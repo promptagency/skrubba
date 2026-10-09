@@ -48,6 +48,12 @@ describe("sessionReducer", () => {
     expect(panelEntities(again)[0].active).toBe(false);
   });
 
+  it("sets one entity to Behåll without toggling it back", () => {
+    let s = reduce(withEntities, { type: "keep", placeholder: "[NAMN_1]" });
+    s = reduce(s, { type: "keep", placeholder: "[NAMN_1]" });
+    expect(panelEntities(s)[0].active).toBe(false);
+  });
+
   it("sets all to Behåll and all to Skrubba", () => {
     const allKept = reduce(withEntities, { type: "keepAll" });
     expect(panelEntities(allKept).every((e) => !e.active)).toBe(true);

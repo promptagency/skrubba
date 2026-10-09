@@ -27,6 +27,7 @@ export type SessionAction =
   | { type: "addManual"; term: string }
   | { type: "setEntities"; text: string; entities: Entity[] }
   | { type: "toggleKeep"; placeholder: string }
+  | { type: "keep"; placeholder: string }
   | { type: "keepAll" }
   | { type: "scrubAll" }
   | { type: "loadExample"; text: string; wordList: string[] }
@@ -67,6 +68,8 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       else kept.add(action.placeholder);
       return { ...state, kept };
     }
+    case "keep":
+      return state.kept.has(action.placeholder) ? state : { ...state, kept: new Set([...state.kept, action.placeholder]) };
     case "keepAll":
       return { ...state, kept: new Set([...state.kept, ...state.entities.map((e) => e.placeholder)]) };
     case "scrubAll": {

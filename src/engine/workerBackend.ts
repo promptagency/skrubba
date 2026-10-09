@@ -8,6 +8,7 @@ export function createWorkerBackend(): NerBackend {
   const send = (msg: ToWorker) => worker.postMessage(msg);
   const pending = new Map<number, { resolve: (s: Span[]) => void; reject: (e: Error) => void }>();
   let nextId = 1;
+  let initPromise: Promise<void> | null = null;
   let onInit: { resolve: () => void; reject: (e: Error) => void; progress: (p: Progress) => void } | null = null;
 
   worker.onmessage = (e: MessageEvent<FromWorker>) => {
@@ -41,10 +42,12 @@ export function createWorkerBackend(): NerBackend {
 
   return {
     init(onProgress) {
-      return new Promise<void>((resolve, reject) => {
-        onInit = { resolve, reject, progress: onProgress };
+      // Idempotent: React StrictMode runs effects twice in dev.
+      initPromise ??= new Promise<void>((resolve, reject) => {
+        onInit = { resolve, reject, progress: (p) => onProgress(p) };
         send({ type: "init" });
       });
+      return initPromise;
     },
     detect(text) {
       const id = nextId++;
