@@ -63,6 +63,12 @@ Decisions and notes from Phase 2:
 - Byt tillbaka and Nyckel tabs are visible but disabled until Phase 3. The "?" link and the "Inget lämnar din dator" link to `/sa-funkar-det` wait for Phase 4.
 - The model tags months as places ("maj" → Plats) in the example. Over-masking, fixable with Behåll.
 
+Follow-up 2026-10-09: model before work (owner's decision).
+- The editor is locked with `gate.lead`, `gate.body` and the percentage until the model is ready; rules-only unlocks it if the model fails.
+- First-visit download cut from 86 MB to 53 MB (packed model, plain runtime only).
+- Offline service worker: the model is downloaded once and served from the cache afterwards, offline included. q4 stays off the table until real timings say 53 MB is too slow.
+- Playwright now runs in Chromium, Firefox and WebKit (30 tests; clipboard and service-worker network checks are Chromium-only).
+
 
 ## Phase 3 – Byt tillbaka and Nyckel modes
 
@@ -76,7 +82,7 @@ Done when: Phase 1 round trip works through the UI, including suggestions.
 ## Phase 4 – Trust and polish
 
 - [ ] Status bar trust line "Inget lämnar din dator" → `/sa-funkar-det` page per `docs/COPY.md`.
-- [ ] PWA: manifest, service worker precaching app + model + runtime. Offline test.
+- [ ] PWA manifest and icons (installable). The offline service worker and its tests were done early, 2026-10-09 (see Phase 2 notes).
 - [ ] Accessibility: full keyboard, visible focus, ARIA live region for status, colour + label for types, contrast AA.
 - [ ] Performance: 10 000 chars masked in < 3 s after model load. Chunk with overlap, dedupe across boundaries.
 - [ ] Mobile: usable at 390 px; entity panel becomes a bottom sheet.
@@ -85,13 +91,7 @@ Done when: Lighthouse PWA + accessibility pass, offline works, Playwright suite 
 
 ## Phase 5 – Ship
 
-- [ ] Fit the 25 MiB per-file cap on Cloudflare Pages (decided 2026-10-09). Over the cap: the model `model_quantized.onnx` (58.9 MB), `ort-wasm-simd-threaded.asyncify.wasm` (26.9 MB, the variant the browser loads) and `.jsep.wasm` (28.4 MB). Solution:
-  - `scripts/fetch-model.ts` splits every file over 24 MiB into numbered parts plus a small manifest (part names, sizes, sha256 of the whole file).
-  - The model: the worker sets transformers.js `env.fetch` so a request for the model file fetches the parts and returns them joined as one response. Integrity check unchanged, on the joined bytes.
-  - The runtime: precompress the wasm we load (gzip, ~6.7 MB, under the cap without splitting), unpack in the worker with `DecompressionStream` and hand the bytes to onnxruntime as `wasmBinary`. Ship only the variants we load.
-  - Remove the duplicate asyncify wasm Vite copies into `dist/assets/`.
-  - Build step fails if any file in `dist/` is over 25 MiB.
-  - Tests: Vitest for split and join (byte-identical, hash checked); Playwright `no-egress` still green; the service worker in Phase 4 precaches the parts.
+- [x] Fit the 25 MiB per-file cap on Cloudflare Pages. Done 2026-10-09: model gzipped in two parts, plain runtime gzipped, other variants and Vite's duplicate dropped, build fails on any file over 25 MiB. See ARCHITECTURE.md, Delivery and offline.
 - [ ] Cloudflare Pages deploy to `skrubba.promptagency.se` with `_headers` for CSP and caching.
 - [ ] Public `README.md`: what it is, what it is not (not a compliance guarantee), run locally, verify no network calls, credits to maskera and KBLab, MIT license.
 - [ ] Footer: "Bygger på maskera (MIT) och KB-BERT (CC0). Öppen källkod."

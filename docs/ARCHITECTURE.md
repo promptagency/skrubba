@@ -19,7 +19,8 @@ src/
     ner.ts               NerBackend interface
     nerModel.ts          maskera recognizer on our files + model spans
     worker.ts            Web Worker: loads model, verifies sha256, runs NER
-    workerBackend.ts     main-thread side of the worker protocol
+    workerBackend.ts     main-thread side of the worker protocol (worker created on first use)
+    packed.ts            join + gunzip files served in parts
     protocol.ts          worker message types
   state/
     session.tsx          React context: text, entities, key (memory only)
@@ -28,11 +29,16 @@ src/
     RestoreView, KeyView, StatusBar, Toast
   pages/
     HowItWorks.tsx       /sa-funkar-det
+  sw/
+    sw.ts, core.ts       offline service worker (built to dist/sw.js)
 scripts/
-  fetch-model.ts         downloads the pinned model (sha256-checked), copies the runtime
+  fetch-model.ts         downloads the pinned model to .cache/model-src/ (sha256-checked), packs model + runtime into public/
+  pack.ts, limits.ts     gzip + split under 24 MiB; 25 MiB per-file guard (also run on dist/ after build)
+  swManifest.ts          content revision per dist/ file, baked into sw.js
 public/
-  models/<model-dir>/... self-hosted ONNX + tokenizer + config (gitignored)
-  runtime/               onnxruntime-web wasm files (gitignored)
+  models/<model-dir>/... tokenizer + config; ONNX weights as .gzpart0, .gzpart1 (gitignored)
+  runtime/               onnxruntime-web plain build: .mjs + .wasm.gzpart0 (gitignored)
+  packed.json            which files are packed, sizes, sha256 (generated, gitignored)
   _headers               Cloudflare Pages headers (CSP, cache)
 ```
 
@@ -114,15 +120,28 @@ Never restore a placeholder number that does not exist in the key. Report it.
 ## Privacy enforcement
 
 - CSP meta tag, added at build time by `vite.config.ts` (the dev server needs inline scripts): `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; worker-src 'self' blob:; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'`. `'wasm-unsafe-eval'` is required for onnxruntime to compile WASM; it does not allow JavaScript eval.
-- transformers.js env: `allowRemoteModels = false`, `allowLocalModels = true`, `localModelPath = "/models/"`, `backends.onnx.wasm.wasmPaths = "/runtime/"`. The worker also sha256-checks the ONNX weights against `config.ts` before reporting ready.
+- transformers.js env: `allowRemoteModels = false`, `allowLocalModels = true`, `localModelPath = "/models/"`, `useWasmCache = false` (it would import the runtime .mjs from a blob: URL, which the CSP blocks), `backends.onnx.wasm.wasmPaths` = the plain build's .mjs and .wasm under `/runtime/`, `wasmBinary` = the unpacked wasm. `env.fetch` is wrapped so requests for packed files fetch and join the parts. The worker sha256-checks the runtime (against `packed.json`) and the ONNX weights (against `config.ts`) before reporting ready.
 - Playwright test `no-egress.spec.ts`: records every request during a full mask → restore session and asserts all URLs share the app origin.
 - Unit test `no-storage.spec.ts`: proxies `localStorage`, `sessionStorage`, `indexedDB`, `document.cookie` and asserts no access during a session.
-- Service worker caches only same-origin assets.
+- Service worker caches only same-origin assets. See Delivery and offline.
+
+## Delivery and offline
+
+First visit downloads about 53 MB: the model gzipped in two parts (48.9 MB), the runtime gzipped (3.7 MB) and the app. Cloudflare Pages caps files at 25 MiB, so anything bigger is split; `scripts/limits.ts` fails the build if a file in `public/` or `dist/` is over the cap.
+
+Only onnxruntime-web's plain build is shipped. It loads and runs the model in Chromium, Firefox and WebKit (`tests/e2e/model.spec.ts`). Vite's copy of the asyncify build is dropped from `dist/`.
+
+The editor is locked until the model is ready (`docs/UX.md`). To make that wait happen once:
+
+- `src/ui/serviceWorker.ts` registers `/sw.js` (production only) and waits until it controls the page before the model worker is created, so the worker's downloads go through it.
+- `sw.js` precaches the small files on install and caches each packed part the first time the app fetches it, so nothing is downloaded twice. Cache keys carry each file's content revision; on activate, entries not in the current build are deleted.
+- When the service worker is in control, transformers.js's own model cache is off (`browserCache: false`), so the device keeps one copy of the model, not two.
+- Without a service worker (private mode, blocked) the app still works; transformers.js's cache and the HTTP cache are all there is.
 
 ## Worker protocol
 
 ```
-main → worker: { type: "init" }
+main → worker: { type: "init", browserCache }
 worker → main: { type: "progress", loaded, total } ... { type: "ready" }
 main → worker: { type: "ner", id, text }
 worker → main: { type: "ner-result", id, spans: [{start,end,type,source:"model"}] }
