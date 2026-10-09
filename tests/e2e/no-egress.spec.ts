@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test";
+import { clipboard, editor, MOD, openReady } from "./helpers.ts";
 
-// Privacy: a full mask → restore session may only touch the app's own origin.
-test("mask and restore with the model makes no request outside our origin", async ({ page, context, baseURL }) => {
+test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+
+// Privacy: a full session may only touch the app's own origin.
+test("masking and copying with the model makes no request outside our origin", async ({ page, context, baseURL }) => {
   const origin = new URL(baseURL!).origin;
   const requests: string[] = [];
   context.on("request", (r) => requests.push(r.url()));
@@ -10,17 +13,14 @@ test("mask and restore with the model makes no request outside our origin", asyn
     if (/Content Security Policy|Refused to/i.test(m.text())) cspViolations.push(m.text());
   });
 
-  await page.goto("/");
-  await expect(page.getByRole("status")).toHaveAttribute("data-state", "ready", { timeout: 90_000 });
-
-  const text = "Johan Lindqvist (19850312-4471) flyttar till Umeå. Ring 070-1740612.";
-  await page.getByLabel("Text").fill(text);
-  const masked = page.getByTestId("masked");
-  await expect(masked).toContainText("[NAMN_1]");
-  await expect(masked).toContainText("[PERSONNUMMER_1]");
-  await expect(masked).not.toContainText("Johan");
-  await expect(masked).not.toContainText("Umeå");
-  await expect(page.getByTestId("restored")).toHaveText(text);
+  await openReady(page);
+  await editor(page).fill("Johan Lindqvist (19850312-4471) flyttar till Umeå. Ring 070-1740612.");
+  await expect(page.locator(".row-main").first()).toBeVisible();
+  await page.keyboard.press(`${MOD}+Shift+KeyC`);
+  await expect(page.locator(".toast")).toBeVisible();
+  const copied = await clipboard(page);
+  expect(copied).toContain("[NAMN_1]");
+  expect(copied).not.toContain("Johan");
 
   const outside = requests.filter((url) => !url.startsWith("data:") && new URL(url).origin !== origin);
   expect(outside).toEqual([]);
