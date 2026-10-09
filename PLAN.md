@@ -21,6 +21,7 @@ Done when: `spike/RESULTS.md` exists with a go/no-go and the chosen dtype.
 - [ ] `src/engine/Masker.ts` interface: `init(onProgress)`, `maskRules(text)`, `mask(text)`, `applyMask`, `restore`, types `Entity`, `Key`, `WordList`.
 - [ ] `src/engine/maskeraMasker.ts` implementing it. Rules sync on main thread; NER in `src/engine/worker.ts`.
 - [ ] `src/engine/wordList.ts`: user-supplied terms (one per line), matched case-insensitively as whole words, typed `ORD`, numbered like other entities. Applied before NER, wins over model spans.
+- [ ] First-name linking (decided 2026-10-09). A lone single-word NAMN whose case-folded, genitive-stripped form equals the first word of exactly one multi-word NAMN in the same text gets that entity's placeholder ("Johan", "Johans" → the [NAMN_n] of "Johan Lindqvist"). If two or more full names share that first name ("Anna Berg", "Anna Ek"), do not link; "Anna" gets its own placeholder, since a wrong link restores the wrong person. Restore writes the full name ("Johan Lindqvist") for every occurrence; each occurrence keeps its surface form so the UI can show which forms were linked. Surnames alone are not linked in v1. Tests: link, genitive link, ambiguous first name stays separate, link survives text edits without renumbering.
 - [ ] Self-host model + ONNX runtime in `public/models/` and `public/runtime/`; configure transformers.js `env` per maskera `docs/PRODUCTION.md`.
 - [ ] Strict CSP in `index.html`. No `unsafe-inline` scripts.
 - [ ] Vitest: round trip on 20 fixture sentences; same value → same placeholder; word list wins over model; restore tolerant of casing/dash/space variants.
@@ -76,7 +77,7 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 
 - ~~Model dtype after spike (q4 vs q8).~~ q8, provisional until the spike runs on real texts (see Phase 0).
 - Should the word list support simple patterns (e.g. `Projekt *`)? Default: no, plain terms only in v1.
-- **First name linked to full name.** maskera gives "Johan Lindqvist", "Johan" and "Johans" three placeholders. Genitive merge is in `docs/ARCHITECTURE.md`; linking a lone first name to an earlier full name is not. Without it the LLM cannot tell they are the same person, but a wrong link would restore the wrong name. Decide before Phase 1 merging.
+- ~~First name linked to full name.~~ Decided 2026-10-09: link. See the Phase 1 task.
 - **Same value, different types.** "Göteborg" came back as both PLATS and ORGANISATION in one text. Proposal: merge by value regardless of type, keep the first type seen.
 - **Split spans.** "Volvo Personvagnar" → `[ORGANISATION_2] Personvagnar`, "Arc'teryx" → `[ORGANISATION_7]'[NAMN_5]`. Proposal: merge adjacent spans separated only by a space or apostrophe.
 - **Type list in `docs/ARCHITECTURE.md` differs from maskera's labels.** maskera emits ORGANISATIONSNUMMER, SAMORDNINGSNUMMER, LAGENHETSNUMMER, IP_ADRESS, KORTNUMMER, KONTONUMMER, JOURNALNUMMER, REGNUMMER. CLAUDE.md says follow maskera's format, so the doc (and the type table in `docs/COPY.md`) should follow. Needs a copy decision for the new types' display names.
