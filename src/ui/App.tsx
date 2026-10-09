@@ -5,6 +5,7 @@ import { copyText } from "./clipboard.ts";
 import { EXAMPLE, t } from "./copy.ts";
 import { Editor, type EditorHandle } from "./Editor.tsx";
 import { EntityPanel } from "./EntityPanel.tsx";
+import { Gate } from "./Gate.tsx";
 import { StatusBar } from "./StatusBar.tsx";
 import { Toast } from "./Toast.tsx";
 
@@ -127,6 +128,7 @@ export function App() {
         <button
           type="button"
           className="link"
+          disabled={state.model.status === "loading"}
           onClick={() => {
             dispatch({ type: "loadExample", text: EXAMPLE.text, wordList: EXAMPLE.wordList });
             pasted.current = true;
@@ -139,18 +141,22 @@ export function App() {
 
       <main className="workspace">
         <section className="editor-column">
-          <Editor
-            ref={editor}
-            text={state.text}
-            entities={freshEntities(state)}
-            flash={flash}
-            onChange={(text, wasPaste) => {
-              pasted.current = wasPaste;
-              dispatch({ type: "setText", text });
-            }}
-            onScrubSelection={(term) => dispatch({ type: "addManual", term })}
-            onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
-          />
+          {state.model.status === "loading" ? (
+            <Gate pct={state.model.pct} />
+          ) : (
+            <Editor
+              ref={editor}
+              text={state.text}
+              entities={freshEntities(state)}
+              flash={flash}
+              onChange={(text, wasPaste) => {
+                pasted.current = wasPaste;
+                dispatch({ type: "setText", text });
+              }}
+              onScrubSelection={(term) => dispatch({ type: "addManual", term })}
+              onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
+            />
+          )}
           <p className="caveat">{t("caveat.short")}</p>
         </section>
         <EntityPanel

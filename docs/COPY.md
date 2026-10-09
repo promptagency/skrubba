@@ -25,6 +25,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | mode.key | Nyckel |
 | editor.empty | Klistra in text här. Den stannar i din webbläsare. |
 | editor.example | Visa exempel |
+| gate.lead | Skrubba laddar ner en liten svensk språkmodell till din webbläsare. |
+| gate.body | Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den. |
 | panel.count | {n} uppgifter |
 | panel.count.one | 1 uppgift |
 | panel.scrubAll | Skrubba alla |

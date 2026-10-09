@@ -278,6 +278,37 @@ kbd {
   white-space: nowrap;
 }
 
+.gate {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.gate p {
+  margin: 0;
+  max-width: 34em;
+}
+
+.gate-lead {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.gate progress {
+  width: min(100%, 24em);
+  margin-top: 20px;
+  accent-color: var(--accent);
+}
+
 /* Entity panel */
 
 .panel {

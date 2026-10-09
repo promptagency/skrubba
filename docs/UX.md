@@ -26,7 +26,9 @@ No wizard. One screen, three modes, switchable at any time. State is shared acro
 
 **Input.** Paste or type. Processing starts on paste immediately and on typing after 300 ms idle.
 
-**Detection order.** Word list and rules first (instant), then NER when the model is ready. While loading, status bar shows "Laddar modell … 43 %" and rule hits are already highlighted. When NER finishes, new highlights appear without moving the caret.
+**Model first.** The editor is locked until the model is ready, so nobody reviews a list that is missing every name. The locked editor shows the loading state in place, not a modal: `gate.lead`, `gate.body` and the progress line "Laddar modell 43 %". When the model is ready the editor unlocks and takes focus. If the model fails, the editor unlocks in rules-only mode with `status.rulesOnly` in the status bar. After the first visit the model comes from the browser's cache and the offline cache, so the lock lasts a second or two.
+
+**Detection order.** Word list and rules first (instant), then NER. When NER finishes, new highlights appear without moving the caret.
 
 **Highlights.** Overlay behind a transparent textarea so editing keeps working. Each type has a colour **and** a label on hover. Never colour alone.
 
