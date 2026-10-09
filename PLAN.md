@@ -80,5 +80,6 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 - ~~First name linked to full name.~~ Decided 2026-10-09: link. See the Phase 1 task.
 - **Same value, different types.** "Göteborg" came back as both PLATS and ORGANISATION in one text. Proposal: merge by value regardless of type, keep the first type seen.
 - **Split spans.** "Volvo Personvagnar" → `[ORGANISATION_2] Personvagnar`, "Arc'teryx" → `[ORGANISATION_7]'[NAMN_5]`. Proposal: merge adjacent spans separated only by a space or apostrophe.
-- **Display names for maskera's extra types.** `docs/ARCHITECTURE.md` now uses maskera's labels (2026-10-09). `docs/COPY.md` still needs Swedish display names for SAMORDNINGSNUMMER, LAGENHETSNUMMER, KONTONUMMER, JOURNALNUMMER, REGNUMMER, and its table should be renamed from ORGNR/IP/KORT to ORGANISATIONSNUMMER/IP_ADRESS/KORTNUMMER. Owner's copy call.
+- ~~Display names for maskera's extra types.~~ Added to `docs/COPY.md` 2026-10-09.
+- **Enable maskera's `regnummer` rule?** Off by default upstream (plate shape = booking-code shape). Leaning on: a miss is worse than over-masking. Decide in Phase 1.
 - **Org.nr with a bad check digit is not masked** (personnummer is typo-tolerant, org.nr is not). Options: our own context rule ("org.nr" before the number) or an upstream issue to maskera.

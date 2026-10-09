@@ -64,16 +64,21 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | ORGANISATION | Organisation |
 | ADRESS | Adress |
 | PERSONNUMMER | Personnummer |
+| SAMORDNINGSNUMMER | Samordningsnummer |
+| ORGANISATIONSNUMMER | Organisationsnummer |
 | TELEFON | Telefon |
 | EPOST | E-post |
-| ORGNR | Organisationsnummer |
 | POSTNUMMER | Postnummer |
+| LAGENHETSNUMMER | Lägenhetsnummer |
 | BANKGIRO | Bankgiro |
 | PLUSGIRO | Plusgiro |
 | IBAN | IBAN |
-| KORT | Kortnummer |
-| IP | IP-adress |
+| KORTNUMMER | Kortnummer |
+| KONTONUMMER | Kontonummer |
+| IP_ADRESS | IP-adress |
 | URL | Webbadress |
+| JOURNALNUMMER | Journalnummer |
+| REGNUMMER | Registreringsnummer |
 | ORD | Ord |
 
 ## Exempeltext (påhittad, visas via "Visa exempel")
