@@ -1,10 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { clipboard, editor, MOD, openReady } from "./helpers.ts";
 
-test.use({ permissions: ["clipboard-read", "clipboard-write"] });
-
 // Privacy: a full session may only touch the app's own origin.
-test("masking and copying with the model makes no request outside our origin", async ({ page, context, baseURL }) => {
+test("masking and copying with the model makes no request outside our origin", async ({ page, context, baseURL, browserName }) => {
   const origin = new URL(baseURL!).origin;
   const requests: string[] = [];
   context.on("request", (r) => requests.push(r.url()));
@@ -18,9 +16,11 @@ test("masking and copying with the model makes no request outside our origin", a
   await expect(page.locator(".row-main").first()).toBeVisible();
   await page.keyboard.press(`${MOD}+Shift+KeyC`);
   await expect(page.locator(".toast")).toBeVisible();
-  const copied = await clipboard(page);
-  expect(copied).toContain("[NAMN_1]");
-  expect(copied).not.toContain("Johan");
+  if (browserName === "chromium") {
+    const copied = await clipboard(page);
+    expect(copied).toContain("[NAMN_1]");
+    expect(copied).not.toContain("Johan");
+  }
 
   const outside = requests.filter((url) => !url.startsWith("data:") && new URL(url).origin !== origin);
   expect(outside).toEqual([]);

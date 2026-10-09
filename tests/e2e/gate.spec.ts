@@ -20,7 +20,8 @@ test("the editor stays locked with an explanation until the model is ready", asy
   await expect(page.getByRole("button", { name: "Visa exempel" })).toBeDisabled();
 
   release();
-  await expect(editor(page)).toBeFocused({ timeout: 90_000 });
+  await expect(page.getByRole("status").first()).toHaveAttribute("data-state", "ready", { timeout: 90_000 });
+  await expect(editor(page)).toBeFocused();
   await expect(page.getByText(LEAD)).toHaveCount(0);
 });
 

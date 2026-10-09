@@ -1,15 +1,14 @@
 import { expect, test } from "@playwright/test";
 import { clipboard, editor, MOD, openReady, rows } from "./helpers.ts";
 
-test.use({ permissions: ["clipboard-read", "clipboard-write"] });
-
 const TEXT =
   "Hej Karin, Johan Lindqvist (850412-1234) är sjukskriven. Johans chef Sara Holm ringer. " +
   "Kunden Nordström Fastigheter vet inget om Projekt Havsvind.";
 
 // Phase 2 definition of done: paste, review, adjust, add a word and copy
 // without the mouse, in under 30 seconds.
-test("paste, review, keep one, add a word and copy using only the keyboard", async ({ page }) => {
+test("paste, review, keep one, add a word and copy using only the keyboard", async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "reads the clipboard");
   await openReady(page);
   const started = Date.now();
 

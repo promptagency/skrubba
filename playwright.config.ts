@@ -5,7 +5,15 @@ export default defineConfig({
   testDir: "tests/e2e",
   timeout: 120_000,
   use: { baseURL: "http://localhost:4173" },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    // Only Chromium lets a test read the clipboard.
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"], permissions: ["clipboard-read", "clipboard-write"] },
+    },
+    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+    { name: "webkit", use: { ...devices["Desktop Safari"] } },
+  ],
   webServer: {
     command: "npm run build && npx vite preview --port 4173 --strictPort",
     url: "http://localhost:4173",
