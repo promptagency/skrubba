@@ -58,10 +58,15 @@ function norm(s: string): string {
 const firstWord = (key: string) => key.slice(0, key.indexOf(" "));
 
 interface Resolved {
-  span: Span;
+  span: Span; // genitive suffix already cut off the end
   surface: string;
   key: string;
   value: string;
+}
+
+function stripSuffix(span: Span, surface: string, key: string, n: number): Resolved {
+  const value = surface.slice(0, -n);
+  return { span: { ...span, end: span.end - n }, surface: value, key: key.slice(0, -n), value };
 }
 
 /** Group spans into entities, merging surface forms and linking first names. */
@@ -81,9 +86,9 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
     const surface = surfaces[i];
     const key = norm(surface);
     if (GENITIVE_TYPES.has(span.type)) {
-      if (key.endsWith(":s")) return { span, surface, key: key.slice(0, -2), value: surface.slice(0, -2) };
+      if (key.endsWith(":s")) return stripSuffix(span, surface, key, 2);
       if (key.endsWith("s") && (known.has(key.slice(0, -1)) || registry.has(key.slice(0, -1))))
-        return { span, surface, key: key.slice(0, -1), value: surface.slice(0, -1) };
+        return stripSuffix(span, surface, key, 1);
     }
     return { span, surface, key, value: surface };
   });

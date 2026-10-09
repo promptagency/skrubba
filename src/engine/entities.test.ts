@@ -86,7 +86,14 @@ describe("buildEntities first-name linking", () => {
     const [e] = build(text, [["Johan Lindqvist", "NAMN"], ["Johan", "NAMN"], ["Johans", "NAMN"]]);
     expect(e.placeholder).toBe("[NAMN_1]");
     expect(e.value).toBe("Johan Lindqvist");
-    expect(e.occurrences.map((o) => o.surface)).toEqual(["Johan Lindqvist", "Johan", "Johans"]);
+    expect(e.occurrences.map((o) => o.surface)).toEqual(["Johan Lindqvist", "Johan", "Johan"]);
+  });
+
+  it("leaves the genitive s outside the occurrence so the output reads [NAMN_1]s", () => {
+    const text = "Anna Berg. Anna Bergs lön. Atea:s avtal med Atea.";
+    const out = build(text, [["Anna Berg", "NAMN"], ["Anna Bergs", "NAMN"], ["Atea:s", "ORGANISATION"], ["Atea", "ORGANISATION"]]);
+    const after = out.flatMap((e) => e.occurrences.map((o) => text.slice(o.end, o.end + 2)));
+    expect(after).toEqual([". ", "s ", ":s", "."]);
   });
 
   it("links when the first name comes before the full name", () => {
