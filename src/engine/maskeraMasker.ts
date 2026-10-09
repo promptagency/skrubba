@@ -1,6 +1,6 @@
 import { applyMask } from "./applyMask.ts";
 import { buildEntities, EntityRegistry } from "./entities.ts";
-import type { Entity, Key, Masker, MaskInput, Progress, RestoreResult, Span } from "./Masker.ts";
+import type { Entity, InitOptions, Key, Masker, MaskInput, Progress, RestoreResult, Span } from "./Masker.ts";
 import type { NerBackend } from "./ner.ts";
 import { ruleSpans } from "./rules.ts";
 import { resolveSpans } from "./spans.ts";
@@ -15,8 +15,8 @@ export class MaskeraMasker implements Masker {
     this.ner = ner;
   }
 
-  init(onProgress: (p: Progress) => void): Promise<void> {
-    return this.ner.init(onProgress);
+  init(onProgress: (p: Progress) => void, options?: InitOptions): Promise<void> {
+    return this.ner.init(onProgress, options);
   }
 
   maskRules(text: string, input: MaskInput): Entity[] {

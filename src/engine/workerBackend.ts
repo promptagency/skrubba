@@ -4,14 +4,23 @@ import type { FromWorker, ToWorker } from "./protocol.ts";
 
 /** NER in a Web Worker. See the worker protocol in docs/ARCHITECTURE.md. */
 export function createWorkerBackend(): NerBackend {
-  const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
-  const send = (msg: ToWorker) => worker.postMessage(msg);
+  // Created on first use, not here: a worker started before the service
+  // worker controls the page would bypass its cache.
+  let worker: Worker | null = null;
+  const send = (msg: ToWorker) => (worker ??= start()).postMessage(msg);
   const pending = new Map<number, { resolve: (s: Span[]) => void; reject: (e: Error) => void }>();
   let nextId = 1;
   let initPromise: Promise<void> | null = null;
   let onInit: { resolve: () => void; reject: (e: Error) => void; progress: (p: Progress) => void } | null = null;
 
-  worker.onmessage = (e: MessageEvent<FromWorker>) => {
+  function start(): Worker {
+    const w = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
+    w.onmessage = onMessage;
+    w.onerror = onError;
+    return w;
+  }
+
+  function onMessage(e: MessageEvent<FromWorker>) {
     const msg = e.data;
     switch (msg.type) {
       case "progress":
@@ -32,20 +41,21 @@ export function createWorkerBackend(): NerBackend {
           pending.delete(msg.id);
         }
     }
-  };
-  worker.onerror = (e) => {
+  }
+
+  function onError(e: ErrorEvent) {
     const err = new Error(e.message || "worker failed");
     onInit?.reject(err);
     for (const p of pending.values()) p.reject(err);
     pending.clear();
-  };
+  }
 
   return {
-    init(onProgress) {
+    init(onProgress, options = { browserCache: true }) {
       // Idempotent: React StrictMode runs effects twice in dev.
       initPromise ??= new Promise<void>((resolve, reject) => {
         onInit = { resolve, reject, progress: (p) => onProgress(p) };
-        send({ type: "init" });
+        send({ type: "init", browserCache: options.browserCache });
       });
       return initPromise;
     },

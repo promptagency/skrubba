@@ -106,9 +106,14 @@ export interface Progress {
   total: number;
 }
 
+export interface InitOptions {
+  /** Let transformers.js keep its own copy of the model. Off when the service worker caches it. */
+  browserCache: boolean;
+}
+
 export interface Masker {
   /** Loads the NER model. Rejects if it cannot; rules keep working. */
-  init(onProgress: (p: Progress) => void): Promise<void>;
+  init(onProgress: (p: Progress) => void, options?: InitOptions): Promise<void>;
   /** Rules, context rules, word list and manual terms. Sync, instant. */
   maskRules(text: string, input: MaskInput): Entity[];
   /** maskRules plus NER, merged. */

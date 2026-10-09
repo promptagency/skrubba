@@ -6,6 +6,7 @@ import { EXAMPLE, t } from "./copy.ts";
 import { Editor, type EditorHandle } from "./Editor.tsx";
 import { EntityPanel } from "./EntityPanel.tsx";
 import { Gate } from "./Gate.tsx";
+import { controlledByServiceWorker } from "./serviceWorker.ts";
 import { StatusBar } from "./StatusBar.tsx";
 import { Toast } from "./Toast.tsx";
 
@@ -33,9 +34,13 @@ export function App() {
 
   // Load the model in the background; rules work meanwhile.
   useEffect(() => {
-    masker
-      .init(({ loaded, total }) =>
-        dispatch({ type: "model", model: { status: "loading", pct: Math.floor((loaded / total) * 100) } }),
+    controlledByServiceWorker()
+      .then((controlled) =>
+        masker.init(
+          ({ loaded, total }) =>
+            dispatch({ type: "model", model: { status: "loading", pct: Math.floor((loaded / total) * 100) } }),
+          { browserCache: !controlled },
+        ),
       )
       .then(
         () => dispatch({ type: "model", model: { status: "ready" } }),

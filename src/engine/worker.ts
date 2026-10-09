@@ -98,6 +98,9 @@ function load() {
 self.onmessage = async (e: MessageEvent<ToWorker>) => {
   const msg = e.data;
   if (msg.type === "init") {
+    // With the service worker caching the packed files, transformers.js's own
+    // cache would only hold a second, unpacked copy of the model.
+    env.useBrowserCache = msg.browserCache;
     try {
       await load();
       post({ type: "ready" });

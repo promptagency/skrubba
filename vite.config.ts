@@ -3,7 +3,8 @@ import { createReadStream, existsSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
-import { defineConfig, type Plugin } from "vite";
+import { build, defineConfig, type Plugin } from "vite";
+import { buildSwManifest } from "./scripts/swManifest.ts";
 
 // Privacy: the page may only talk to its own origin. 'wasm-unsafe-eval' lets
 // onnxruntime compile its WASM; it does not allow eval() of JavaScript.
@@ -66,8 +67,34 @@ function dropBundledWasm(): Plugin {
   };
 }
 
+// After the app is built, build src/sw/sw.ts into dist/sw.js as a classic
+// script, with the content revision of every file in dist/ baked in.
+function serviceWorker(): Plugin {
+  let outDir = "dist";
+  return {
+    name: "service-worker",
+    apply: "build",
+    configResolved(config) {
+      outDir = config.build.outDir;
+    },
+    async closeBundle() {
+      await build({
+        configFile: false,
+        logLevel: "warn",
+        define: { __SW_MANIFEST__: JSON.stringify(buildSwManifest(outDir)) },
+        build: {
+          outDir,
+          emptyOutDir: false,
+          copyPublicDir: false,
+          lib: { entry: "src/sw/sw.ts", formats: ["iife"], name: "sw", fileName: () => "sw.js" },
+        },
+      });
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), cspMeta(), serveRuntimeInDev()],
+  plugins: [react(), cspMeta(), serveRuntimeInDev(), serviceWorker()],
   // transformers.js and onnxruntime-web break under dependency prebundling.
   optimizeDeps: { exclude: ["@huggingface/transformers"] },
   // The worker dynamic-imports parts of transformers.js; only ES workers can split.

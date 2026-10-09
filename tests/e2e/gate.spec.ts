@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { editor } from "./helpers.ts";
 
+// These tests hold back or block the model with page.route, which does not
+// see requests a service worker makes. The offline cache has its own tests.
+test.use({ serviceWorkers: "block" });
+
 const LEAD = "Skrubba laddar ner en liten svensk språkmodell till din webbläsare.";
 
 test("the editor stays locked with an explanation until the model is ready", async ({ page }) => {
