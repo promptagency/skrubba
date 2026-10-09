@@ -1,0 +1,43 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import { COPY, countLabel, EXAMPLE, t, TYPE_LABEL } from "./copy.ts";
+
+const doc = readFileSync("docs/COPY.md", "utf8");
+const rows = (section: string) => {
+  const body = doc.slice(doc.indexOf(section)).split("\n## ")[0];
+  return new Map([...body.matchAll(/^\| ([^|]+?) \| ([^|]+?) \|$/gm)].map((m) => [m[1], m[2]]));
+};
+
+describe("copy matches docs/COPY.md", () => {
+  it("has every fixed string verbatim", () => {
+    const fixed = rows("## Fasta strängar");
+    for (const [key, text] of Object.entries(COPY)) expect(fixed.get(key), key).toBe(text);
+  });
+
+  it("has every type label verbatim", () => {
+    const types = rows("## Typer");
+    for (const [type, label] of Object.entries(TYPE_LABEL)) expect(types.get(type), type).toBe(label);
+  });
+
+  it("has the example text verbatim", () => {
+    const quoted = doc
+      .slice(doc.indexOf("## Exempeltext"))
+      .split("\n## ")[0]
+      .split("\n")
+      .filter((l) => l.startsWith(">"))
+      .map((l) => l.replace(/^> ?/, ""))
+      .join("\n");
+    expect(EXAMPLE.text).toBe(quoted);
+  });
+});
+
+describe("t", () => {
+  it("fills placeholders", () => {
+    expect(t("status.loading", { pct: 43 })).toBe("Laddar modell 43 %");
+  });
+
+  it("uses the singular for one", () => {
+    expect(countLabel(1)).toBe("1 uppgift");
+    expect(countLabel(14)).toBe("14 uppgifter");
+  });
+});
