@@ -9,8 +9,11 @@ import { findTerms } from "./wordList.ts";
 
 export class MaskeraMasker implements Masker {
   private readonly registry = new EntityRegistry();
+  private readonly ner: NerBackend;
 
-  constructor(private readonly ner: NerBackend) {}
+  constructor(ner: NerBackend) {
+    this.ner = ner;
+  }
 
   init(onProgress: (p: Progress) => void): Promise<void> {
     return this.ner.init(onProgress);
