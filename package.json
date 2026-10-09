@@ -14,7 +14,8 @@
     "fetch-model": "tsx scripts/fetch-model.ts",
     "predev": "npm run fetch-model",
     "prebuild": "npm run fetch-model",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "postbuild": "tsx scripts/check-sizes.ts"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.1",

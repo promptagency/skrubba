@@ -53,11 +53,24 @@ function serveRuntimeInDev(): Plugin {
   };
 }
 
+// onnxruntime-web references its own .wasm via new URL(), so Vite emits a
+// 27 MB copy. The worker hands onnxruntime the unpacked bytes from /runtime/
+// instead (src/engine/worker.ts), so the copy is never loaded. Drop it.
+function dropBundledWasm(): Plugin {
+  return {
+    name: "drop-bundled-wasm",
+    apply: "build",
+    generateBundle(_, bundle) {
+      for (const name of Object.keys(bundle)) if (name.endsWith(".wasm")) delete bundle[name];
+    },
+  };
+}
+
 export default defineConfig({
   plugins: [react(), cspMeta(), serveRuntimeInDev()],
   // transformers.js and onnxruntime-web break under dependency prebundling.
   optimizeDeps: { exclude: ["@huggingface/transformers"] },
   // The worker dynamic-imports parts of transformers.js; only ES workers can split.
-  worker: { format: "es" },
-  test: { include: ["src/**/*.test.ts"] },
+  worker: { format: "es", plugins: () => [dropBundledWasm()] },
+  test: { include: ["src/**/*.test.ts", "scripts/**/*.test.ts"] },
 });

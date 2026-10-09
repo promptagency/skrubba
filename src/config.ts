@@ -2,7 +2,7 @@ export const APP_NAME = "Skrubba";
 export const APP_SLUG = "skrubba";
 export const APP_URL = "https://skrubba.promptagency.se";
 
-// Self-hosted NER model (scripts/fetch-model.ts puts it in public/models/).
+// Self-hosted NER model (scripts/fetch-model.ts packs it into public/models/).
 // The directory carries the revision so a new model gets a new URL: the
 // browser caches model files by URL and never revalidates them.
 export const MODEL = {
@@ -26,3 +26,12 @@ export const MODEL = {
 
 export const MODEL_BASE = "/models/";
 export const RUNTIME_BASE = "/runtime/";
+/** Raw model files for Node (tests, spike). Not served. */
+export const MODEL_SRC_DIR = ".cache/model-src/";
+
+// onnxruntime-web's plain build. It loads and runs the model in Chromium,
+// Firefox and WebKit (tests/e2e/model.spec.ts) and is the smallest variant.
+export const RUNTIME_FILES = {
+  mjs: "ort-wasm-simd-threaded.mjs",
+  wasm: "ort-wasm-simd-threaded.wasm",
+} as const;

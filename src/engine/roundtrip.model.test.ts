@@ -1,16 +1,16 @@
-// Runs the real model from public/models/ (npm run fetch-model). Slow: loads
+// Runs the real model from .cache/model-src/ (npm run fetch-model). Slow: loads
 // the model once, then ~20 ms per sentence.
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { MODEL } from "../config.ts";
+import { MODEL, MODEL_SRC_DIR } from "../config.ts";
 import { SENTENCES } from "./fixtures/sentences.ts";
 import { MaskeraMasker } from "./maskeraMasker.ts";
 import type { NerBackend } from "./ner.ts";
 import { createRecognizer, modelSpans } from "./nerModel.ts";
 
-const modelPresent = existsSync(join("public/models", MODEL.directory, MODEL.onnxFile));
-const recognizer = createRecognizer({ localModelPath: "public/models/", device: "cpu" });
+const modelPresent = existsSync(join(MODEL_SRC_DIR, MODEL.directory, MODEL.onnxFile));
+const recognizer = createRecognizer({ localModelPath: MODEL_SRC_DIR, device: "cpu" });
 const backend: NerBackend = {
   init: () => recognizer.ready,
   detect: (text) => modelSpans(text, recognizer),
