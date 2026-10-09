@@ -11,6 +11,8 @@ export const MODEL = {
   directory: "maskera-sv-ner-7a00633",
   dtype: "q8",
   onnxFile: "onnx/model_quantized.onnx",
+  // Size of onnxFile, for the loading percentage (servers may omit content-length).
+  onnxBytes: 58_903_657,
   // sha256 per file at `revision`, from maskera's own pinned map.
   files: {
     "config.json": "9a4345c97bba5b637fbb07779d56d45b0bac707bc413b623c99caa51bde125cc",

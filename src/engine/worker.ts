@@ -3,6 +3,7 @@
 import { env } from "@huggingface/transformers";
 import { MODEL, MODEL_BASE, RUNTIME_BASE } from "../config.ts";
 import { createRecognizer, modelSpans } from "./nerModel.ts";
+import { countBytes } from "./progress.ts";
 import type { FromWorker, ToWorker } from "./protocol.ts";
 
 const post = (msg: FromWorker) => postMessage(msg);
@@ -31,17 +32,29 @@ async function verifyWeights(): Promise<void> {
   if (hex !== MODEL.files[MODEL.onnxFile]) throw new Error("model checksum mismatch");
 }
 
+// Count the weights as they download for the loading percentage. Only the
+// ONNX file matters: it is 99 % of the bytes. Reports whole-percent steps.
+const weightsPath = `${MODEL_BASE}${MODEL.directory}/${MODEL.onnxFile}`;
+const plainFetch = env.fetch;
+let lastPct = -1;
+env.fetch = async (input, init) => {
+  const res: Response = await plainFetch(input, init);
+  const url = new URL(String(input), self.location.href);
+  if (url.pathname !== weightsPath || init?.method === "HEAD") return res;
+  return countBytes(res, MODEL.onnxBytes, (loaded, total) => {
+    const pct = Math.floor((loaded / total) * 100);
+    if (pct === lastPct) return;
+    lastPct = pct;
+    post({ type: "progress", loaded, total });
+  });
+};
+
 let ready: Promise<ReturnType<typeof createRecognizer>> | null = null;
 
 function load() {
   ready ??= (async () => {
-    // Self-hosted models report coarse start/done events only.
-    const recognizer = createRecognizer({
-      device: "wasm",
-      onProgress: (p) => {
-        if (p.status === "initiate") post({ type: "progress", loaded: 0, total: 1 });
-      },
-    });
+    post({ type: "progress", loaded: 0, total: MODEL.onnxBytes });
+    const recognizer = createRecognizer({ device: "wasm" });
     await recognizer.ready;
     await verifyWeights();
     return recognizer;

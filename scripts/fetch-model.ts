@@ -3,7 +3,7 @@
 // Skips files that are already present and verified. Runs before dev and build.
 
 import { createHash } from "node:crypto";
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -39,6 +39,11 @@ for (const [file, expected] of Object.entries(MODEL.files)) {
   }
   mkdirSync(dirname(target), { recursive: true });
   writeFileSync(target, buf);
+}
+const onnxSize = statSync(join(dest, MODEL.onnxFile)).size;
+if (onnxSize !== MODEL.onnxBytes) {
+  console.error(`MODEL.onnxBytes is ${MODEL.onnxBytes}, ${MODEL.onnxFile} is ${onnxSize} bytes. Update src/config.ts.`);
+  process.exit(1);
 }
 console.log(`model verified in ${dest}`);
 
