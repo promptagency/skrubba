@@ -72,7 +72,7 @@ Numbering is assigned once per session per unique value and never reused. If the
 
 ## Merging rules and model
 
-Priority on overlap: manual > word list > rules > model. Lower-priority rule spans that overlap a higher-priority span are dropped. Model spans are clipped instead, as maskera does, so the part outside the higher-priority span stays masked. Organisations from the model are active by default.
+Priority on overlap: manual > word list > rules > model. A lower-priority span wholly inside a higher-priority one is dropped. One that partially overlaps is clipped to its uncovered part, as maskera does, so that part stays masked. Organisations from the model are active by default.
 
 Adjacent model spans separated only by a space or an apostrophe are joined into one span ("Arc'teryx" came back as ORGANISATION + NAMN). The joined span is ORGANISATION if either part was, otherwise the first part's type.
 
