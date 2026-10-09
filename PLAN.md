@@ -75,7 +75,13 @@ Done when: Lighthouse PWA + accessibility pass, offline works, Playwright suite 
 
 ## Phase 5 – Ship
 
-- [ ] Cloudflare Pages caps files at 25 MiB. `ort-wasm-simd-threaded.asyncify.wasm` (26.9 MB) and `.jsep.wasm` (28.4 MB) exceed it. Vite also copies the asyncify wasm into `dist/assets/` though the worker loads it from `/runtime/`. Decide: pin one runtime variant, serve the runtime from R2 behind our own origin, or drop the duplicate.
+- [ ] Fit the 25 MiB per-file cap on Cloudflare Pages (decided 2026-10-09). Over the cap: the model `model_quantized.onnx` (58.9 MB), `ort-wasm-simd-threaded.asyncify.wasm` (26.9 MB, the variant the browser loads) and `.jsep.wasm` (28.4 MB). Solution:
+  - `scripts/fetch-model.ts` splits every file over 24 MiB into numbered parts plus a small manifest (part names, sizes, sha256 of the whole file).
+  - The model: the worker sets transformers.js `env.fetch` so a request for the model file fetches the parts and returns them joined as one response. Integrity check unchanged, on the joined bytes.
+  - The runtime: precompress the wasm we load (gzip, ~6.7 MB, under the cap without splitting), unpack in the worker with `DecompressionStream` and hand the bytes to onnxruntime as `wasmBinary`. Ship only the variants we load.
+  - Remove the duplicate asyncify wasm Vite copies into `dist/assets/`.
+  - Build step fails if any file in `dist/` is over 25 MiB.
+  - Tests: Vitest for split and join (byte-identical, hash checked); Playwright `no-egress` still green; the service worker in Phase 4 precaches the parts.
 - [ ] Cloudflare Pages deploy to `skrubba.promptagency.se` with `_headers` for CSP and caching.
 - [ ] Public `README.md`: what it is, what it is not (not a compliance guarantee), run locally, verify no network calls, credits to maskera and KBLab, MIT license.
 - [ ] Footer: "Bygger på maskera (MIT) och KB-BERT (CC0). Öppen källkod."
