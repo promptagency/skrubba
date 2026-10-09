@@ -13,7 +13,8 @@
     "test": "vitest run",
     "fetch-model": "tsx scripts/fetch-model.ts",
     "predev": "npm run fetch-model",
-    "prebuild": "npm run fetch-model"
+    "prebuild": "npm run fetch-model",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.1",
@@ -23,6 +24,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

@@ -6,3 +6,5 @@ spike/RESULTS.md
 public/models/
 public/runtime/
 .cache
+test-results
+playwright-report
