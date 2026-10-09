@@ -5,3 +5,4 @@ import { createWorkerBackend } from "./workerBackend.ts";
 export function createBrowserMasker(): MaskeraMasker {
   return new MaskeraMasker(createWorkerBackend());
 }
+export { parseWordList } from "./wordList.ts";
