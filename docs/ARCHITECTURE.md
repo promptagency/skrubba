@@ -30,10 +30,12 @@ Only `engine/maskeraMasker.ts` and `engine/worker.ts` import `maskera` or `@hugg
 ## Masker interface
 
 ```ts
-export type EntityType =
+export type EntityType =   // maskera's labels verbatim, so placeholders match its format
   | "NAMN" | "PLATS" | "ORGANISATION" | "ADRESS"
-  | "PERSONNUMMER" | "TELEFON" | "EPOST" | "ORGNR" | "POSTNUMMER"
-  | "BANKGIRO" | "PLUSGIRO" | "IBAN" | "KORT" | "IP" | "URL"
+  | "PERSONNUMMER" | "SAMORDNINGSNUMMER" | "ORGANISATIONSNUMMER"
+  | "TELEFON" | "EPOST" | "POSTNUMMER" | "LAGENHETSNUMMER"
+  | "BANKGIRO" | "PLUSGIRO" | "IBAN" | "KORTNUMMER" | "KONTONUMMER"
+  | "IP_ADRESS" | "URL" | "JOURNALNUMMER" | "REGNUMMER"
   | "ORD";   // manual selection or word list
 
 export interface Entity {
@@ -73,6 +75,10 @@ Numbering is assigned once per session per unique value and never reused. If the
 Priority on overlap: manual > word list > rules > model. Lower-priority spans that partially overlap a higher-priority span are dropped. Organisations from the model are active by default.
 
 Values are merged across surface forms: case-insensitive, trailing genitive `s` stripped for NAMN/PLATS/ORGANISATION, whitespace normalised. "Anna Berg", "anna berg" and "Anna Bergs" share one placeholder.
+
+First names are linked to full names. A single-word NAMN whose normalised form (as above) equals the first word of exactly one multi-word NAMN in the same text joins that entity: "Johan" and "Johans" get the placeholder of "Johan Lindqvist". If two or more full names share the first name ("Anna Berg", "Anna Ek"), a lone "Anna" is not linked and gets its own placeholder, because a wrong link restores the wrong person. Surnames alone are not linked in v1.
+
+A linked entity has one `value`, the full name, and restore writes that for every occurrence: an answer that said "[NAMN_1]" where the original said "Johan" comes back as "Johan Lindqvist". Each occurrence keeps its own `surface`, so the entity panel can show the linked forms.
 
 ## Long texts
 
