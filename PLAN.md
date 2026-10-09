@@ -42,17 +42,27 @@ Notes from Phase 1:
 
 Follow `docs/UX.md` exactly.
 
-- [ ] Layout: textarea left, entity panel right, status bar bottom. Mode switch top (Skrubba / Byt tillbaka / Nyckel).
-- [ ] On paste or typing (debounced 300 ms): rules + word list immediately, NER when ready. Highlight overlay behind an editable textarea.
-- [ ] Entity panel: one row per unique value with type, count, toggle Skrubba / Behåll. Click row → scroll and flash occurrences. Organisations active by default.
-- [ ] Manual masking: select text → `M` or floating "Skrubba markering". All occurrences become one `ORD` entity.
-- [ ] Word list: collapsible field in the panel, "Egna ord", one term per line. Changes re-run matching live.
-- [ ] "Kopiera" button + counter ("14 uppgifter skrubbade"). Clipboard API with fallback.
-- [ ] Model loading state in status bar; rules work meanwhile.
-- [ ] "Visa exempel" loads the example text from `docs/COPY.md`.
-- [ ] Keyboard shortcuts per `docs/UX.md`.
+- [x] Layout: textarea left, entity panel right, status bar bottom. Mode switch top (Skrubba / Byt tillbaka / Nyckel).
+- [x] On paste or typing (debounced 300 ms): rules + word list immediately, NER when ready. Highlight overlay behind an editable textarea.
+- [x] Entity panel: one row per unique value with type, count, toggle Skrubba / Behåll. Click row → scroll and flash occurrences. Organisations active by default.
+- [x] Manual masking: select text → `M` or floating "Skrubba markering". All occurrences become one `ORD` entity.
+- [x] Word list: collapsible field in the panel, "Egna ord", one term per line. Changes re-run matching live.
+- [x] "Kopiera" button + counter ("14 uppgifter skrubbade"). Clipboard API with fallback.
+- [x] Model loading state in status bar; rules work meanwhile.
+- [x] "Visa exempel" loads the example text from `docs/COPY.md`.
+- [x] Keyboard shortcuts per `docs/UX.md`.
 
 Done when: a user can paste, review, adjust, add a word, and copy in under 30 seconds without the mouse.
+
+Status 2026-10-09: done. Playwright `scrub.spec.ts` does it keyboard-only in about 5 s after model load; 121 Vitest tests, 6 Playwright tests green.
+
+Decisions and notes from Phase 2:
+- "Kopiera" is disabled while the model loads, so rules-only text with unmasked names cannot be copied by accident. Once the model fails (rules-only state) copying is allowed again; the status line tells the user to mark names themselves.
+- Copy re-masks the current text instead of trusting highlights that may be 300 ms old.
+- The loading percentage is real: the worker counts weight bytes through transformers.js `env.fetch`.
+- Byt tillbaka and Nyckel tabs are visible but disabled until Phase 3. The "?" link and the "Inget lämnar din dator" link to `/sa-funkar-det` wait for Phase 4.
+- The model tags months as places ("maj" → Plats) in the example. Over-masking, fixable with Behåll.
+
 
 ## Phase 3 – Byt tillbaka and Nyckel modes
 
@@ -100,3 +110,4 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 - ~~Display names for maskera's extra types.~~ Added to `docs/COPY.md` 2026-10-09.
 - **Enable maskera's `regnummer` rule?** Off by default upstream (plate shape = booking-code shape). Leaning on: a miss is worse than over-masking. Decide in Phase 1.
 - ~~Org.nr with a bad check digit is not masked.~~ Decided 2026-10-09: our own context rule masks any NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer", checksum or not. Not reported upstream.
+- **Copy strings not in `docs/COPY.md`.** (1) What to show when copying fails (clipboard blocked); today nothing is shown. (2) The hover label on a highlight is composed as "Namn · [NAMN_1] · Skrubba". (3) Screen-reader label of a panel row is "value, type, count, Skrubba/Behåll". Owner's copy call.
