@@ -6,10 +6,13 @@ Phased plan for Skrubba. Each phase ends in something runnable. Do not start a p
 
 Goal: prove the engine works on real-looking texts before any UI exists.
 
-- [ ] Scaffold Vite + React + TS. Install `maskera`, `@huggingface/transformers`.
-- [ ] `scripts/spike.ts` (Node): run `redactWithNer` on texts in `spike/texts/*.txt` (owner supplies 3–5 texts, see `spike/README.md`). Print masked text, leaks against `*.expected.txt`, over-masking, timings.
-- [ ] Record results in `spike/RESULTS.md`.
-- [ ] Decision gate: if leaks on names are unacceptable, evaluate `dtype: "q8"` and, as fallback, KBLab's `bert-base-swedish-lowermix-reallysimple-ner` (475 MB). Record the decision.
+- [x] Scaffold Vite + React + TS. Install `maskera`, `@huggingface/transformers`.
+- [x] `scripts/spike.ts` (Node): run `redactWithNer` on texts in `spike/texts/*.txt` (owner supplies 3–5 texts, see `spike/README.md`). Print masked text, leaks against `*.expected.txt`, over-masking, timings.
+- [x] Record results in `spike/RESULTS.md`.
+- [x] Decision gate: if leaks on names are unacceptable, evaluate `dtype: "q8"` and, as fallback, KBLab's `bert-base-swedish-lowermix-reallysimple-ner` (475 MB). Record the decision.
+- [ ] Re-run `npm run spike` on the owner's real texts and confirm the decision below.
+
+Decision (2026-10-09, on five stand-in texts written by Claude): **go, dtype q8 (provisional).** Leaks out of 76 expected values: q4 3, q8 1, rules only 57. Zero NAMN and PERSONNUMMER leaks with either dtype, so KBLab was not evaluated. q8 is chosen because a miss is worse than over-masking and it ran faster on Node CPU; the cost is +16 MB once. maskera's published benchmarks are on q4, so re-check browser WASM speed for both in Phase 1. Full numbers and findings in `spike/RESULTS.md` (gitignored).
 
 Done when: `spike/RESULTS.md` exists with a go/no-go and the chosen dtype.
 
@@ -71,5 +74,10 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 
 ## Open questions
 
-- Model dtype after spike (q4 vs q8).
+- ~~Model dtype after spike (q4 vs q8).~~ q8, provisional until the spike runs on real texts (see Phase 0).
 - Should the word list support simple patterns (e.g. `Projekt *`)? Default: no, plain terms only in v1.
+- **First name linked to full name.** maskera gives "Johan Lindqvist", "Johan" and "Johans" three placeholders. Genitive merge is in `docs/ARCHITECTURE.md`; linking a lone first name to an earlier full name is not. Without it the LLM cannot tell they are the same person, but a wrong link would restore the wrong name. Decide before Phase 1 merging.
+- **Same value, different types.** "Göteborg" came back as both PLATS and ORGANISATION in one text. Proposal: merge by value regardless of type, keep the first type seen.
+- **Split spans.** "Volvo Personvagnar" → `[ORGANISATION_2] Personvagnar`, "Arc'teryx" → `[ORGANISATION_7]'[NAMN_5]`. Proposal: merge adjacent spans separated only by a space or apostrophe.
+- **Type list in `docs/ARCHITECTURE.md` differs from maskera's labels.** maskera emits ORGANISATIONSNUMMER, SAMORDNINGSNUMMER, LAGENHETSNUMMER, IP_ADRESS, KORTNUMMER, KONTONUMMER, JOURNALNUMMER, REGNUMMER. CLAUDE.md says follow maskera's format, so the doc (and the type table in `docs/COPY.md`) should follow. Needs a copy decision for the new types' display names.
+- **Org.nr with a bad check digit is not masked** (personnummer is typo-tolerant, org.nr is not). Options: our own context rule ("org.nr" before the number) or an upstream issue to maskera.
