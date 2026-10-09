@@ -22,6 +22,7 @@ Done when: `spike/RESULTS.md` exists with a go/no-go and the chosen dtype.
 - [ ] `src/engine/maskeraMasker.ts` implementing it. Rules sync on main thread; NER in `src/engine/worker.ts`.
 - [ ] `src/engine/wordList.ts`: user-supplied terms (one per line), matched case-insensitively as whole words, typed `ORD`, numbered like other entities. Applied before NER, wins over model spans.
 - [ ] First-name linking (decided 2026-10-09). A lone single-word NAMN whose case-folded, genitive-stripped form equals the first word of exactly one multi-word NAMN in the same text gets that entity's placeholder ("Johan", "Johans" → the [NAMN_n] of "Johan Lindqvist"). If two or more full names share that first name ("Anna Berg", "Anna Ek"), do not link; "Anna" gets its own placeholder, since a wrong link restores the wrong person. Restore writes the full name ("Johan Lindqvist") for every occurrence; each occurrence keeps its surface form so the UI can show which forms were linked. Surnames alone are not linked in v1. Tests: link, genitive link, ambiguous first name stays separate, link survives text edits without renumbering.
+- [ ] Merging (decided 2026-10-09): same value with different types shares one entity, typed by the first type seen; adjacent model spans separated only by a space or apostrophe are joined; org.nr context rule. Tests for each.
 - [ ] Self-host model + ONNX runtime in `public/models/` and `public/runtime/`; configure transformers.js `env` per maskera `docs/PRODUCTION.md`.
 - [ ] Strict CSP in `index.html`. No `unsafe-inline` scripts.
 - [ ] Vitest: round trip on 20 fixture sentences; same value → same placeholder; word list wins over model; restore tolerant of casing/dash/space variants.
@@ -78,8 +79,8 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 - ~~Model dtype after spike (q4 vs q8).~~ q8, provisional until the spike runs on real texts (see Phase 0).
 - Should the word list support simple patterns (e.g. `Projekt *`)? Default: no, plain terms only in v1.
 - ~~First name linked to full name.~~ Decided 2026-10-09: link. See the Phase 1 task.
-- **Same value, different types.** "Göteborg" came back as both PLATS and ORGANISATION in one text. Proposal: merge by value regardless of type, keep the first type seen.
-- **Split spans.** "Volvo Personvagnar" → `[ORGANISATION_2] Personvagnar`, "Arc'teryx" → `[ORGANISATION_7]'[NAMN_5]`. Proposal: merge adjacent spans separated only by a space or apostrophe.
+- ~~Same value, different types.~~ Decided 2026-10-09: merge by value regardless of type, keep the first type seen.
+- ~~Split spans.~~ Decided 2026-10-09: merge adjacent model spans separated only by a space or apostrophe. Does not fix "Volvo Personvagnar", where the model left "Personvagnar" unmasked.
 - ~~Display names for maskera's extra types.~~ Added to `docs/COPY.md` 2026-10-09.
 - **Enable maskera's `regnummer` rule?** Off by default upstream (plate shape = booking-code shape). Leaning on: a miss is worse than over-masking. Decide in Phase 1.
-- **Org.nr with a bad check digit is not masked** (personnummer is typo-tolerant, org.nr is not). Options: our own context rule ("org.nr" before the number) or an upstream issue to maskera.
+- ~~Org.nr with a bad check digit is not masked.~~ Decided 2026-10-09: our own context rule masks any NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer", checksum or not. Not reported upstream.

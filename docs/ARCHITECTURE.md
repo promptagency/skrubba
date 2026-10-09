@@ -72,9 +72,13 @@ Numbering is assigned once per session per unique value and never reused. If the
 
 ## Merging rules and model
 
-Priority on overlap: manual > word list > rules > model. Lower-priority spans that partially overlap a higher-priority span are dropped. Organisations from the model are active by default.
+Priority on overlap: manual > word list > rules > model. Lower-priority rule spans that overlap a higher-priority span are dropped. Model spans are clipped instead, as maskera does, so the part outside the higher-priority span stays masked. Organisations from the model are active by default.
 
-Values are merged across surface forms: case-insensitive, trailing genitive `s` stripped for NAMN/PLATS/ORGANISATION, whitespace normalised. "Anna Berg", "anna berg" and "Anna Bergs" share one placeholder.
+Adjacent model spans separated only by a space or an apostrophe are joined into one span ("Arc'teryx" came back as ORGANISATION + NAMN). The joined span is ORGANISATION if either part was, otherwise the first part's type.
+
+Our own context rule masks NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer" as ORGANISATIONSNUMMER even when the checksum fails. maskera only masks Luhn-valid org.nr.
+
+Values are merged across surface forms: case-insensitive, trailing genitive `s` stripped for NAMN/PLATS/ORGANISATION, whitespace normalised. "Anna Berg", "anna berg" and "Anna Bergs" share one placeholder. The merge ignores type: the same value found as PLATS and as ORGANISATION ("Göteborg") is one entity, typed by the first type seen in the session.
 
 First names are linked to full names. A single-word NAMN whose normalised form (as above) equals the first word of exactly one multi-word NAMN in the same text joins that entity: "Johan" and "Johans" get the placeholder of "Johan Lindqvist". If two or more full names share the first name ("Anna Berg", "Anna Ek"), a lone "Anna" is not linked and gets its own placeholder, because a wrong link restores the wrong person. Surnames alone are not linked in v1.
 
