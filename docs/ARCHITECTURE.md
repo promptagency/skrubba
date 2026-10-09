@@ -4,14 +4,23 @@
 
 ```
 src/
-  config.ts              product name, slug, model paths, version
+  config.ts              product name, URL, pinned model (revision, dtype, sha256), paths
   engine/
-    Masker.ts            interface + types (Entity, Key, MaskResult)
-    maskeraMasker.ts     implementation on top of `maskera`
-    worker.ts            Web Worker: loads model, runs NER
+    Masker.ts            interface + types (Entity, Span, Key, RestoreResult)
+    index.ts             createBrowserMasker()
+    maskeraMasker.ts     Masker implementation: merges all span sources
+    rules.ts             rule layer (@maskera/core detectors + our context rules)
+    contextRules.ts      our own rules, e.g. labelled org.nr with a bad checksum
+    wordList.ts          manual and word-list terms → ORD spans, whole word, case-insensitive
+    spans.ts             priority, clipping, joining split model spans
+    entities.ts          session numbering, value merging, first-name linking
+    applyMask.ts         masked text + key
     tolerantRestore.ts   placeholder normalisation + suggestions
-    wordList.ts          user terms → ORD entities, whole-word, case-insensitive
-    chunk.ts             long-text chunking with overlap
+    ner.ts               NerBackend interface
+    nerModel.ts          maskera recognizer on our files + model spans
+    worker.ts            Web Worker: loads model, verifies sha256, runs NER
+    workerBackend.ts     main-thread side of the worker protocol
+    protocol.ts          worker message types
   state/
     session.tsx          React context: text, entities, key (memory only)
   ui/
@@ -19,13 +28,15 @@ src/
     RestoreView, KeyView, StatusBar, Toast
   pages/
     HowItWorks.tsx       /sa-funkar-det
+scripts/
+  fetch-model.ts         downloads the pinned model (sha256-checked), copies the runtime
 public/
-  models/<model-id>/...  self-hosted ONNX + tokenizer + config
-  runtime/               onnxruntime-web wasm files
+  models/<model-dir>/... self-hosted ONNX + tokenizer + config (gitignored)
+  runtime/               onnxruntime-web wasm files (gitignored)
   _headers               Cloudflare Pages headers (CSP, cache)
 ```
 
-Only `engine/maskeraMasker.ts` and `engine/worker.ts` import `maskera` or `@huggingface/transformers`.
+Only `engine/rules.ts` (`@maskera/core`), `engine/nerModel.ts` (`maskera`) and `engine/worker.ts` (`@huggingface/transformers`) import the engine libraries. `nerModel.ts` is reached only from the worker and from Node tests, so the main bundle never contains the model package.
 
 ## Masker interface
 
@@ -86,7 +97,7 @@ A linked entity has one `value`, the full name, and restore writes that for ever
 
 ## Long texts
 
-KB-BERT max 512 tokens. `chunk.ts` splits on paragraph boundaries into ≤ 400-token windows with 50-token overlap, runs NER per chunk in the worker, and merges spans; a span found in the overlap by either chunk counts once.
+KB-BERT max 512 tokens. maskera's recognizer already splits text over 480 tokens at a boundary it picks (`splitPoint`) and runs each part, so there is no `chunk.ts` for now. Phase 4 measures 10 000 chars and revisits this if boundaries cut entities.
 
 ## Tolerant restore
 
@@ -102,8 +113,8 @@ Never restore a placeholder number that does not exist in the key. Report it.
 
 ## Privacy enforcement
 
-- `index.html` CSP: `default-src 'self'; script-src 'self'; connect-src 'self'; worker-src 'self' blob:; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'`.
-- transformers.js env: `allowRemoteModels = false`, `allowLocalModels = true`, `localModelPath = "/models/"`, `backends.onnx.wasm.wasmPaths = "/runtime/"`.
+- CSP meta tag, added at build time by `vite.config.ts` (the dev server needs inline scripts): `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; worker-src 'self' blob:; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'`. `'wasm-unsafe-eval'` is required for onnxruntime to compile WASM; it does not allow JavaScript eval.
+- transformers.js env: `allowRemoteModels = false`, `allowLocalModels = true`, `localModelPath = "/models/"`, `backends.onnx.wasm.wasmPaths = "/runtime/"`. The worker also sha256-checks the ONNX weights against `config.ts` before reporting ready.
 - Playwright test `no-egress.spec.ts`: records every request during a full mask → restore session and asserts all URLs share the app origin.
 - Unit test `no-storage.spec.ts`: proxies `localStorage`, `sessionStorage`, `indexedDB`, `document.cookie` and asserts no access during a session.
 - Service worker caches only same-origin assets.
@@ -114,7 +125,7 @@ Never restore a placeholder number that does not exist in the key. Report it.
 main → worker: { type: "init" }
 worker → main: { type: "progress", loaded, total } ... { type: "ready" }
 main → worker: { type: "ner", id, text }
-worker → main: { type: "ner-result", id, spans: [{start,end,label,score}] }
+worker → main: { type: "ner-result", id, spans: [{start,end,type,source:"model"}] }
 worker → main: { type: "error", id?, message }
 ```
 

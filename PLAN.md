@@ -18,16 +18,25 @@ Done when: `spike/RESULTS.md` exists with a go/no-go and the chosen dtype.
 
 ## Phase 1 – Engine wrapper + self-hosted model
 
-- [ ] `src/engine/Masker.ts` interface: `init(onProgress)`, `maskRules(text)`, `mask(text)`, `applyMask`, `restore`, types `Entity`, `Key`, `WordList`.
-- [ ] `src/engine/maskeraMasker.ts` implementing it. Rules sync on main thread; NER in `src/engine/worker.ts`.
-- [ ] `src/engine/wordList.ts`: user-supplied terms (one per line), matched case-insensitively as whole words, typed `ORD`, numbered like other entities. Applied before NER, wins over model spans.
-- [ ] First-name linking (decided 2026-10-09). A lone single-word NAMN whose case-folded, genitive-stripped form equals the first word of exactly one multi-word NAMN in the same text gets that entity's placeholder ("Johan", "Johans" → the [NAMN_n] of "Johan Lindqvist"). If two or more full names share that first name ("Anna Berg", "Anna Ek"), do not link; "Anna" gets its own placeholder, since a wrong link restores the wrong person. Restore writes the full name ("Johan Lindqvist") for every occurrence; each occurrence keeps its surface form so the UI can show which forms were linked. Surnames alone are not linked in v1. Tests: link, genitive link, ambiguous first name stays separate, link survives text edits without renumbering.
-- [ ] Merging (decided 2026-10-09): same value with different types shares one entity, typed by the first type seen; adjacent model spans separated only by a space or apostrophe are joined; org.nr context rule. Tests for each.
-- [ ] Self-host model + ONNX runtime in `public/models/` and `public/runtime/`; configure transformers.js `env` per maskera `docs/PRODUCTION.md`.
-- [ ] Strict CSP in `index.html`. No `unsafe-inline` scripts.
-- [ ] Vitest: round trip on 20 fixture sentences; same value → same placeholder; word list wins over model; restore tolerant of casing/dash/space variants.
+- [x] `src/engine/Masker.ts` interface: `init(onProgress)`, `maskRules(text)`, `mask(text)`, `applyMask`, `restore`, types `Entity`, `Key`, `WordList`.
+- [x] `src/engine/maskeraMasker.ts` implementing it. Rules sync on main thread; NER in `src/engine/worker.ts`.
+- [x] `src/engine/wordList.ts`: user-supplied terms (one per line), matched case-insensitively as whole words, typed `ORD`, numbered like other entities. Applied before NER, wins over model spans.
+- [x] First-name linking (decided 2026-10-09). A lone single-word NAMN whose case-folded, genitive-stripped form equals the first word of exactly one multi-word NAMN in the same text gets that entity's placeholder ("Johan", "Johans" → the [NAMN_n] of "Johan Lindqvist"). If two or more full names share that first name ("Anna Berg", "Anna Ek"), do not link; "Anna" gets its own placeholder, since a wrong link restores the wrong person. Restore writes the full name ("Johan Lindqvist") for every occurrence; each occurrence keeps its surface form so the UI can show which forms were linked. Surnames alone are not linked in v1. Tests: link, genitive link, ambiguous first name stays separate, link survives text edits without renumbering.
+- [x] Merging (decided 2026-10-09): same value with different types shares one entity, typed by the first type seen; adjacent model spans separated only by a space or apostrophe are joined; org.nr context rule. Tests for each.
+- [x] Self-host model + ONNX runtime in `public/models/` and `public/runtime/`; configure transformers.js `env` per maskera `docs/PRODUCTION.md`.
+- [x] Strict CSP in `index.html`. No `unsafe-inline` scripts.
+- [x] Vitest: round trip on 20 fixture sentences; same value → same placeholder; word list wins over model; restore tolerant of casing/dash/space variants.
 
 Done when: `mask` → `restore` round trip passes and a Playwright test confirms zero requests to non-same-origin hosts.
+
+Status 2026-10-09: done. 97 Vitest tests (20 sentences round-trip through the real q8 model with zero leaks), Playwright `no-egress` green and shown to fail when the runtime points at a CDN. `src/ui/App.tsx` is a throwaway harness until Phase 2.
+
+Notes from Phase 1:
+- `Masker` gained a `MaskInput` (`wordList`, `manual`) argument; manual terms are ORD spans with top priority.
+- No `chunk.ts`: maskera already splits long text (see ARCHITECTURE.md, Long texts).
+- Model load progress is coarse (start, done) for self-hosted files. `status.loading` wants a percentage; Phase 2 needs either a byte-level progress source or a different string.
+- Placeholder numbers are claimed as the user types (debounced), so a half-typed name can use up a number. Stable, but numbers may have gaps.
+
 
 ## Phase 2 – The one screen (Skrubba mode)
 
@@ -66,6 +75,7 @@ Done when: Lighthouse PWA + accessibility pass, offline works, Playwright suite 
 
 ## Phase 5 – Ship
 
+- [ ] Cloudflare Pages caps files at 25 MiB. `ort-wasm-simd-threaded.asyncify.wasm` (26.9 MB) and `.jsep.wasm` (28.4 MB) exceed it. Vite also copies the asyncify wasm into `dist/assets/` though the worker loads it from `/runtime/`. Decide: pin one runtime variant, serve the runtime from R2 behind our own origin, or drop the duplicate.
 - [ ] Cloudflare Pages deploy to `skrubba.promptagency.se` with `_headers` for CSP and caching.
 - [ ] Public `README.md`: what it is, what it is not (not a compliance guarantee), run locally, verify no network calls, credits to maskera and KBLab, MIT license.
 - [ ] Footer: "Bygger på maskera (MIT) och KB-BERT (CC0). Öppen källkod."
