@@ -128,6 +128,7 @@ Never restore a placeholder number that does not exist in the key. Report it.
 - Playwright test `no-egress.spec.ts`: records every request during a full mask → restore session and asserts all URLs share the app origin.
 - Playwright test in `restore.spec.ts`: proxies `localStorage`, `sessionStorage`, `indexedDB` and `document.cookie` before the app loads, runs a full session (scrub, copy, restore, download key) and asserts none was touched and nothing was persisted, workers included.
 - Service worker caches only same-origin assets. See Delivery and offline.
+- Cross-origin isolation (COOP `same-origin`, COEP `require-corp`) so onnxruntime can use threads. Since every resource is same-origin, `require-corp` blocks nothing; it also stops any future cross-origin embed from slipping in unnoticed.
 
 ## Delivery and offline
 
@@ -155,8 +156,12 @@ worker → main: { type: "error", id?, message }
 
 If the worker fails to initialise (old browser, blocked WASM), the app continues in rules-only mode and says so in the status bar. It never silently degrades.
 
+## Routing
+
+Two paths and no router library: `/` is the app, `/sa-funkar-det` the explainer (`src/ui/route.ts`, history API). The session stays in memory while the page is shown. The service worker answers every navigation with the app shell; Cloudflare Pages serves `index.html` for unknown paths when there is no `404.html`.
+
 ## Performance budgets
 
 - Rules on 10 000 chars: < 50 ms main thread.
-- NER on 10 000 chars after load: < 3 s.
+- NER on 10 000 chars after load: < 3 s. Measured about 1.4 s in Chromium with threads (`tests/e2e/perf.spec.ts`).
 - First paint: < 1 s on 3G. Model loads lazily after first paint.

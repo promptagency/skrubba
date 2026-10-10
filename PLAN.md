@@ -92,13 +92,24 @@ Decisions from Phase 3:
 
 ## Phase 4 – Trust and polish
 
-- [ ] Status bar trust line "Inget lämnar din dator" → `/sa-funkar-det` page per `docs/COPY.md`.
-- [ ] PWA manifest and icons (installable). The offline service worker and its tests were done early, 2026-10-09 (see Phase 2 notes).
-- [ ] Accessibility: full keyboard, visible focus, ARIA live region for status, colour + label for types, contrast AA.
-- [ ] Performance: 10 000 chars masked in < 3 s after model load. Chunk with overlap, dedupe across boundaries.
-- [ ] Mobile: usable at 390 px; entity panel becomes a bottom sheet.
+- [x] Status bar trust line "Inget lämnar din dator" → `/sa-funkar-det` page per `docs/COPY.md`.
+- [x] PWA manifest and icons (installable). The offline service worker and its tests were done early, 2026-10-09 (see Phase 2 notes).
+- [x] Accessibility: full keyboard, visible focus, ARIA live region for status, colour + label for types, contrast AA.
+- [x] Performance: 10 000 chars masked in < 3 s after model load. Chunk with overlap, dedupe across boundaries.
+- [x] Mobile: usable at 390 px; entity panel becomes a bottom sheet.
 
 Done when: Lighthouse PWA + accessibility pass, offline works, Playwright suite green.
+
+Status 2026-10-10: done. 161 Vitest tests; 94 Playwright tests green in Chromium, Firefox and WebKit (38 skips are Chromium-only checks). Lighthouse 12, mobile emulation, production build: performance 100, accessibility 100, best practices 100, CLS 0, TBT 0 ms.
+
+Notes from Phase 4:
+- Lighthouse removed its PWA category in v12, so "Lighthouse PWA" is replaced by Chrome's own manifest parse (`Page.getAppManifest`, no errors) plus a manifest test in all three browsers. Accessibility is checked on every view, light and dark, desktop and 390 px, with axe-core (WCAG 2.2 AA), the engine behind Lighthouse's score.
+- Performance: 10 000 characters masked in about 1.4 s in Chromium, from 4.4 s, by turning on cross-origin isolation (COOP `same-origin`, COEP `require-corp`) so onnxruntime runs on several threads. Skrubba loads nothing cross-origin, so the headers block nothing. Set in `public/_headers` and the Vite servers.
+- No own chunking: a 10 000-character test with ~200 different names through the real model leaks no name, so maskera's splitting is enough. Rules on 10 000 characters run in under 50 ms.
+- The status line is read to screen readers in quarters while loading; the visible line shows every percent with fixed-width digits, and on narrow screens the trust link has its own line. Together that took layout shift to 0.
+- Mobile: the entity panel is a bottom sheet behind an "{n} uppgifter" chip; Esc or a tap outside closes it.
+- The app icon (`[ ▬ ]` in white on green, `scripts/make-icons.ts`) is a placeholder for the owner to replace.
+
 
 ## Phase 5 – Ship
 
@@ -122,3 +133,4 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 - **Enable maskera's `regnummer` rule?** Off by default upstream (plate shape = booking-code shape). Leaning on: a miss is worse than over-masking. Decide in Phase 1.
 - ~~Org.nr with a bad check digit is not masked.~~ Decided 2026-10-09: our own context rule masks any NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer", checksum or not. Not reported upstream.
 - **Copy strings not in `docs/COPY.md`.** (1) What to show when copying fails (clipboard blocked); today nothing is shown, though the key is still recorded. (2) The hover label on a highlight is composed as "Namn · [NAMN_1] · Skrubba". (3) Screen-reader label of a panel row is "value, type, count, Skrubba/Behåll". Owner's copy call.
+- **Repo URL for /sa-funkar-det.** The credits line links "Öppen källkod från Prompt Agency" to the repo once `REPO_URL` in `src/config.ts` is set. Empty while the repo is private, so the line shows without a link.
