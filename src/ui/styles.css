@@ -432,6 +432,7 @@ kbd {
 .status {
   margin: 0;
   color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .dot-model-loading {
@@ -531,6 +532,13 @@ kbd {
   }
   .status {
     font-size: 13px;
+  }
+  /* Two fixed lines, so the bar keeps its height while the percentage counts. */
+  .status-sep {
+    display: none;
+  }
+  .status-trust {
+    display: block;
   }
   .key-table {
     font-size: 13px;

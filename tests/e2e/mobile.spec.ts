@@ -55,3 +55,18 @@ test("at 390 px the screen passes axe, sheet open", async ({ page, browserName }
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
   expect(violations.map((v) => v.id)).toEqual([]);
 });
+
+test("the status bar keeps its height while the model loads (no layout shift)", async ({ page }) => {
+  await page.addInitScript(() => {
+    const heights = new Set<number>();
+    Object.assign(window, { __heights: heights });
+    const tick = () => {
+      const footer = document.querySelector("footer");
+      if (footer) heights.add(Math.round(footer.getBoundingClientRect().height));
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  await openReady(page);
+  expect(await page.evaluate(() => [...(window as unknown as { __heights: Set<number> }).__heights])).toHaveLength(1);
+});
