@@ -122,6 +122,22 @@ test.describe("clicking a highlighted word in the text", () => {
     await expect(page.locator(`mark[data-ph="${ph}"]`)).not.toHaveClass(/hl-kept/);
   });
 
+  test("a kept word gets a border in its highlight colour, set off from the text", async ({ page }) => {
+    await openReady(page);
+    await editor(page).fill(SHORT);
+    const mark = page.locator("mark.hl-name");
+    const fill = await mark.evaluate((el) => getComputedStyle(el).backgroundColor);
+    const box = await mark.boundingBox();
+    await clickMark(page, (await mark.getAttribute("data-ph"))!);
+    await expect(mark).toHaveClass(/hl-kept/);
+    const kept = await mark.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { bg: s.backgroundColor, color: s.outlineColor, style: s.outlineStyle, offset: s.outlineOffset };
+    });
+    expect(kept).toEqual({ bg: "rgba(0, 0, 0, 0)", color: fill, style: "solid", offset: "1px" });
+    expect(await mark.boundingBox()).toEqual(box); // no layout shift against the textarea
+  });
+
   test("a double-click selects the word and leaves it as it was", async ({ page }) => {
     await openReady(page);
     await editor(page).fill(SHORT);

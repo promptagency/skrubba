@@ -171,28 +171,31 @@ kbd {
   color: transparent;
   border-radius: 3px;
   box-shadow: 0 0 0 1px transparent;
+  background: var(--hl);
 }
 
 .hl-name {
-  background: var(--hl-name);
+  --hl: var(--hl-name);
 }
 .hl-place {
-  background: var(--hl-place);
+  --hl: var(--hl-place);
 }
 .hl-org {
-  background: var(--hl-org);
+  --hl: var(--hl-org);
 }
 .hl-number {
-  background: var(--hl-number);
+  --hl: var(--hl-number);
 }
 .hl-word {
-  background: var(--hl-word);
+  --hl: var(--hl-word);
 }
 
-/* Behåll: still found, shown as a border only. Click to switch back. */
+/* Behåll: still found, shown as a border in the type colour only. An outline
+   takes no layout space, so the marks stay aligned with the textarea text. */
 .hl-kept {
   background: none;
-  box-shadow: inset 0 0 0 1.5px var(--muted);
+  outline: 2px solid var(--hl);
+  outline-offset: 1px;
 }
 
 .hl-flash {
