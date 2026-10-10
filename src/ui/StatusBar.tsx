@@ -13,14 +13,24 @@ function modelText(model: ModelState): string {
   return t("status.rulesOnly");
 }
 
+/** What screen readers hear: the same text, but loading only in quarters so it does not chatter. */
+export function announcement(model: ModelState): string {
+  if (model.status === "loading") return t("status.loading", { pct: Math.floor(model.pct / 25) * 25 });
+  return modelText(model);
+}
+
 export function StatusBar({ model, primary }: Props) {
   return (
     <footer className="statusbar">
-      <p className="status" role="status" data-state={model.status}>
+      <p className="status" data-state={model.status}>
         <span className={`dot dot-model-${model.status}`} aria-hidden="true">
           ●
         </span>{" "}
-        {modelText(model)} ·{" "}
+        <span aria-hidden="true">{modelText(model)}</span>
+        <span className="sr-only" role="status">
+          {announcement(model)}
+        </span>{" "}
+        ·{" "}
         <a href={HOW_PATH} onClick={followLink}>
           {t("status.trust")}
         </a>

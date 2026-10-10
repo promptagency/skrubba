@@ -4,7 +4,7 @@ export const MOD = process.platform === "darwin" ? "Meta" : "Control";
 
 export async function openReady(page: Page) {
   await page.goto("/");
-  await expect(page.getByRole("status").first()).toHaveAttribute("data-state", "ready", { timeout: 90_000 });
+  await expect(page.locator("p.status")).toHaveAttribute("data-state", "ready", { timeout: 90_000 });
 }
 
 export const editor = (page: Page) => page.getByRole("textbox", { name: "Skrubba" });

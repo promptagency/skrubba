@@ -7,7 +7,7 @@ test("after one visit the app works offline, model included", async ({ page, con
 
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole("status").first()).toHaveAttribute("data-state", "ready", { timeout: 60_000 });
+  await expect(page.locator("p.status")).toHaveAttribute("data-state", "ready", { timeout: 60_000 });
   await editor(page).fill("Igår ringde Johan Lindqvist.");
   await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toContainText("Namn");
 });
@@ -24,7 +24,7 @@ test("a second visit downloads nothing from the network", async ({ page, context
     if (res && /\/(models|runtime)\//.test(r.url())) seen.push({ url: r.url(), fromServiceWorker: res.fromServiceWorker() });
   });
   await page.reload();
-  await expect(page.getByRole("status").first()).toHaveAttribute("data-state", "ready", { timeout: 60_000 });
+  await expect(page.locator("p.status")).toHaveAttribute("data-state", "ready", { timeout: 60_000 });
   expect(seen.length).toBeGreaterThan(0);
   expect(seen.filter((r) => !r.fromServiceWorker)).toEqual([]);
 });

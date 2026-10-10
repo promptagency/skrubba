@@ -15,7 +15,7 @@ function build(name: string, env: Record<string, string>) {
 }
 
 const buildId = (page: Page) => page.locator('meta[name="skrubba-build"]').getAttribute("content");
-const status = (page: Page) => page.getByRole("status").first();
+const status = (page: Page) => page.locator("p.status");
 const safely = <T>(fn: () => Promise<T>) => fn().catch(() => null);
 
 // The page's own requests go through the service worker in control, so the
