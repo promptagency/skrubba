@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: 120_000,
-  use: { baseURL: "http://localhost:4173" },
+  use: { baseURL: "http://localhost:4174" },
   projects: [
     // Only Chromium lets a test read the clipboard.
     {
@@ -15,8 +15,8 @@ export default defineConfig({
     { name: "webkit", use: { ...devices["Desktop Safari"] } },
   ],
   webServer: {
-    command: "npm run build && npx vite preview --port 4173 --strictPort",
-    url: "http://localhost:4173",
+    command: "npm run build && npx vite preview --port 4174 --strictPort",
+    url: "http://localhost:4174",
     timeout: 180_000,
     reuseExistingServer: false,
   },

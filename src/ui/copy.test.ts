@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { COPY, countLabel, EXAMPLE, HOW, t, TYPE_LABEL } from "./copy.ts";
+import { COPY, countLabel, EXAMPLE, FAQ, t, TYPE_LABEL } from "./copy.ts";
 
 const doc = readFileSync("docs/COPY.md", "utf8");
 const rows = (section: string) => {
@@ -42,20 +42,11 @@ describe("t", () => {
   });
 });
 
-describe("Så funkar Skrubba matches docs/COPY.md", () => {
-  const section = doc.slice(doc.indexOf("## Sidan /sa-funkar-det")).split("\n## ")[0];
-
-  it("has the heading", () => {
-    expect(section).toContain(`Rubrik: ${HOW.title}`);
-  });
-
-  it("has the three paragraphs verbatim", () => {
-    const paragraphs = [...section.matchAll(/^\d\. \*\*(.+?)\*\* (.+)$/gm)].map((m) => ({ lead: m[1], body: m[2] }));
-    expect(HOW.paragraphs).toEqual(paragraphs);
-  });
-
-  it("has the credits line", () => {
-    expect(section).toContain(`Sist på sidan: ${HOW.credits}`);
+describe("Vanliga frågor matches docs/COPY.md", () => {
+  it("has every question and answer verbatim, in order", () => {
+    const section = doc.slice(doc.indexOf("## Vanliga frågor")).split("\n## ")[0];
+    const items = [...section.matchAll(/^### (.+)\n\n(.+)$/gm)].map((m) => ({ q: m[1], a: m[2] }));
+    expect(FAQ.items).toEqual(items);
   });
 });
 

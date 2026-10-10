@@ -45,6 +45,6 @@ describe("mergeEntries", () => {
 
 describe("keyFileName", () => {
   it("dates the file", () => {
-    expect(keyFileName(new Date("2026-10-10T08:00:00Z"))).toBe("skrubba-nyckel-2026-10-10.json");
+    expect(keyFileName(new Date("2026-10-10T08:00:00Z"))).toBe("skrubba-kodnyckel-2026-10-10.json");
   });
 });

@@ -40,8 +40,8 @@ test("a dropped PDF is refused with a message and nothing changes", async ({ pag
 
 test("the key button says there is no key, then counts what the key holds", async ({ page }) => {
   await openReady(page);
-  const keyButton = page.getByRole("button", { name: /^Nyckel/ });
-  await expect(keyButton).toHaveText("Ingen nyckel än");
+  const keyButton = page.getByRole("button", { name: /^Kodnyckel/ });
+  await expect(keyButton).toHaveText("Ingen kodnyckel än");
   await editor(page).fill("Johan Lindqvist ringde från Umeå.");
   await expect(rows(page)).toHaveCount(2);
   await copyScrubbed(page).click();

@@ -55,8 +55,10 @@ test.describe("accessibility", () => {
         expect(await violations(page)).toEqual([]);
       });
 
-      test("Så funkar Skrubba", async ({ page }) => {
-        await page.goto("/sa-funkar-det");
+      test("Vanliga frågor", async ({ page }) => {
+        await openReady(page);
+        await page.getByRole("button", { name: "Vanliga frågor" }).click();
+        await expect(page.getByRole("dialog", { name: "Vanliga frågor" })).toBeVisible();
         expect(await violations(page)).toEqual([]);
       });
     });

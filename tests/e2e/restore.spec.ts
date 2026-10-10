@@ -27,7 +27,7 @@ test("Phase 3 round trip: scrub, copy, paste an answer, restore with a suggestio
   await expect(answerBox(page)).toHaveValue(`Hej! Johan Lindqvist bör kontakta HR innan flytten till ${mangled}. [NAMN_9] vet inget.`);
   await expect(page.locator(".hl-restored").filter({ hasText: "Johan Lindqvist" })).toBeVisible();
   await expect(page.getByText(`Hittade ${mangled} i svaret. Menade du ${umea}, alltså Umeå?`)).toBeVisible();
-  await expect(page.getByText("[NAMN_9] finns inte i nyckeln. Kontrollera svaret själv.")).toBeVisible();
+  await expect(page.getByText("[NAMN_9] finns inte i kodnyckeln. Kontrollera svaret själv.")).toBeVisible();
 
   await page.getByRole("button", { name: "Ja" }).click();
   await expect(answerBox(page)).toHaveValue("Hej! Johan Lindqvist bör kontakta HR innan flytten till Umeå. [NAMN_9] vet inget.");
@@ -49,8 +49,8 @@ test("the key downloads, uploads into a fresh tab, and restores there", async ({
   await scrubAndCopy(page);
   const dialog = await openKey(page);
   await expect(dialog.getByText("Filen innehåller riktiga uppgifter.", { exact: false })).toBeVisible();
-  const [download] = await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner nyckel" }).click()]);
-  expect(download.suggestedFilename()).toMatch(/^skrubba-nyckel-\d{4}-\d{2}-\d{2}\.json$/);
+  const [download] = await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner kodnyckel" }).click()]);
+  expect(download.suggestedFilename()).toMatch(/^skrubba-kodnyckel-\d{4}-\d{2}-\d{2}\.json$/);
   const path = await download.path();
   const key = JSON.parse(readFileSync(path, "utf8"));
   expect(key.app).toBe("skrubba");
@@ -71,7 +71,7 @@ test("a file that is not a key is refused with a message", async ({ page }) => {
   await page.goto("/");
   await openKey(page);
   await page.locator('input[type="file"]').setInputFiles({ name: "x.json", mimeType: "application/json", buffer: Buffer.from("{}") });
-  await expect(page.getByText("Filen kunde inte läsas som en nyckel.", { exact: false })).toBeVisible();
+  await expect(page.getByText("Filen kunde inte läsas som en kodnyckel.", { exact: false })).toBeVisible();
 });
 
 test("Rensa allt clears text, entities, words and key after confirming", async ({ page }) => {
@@ -79,13 +79,13 @@ test("Rensa allt clears text, entities, words and key after confirming", async (
   await scrubAndCopy(page);
   const dialog = await openKey(page);
   page.once("dialog", (d) => {
-    expect(d.message()).toBe("Text, uppgifter, egna ord och nyckel raderas. Vill du fortsätta?");
+    expect(d.message()).toBe("Text, uppgifter, egna ord och kodnyckel raderas. Vill du fortsätta?");
     void d.accept();
   });
   await dialog.getByRole("button", { name: "Rensa allt" }).click();
-  await expect(dialog.getByText("Nyckeln skapas när du kopierar en skrubbad text.")).toBeVisible();
+  await expect(dialog.getByText("Kodnyckeln skapas när du kopierar en skrubbad text.")).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("button", { name: /^Nyckel/ })).toHaveText("Ingen nyckel än");
+  await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveText("Ingen kodnyckel än");
   await expect(editor(page)).toHaveValue("");
   await expect(rows(page)).toHaveCount(0);
 });
@@ -143,7 +143,7 @@ test("a whole session never touches web storage or cookies", async ({ page, cont
   await answerBox(page).fill("Hej [NAMN_1].");
   await page.keyboard.press(`${MOD}+Enter`);
   const dialog = await openKey(page);
-  await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner nyckel" }).click()]);
+  await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner kodnyckel" }).click()]);
 
   type Spy = { __touched: string[]; __real: Record<string, () => unknown> };
   expect(await page.evaluate(() => (window as unknown as Spy).__touched)).toEqual([]);
@@ -164,7 +164,7 @@ test("a restore made before the key had the value updates once it does", async (
   await openReady(page);
   await answerBox(page).fill("Hälsa [NAMN_1].");
   await page.keyboard.press(`${MOD}+Enter`);
-  await expect(page.getByText("[NAMN_1] finns inte i nyckeln.", { exact: false })).toBeVisible();
+  await expect(page.getByText("[NAMN_1] finns inte i kodnyckeln.", { exact: false })).toBeVisible();
 
   await editor(page).fill("Anna Berg ringde i går.");
   await expect(rows(page).filter({ hasText: "Anna Berg" })).toHaveCount(1);
@@ -172,5 +172,5 @@ test("a restore made before the key had the value updates once it does", async (
   await expect(page.locator(".toast")).toBeVisible();
 
   await expect(answerBox(page)).toHaveValue("Hälsa Anna Berg.");
-  await expect(page.getByText(/finns inte i nyckeln/)).toHaveCount(0);
+  await expect(page.getByText(/finns inte i kodnyckeln/)).toHaveCount(0);
 });

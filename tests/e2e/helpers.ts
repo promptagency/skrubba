@@ -15,10 +15,10 @@ export const clipboard = (page: Page) => page.evaluate(() => navigator.clipboard
 export const answerBox = (page: Page) => page.getByRole("textbox", { name: "Avskrubba" });
 /** Kopiera under the Skrubba card (the first of the two). */
 export const copyScrubbed = (page: Page) => page.getByRole("button", { name: "Kopiera" }).first();
-/** The key card, opened from the key button next to "Nyckel". */
+/** The key card, opened from the key button next to "Kodnyckel". */
 export async function openKey(page: Page) {
-  await page.getByRole("button", { name: /^Nyckel/ }).click();
-  const dialog = page.getByRole("dialog", { name: "Nyckel" });
+  await page.getByRole("button", { name: /^Kodnyckel/ }).click();
+  const dialog = page.getByRole("dialog", { name: "Kodnyckel" });
   await expect(dialog).toBeVisible();
   return dialog;
 }

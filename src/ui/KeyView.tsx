@@ -11,7 +11,7 @@ export interface KeyViewProps {
   onClear(): void;
 }
 
-/** Nyckel: what each placeholder stands for, download, upload, clear. */
+/** Kodnyckel: what each placeholder stands for, download, upload, clear. */
 export function KeyView({ entries, wordList, entities, onDownload, onUpload, onClear }: KeyViewProps) {
   const file = useRef<HTMLInputElement>(null);
   const [uploadFailed, setUploadFailed] = useState(false);

@@ -22,7 +22,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | app.tagline | Namn, personnummer och hemligheter byts ut mot platshållare. Allt sker i din webbläsare. |
 | mode.scrub | Skrubba |
 | mode.restore | Avskrubba |
-| mode.key | Nyckel |
+| mode.key | Kodnyckel |
 | editor.empty | Klistra in text här eller släpp en textfil. Den stannar i din webbläsare. |
 | editor.example | Visa exempel |
 | gate.lead | Skrubba laddar ner en liten svensk språkmodell till din webbläsare. |
@@ -48,25 +48,27 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | restore.unmatched | Hittade {found} i svaret. Menade du {placeholder}, alltså {value}? |
 | restore.accept | Ja |
 | restore.reject | Nej |
-| restore.unknown | {found} finns inte i nyckeln. Kontrollera svaret själv. |
+| restore.unknown | {found} finns inte i kodnyckeln. Kontrollera svaret själv. |
 | key.col.placeholder | Platshållare |
 | key.col.value | Värde |
 | key.col.type | Typ |
 | key.col.count | Förekomster |
-| key.download | Ladda ner nyckel |
-| key.upload | Ladda upp nyckel |
+| key.download | Ladda ner kodnyckel |
+| key.upload | Ladda upp kodnyckel |
 | key.clear | Rensa allt |
 | key.downloadWarning | Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material. |
-| key.note | Nyckeln finns bara i den här fliken. Stänger du fliken försvinner den. |
-| key.clearConfirm | Text, uppgifter, egna ord och nyckel raderas. Vill du fortsätta? |
-| key.empty | Nyckeln skapas när du kopierar en skrubbad text. |
-| key.uploadError | Filen kunde inte läsas som en nyckel. Välj en fil som du har laddat ner från Skrubba. |
-| key.uploadConfirm | Text, uppgifter, egna ord och nyckel ersätts av innehållet i filen. Vill du fortsätta? |
-| unload.warning | Du har en nyckel som inte är nedladdad. Stänger du fliken går den förlorad. |
+| key.note | Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den. |
+| key.clearConfirm | Text, uppgifter, egna ord och kodnyckel raderas. Vill du fortsätta? |
+| key.empty | Kodnyckeln skapas när du kopierar en skrubbad text. |
+| key.uploadError | Filen kunde inte läsas som en kodnyckel. Välj en fil som du har laddat ner från Skrubba. |
+| key.uploadConfirm | Text, uppgifter, egna ord och kodnyckel ersätts av innehållet i filen. Vill du fortsätta? |
+| unload.warning | Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad. |
 | drop.unsupported | Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den. |
-| key.none | Ingen nyckel än |
+| key.none | Ingen kodnyckel än |
 | key.close | Stäng |
 | footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency. |
+| key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
+| faq.open | Vanliga frågor |
 | caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar. |
 
 ## Att granska
@@ -79,6 +81,13 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `key.none`: på nyckelknappen innan något är kopierat.
 - `key.close`: stänger nyckelkortet.
 - `footer.credits`: sidfoten.
+
+Ändrat 2026-10-10, andra omgången:
+
+- "Nyckel" heter nu "Kodnyckel" överallt, så att ingen tror att det är en krypteringsnyckel. Kodnyckel är det vedertagna ordet för listan som kopplar koder till riktiga personer. Berörda: `mode.key`, `key.none`, `key.download`, `key.upload`, `key.note`, `key.empty`, `key.uploadError`, `key.uploadConfirm`, `key.clearConfirm`, `unload.warning`, `restore.unknown`. Filen heter `skrubba-kodnyckel-ÅÅÅÅ-MM-DD.json`.
+- `key.explainer`: ny, vid knappen och överst i kodnyckelfönstret.
+- `faq.open`: knappen "Vanliga frågor" ersätter "?".
+- Sidan "Så funkar Skrubba" är nu fönstret "Vanliga frågor". De tre styckena är omskrivna till frågor med samma svar, och frågan "Vad är kodnyckeln?" är ny.
 
 ## Typer
 
@@ -119,16 +128,22 @@ Visar båda sorters uppgifter i samma text. Personuppgifter som modellen hittar,
 > Hälsningar
 > Micke
 
-## Sidan /sa-funkar-det
+## Vanliga frågor
 
-Rubrik: Så funkar Skrubba
+Öppnas som ett fönster ovanpå sidan, från knappen "Vanliga frågor" uppe till höger och från "Inget lämnar din dator" i sidfoten. Rubriken är "Vanliga frågor". Varje fråga är en underrubrik med svaret under.
 
-Tre stycken, inte fler.
+### Vad händer med min text?
 
-1. **Vad som händer.** Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret här för att byta tillbaka.
+Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret här för att byta tillbaka.
 
-2. **Så kontrollerar du det själv.** Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på GitHub.
+### Hur kan jag kontrollera att inget skickas?
 
-3. **Det Skrubba inte gör.** Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge nyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.
+Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på GitHub.
 
-Sist på sidan: Skrubba bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency, länk till repot.
+### Vad gör Skrubba inte?
+
+Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.
+
+### Vad är kodnyckeln?
+
+En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att byta tillbaka i svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.

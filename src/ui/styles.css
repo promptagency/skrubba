@@ -109,19 +109,6 @@ kbd {
   top: 0;
 }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
-}
-
-.brand {
-  font-size: 17px;
-  margin: 0;
-}
-
 .caveat {
   margin: 0;
   font-size: 13px;
@@ -485,50 +472,8 @@ code {
   font-size: 0.9em;
 }
 
-/* Så funkar Skrubba */
-
 a {
   color: inherit;
-}
-
-.help {
-  display: inline-grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-a.brand {
-  font-weight: 700;
-  font-size: 17px;
-  text-decoration: none;
-}
-
-.page {
-  min-height: 100%;
-}
-
-.page-body {
-  max-width: 40em;
-  margin: 0 auto;
-  padding: 32px 16px 64px;
-  line-height: 1.6;
-  font-size: 16px;
-}
-
-.page-body h1 {
-  font-size: 26px;
-  margin: 0 0 20px;
-}
-
-.credits {
-  margin-top: 40px;
-  color: var(--muted);
-  font-size: 14px;
 }
 
 .sr-only {
@@ -581,7 +526,27 @@ a.brand {
   padding: 8px 12px;
 }
 
-.toolbar .help {
+.toolbar {
+  align-items: flex-start;
+}
+
+.toolbar-key {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+
+.toolbar-explainer {
+  grid-column: 2;
+  margin: 0;
+  max-width: 34em;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.faq-button {
   margin-left: auto;
 }
 
@@ -670,9 +635,9 @@ a.brand {
   z-index: 10;
 }
 
-/* The key as a card over the page. */
+/* Windows over the page: the kodnyckel and Vanliga frågor. */
 
-.key-dialog {
+.modal {
   width: min(900px, calc(100vw - 32px));
   max-height: calc(100vh - 64px);
   padding: 24px;
@@ -682,20 +647,39 @@ a.brand {
   color: var(--text);
 }
 
-.key-dialog::backdrop {
+.modal::backdrop {
   background: rgb(0 0 0 / 0.35);
 }
 
-.key-dialog-head {
+.modal-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
 }
 
-.key-dialog-head h2 {
+.modal-head h2 {
   margin: 0;
   font-size: 20px;
+}
+
+.modal-lead {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.faq {
+  max-width: 44em;
+  line-height: 1.6;
+}
+
+.faq h3 {
+  font-size: 16px;
+  margin: 20px 0 4px;
+}
+
+.faq p {
+  margin: 0;
 }
 
 .keyview {
@@ -719,9 +703,21 @@ a.brand {
   .card-column .gate {
     height: 360px;
   }
+  .toolbar {
+    flex-wrap: wrap;
+  }
+  .toolbar-key {
+    grid-template-columns: auto 1fr;
+    flex: 1 1 100%;
+  }
+  .toolbar-explainer {
+    grid-column: 1 / -1;
+  }
   .key-button {
     min-width: 0;
-    flex: 1;
+  }
+  .faq-button {
+    margin-left: 0;
   }
   .key-table {
     font-size: 13px;

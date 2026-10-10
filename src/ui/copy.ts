@@ -8,7 +8,7 @@ export const COPY = {
   "app.tagline": "Namn, personnummer och hemligheter byts ut mot platshållare. Allt sker i din webbläsare.",
   "mode.scrub": "Skrubba",
   "mode.restore": "Avskrubba",
-  "mode.key": "Nyckel",
+  "mode.key": "Kodnyckel",
   "editor.empty": "Klistra in text här eller släpp en textfil. Den stannar i din webbläsare.",
   "editor.example": "Visa exempel",
   "gate.lead": "Skrubba laddar ner en liten svensk språkmodell till din webbläsare.",
@@ -35,25 +35,27 @@ export const COPY = {
   "restore.unmatched": "Hittade {found} i svaret. Menade du {placeholder}, alltså {value}?",
   "restore.accept": "Ja",
   "restore.reject": "Nej",
-  "restore.unknown": "{found} finns inte i nyckeln. Kontrollera svaret själv.",
+  "restore.unknown": "{found} finns inte i kodnyckeln. Kontrollera svaret själv.",
   "key.col.placeholder": "Platshållare",
   "key.col.value": "Värde",
   "key.col.type": "Typ",
   "key.col.count": "Förekomster",
-  "key.download": "Ladda ner nyckel",
-  "key.upload": "Ladda upp nyckel",
+  "key.download": "Ladda ner kodnyckel",
+  "key.upload": "Ladda upp kodnyckel",
   "key.clear": "Rensa allt",
   "key.downloadWarning": "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material.",
-  "key.note": "Nyckeln finns bara i den här fliken. Stänger du fliken försvinner den.",
-  "key.clearConfirm": "Text, uppgifter, egna ord och nyckel raderas. Vill du fortsätta?",
-  "key.empty": "Nyckeln skapas när du kopierar en skrubbad text.",
-  "key.uploadError": "Filen kunde inte läsas som en nyckel. Välj en fil som du har laddat ner från Skrubba.",
-  "key.uploadConfirm": "Text, uppgifter, egna ord och nyckel ersätts av innehållet i filen. Vill du fortsätta?",
-  "unload.warning": "Du har en nyckel som inte är nedladdad. Stänger du fliken går den förlorad.",
+  "key.note": "Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den.",
+  "key.clearConfirm": "Text, uppgifter, egna ord och kodnyckel raderas. Vill du fortsätta?",
+  "key.empty": "Kodnyckeln skapas när du kopierar en skrubbad text.",
+  "key.uploadError": "Filen kunde inte läsas som en kodnyckel. Välj en fil som du har laddat ner från Skrubba.",
+  "key.uploadConfirm": "Text, uppgifter, egna ord och kodnyckel ersätts av innehållet i filen. Vill du fortsätta?",
+  "unload.warning": "Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad.",
   "drop.unsupported": "Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den.",
-  "key.none": "Ingen nyckel än",
+  "key.none": "Ingen kodnyckel än",
   "key.close": "Stäng",
   "footer.credits": "Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency.",
+  "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
+  "faq.open": "Vanliga frågor",
   "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar.",
 } as const;
 
@@ -100,25 +102,27 @@ export function typeGroup(type: EntityType): "name" | "place" | "org" | "word" |
   return "number";
 }
 
-// The page /sa-funkar-det, verbatim from docs/COPY.md.
-export const HOW = {
-  title: "Så funkar Skrubba",
-  paragraphs: [
+// Vanliga frågor, verbatim from docs/COPY.md.
+export const FAQ = {
+  title: "Vanliga frågor",
+  items: [
     {
-      lead: "Vad som händer.",
-      body: "Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret här för att byta tillbaka.",
+      q: "Vad händer med min text?",
+      a: "Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret här för att byta tillbaka.",
     },
     {
-      lead: "Så kontrollerar du det själv.",
-      body: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på GitHub.",
+      q: "Hur kan jag kontrollera att inget skickas?",
+      a: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på GitHub.",
     },
     {
-      lead: "Det Skrubba inte gör.",
-      body: "Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge nyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
+      q: "Vad gör Skrubba inte?",
+      a: "Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
+    },
+    {
+      q: "Vad är kodnyckeln?",
+      a: "En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att byta tillbaka i svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.",
     },
   ],
-  credits:
-    "Skrubba bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency",
 };
 
 export const EXAMPLE = {

@@ -22,7 +22,8 @@ test("at 390 px the two cards stack, Skrubba first, with nothing scrolling sidew
   expect(box!.x).toBeGreaterThanOrEqual(0);
   expect(box!.x + box!.width).toBeLessThanOrEqual(390);
 
-  await page.goto("/sa-funkar-det");
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Vanliga frågor" }).click();
   expect(await noSideScroll(page)).toBe(true);
 });
 

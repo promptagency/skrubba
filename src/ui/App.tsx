@@ -3,16 +3,16 @@ import { keyFileName, type MaskInput, parseKey, parseWordList } from "../engine/
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
-import { countLabel, EXAMPLE, HOW, t } from "./copy.ts";
+import { REPO_URL } from "../config.ts";
+import { countLabel, EXAMPLE, t } from "./copy.ts";
 import { DropZone } from "./DropZone.tsx";
 import { Editor, type EditorHandle } from "./Editor.tsx";
 import { EntityPanel } from "./EntityPanel.tsx";
 import { Gate } from "./Gate.tsx";
-import { HowItWorks } from "./HowItWorks.tsx";
+import { FaqDialog } from "./FaqDialog.tsx";
 import { KeyDialog } from "./KeyDialog.tsx";
 import { ModelStatus } from "./ModelStatus.tsx";
 import { RestoreView } from "./RestoreView.tsx";
-import { followLink, HOW_PATH, usePath } from "./route.ts";
 import { controlledByServiceWorker } from "./serviceWorker.ts";
 import { Toast } from "./Toast.tsx";
 
@@ -21,9 +21,9 @@ const FLASH_MS = 1200;
 
 export function App() {
   const { state, dispatch, masker } = useSession();
-  const path = usePath();
   const [flash, setFlash] = useState<string | null>(null);
   const [keyOpen, setKeyOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
   const [listOpen, setListOpen] = useState(true);
   const [dropError, setDropError] = useState<"scrub" | "restore" | null>(null);
   const editor = useRef<EditorHandle>(null);
@@ -193,9 +193,6 @@ export function App() {
 
   const entities = panelEntities(state);
 
-  // The session stays in memory while the page is shown; going back finds it intact.
-  if (path === HOW_PATH) return <HowItWorks />;
-
   return (
     <div className="site">
       <header className="masthead">
@@ -203,22 +200,28 @@ export function App() {
       </header>
 
       <div className="toolbar">
-        <span className="toolbar-label" id="key-label">
-          {t("mode.key")}
-        </span>
-        <button
-          type="button"
-          className="key-button"
-          aria-labelledby="key-label key-button"
-          id="key-button"
-          aria-haspopup="dialog"
-          onClick={() => setKeyOpen(true)}
-        >
-          {state.keyEntries.length > 0 ? countLabel(state.keyEntries.length) : t("key.none")}
+        <div className="toolbar-key">
+          <span className="toolbar-label" id="key-label">
+            {t("mode.key")}
+          </span>
+          <button
+            type="button"
+            className="key-button"
+            aria-labelledby="key-label key-button"
+            aria-describedby="key-explainer"
+            id="key-button"
+            aria-haspopup="dialog"
+            onClick={() => setKeyOpen(true)}
+          >
+            {state.keyEntries.length > 0 ? countLabel(state.keyEntries.length) : t("key.none")}
+          </button>
+          <p className="toolbar-explainer" id="key-explainer">
+            {t("key.explainer")}
+          </p>
+        </div>
+        <button type="button" className="faq-button" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
+          {t("faq.open")}
         </button>
-        <a className="help" href={HOW_PATH} onClick={followLink} aria-label={HOW.title}>
-          ?
-        </a>
       </div>
 
       <main className="panels">
@@ -341,11 +344,17 @@ export function App() {
       </main>
 
       <footer className="site-footer">
-        <p>{t("footer.credits")}</p>
         <p>
-          <a href={HOW_PATH} onClick={followLink}>
+          {REPO_URL ? (
+            <a href={REPO_URL}>{t("footer.credits")}</a>
+          ) : (
+            t("footer.credits")
+          )}
+        </p>
+        <p>
+          <button type="button" className="link" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
             {t("status.trust")}
-          </a>
+          </button>
         </p>
       </footer>
 
@@ -359,6 +368,7 @@ export function App() {
         onUpload={uploadKey}
         onClear={clearAll}
       />
+      <FaqDialog open={faqOpen} onClose={() => setFaqOpen(false)} />
       <Toast message={state.toast} onClose={closeToast} />
     </div>
   );

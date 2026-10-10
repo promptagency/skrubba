@@ -47,5 +47,5 @@ export function mergeEntries(existing: KeyEntry[], add: KeyEntry[]): KeyEntry[] 
 }
 
 export function keyFileName(date: Date): string {
-  return `skrubba-nyckel-${date.toISOString().slice(0, 10)}.json`;
+  return `skrubba-kodnyckel-${date.toISOString().slice(0, 10)}.json`;
 }
