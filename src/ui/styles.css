@@ -16,6 +16,14 @@
   --hl-number: #f4c9d6;
   --hl-word: #e6d7f5;
 
+  /* Darker shade per type: list dots and the border of a kept highlight.
+     At least 3:1 against both the light and the dark background. */
+  --hl-name-edge: #c27a1e;
+  --hl-place-edge: #2f8a52;
+  --hl-org-edge: #3f5fc9;
+  --hl-number-edge: #b8436a;
+  --hl-word-edge: #7d4fb5;
+
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --radius: 6px;
   --editor-font-size: 16px;
@@ -176,25 +184,30 @@ kbd {
 
 .hl-name {
   --hl: var(--hl-name);
+  --hl-edge: var(--hl-name-edge);
 }
 .hl-place {
   --hl: var(--hl-place);
+  --hl-edge: var(--hl-place-edge);
 }
 .hl-org {
   --hl: var(--hl-org);
+  --hl-edge: var(--hl-org-edge);
 }
 .hl-number {
   --hl: var(--hl-number);
+  --hl-edge: var(--hl-number-edge);
 }
 .hl-word {
   --hl: var(--hl-word);
+  --hl-edge: var(--hl-word-edge);
 }
 
-/* Behåll: still found, shown as a border in the type colour only. An outline
+/* Behåll: still found, shown as a border in the type's darker shade only. An outline
    takes no layout space, so the marks stay aligned with the textarea text. */
 .hl-kept {
   background: none;
-  outline: 2px solid var(--hl);
+  outline: 2px solid var(--hl-edge);
   outline-offset: 1px;
 }
 
@@ -349,19 +362,19 @@ kbd {
 }
 
 .dot-name {
-  color: #c27a1e;
+  color: var(--hl-name-edge);
 }
 .dot-place {
-  color: #2f8a52;
+  color: var(--hl-place-edge);
 }
 .dot-org {
-  color: #3f5fc9;
+  color: var(--hl-org-edge);
 }
 .dot-number {
-  color: #b8436a;
+  color: var(--hl-number-edge);
 }
 .dot-word {
-  color: #7d4fb5;
+  color: var(--hl-word-edge);
 }
 
 .words summary {

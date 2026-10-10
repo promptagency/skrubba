@@ -38,7 +38,7 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 
 **Manual masking.** Select text → press `M` or the floating "Skrubba markering" button. All occurrences of the selection become one `ORD` entity. Selecting inside a highlight and pressing `B` toggles it to Behåll.
 
-**Clicking in the text.** A plain click on a highlight switches it between Skrubba (filled with the type colour) and Behåll (a border in the same type colour, 1px off the text), for every occurrence. The pointer turns into a hand over highlights. A drag that selects text, a click with Shift/Cmd/Ctrl/Alt, or a double-click (which selects the word) does not switch anything. Trade-off: placing the caret inside a highlight with a single click also switches it; click again to switch back.
+**Clicking in the text.** A plain click on a highlight switches it between Skrubba (filled with the type colour) and Behåll (a border in a darker shade of the type colour, the same as its dot in the list, 1px off the text), for every occurrence. The pointer turns into a hand over highlights. A drag that selects text, a click with Shift/Cmd/Ctrl/Alt, or a double-click (which selects the word) does not switch anything. Trade-off: placing the caret inside a highlight with a single click also switches it; click again to switch back.
 
 **Egna ord.** Collapsible section under the list. One term per line. Placeholder text: "Kundnamn, projektnamn, produkter …". Edits re-run matching live. The list is part of the key and is saved with it.
 
