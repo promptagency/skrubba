@@ -1,3 +1,5 @@
+declare const __SW_KILL__: boolean;
+
 /**
  * Register the offline service worker (production only) and wait until it
  * controls the page, so the model worker's downloads go through its cache.
@@ -5,6 +7,11 @@
  */
 export async function controlledByServiceWorker(timeoutMs = 5000): Promise<boolean> {
   if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return false;
+  if (__SW_KILL__) {
+    // Kill-switch build: make sure nothing stays registered.
+    for (const reg of await navigator.serviceWorker.getRegistrations()) await reg.unregister();
+    return false;
+  }
   try {
     await navigator.serviceWorker.register("/sw.js");
   } catch {

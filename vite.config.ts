@@ -29,6 +29,7 @@ function cspMeta(): Plugin {
     apply: "build",
     transformIndexHtml: () => [
       { tag: "meta", attrs: { "http-equiv": "Content-Security-Policy", content: CSP }, injectTo: "head-prepend" },
+      { tag: "meta", attrs: { name: "skrubba-build", content: BUILD_ID }, injectTo: "head" },
     ],
   };
 }
@@ -68,8 +69,14 @@ function dropBundledWasm(): Plugin {
   };
 }
 
-// After the app is built, build src/sw/sw.ts into dist/sw.js as a classic
-// script, with the content revision of every file in dist/ baked in.
+// SW_KILL=1 builds the kill switch (src/sw/kill.ts) and an app that does not
+// register a service worker. See README, "Turning the offline cache off".
+const SW_KILL = process.env.SW_KILL === "1";
+// Shown as <meta name="skrubba-build"> so a deploy can be identified.
+const BUILD_ID = process.env.BUILD_ID ?? process.env.CF_PAGES_COMMIT_SHA ?? "local";
+
+// After the app is built, build the service worker into dist/sw.js as a
+// classic script, with the content revision of every file in dist/ baked in.
 function serviceWorker(): Plugin {
   let outDir = "dist";
   return {
@@ -87,7 +94,12 @@ function serviceWorker(): Plugin {
           outDir,
           emptyOutDir: false,
           copyPublicDir: false,
-          lib: { entry: "src/sw/sw.ts", formats: ["iife"], name: "sw", fileName: () => "sw.js" },
+          lib: {
+            entry: SW_KILL ? "src/sw/kill.ts" : "src/sw/sw.ts",
+            formats: ["iife"],
+            name: "sw",
+            fileName: () => "sw.js",
+          },
         },
       });
     },
@@ -96,6 +108,7 @@ function serviceWorker(): Plugin {
 
 export default defineConfig({
   plugins: [react(), cspMeta(), serveRuntimeInDev(), serviceWorker()],
+  define: { __SW_KILL__: JSON.stringify(SW_KILL) },
   // transformers.js and onnxruntime-web break under dependency prebundling.
   optimizeDeps: { exclude: ["@huggingface/transformers"] },
   // The worker dynamic-imports parts of transformers.js; only ES workers can split.
