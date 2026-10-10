@@ -111,6 +111,14 @@ Notes from Phase 4:
 - The app icon (`[ ▬ ]` in white on green, `scripts/make-icons.ts`) is a placeholder for the owner to replace.
 
 
+## Phase 4b – Owner's layout (2026-10-10)
+
+The owner's wireframe replaced the three modes with two cards and a key card. Done: large logotype; "Nyckel" + key button opening the key as a dialog; "?" top right; Skrubba and Avskrubba cards side by side (stacked on phones); item list under the Skrubba card with Kopiera beside its toggle; Avskrubba button that becomes Kopiera; `.txt`/`.md` drop on both cards; footer with credits and the trust link. 171 Vitest, 109 Playwright tests green.
+
+- [ ] Owner reviews UX, branding and the strings under "Att granska" in `docs/COPY.md`.
+- [ ] History of texts (wireframe): left out for now. If it comes back, decide memory-only (this tab) versus saved on the device, which would change a hard rule.
+- [ ] `CLAUDE.md` still says "One screen, three modes (Skrubba, Byt tillbaka, Nyckel)". It is read-only; the owner updates it or lets Claude.
+
 ## Phase 5 – Ship
 
 - [x] Fit the 25 MiB per-file cap on Cloudflare Pages. Done 2026-10-09: model gzipped in two parts, plain runtime gzipped, other variants and Vite's duplicate dropped, build fails on any file over 25 MiB. See ARCHITECTURE.md, Delivery and offline.

@@ -1,32 +1,33 @@
 # UX.md – the one screen
 
-No wizard. One screen, three modes, switchable at any time. State is shared across modes.
+No wizard. One page, two cards side by side: **Skrubba** (make the text safe) and **Avskrubba** (put the real values back in the AI's answer). The key opens as a card on top. Layout from the owner's wireframe, 2026-10-10.
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│ [Skrubba]  [Byt tillbaka]  [Nyckel]          Visa exempel  ? │
-├────────────────────────────────────┬─────────────────────────┤
-│                                    │ 14 uppgifter            │
-│  Textyta                           │ ─────────────────────── │
-│  (editable, highlights overlaid)   │ ● Anna Berg      Namn ×3│
-│                                    │ ● 850412-1234    Pnr ×1 │
-│                                    │ ● Floda          Plats×2│
-│                                    │ ● Ikea           Org  ×1│
-│                                    │ ○ Göteborg       Plats×1│  ← behåll
-│                                    │ ● Projekt Nordlys Ord ×2│  ← egna ord
-│                                    │ ─────────────────────── │
-│                                    │ ▸ Egna ord (1)          │
-│                                    │ [Skrubba alla] [Behåll alla]
-├────────────────────────────────────┴─────────────────────────┤
-│ ● Modell laddad · Inget lämnar din dator          [Kopiera]  │
-└──────────────────────────────────────────────────────────────┘
+                          Skrubba                          ← logotype
+ Nyckel [ 13 uppgifter ]                               (?)
+ Skrubba            Visa exempel   Avskrubba
+ ┌──────────────────────────────┐  ┌──────────────────────────────┐
+ │ text, highlights overlaid    │  │ the AI's answer; restored    │
+ │ (paste, type or drop .txt/.md)│  │ values highlighted           │
+ └──────────────────────────────┘  └──────────────────────────────┘
+ 13 uppgifter ▾        [Kopiera]   Hittade NAMN 1 … ? [Ja] [Nej]
+ Skrubba hittar inte allt …                          [Avskrubba]
+ ● Anna Berg    Namn  ×3 Skrubba
+ ○ Göteborg     Plats ×1 Behåll
+ ▸ Egna ord (1)
+ [Skrubba alla] [Behåll alla]
+ ─────────────────────────────────────────────────────────────────
+   Bygger på maskera (MIT) … Öppen källkod från Prompt Agency.
+                     Inget lämnar din dator
 ```
 
-## Mode: Skrubba
+History of texts (in the wireframe) is left out for now: text may only live in memory, and saved cases are out of scope for v1.
+
+## Skrubba card
 
 **Input.** Paste or type. Processing starts on paste immediately and on typing after 300 ms idle.
 
-**Model first.** The editor is locked until the model is ready, so nobody reviews a list that is missing every name. The locked editor shows the loading state in place, not a modal: `gate.lead`, `gate.body` and the progress line "Laddar modell 43 %". When the model is ready the editor unlocks and takes focus. If the model fails, the editor unlocks in rules-only mode with `status.rulesOnly` in the status bar. After the first visit the model comes from the browser's cache and the offline cache, so the lock lasts a second or two.
+**Model first.** The editor is locked until the model is ready, so nobody reviews a list that is missing every name. The locked editor shows the loading state in place, not a modal: `gate.lead`, `gate.body` and the progress line "Laddar modell 43 %". When the model is ready the editor unlocks and takes focus. If the model fails, the editor unlocks in rules-only mode with `status.rulesOnly` under the card. After the first visit the model comes from the browser's cache and the offline cache, so the lock lasts a second or two.
 
 **Detection order.** Word list and rules first (instant), then NER. When NER finishes, new highlights appear without moving the caret.
 
@@ -42,9 +43,9 @@ No wizard. One screen, three modes, switchable at any time. State is shared acro
 
 **Empty state.** "Klistra in text här. Den stannar i din webbläsare." plus "Visa exempel".
 
-## Mode: Byt tillbaka
+## Avskrubba card
 
-Textarea for the LLM answer. Button "Byt tillbaka" (also `Cmd/Ctrl+Enter`). Result replaces the content, restored values highlighted.
+Textarea for the AI's answer, usable while the model loads. The button under the card says "Avskrubba" (also `Cmd/Ctrl+Enter` in the card); the result replaces the content with restored values highlighted, and the same button becomes "Kopiera". Editing the answer turns it back into "Avskrubba".
 
 Unmatched placeholders are listed under the text:
 
@@ -52,11 +53,9 @@ Unmatched placeholders are listed under the text:
 
 Tolerant matching rules live in `docs/ARCHITECTURE.md`. The tool asks when unsure; it never silently substitutes.
 
-"Kopiera" at the bottom.
+## Key card
 
-## Mode: Nyckel
-
-Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
+Opened from the key button next to "Nyckel" (it reads "Ingen nyckel än", then "{n} uppgifter"). A dialog over the page: title "Nyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
 
 - "Ladda ner nyckel" → `skrubba-nyckel-YYYY-MM-DD.json` (entities + word list). Line under: "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material."
 - "Ladda upp nyckel" → file picker, restores key and word list into memory.
@@ -64,29 +63,31 @@ Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. 
 
 Note under the table: "Nyckeln finns bara i den här fliken. Stänger du fliken försvinner den."
 
-## Status bar (always visible)
+## Model state
 
-Left: model state (● Laddar modell 43 % / ● Modell laddad / ● Endast regler) and "Inget lämnar din dator" linking to `/sa-funkar-det`.
-Right: primary action for the current mode.
+Loading progress shows inside the Skrubba card (`gate.lead`, `gate.body`, "Laddar modell 43 %"). The Avskrubba card and the key card work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Inget lämnar din dator" sits in the footer and links to `/sa-funkar-det`; "?" top right links there too.
+
+## Dropping files
+
+Each card accepts a dropped `.txt` or `.md` file, read in the browser. Anything else gets `drop.unsupported` and leaves the card as it was. Word and PDF are out of scope for v1.
 
 ## Keyboard
 
 | Key | Action |
 |---|---|
-| `Cmd/Ctrl+1 / 2 / 3` | Switch mode |
 | `M` (with selection) | Skrubba selection |
 | `B` (with selection or focused row) | Behåll |
-| `Cmd/Ctrl+Shift+C` | Copy |
-| `Cmd/Ctrl+Enter` | Primary action in current mode |
-| `↑ ↓` in panel, `Space` | Navigate rows, toggle |
-| `Esc` | Close toast / dialog |
+| `Cmd/Ctrl+Shift+C` | Copy from the card in focus (Skrubba otherwise) |
+| `Cmd/Ctrl+Enter` | Skrubba card: Kopiera. Avskrubba card: Avskrubba, then Kopiera |
+| `↑ ↓` in the list, `Space` | Navigate rows, toggle |
+| `Esc` | Close the key card or the toast |
 
 ## Mobile (≥ 390 px)
 
-Textarea full width. Entity panel becomes a bottom sheet opened by the chip "14 uppgifter". Mode switch stays at top. Primary action sticky at bottom.
+The cards stack, Skrubba first; the item list stays under the Skrubba card and folds with its toggle. The key card fits the screen width. Nothing scrolls sideways.
 
 ## What this screen must never do
 
-- Show a modal on load.
+- Show a modal on load. (The key card opens only when asked for.)
 - Ask for an account, email or cookie consent (there are no cookies).
 - Send anything anywhere. The "?" page says exactly how to verify that.
