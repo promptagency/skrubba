@@ -58,3 +58,13 @@ describe("Så funkar Skrubba matches docs/COPY.md", () => {
     expect(section).toContain(`Sist på sidan: ${HOW.credits}`);
   });
 });
+
+describe("index.html and the manifest use app.tagline", () => {
+  it("has the tagline as description", () => {
+    const html = readFileSync("index.html", "utf8");
+    const manifest = JSON.parse(readFileSync("public/manifest.webmanifest", "utf8"));
+    expect(html).toContain(`<meta name="description" content="${COPY["app.tagline"]}" />`);
+    expect(manifest.description).toBe(COPY["app.tagline"]);
+    expect(html).toContain(`<title>${COPY["app.title"]}</title>`);
+  });
+});
