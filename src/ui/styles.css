@@ -512,6 +512,7 @@ a {
 /* Page layout: logotype, toolbar, mode switch, input | button | result, footer. */
 
 .site {
+  position: relative;
   max-width: 1160px;
   margin: 0 auto;
   padding: 0 24px 32px;
@@ -530,15 +531,15 @@ a {
   line-height: 1;
 }
 
+/* Vanliga frågor in the top right corner, beside the logotype. */
 .toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
+  position: absolute;
+  top: 24px;
+  right: 24px;
 }
 
 .faq-button {
-  margin-left: auto;
+  margin: 0;
 }
 
 /* Skrubba or Avskrubba: decides what the button between the panes does. */
@@ -616,9 +617,12 @@ a {
   margin-top: calc(var(--pane-head) + 12px + var(--pane-height) / 2 - 24px);
 }
 
+/* Same width in both modes, so the panes do not move when switching. */
 .run {
   display: flex;
   align-items: center;
+  justify-content: center;
+  min-width: 11em;
   gap: 8px;
   min-height: 48px;
   padding: 0 20px;
@@ -748,6 +752,12 @@ a {
   }
   .masthead {
     padding: 24px 0 16px;
+  }
+  .toolbar {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
   }
   .workspace {
     --pane-height: 320px;

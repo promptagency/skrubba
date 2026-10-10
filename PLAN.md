@@ -143,5 +143,6 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 - ~~Display names for maskera's extra types.~~ Added to `docs/COPY.md` 2026-10-09.
 - **Enable maskera's `regnummer` rule?** Off by default upstream (plate shape = booking-code shape). Leaning on: a miss is worse than over-masking. Decide in Phase 1.
 - ~~Org.nr with a bad check digit is not masked.~~ Decided 2026-10-09: our own context rule masks any NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer", checksum or not. Not reported upstream.
+- **Flaky test.** `deploy.spec.ts` "a returning visitor gets a new deploy within two loads" failed twice in full three-browser runs on 2026-10-10 and passed every time on its own (9 of 9). Likely timing of the service-worker update under load; look into it before shipping.
 - **Copy strings not in `docs/COPY.md`.** (1) What to show when copying fails (clipboard blocked); today nothing is shown, though the key is still recorded. (2) The hover label on a highlight is composed as "Namn · [NAMN_1] · Skrubba". (3) Screen-reader label of a panel row is "value, type, count, Skrubba/Behåll". Owner's copy call.
 - **Repo URL for /sa-funkar-det.** The credits line links "Öppen källkod från Prompt Agency" to the repo once `REPO_URL` in `src/config.ts` is set. Empty while the repo is private, so the line shows without a link.

@@ -107,3 +107,13 @@ test("text with placeholders in Skrubba offers to move it to Avskrubba", async (
   await expect(editor(page)).toHaveValue("");
   await expect(notice).toHaveCount(0);
 });
+
+test("switching mode does not move the panes", async ({ page }) => {
+  await openReady(page);
+  const left = () => page.locator(".pane").first().boundingBox();
+  const right = () => page.locator(".pane").nth(1).boundingBox();
+  const before = [await left(), await right()];
+  await modeSwitch(page).getByRole("button", { name: "Avskrubba" }).click();
+  await expect(run(page)).toHaveAccessibleName("Avskrubba");
+  expect([(await left())!.x, (await left())!.width, (await right())!.x]).toEqual([before[0]!.x, before[0]!.width, before[1]!.x]);
+});
