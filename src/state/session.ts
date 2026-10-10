@@ -1,6 +1,6 @@
 // Session state. Memory only: never localStorage, sessionStorage, IndexedDB,
 // cookies or the URL (see CLAUDE.md).
-import type { Entity } from "../engine/index.ts";
+import { type Entity, type Key, type KeyEntry, mergeEntries, parseWordList, type RestoreResult } from "../engine/index.ts";
 
 export type Mode = "scrub" | "restore" | "key";
 
@@ -18,6 +18,22 @@ export interface SessionState {
   entitiesText: string;
   model: ModelState;
   toast: string | null;
+  /** Placeholder → value for everything copied so far, or loaded from a key file. */
+  keyEntries: KeyEntry[];
+  keyCreatedAt: string | null;
+  /** False once the key has entries the user has not downloaded. */
+  keyDownloaded: boolean;
+  /** Byt tillbaka: the text in the answer box. */
+  answer: string;
+  /** The last restore of `original` (the answer as pasted), or null if the answer changed since. */
+  restore: RestoreState | null;
+}
+
+export interface RestoreState {
+  original: string;
+  result: RestoreResult;
+  accepted: string[];
+  rejected: string[];
 }
 
 export type SessionAction =
@@ -32,7 +48,14 @@ export type SessionAction =
   | { type: "scrubAll" }
   | { type: "loadExample"; text: string; wordList: string[] }
   | { type: "model"; model: ModelState }
-  | { type: "toast"; message: string | null };
+  | { type: "toast"; message: string | null }
+  | { type: "copied"; entries: KeyEntry[]; at: string }
+  | { type: "keyDownloaded" }
+  | { type: "loadKey"; key: Key }
+  | { type: "clearAll" }
+  | { type: "setAnswer"; text: string }
+  | { type: "restored"; original: string; result: RestoreResult }
+  | { type: "suggestion"; found: string; accept: boolean };
 
 export const initialSession: SessionState = {
   mode: "scrub",
@@ -44,6 +67,11 @@ export const initialSession: SessionState = {
   entitiesText: "",
   model: { status: "loading", pct: 0 },
   toast: null,
+  keyEntries: [],
+  keyCreatedAt: null,
+  keyDownloaded: true,
+  answer: "",
+  restore: null,
 };
 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
@@ -82,6 +110,50 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       return { ...state, model: action.model };
     case "toast":
       return { ...state, toast: action.message };
+    case "copied": {
+      const keyEntries = mergeEntries(state.keyEntries, action.entries);
+      const grew = keyEntries.length > state.keyEntries.length;
+      return {
+        ...state,
+        keyEntries,
+        keyCreatedAt: state.keyCreatedAt ?? action.at,
+        keyDownloaded: state.keyDownloaded && !grew,
+      };
+    }
+    case "keyDownloaded":
+      return { ...state, keyDownloaded: true };
+    case "loadKey":
+      return {
+        ...initialSession,
+        mode: state.mode,
+        model: state.model,
+        wordListRaw: action.key.wordList.join("\n"),
+        keyEntries: action.key.entries,
+        keyCreatedAt: action.key.createdAt,
+      };
+    case "clearAll":
+      return { ...initialSession, mode: state.mode, model: state.model };
+    case "setAnswer":
+      return { ...state, answer: action.text, restore: null };
+    case "restored": {
+      const same = state.restore?.original === action.original;
+      return {
+        ...state,
+        answer: action.result.text,
+        restore: {
+          original: action.original,
+          result: action.result,
+          accepted: same ? state.restore!.accepted : [],
+          rejected: same ? state.restore!.rejected : [],
+        },
+      };
+    }
+    case "suggestion": {
+      if (!state.restore) return state;
+      const list = action.accept ? "accepted" : "rejected";
+      if (state.restore[list].includes(action.found)) return state;
+      return { ...state, restore: { ...state.restore, [list]: [...state.restore[list], action.found] } };
+    }
   }
 }
 
@@ -96,4 +168,15 @@ export function panelEntities(state: SessionState): Entity[] {
 /** Entities whose offsets match the current text, for highlighting. */
 export function freshEntities(state: SessionState): Entity[] {
   return state.entitiesText === state.text ? withKept(state, state.entities) : [];
+}
+
+/** The key as it is downloaded and used for Byt tillbaka. */
+export function currentKey(state: SessionState): Key {
+  return {
+    entries: state.keyEntries,
+    wordList: parseWordList(state.wordListRaw),
+    createdAt: state.keyCreatedAt ?? new Date().toISOString(),
+    app: "skrubba",
+    version: 1,
+  };
 }
