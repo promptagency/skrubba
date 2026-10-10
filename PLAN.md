@@ -117,7 +117,7 @@ The owner's wireframe replaced the three modes with two cards and a key card. Do
 
 - [ ] Owner reviews UX, branding and the strings under "Att granska" in `docs/COPY.md`.
 - [ ] History of texts (wireframe): left out for now. If it comes back, decide memory-only (this tab) versus saved on the device, which would change a hard rule.
-- [ ] `CLAUDE.md` still says "One screen, three modes (Skrubba, Byt tillbaka, Nyckel)". It is read-only; the owner updates it or lets Claude.
+- [x] `CLAUDE.md` updated 2026-10-10 for the two-card layout and plain-text drop.
 
 ## Phase 5 – Ship
 

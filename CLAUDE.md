@@ -47,12 +47,12 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 - Code, commits and docs under `docs/` except `COPY.md`: English. UI: Swedish, per `docs/COPY.md`.
 - Engine behind `src/engine/` with a single interface (`Masker`). Nothing outside imports `maskera` directly.
 - Placeholders follow maskera's format `[NAMN_1]`, `[PLATS_1]`, `[ORGANISATION_1]`, `[ADRESS_1]`, `[PERSONNUMMER_1]`; manual and word-list entries use `[ORD_1]`. Restore must be tolerant (see `docs/ARCHITECTURE.md`).
-- One screen, three modes (Skrubba, Byt tillbaka, Nyckel). No wizard. See `docs/UX.md`.
+- One page, two cards side by side: Skrubba (mask) and Avskrubba (restore), with the key as a card opened from the Nyckel button. No wizard. See `docs/UX.md`.
 - Commit small, one feature per commit, with the test that proves it.
 
 ## Out of scope for v1
 
-File upload (docx/pdf), fake replacement names, role profiles, saved cases, accounts, browser extension. Do not build toward them unless `PLAN.md` says so.
+File upload (docx/pdf; dropping a plain `.txt` or `.md` file is in), history of texts, fake replacement names, role profiles, saved cases, accounts, browser extension. Do not build toward them unless `PLAN.md` says so.
 
 ## When unsure
 
