@@ -3,8 +3,9 @@
 // origin only. Small files are fetched on install; the packed model and
 // runtime parts are cached the first time the app fetches them, so nothing
 // is downloaded twice. Entries are keyed by content revision, so a deploy
-// never mixes old and new files.
-import { cacheKey, precacheList, type SwManifest, staleKeys } from "./core.ts";
+// never mixes old and new files, and the previous build's files are kept one
+// more cycle for tabs that still run it.
+import { cacheKey, MANIFEST_KEY, precacheList, type SwManifest, staleKeys } from "./core.ts";
 
 declare const self: ServiceWorkerGlobalScope;
 declare const __SW_MANIFEST__: SwManifest;
@@ -34,8 +35,13 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE);
+      const stored = await cache.match(MANIFEST_KEY);
+      const previous: SwManifest = stored ? await stored.json() : {};
+      // Re-activating the same build must not forget the build before it.
+      const before = JSON.stringify(previous) === JSON.stringify(MANIFEST) ? {} : previous;
       const keys = (await cache.keys()).map((r) => r.url);
-      await Promise.all(staleKeys(keys, MANIFEST).map((url) => cache.delete(url)));
+      await Promise.all(staleKeys(keys, MANIFEST, before).map((url) => cache.delete(url)));
+      await cache.put(MANIFEST_KEY, Response.json(MANIFEST));
       await self.clients.claim();
     })(),
   );
@@ -49,8 +55,7 @@ self.addEventListener("fetch", (event) => {
   // One screen: every navigation gets the app shell.
   const path = req.mode === "navigate" ? "/index.html" : url.pathname;
   const rev = MANIFEST[path];
-  if (!rev) return;
-  event.respondWith(cacheFirst(path, rev));
+  event.respondWith(rev ? cacheFirst(path, rev) : previousBuild(req, path));
 });
 
 async function cacheFirst(path: string, rev: string): Promise<Response> {
@@ -61,4 +66,12 @@ async function cacheFirst(path: string, rev: string): Promise<Response> {
   const res = await fetch(path);
   if (res.ok) await cache.put(key, res.clone());
   return res;
+}
+
+// Not in this build: a tab still running the previous build asking for one of
+// its files. Every path except index.html is content-addressed, so whatever
+// is cached under that path is the right file.
+async function previousBuild(req: Request, path: string): Promise<Response> {
+  const cache = await caches.open(CACHE);
+  return (await cache.match(path, { ignoreSearch: true })) ?? fetch(req);
 }

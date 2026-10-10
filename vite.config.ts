@@ -1,6 +1,6 @@
 /// <reference types="vitest/config" />
 import { createReadStream, existsSync } from "node:fs";
-import { basename, extname, join } from "node:path";
+import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { build, defineConfig, type Plugin } from "vite";
@@ -43,9 +43,10 @@ function serveRuntimeInDev(): Plugin {
     apply: "serve",
     configureServer(server) {
       server.middlewares.use("/runtime", (req, res, next) => {
-        const name = basename((req.url ?? "").split("?")[0]);
-        const file = join(dir, name);
-        const type = types[extname(name)];
+        const rel = (req.url ?? "").split("?")[0];
+        const file = join(dir, rel);
+        const type = types[extname(rel)];
+        if (!file.startsWith(dir)) return next();
         if (!type || !existsSync(file)) return next();
         res.setHeader("Content-Type", type);
         createReadStream(file).pipe(res);

@@ -10,10 +10,19 @@ export function precacheList(manifest: SwManifest): string[] {
   return Object.keys(manifest).filter((path) => !/\.gzpart\d+$/.test(path));
 }
 
-/** Cached request URLs that no longer match the manifest (old revisions, removed files). */
-export function staleKeys(cachedUrls: string[], manifest: SwManifest): string[] {
+/** Where the service worker keeps the manifest it activated with, to know the previous build. */
+export const MANIFEST_KEY = "/__sw-manifest";
+
+/**
+ * Cached request URLs to delete on activate: anything that belongs neither to
+ * this build nor to the previous one. The previous build's files stay one
+ * more cycle, so a tab still running it never asks for a file that is gone.
+ */
+export function staleKeys(cachedUrls: string[], current: SwManifest, previous: SwManifest): string[] {
   return cachedUrls.filter((url) => {
     const { pathname, searchParams } = new URL(url);
-    return manifest[pathname] !== searchParams.get("__rev");
+    if (pathname === MANIFEST_KEY) return false;
+    const rev = searchParams.get("__rev");
+    return current[pathname] !== rev && previous[pathname] !== rev;
   });
 }

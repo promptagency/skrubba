@@ -8,4 +8,4 @@ public/runtime/
 .cache
 test-results
 playwright-report
-public/packed.json
+src/engine/assets.generated.ts

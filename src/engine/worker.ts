@@ -1,9 +1,10 @@
 // Web Worker: loads the model and runs NER. The only place transformers.js
 // runs in the browser; the main thread never blocks on inference.
 import { env } from "@huggingface/transformers";
-import { MODEL, MODEL_BASE, RUNTIME_BASE, RUNTIME_FILES } from "../config.ts";
+import { MODEL, MODEL_BASE, RUNTIME_FILES } from "../config.ts";
+import { PACKED, RUNTIME_DIR } from "./assets.generated.ts";
 import { createRecognizer, modelSpans } from "./nerModel.ts";
-import { type PackedManifest, partUrl, unpack } from "./packed.ts";
+import { partUrl, unpack } from "./packed.ts";
 import type { FromWorker, ToWorker } from "./protocol.ts";
 
 const post = (msg: FromWorker) => postMessage(msg);
@@ -15,35 +16,29 @@ async function sha256(buf: ArrayBuffer): Promise<string> {
 }
 
 // Large files are served gzipped in parts (Cloudflare's 25 MiB per-file cap,
-// and fewer bytes). /packed.json says which; every request for one of them
-// goes through `unpack`, which also feeds the loading percentage.
-let manifest: Promise<PackedManifest> | null = null;
-const getManifest = () =>
-  (manifest ??= plainFetch("/packed.json").then((r: Response) => {
-    if (!r.ok) throw new Error(`packed.json: ${r.status}`);
-    return r.json() as Promise<PackedManifest>;
-  }));
-
+// and fewer bytes). PACKED, generated at build time, says which; every
+// request for one of them goes through `unpack`, which also feeds the
+// loading percentage.
+const totalPacked = Object.values(PACKED).reduce((n, info) => n + info.packedBytes, 0);
 const loadedByFile = new Map<string, number>();
 let lastPct = -1;
-async function reportProgress(path: string, loaded: number) {
+function reportProgress(path: string, loaded: number) {
   loadedByFile.set(path, loaded);
-  const total = Object.values(await getManifest()).reduce((n, info) => n + info.packedBytes, 0);
   const sum = [...loadedByFile.values()].reduce((n, x) => n + x, 0);
-  const pct = Math.floor((sum / total) * 100);
+  const pct = Math.floor((sum / totalPacked) * 100);
   if (pct === lastPct) return;
   lastPct = pct;
-  post({ type: "progress", loaded: sum, total });
+  post({ type: "progress", loaded: sum, total: totalPacked });
 }
 
 env.fetch = async (input, init) => {
   const url = new URL(String(input), self.location.href);
-  const info = url.origin === self.location.origin ? (await getManifest())[url.pathname] : undefined;
+  const info = url.origin === self.location.origin ? PACKED[url.pathname] : undefined;
   if (!info || init?.method === "HEAD") return plainFetch(input, init);
   return unpack(
     (i) => plainFetch(partUrl(url.pathname, i)),
     info.parts,
-    (n) => void reportProgress(url.pathname, n),
+    (n) => reportProgress(url.pathname, n),
   );
 };
 
@@ -52,13 +47,13 @@ env.fetch = async (input, init) => {
 // which our CSP blocks.
 env.useWasmCache = false;
 const wasm = env.backends.onnx?.wasm;
-const wasmPath = `${RUNTIME_BASE}${RUNTIME_FILES.wasm}`;
-if (wasm) wasm.wasmPaths = { mjs: `${RUNTIME_BASE}${RUNTIME_FILES.mjs}`, wasm: wasmPath };
+const wasmPath = `${RUNTIME_DIR}${RUNTIME_FILES.wasm}`;
+if (wasm) wasm.wasmPaths = { mjs: `${RUNTIME_DIR}${RUNTIME_FILES.mjs}`, wasm: wasmPath };
 
 async function loadRuntime(): Promise<void> {
   if (!wasm) throw new Error("onnxruntime wasm backend missing");
   const bytes = await (await env.fetch(wasmPath)).arrayBuffer();
-  const info = (await getManifest())[wasmPath];
+  const info = PACKED[wasmPath];
   if (!info || (await sha256(bytes)) !== info.sha256) throw new Error("runtime checksum mismatch");
   wasm.wasmBinary = new Uint8Array(bytes);
 }
