@@ -29,8 +29,7 @@ src/
   ui/
     App.tsx, ModeTabs, Editor (textarea + overlay), EntityPanel,
     RestoreView, KeyView, StatusBar, Toast
-  pages/
-    HowItWorks.tsx       /sa-funkar-det
+    FaqDialog.tsx        Vanliga frågor window
   sw/
     sw.ts, core.ts       offline service worker (built to dist/sw.js)
     kill.ts              kill switch, built instead with SW_KILL=1 (see README)
@@ -158,7 +157,7 @@ If the worker fails to initialise (old browser, blocked WASM), the app continues
 
 ## Routing
 
-Two paths and no router library: `/` is the app, `/sa-funkar-det` the explainer (`src/ui/route.ts`, history API). The session stays in memory while the page is shown. The service worker answers every navigation with the app shell; Cloudflare Pages serves `index.html` for unknown paths when there is no `404.html`.
+One path, `/`. Vanliga frågor and the kodnyckel are windows (`<dialog>`) over the app, so there is no router. The service worker answers every navigation with the app shell.
 
 ## Performance budgets
 

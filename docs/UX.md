@@ -1,10 +1,11 @@
 # UX.md – the one screen
 
-No wizard. One page, two cards side by side: **Skrubba** (make the text safe) and **Avskrubba** (put the real values back in the AI's answer). The key opens as a card on top. Layout from the owner's wireframe, 2026-10-10.
+No wizard. One page, two cards side by side: **Skrubba** (make the text safe) and **Avskrubba** (put the real values back in the AI's answer). The kodnyckel and Vanliga frågor open as windows on top. Layout from the owner's wireframe, 2026-10-10.
 
 ```
                           Skrubba                          ← logotype
- Nyckel [ 13 uppgifter ]                               (?)
+ Kodnyckel [ 13 uppgifter ]                    [Vanliga frågor]
+   Visar vilka riktiga uppgifter platshållarna står för …
  Skrubba            Visa exempel   Avskrubba
  ┌──────────────────────────────┐  ┌──────────────────────────────┐
  │ text, highlights overlaid    │  │ the AI's answer; restored    │
@@ -53,19 +54,23 @@ Unmatched placeholders are listed under the text:
 
 Tolerant matching rules live in `docs/ARCHITECTURE.md`. The tool asks when unsure; it never silently substitutes.
 
-## Key card
+## Kodnyckel window
 
-Opened from the key button next to "Nyckel" (it reads "Ingen nyckel än", then "{n} uppgifter"). A dialog over the page: title "Nyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
+"Kodnyckel" is the established Swedish word for a list linking codes to real identities; it is not an encryption key, and the explainer (`key.explainer`) next to the button and at the top of the window says so by example. Opened from the button next to "Kodnyckel" (it reads "Ingen kodnyckel än", then "{n} uppgifter"). A window over the page: title "Kodnyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
 
-- "Ladda ner nyckel" → `skrubba-nyckel-YYYY-MM-DD.json` (entities + word list). Line under: "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material."
-- "Ladda upp nyckel" → file picker, restores key and word list into memory.
+- "Ladda ner kodnyckel" → `skrubba-kodnyckel-YYYY-MM-DD.json` (entities + word list). Line under: "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material."
+- "Ladda upp kodnyckel" → file picker, restores key and word list into memory.
 - "Rensa allt" → clears text, entities, word list, key. Confirmation required.
 
-Note under the table: "Nyckeln finns bara i den här fliken. Stänger du fliken försvinner den."
+Note under the table: "Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den."
+
+## Vanliga frågor window
+
+The button "Vanliga frågor" top right, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
 
 ## Model state
 
-Loading progress shows inside the Skrubba card (`gate.lead`, `gate.body`, "Laddar modell 43 %"). The Avskrubba card and the key card work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Inget lämnar din dator" sits in the footer and links to `/sa-funkar-det`; "?" top right links there too.
+Loading progress shows inside the Skrubba card (`gate.lead`, `gate.body`, "Laddar modell 43 %"). The Avskrubba card and the key card work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Inget lämnar din dator" sits in the footer and opens Vanliga frågor.
 
 ## Dropping files
 
@@ -80,14 +85,14 @@ Each card accepts a dropped `.txt` or `.md` file, read in the browser. Anything 
 | `Cmd/Ctrl+Shift+C` | Copy from the card in focus (Skrubba otherwise) |
 | `Cmd/Ctrl+Enter` | Skrubba card: Kopiera. Avskrubba card: Avskrubba, then Kopiera |
 | `↑ ↓` in the list, `Space` | Navigate rows, toggle |
-| `Esc` | Close the key card or the toast |
+| `Esc` | Close the kodnyckel or Vanliga frågor window, or the toast |
 
 ## Mobile (≥ 390 px)
 
-The cards stack, Skrubba first; the item list stays under the Skrubba card and folds with its toggle. The key card fits the screen width. Nothing scrolls sideways.
+The cards stack, Skrubba first; the item list stays under the Skrubba card and folds with its toggle. The windows fit the screen width. Nothing scrolls sideways.
 
 ## What this screen must never do
 
-- Show a modal on load. (The key card opens only when asked for.)
+- Show a modal on load. (The windows open only when asked for.)
 - Ask for an account, email or cookie consent (there are no cookies).
-- Send anything anywhere. The "?" page says exactly how to verify that.
+- Send anything anywhere. Vanliga frågor says exactly how to verify that.
