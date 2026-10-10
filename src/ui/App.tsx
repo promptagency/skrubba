@@ -3,7 +3,7 @@ import { keyFileName, type MaskInput, parseKey, parseWordList } from "../engine/
 import { currentKey, freshEntities, type Mode, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
-import { EXAMPLE, HOW, t } from "./copy.ts";
+import { countLabel, EXAMPLE, HOW, t } from "./copy.ts";
 import { Editor, type EditorHandle } from "./Editor.tsx";
 import { EntityPanel } from "./EntityPanel.tsx";
 import { Gate } from "./Gate.tsx";
@@ -27,6 +27,8 @@ export function App() {
   const { state, dispatch, masker } = useSession();
   const path = usePath();
   const [flash, setFlash] = useState<string | null>(null);
+  // Narrow screens only: the entity panel as a bottom sheet.
+  const [sheetOpen, setSheetOpen] = useState(false);
   const editor = useRef<EditorHandle>(null);
   const pasted = useRef(false);
   const latest = useRef(state);
@@ -191,8 +193,9 @@ export function App() {
         if (mode === "scrub") void copyScrubbed();
         if (mode === "restore") runRestore();
         if (mode === "key") downloadKey();
-      } else if (e.key === "Escape" && latest.current.toast) {
-        closeToast();
+      } else if (e.key === "Escape") {
+        setSheetOpen(false);
+        if (latest.current.toast) closeToast();
       }
     }
     window.addEventListener("keydown", onKey);
@@ -258,9 +261,23 @@ export function App() {
                 onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
               />
             )}
-            <p className="caveat">{t("caveat.short")}</p>
+            <div className="editor-footer">
+              <button
+                type="button"
+                className="panel-chip"
+                aria-expanded={sheetOpen}
+                aria-controls="entity-panel"
+                onClick={() => setSheetOpen((open) => !open)}
+              >
+                {countLabel(entities.length)}
+              </button>
+              <p className="caveat">{t("caveat.short")}</p>
+            </div>
           </section>
+          {/* Narrow screens: tapping outside the open sheet closes it. */}
+          {sheetOpen && <div className="sheet-backdrop" aria-hidden="true" onClick={() => setSheetOpen(false)} />}
           <EntityPanel
+            open={sheetOpen}
             entities={entities}
             wordListRaw={state.wordListRaw}
             wordCount={wordList.length}

@@ -458,19 +458,92 @@ kbd {
   border-radius: var(--radius);
 }
 
+.editor-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panel-chip {
+  display: none;
+  flex: none;
+}
+
+.sheet-backdrop {
+  display: none;
+}
+
 @media (max-width: 760px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+  .brand {
+    flex: 1;
+  }
+  .modes {
+    order: 3;
+    flex-basis: 100%;
+  }
   .workspace {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
+    position: relative;
   }
+  .editor-column {
+    padding: 8px 16px;
+  }
+  .panel-chip {
+    display: inline-block;
+  }
+  /* The entity panel becomes a bottom sheet over the editor. */
   .panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 70%;
+    z-index: 5;
+    background: var(--bg);
     border-left: none;
     border-top: 1px solid var(--line);
-    max-height: 40vh;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 24px rgb(0 0 0 / 0.15);
+    transform: translateY(100%);
+    visibility: hidden;
+    transition:
+      transform 0.2s ease-out,
+      visibility 0.2s;
+  }
+  .panel.open {
+    transform: none;
+    visibility: visible;
+  }
+  .sheet-backdrop {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    background: rgb(0 0 0 / 0.08);
+  }
+  .statusbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .status {
+    font-size: 13px;
+  }
+  .key-table {
+    font-size: 13px;
+  }
+  .key-table code {
+    word-break: break-all;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
   .hl-flash {
     animation: none;
     box-shadow: 0 0 0 3px var(--focus);

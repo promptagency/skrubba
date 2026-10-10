@@ -3,6 +3,8 @@ import type { Entity } from "../engine/index.ts";
 import { countLabel, t, TYPE_LABEL, typeGroup } from "./copy.ts";
 
 interface Props {
+  /** Narrow screens: whether the bottom sheet is shown. Ignored on wide screens. */
+  open: boolean;
   entities: Entity[];
   wordListRaw: string;
   wordCount: number;
@@ -47,7 +49,7 @@ export function EntityPanel(props: Props) {
   }
 
   return (
-    <aside className="panel" aria-label={countLabel(entities.length)}>
+    <aside id="entity-panel" className={`panel ${props.open ? "open" : ""}`} aria-label={countLabel(entities.length)}>
       <h2 className="panel-count">{countLabel(entities.length)}</h2>
       <ul className="rows" ref={list}>
         {entities.map((e, i) => (
