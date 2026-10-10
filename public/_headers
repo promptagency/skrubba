@@ -1,0 +1,6 @@
+# Cloudflare Pages headers. The full set (CSP, caching) comes in Phase 5.
+
+# Browsers check this file for updates on every visit. It must never be
+# cached, or new deploys and the kill switch stop reaching visitors.
+/sw.js
+  Cache-Control: no-cache
