@@ -42,7 +42,7 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 
 **Copy.** "Kopiera" copies the text with all active entities replaced. Toast: "Kopierat. 14 uppgifter skrubbade." Counter updates live.
 
-**Empty state.** "Klistra in text här. Den stannar i din webbläsare." plus "Visa exempel".
+**Empty state.** "Klistra in text här. Den stannar i din webbläsare." plus "Visa exempel". The item count and "Skrubba alla" / "Behåll alla" stay hidden until there is text; "Egna ord" is always there so terms can be added first.
 
 ## Avskrubba card
 

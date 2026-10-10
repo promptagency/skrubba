@@ -45,6 +45,11 @@
   box-sizing: border-box;
 }
 
+/* The hidden attribute must win over component display rules. */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body,
 #root {

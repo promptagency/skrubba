@@ -273,18 +273,21 @@ export function App() {
           )}
           <ModelStatus model={state.model} />
           <div className="card-actions">
-            <button
-              type="button"
-              className="disclosure"
-              aria-expanded={listOpen}
-              aria-controls="entity-rows"
-              onClick={() => setListOpen((open) => !open)}
-            >
-              {countLabel(entities.length)}{" "}
-              <span className="disclosure-arrow" aria-hidden="true">
-                {listOpen ? "▾" : "▸"}
-              </span>
-            </button>
+            {/* Nothing to count or act on before there is text. */}
+            {state.text && (
+              <button
+                type="button"
+                className="disclosure"
+                aria-expanded={listOpen}
+                aria-controls="entity-rows"
+                onClick={() => setListOpen((open) => !open)}
+              >
+                {countLabel(entities.length)}{" "}
+                <span className="disclosure-arrow" aria-hidden="true">
+                  {listOpen ? "▾" : "▸"}
+                </span>
+              </button>
+            )}
             <button
               type="button"
               className="primary"
@@ -296,7 +299,7 @@ export function App() {
           </div>
           <p className="caveat">{t("caveat.short")}</p>
           <EntityPanel
-            open={listOpen}
+            open={listOpen && state.text !== ""}
             entities={entities}
             wordListRaw={state.wordListRaw}
             wordCount={wordList.length}
