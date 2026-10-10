@@ -20,8 +20,8 @@ const withEntities = reduce(withText, {
 });
 
 describe("sessionReducer", () => {
-  it("starts empty in Skrubba mode with the model loading", () => {
-    expect(initialSession.mode).toBe("scrub");
+  it("starts empty with the model loading", () => {
+    expect(initialSession).not.toHaveProperty("mode");
     expect(initialSession.text).toBe("");
     expect(initialSession.model).toEqual({ status: "loading", pct: 0 });
   });
@@ -76,7 +76,6 @@ describe("sessionReducer", () => {
     const s = reduce(withEntities, { type: "loadExample", text: "Hej", wordList: ["Projekt Havsvind"] });
     expect(s.text).toBe("Hej");
     expect(s.wordListRaw).toBe("Projekt Havsvind");
-    expect(s.mode).toBe("scrub");
   });
 
   it("tracks model state", () => {

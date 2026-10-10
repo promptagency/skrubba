@@ -1,30 +1,25 @@
 import { readFileSync } from "node:fs";
 import { expect, type Page, test } from "@playwright/test";
-import { editor, MOD, openReady, rows } from "./helpers.ts";
+import { answerBox, copyScrubbed, editor, MOD, openKey, openReady, placeholderOf, rows } from "./helpers.ts";
 
 const TEXT = "Hej Karin, Johan Lindqvist (850412-1234) flyttar till Umeå.";
 
 async function scrubAndCopy(page: Page) {
   await editor(page).fill(TEXT);
   await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
-  await page.getByRole("button", { name: "Kopiera" }).click();
+  await copyScrubbed(page).click();
   await expect(page.locator(".toast")).toContainText("skrubbade");
 }
 
-const answerBox = (page: Page) => page.getByRole("textbox", { name: "Byt tillbaka" });
-const placeholderOf = (page: Page, value: string) =>
-  page.getByRole("row").filter({ hasText: value }).getByRole("cell").first().textContent();
 
 test("Phase 3 round trip: scrub, copy, paste an answer, restore with a suggestion", async ({ page }) => {
   await openReady(page);
   await scrubAndCopy(page);
 
-  await page.keyboard.press(`${MOD}+3`);
-  const johan = (await placeholderOf(page, "Johan Lindqvist"))!;
-  const umea = (await placeholderOf(page, "Umeå"))!;
+  const johan = await placeholderOf(page, "Johan Lindqvist");
+  const umea = await placeholderOf(page, "Umeå");
   expect(johan).toMatch(/^\[NAMN_\d\]$/);
 
-  await page.keyboard.press(`${MOD}+2`);
   const mangled = umea.replace("[", "").replace("]", "").replace("_", " "); // "PLATS 1"
   await answerBox(page).fill(`Hej! ${johan} bör kontakta HR innan flytten till ${mangled}. ${"[NAMN_9]"} vet inget.`);
   await page.keyboard.press(`${MOD}+Enter`);
@@ -42,7 +37,6 @@ test("Phase 3 round trip: scrub, copy, paste an answer, restore with a suggestio
 test("Nej hides a suggestion and leaves the text", async ({ page }) => {
   await openReady(page);
   await scrubAndCopy(page);
-  await page.keyboard.press(`${MOD}+2`);
   await answerBox(page).fill("Ring NAMN 1 i dag.");
   await page.keyboard.press(`${MOD}+Enter`);
   await page.getByRole("button", { name: "Nej" }).click();
@@ -53,9 +47,9 @@ test("Nej hides a suggestion and leaves the text", async ({ page }) => {
 test("the key downloads, uploads into a fresh tab, and restores there", async ({ page, context }) => {
   await openReady(page);
   await scrubAndCopy(page);
-  await page.keyboard.press(`${MOD}+3`);
-  await expect(page.getByText("Filen innehåller riktiga uppgifter.", { exact: false })).toBeVisible();
-  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Ladda ner nyckel" }).click()]);
+  const dialog = await openKey(page);
+  await expect(dialog.getByText("Filen innehåller riktiga uppgifter.", { exact: false })).toBeVisible();
+  const [download] = await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner nyckel" }).click()]);
   expect(download.suggestedFilename()).toMatch(/^skrubba-nyckel-\d{4}-\d{2}-\d{2}\.json$/);
   const path = await download.path();
   const key = JSON.parse(readFileSync(path, "utf8"));
@@ -64,10 +58,10 @@ test("the key downloads, uploads into a fresh tab, and restores there", async ({
 
   const fresh = await context.newPage();
   await fresh.goto("/");
-  await fresh.getByRole("button", { name: "Nyckel" }).click();
+  const freshKey = await openKey(fresh);
   await fresh.locator('input[type="file"]').setInputFiles(path);
-  await expect(fresh.getByRole("row").filter({ hasText: "Johan Lindqvist" })).toBeVisible();
-  await fresh.getByRole("button", { name: "Byt tillbaka" }).first().click();
+  await expect(freshKey.getByRole("row").filter({ hasText: "Johan Lindqvist" })).toBeVisible();
+  await fresh.keyboard.press("Escape");
   await answerBox(fresh).fill(`Hälsa ${johan}.`);
   await fresh.keyboard.press(`${MOD}+Enter`);
   await expect(answerBox(fresh)).toHaveValue("Hälsa Johan Lindqvist.");
@@ -75,7 +69,7 @@ test("the key downloads, uploads into a fresh tab, and restores there", async ({
 
 test("a file that is not a key is refused with a message", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Nyckel" }).click();
+  await openKey(page);
   await page.locator('input[type="file"]').setInputFiles({ name: "x.json", mimeType: "application/json", buffer: Buffer.from("{}") });
   await expect(page.getByText("Filen kunde inte läsas som en nyckel.", { exact: false })).toBeVisible();
 });
@@ -83,14 +77,15 @@ test("a file that is not a key is refused with a message", async ({ page }) => {
 test("Rensa allt clears text, entities, words and key after confirming", async ({ page }) => {
   await openReady(page);
   await scrubAndCopy(page);
-  await page.keyboard.press(`${MOD}+3`);
+  const dialog = await openKey(page);
   page.once("dialog", (d) => {
     expect(d.message()).toBe("Text, uppgifter, egna ord och nyckel raderas. Vill du fortsätta?");
     void d.accept();
   });
-  await page.getByRole("button", { name: "Rensa allt" }).click();
-  await expect(page.getByText("Nyckeln skapas när du kopierar en skrubbad text.")).toBeVisible();
-  await page.keyboard.press(`${MOD}+1`);
+  await dialog.getByRole("button", { name: "Rensa allt" }).click();
+  await expect(dialog.getByText("Nyckeln skapas när du kopierar en skrubbad text.")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: /^Nyckel/ })).toHaveText("Ingen nyckel än");
   await expect(editor(page)).toHaveValue("");
   await expect(rows(page)).toHaveCount(0);
 });
@@ -145,11 +140,10 @@ test("a whole session never touches web storage or cookies", async ({ page, cont
 
   await openReady(page);
   await scrubAndCopy(page);
-  await page.keyboard.press(`${MOD}+2`);
   await answerBox(page).fill("Hej [NAMN_1].");
   await page.keyboard.press(`${MOD}+Enter`);
-  await page.keyboard.press(`${MOD}+3`);
-  await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Ladda ner nyckel" }).click()]);
+  const dialog = await openKey(page);
+  await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner nyckel" }).click()]);
 
   type Spy = { __touched: string[]; __real: Record<string, () => unknown> };
   expect(await page.evaluate(() => (window as unknown as Spy).__touched)).toEqual([]);
@@ -168,18 +162,15 @@ test("a whole session never touches web storage or cookies", async ({ page, cont
 
 test("a restore made before the key had the value updates once it does", async ({ page }) => {
   await openReady(page);
-  await page.keyboard.press(`${MOD}+2`);
   await answerBox(page).fill("Hälsa [NAMN_1].");
   await page.keyboard.press(`${MOD}+Enter`);
   await expect(page.getByText("[NAMN_1] finns inte i nyckeln.", { exact: false })).toBeVisible();
 
-  await page.keyboard.press(`${MOD}+1`);
   await editor(page).fill("Anna Berg ringde i går.");
   await expect(rows(page).filter({ hasText: "Anna Berg" })).toHaveCount(1);
-  await page.getByRole("button", { name: "Kopiera" }).click();
+  await copyScrubbed(page).click();
   await expect(page.locator(".toast")).toBeVisible();
 
-  await page.keyboard.press(`${MOD}+2`);
   await expect(answerBox(page)).toHaveValue("Hälsa Anna Berg.");
   await expect(page.getByText(/finns inte i nyckeln/)).toHaveCount(0);
 });

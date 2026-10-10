@@ -1,35 +1,33 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { keyFileName, type MaskInput, parseKey, parseWordList } from "../engine/index.ts";
-import { currentKey, freshEntities, type Mode, panelEntities } from "../state/session.ts";
+import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
 import { countLabel, EXAMPLE, HOW, t } from "./copy.ts";
+import { DropZone } from "./DropZone.tsx";
 import { Editor, type EditorHandle } from "./Editor.tsx";
 import { EntityPanel } from "./EntityPanel.tsx";
 import { Gate } from "./Gate.tsx";
 import { HowItWorks } from "./HowItWorks.tsx";
-import { KeyView } from "./KeyView.tsx";
+import { KeyDialog } from "./KeyDialog.tsx";
+import { ModelStatus } from "./ModelStatus.tsx";
 import { RestoreView } from "./RestoreView.tsx";
 import { followLink, HOW_PATH, usePath } from "./route.ts";
 import { controlledByServiceWorker } from "./serviceWorker.ts";
-import { StatusBar } from "./StatusBar.tsx";
 import { Toast } from "./Toast.tsx";
 
 const DEBOUNCE_MS = 300;
 const FLASH_MS = 1200;
-const MODES: Array<{ mode: Mode; label: string }> = [
-  { mode: "scrub", label: t("mode.scrub") },
-  { mode: "restore", label: t("mode.restore") },
-  { mode: "key", label: t("mode.key") },
-];
 
 export function App() {
   const { state, dispatch, masker } = useSession();
   const path = usePath();
   const [flash, setFlash] = useState<string | null>(null);
-  // Narrow screens only: the entity panel as a bottom sheet.
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [keyOpen, setKeyOpen] = useState(false);
+  const [listOpen, setListOpen] = useState(true);
+  const [dropError, setDropError] = useState<"scrub" | "restore" | null>(null);
   const editor = useRef<EditorHandle>(null);
+  const restorePanel = useRef<HTMLElement>(null);
   const pasted = useRef(false);
   const latest = useRef(state);
   latest.current = state;
@@ -37,7 +35,7 @@ export function App() {
   const wordList = parseWordList(state.wordListRaw);
   const modelStatus = state.model.status;
 
-  // Load the model in the background. The Skrubba editor waits for it.
+  // Load the model in the background. The Skrubba card waits for it.
   useEffect(() => {
     controlledByServiceWorker()
       .then((controlled) =>
@@ -99,8 +97,8 @@ export function App() {
     dispatch({ type: "toast", message: t("toast.copied", { n: key.entries.length }) });
   }, [masker, dispatch]);
 
-  // Byt tillbaka always starts from the answer as pasted, with the
-  // suggestions accepted so far.
+  // Avskrubba always starts from the answer as pasted, with the suggestions
+  // accepted so far.
   const runRestore = useCallback(
     (accept?: string) => {
       const s = latest.current;
@@ -124,6 +122,12 @@ export function App() {
     await copyText(s.answer);
     dispatch({ type: "toast", message: t("toast.copiedRestored", { n: s.restore?.result.restored.length ?? 0 }) });
   }, [dispatch]);
+
+  // The right card's one button: Avskrubba, then Kopiera once it is done.
+  const restoreOrCopy = useCallback(() => {
+    if (latest.current.restore) void copyRestored();
+    else runRestore();
+  }, [copyRestored, runRestore]);
 
   const downloadKey = useCallback(() => {
     const s = latest.current;
@@ -166,41 +170,26 @@ export function App() {
 
   const closeToast = useCallback(() => dispatch({ type: "toast", message: null }), [dispatch]);
 
-  const primary = {
-    scrub: {
-      label: t("action.copy"),
-      disabled: state.model.status === "loading" || !state.text,
-      onClick: () => void copyScrubbed(),
-    },
-    restore: { label: t("action.restore"), disabled: !state.answer, onClick: () => runRestore() },
-    // Nyckel has its own buttons, with the warning under "Ladda ner nyckel".
-    key: null,
-  }[state.mode];
-
+  // Shortcuts act on the card that has focus; the Skrubba card otherwise.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const mod = e.metaKey || e.ctrlKey;
-      const mode = latest.current.mode;
-      if (mod && ["1", "2", "3"].includes(e.key)) {
+      const inRestore = !!restorePanel.current?.contains(document.activeElement);
+      if (mod && e.shiftKey && e.key.toLowerCase() === "c") {
         e.preventDefault();
-        dispatch({ type: "mode", mode: MODES[Number(e.key) - 1].mode });
-      } else if (mod && e.shiftKey && e.key.toLowerCase() === "c") {
-        e.preventDefault();
-        if (mode === "scrub") void copyScrubbed();
-        if (mode === "restore") void copyRestored();
+        if (inRestore) void copyRestored();
+        else void copyScrubbed();
       } else if (mod && e.key === "Enter") {
         e.preventDefault();
-        if (mode === "scrub") void copyScrubbed();
-        if (mode === "restore") runRestore();
-        if (mode === "key") downloadKey();
-      } else if (e.key === "Escape") {
-        setSheetOpen(false);
-        if (latest.current.toast) closeToast();
+        if (inRestore) restoreOrCopy();
+        else void copyScrubbed();
+      } else if (e.key === "Escape" && latest.current.toast) {
+        closeToast();
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [dispatch, copyScrubbed, copyRestored, runRestore, downloadKey, closeToast]);
+  }, [copyScrubbed, copyRestored, restoreOrCopy, closeToast]);
 
   const entities = panelEntities(state);
 
@@ -208,46 +197,58 @@ export function App() {
   if (path === HOW_PATH) return <HowItWorks />;
 
   return (
-    <div className="app">
-      <header className="topbar">
-        <h1 className="brand">{t("app.name")}</h1>
-        <nav className="modes" aria-label={t("app.name")}>
-          {MODES.map(({ mode, label }, i) => (
-            <button
-              key={mode}
-              type="button"
-              className="mode"
-              aria-current={state.mode === mode ? "page" : undefined}
-              onClick={() => dispatch({ type: "mode", mode })}
-              title={`${navigator.platform.startsWith("Mac") ? "⌘" : "Ctrl+"}${i + 1}`}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
+    <div className="site">
+      <header className="masthead">
+        <h1 className="logotype">{t("app.name")}</h1>
+      </header>
+
+      <div className="toolbar">
+        <span className="toolbar-label" id="key-label">
+          {t("mode.key")}
+        </span>
         <button
           type="button"
-          className="link"
-          disabled={state.model.status === "loading"}
-          onClick={() => {
-            dispatch({ type: "loadExample", text: EXAMPLE.text, wordList: EXAMPLE.wordList });
-            pasted.current = true;
-            editor.current?.focus();
-          }}
+          className="key-button"
+          aria-labelledby="key-label key-button"
+          id="key-button"
+          aria-haspopup="dialog"
+          onClick={() => setKeyOpen(true)}
         >
-          {t("editor.example")}
+          {state.keyEntries.length > 0 ? countLabel(state.keyEntries.length) : t("key.none")}
         </button>
         <a className="help" href={HOW_PATH} onClick={followLink} aria-label={HOW.title}>
           ?
         </a>
-      </header>
+      </div>
 
-      {state.mode === "scrub" && (
-        <main className="workspace">
-          <section className="editor-column">
-            {state.model.status === "loading" ? (
-              <Gate pct={state.model.pct} />
-            ) : (
+      <main className="panels">
+        <section className="card-column" aria-labelledby="scrub-title">
+          <div className="card-head">
+            <h2 id="scrub-title">{t("mode.scrub")}</h2>
+            <button
+              type="button"
+              className="link"
+              disabled={state.model.status === "loading"}
+              onClick={() => {
+                dispatch({ type: "loadExample", text: EXAMPLE.text, wordList: EXAMPLE.wordList });
+                pasted.current = true;
+                editor.current?.focus();
+              }}
+            >
+              {t("editor.example")}
+            </button>
+          </div>
+          {state.model.status === "loading" ? (
+            <Gate pct={state.model.pct} />
+          ) : (
+            <DropZone
+              onText={(text) => {
+                setDropError(null);
+                pasted.current = true;
+                dispatch({ type: "setText", text });
+              }}
+              onUnsupported={() => setDropError("scrub")}
+            >
               <Editor
                 ref={editor}
                 text={state.text}
@@ -260,24 +261,39 @@ export function App() {
                 onScrubSelection={(term) => dispatch({ type: "addManual", term })}
                 onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
               />
-            )}
-            <div className="editor-footer">
-              <button
-                type="button"
-                className="panel-chip"
-                aria-expanded={sheetOpen}
-                aria-controls="entity-panel"
-                onClick={() => setSheetOpen((open) => !open)}
-              >
-                {countLabel(entities.length)}
-              </button>
-              <p className="caveat">{t("caveat.short")}</p>
-            </div>
-          </section>
-          {/* Narrow screens: tapping outside the open sheet closes it. */}
-          {sheetOpen && <div className="sheet-backdrop" aria-hidden="true" onClick={() => setSheetOpen(false)} />}
+            </DropZone>
+          )}
+          {dropError === "scrub" && (
+            <p className="notice" role="alert">
+              {t("drop.unsupported")}
+            </p>
+          )}
+          <ModelStatus model={state.model} />
+          <div className="card-actions">
+            <button
+              type="button"
+              className="disclosure"
+              aria-expanded={listOpen}
+              aria-controls="entity-rows"
+              onClick={() => setListOpen((open) => !open)}
+            >
+              {countLabel(entities.length)}{" "}
+              <span className="disclosure-arrow" aria-hidden="true">
+                {listOpen ? "▾" : "▸"}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="primary"
+              disabled={state.model.status === "loading" || !state.text}
+              onClick={() => void copyScrubbed()}
+            >
+              {t("action.copy")}
+            </button>
+          </div>
+          <p className="caveat">{t("caveat.short")}</p>
           <EntityPanel
-            open={sheetOpen}
+            open={listOpen}
             entities={entities}
             wordListRaw={state.wordListRaw}
             wordCount={wordList.length}
@@ -288,38 +304,61 @@ export function App() {
             onKeepAll={() => dispatch({ type: "keepAll" })}
             onWordList={(raw) => dispatch({ type: "setWordList", raw })}
           />
-        </main>
-      )}
+        </section>
 
-      {state.mode === "restore" && (
-        <main className="workspace workspace-single">
-          <RestoreView
-            answer={state.answer}
-            restore={state.restore}
-            onChange={(text) => dispatch({ type: "setAnswer", text })}
-            onAnswer={(found, accept) => {
-              dispatch({ type: "suggestion", found, accept });
-              if (accept) runRestore(found);
+        <section className="card-column" aria-labelledby="restore-title" ref={restorePanel}>
+          <div className="card-head">
+            <h2 id="restore-title">{t("mode.restore")}</h2>
+          </div>
+          <DropZone
+            onText={(text) => {
+              setDropError(null);
+              dispatch({ type: "setAnswer", text });
             }}
-            onCopy={() => void copyRestored()}
-          />
-        </main>
-      )}
+            onUnsupported={() => setDropError("restore")}
+          >
+            <RestoreView
+              answer={state.answer}
+              restore={state.restore}
+              onChange={(text) => dispatch({ type: "setAnswer", text })}
+              onAnswer={(found, accept) => {
+                dispatch({ type: "suggestion", found, accept });
+                if (accept) runRestore(found);
+              }}
+            />
+          </DropZone>
+          {dropError === "restore" && (
+            <p className="notice" role="alert">
+              {t("drop.unsupported")}
+            </p>
+          )}
+          <div className="card-actions">
+            <button type="button" className="primary" disabled={!state.answer} onClick={restoreOrCopy}>
+              {state.restore ? t("action.copy") : t("action.restore")}
+            </button>
+          </div>
+        </section>
+      </main>
 
-      {state.mode === "key" && (
-        <main className="workspace workspace-single">
-          <KeyView
-            entries={state.keyEntries}
-            wordList={wordList}
-            entities={entities}
-            onDownload={downloadKey}
-            onUpload={uploadKey}
-            onClear={clearAll}
-          />
-        </main>
-      )}
+      <footer className="site-footer">
+        <p>{t("footer.credits")}</p>
+        <p>
+          <a href={HOW_PATH} onClick={followLink}>
+            {t("status.trust")}
+          </a>
+        </p>
+      </footer>
 
-      <StatusBar model={state.model} primary={primary} />
+      <KeyDialog
+        open={keyOpen}
+        onClose={() => setKeyOpen(false)}
+        entries={state.keyEntries}
+        wordList={wordList}
+        entities={entities}
+        onDownload={downloadKey}
+        onUpload={uploadKey}
+        onClear={clearAll}
+      />
       <Toast message={state.toast} onClose={closeToast} />
     </div>
   );

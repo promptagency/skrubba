@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import type { Entity, KeyEntry } from "../engine/index.ts";
 import { t, TYPE_LABEL } from "./copy.ts";
 
-interface Props {
+export interface KeyViewProps {
   entries: KeyEntry[];
   wordList: string[];
   entities: Entity[];
@@ -12,7 +12,7 @@ interface Props {
 }
 
 /** Nyckel: what each placeholder stands for, download, upload, clear. */
-export function KeyView({ entries, wordList, entities, onDownload, onUpload, onClear }: Props) {
+export function KeyView({ entries, wordList, entities, onDownload, onUpload, onClear }: KeyViewProps) {
   const file = useRef<HTMLInputElement>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
   const counts = new Map(entities.map((e) => [e.placeholder, e.occurrences.length]));

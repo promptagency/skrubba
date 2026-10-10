@@ -8,11 +8,10 @@ interface Props {
   restore: RestoreState | null;
   onChange(text: string): void;
   onAnswer(found: string, accept: boolean): void;
-  onCopy(): void;
 }
 
 /** Byt tillbaka: paste the AI's answer, get the real values back. */
-export function RestoreView({ answer, restore, onChange, onAnswer, onCopy }: Props) {
+export function RestoreView({ answer, restore, onChange, onAnswer }: Props) {
   const area = useRef<HTMLTextAreaElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
   const marks = (restore?.result.restored ?? []).map((r) => ({ start: r.start, end: r.end, data: r.placeholder }));
@@ -45,7 +44,6 @@ export function RestoreView({ answer, restore, onChange, onAnswer, onCopy }: Pro
           placeholder={t("restore.empty")}
           value={answer}
           spellCheck={false}
-          autoFocus
           onChange={(e) => onChange(e.target.value)}
           onScroll={syncScroll}
         />
@@ -72,11 +70,6 @@ export function RestoreView({ answer, restore, onChange, onAnswer, onCopy }: Pro
         </ul>
       )}
 
-      <div className="restore-actions">
-        <button type="button" onClick={onCopy} disabled={!answer}>
-          {t("action.copy")}
-        </button>
-      </div>
     </div>
   );
 }

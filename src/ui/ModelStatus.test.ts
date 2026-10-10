@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { announcement } from "./StatusBar.tsx";
+import { announcement } from "./ModelStatus.tsx";
 
 describe("announcement", () => {
   it("speaks loading progress in quarters only", () => {

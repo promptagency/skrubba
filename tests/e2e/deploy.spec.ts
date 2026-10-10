@@ -15,7 +15,7 @@ function build(name: string, env: Record<string, string>) {
 }
 
 const buildId = (page: Page) => page.locator('meta[name="skrubba-build"]').getAttribute("content");
-const status = (page: Page) => page.locator("p.status");
+const status = (page: Page) => page.locator(".model-status");
 const safely = <T>(fn: () => Promise<T>) => fn().catch(() => null);
 
 // The page's own requests go through the service worker in control, so the
@@ -121,7 +121,7 @@ test.describe("deploys", () => {
 
     // The first tab still runs build a and can still mask with its model.
     expect(await buildId(page)).toBe("a");
-    await page.getByRole("textbox", { name: "Skrubba" }).fill("Igår ringde Johan Lindqvist.");
+    await page.getByRole("textbox", { name: "Skrubba", exact: true }).fill("Igår ringde Johan Lindqvist.");
     await expect(page.locator(".row-main").filter({ hasText: "Johan Lindqvist" })).toContainText("Namn");
   });
 });

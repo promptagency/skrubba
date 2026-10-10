@@ -24,7 +24,7 @@ test("the editor stays locked with an explanation until the model is ready", asy
   await expect(page.getByRole("button", { name: "Visa exempel" })).toBeDisabled();
 
   release();
-  await expect(page.locator("p.status")).toHaveAttribute("data-state", "ready", { timeout: 90_000 });
+  await expect(page.locator(".model-status")).toHaveAttribute("data-state", "ready", { timeout: 90_000 });
   await expect(editor(page)).toBeFocused();
   await expect(page.getByText(LEAD)).toHaveCount(0);
 });
@@ -32,7 +32,7 @@ test("the editor stays locked with an explanation until the model is ready", asy
 test("the editor unlocks in rules-only mode when the model cannot load", async ({ page }) => {
   await page.route("**/models/**/onnx/**", (route) => route.abort());
   await page.goto("/");
-  await expect(page.locator("p.status")).toHaveAttribute("data-state", "rulesOnly", { timeout: 90_000 });
+  await expect(page.locator(".model-status")).toHaveAttribute("data-state", "rulesOnly", { timeout: 90_000 });
   await expect(editor(page)).toBeFocused();
   await editor(page).fill("Pnr 19850312-4471");
   await expect(page.locator(".row-main").filter({ hasText: "19850312-4471" })).toBeVisible();

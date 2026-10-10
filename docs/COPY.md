@@ -21,9 +21,9 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | app.title | Skrubba. Gör texten ofarlig innan du klistrar in den i AI. |
 | app.tagline | Namn, personnummer och hemligheter byts ut mot platshållare. Allt sker i din webbläsare. |
 | mode.scrub | Skrubba |
-| mode.restore | Byt tillbaka |
+| mode.restore | Avskrubba |
 | mode.key | Nyckel |
-| editor.empty | Klistra in text här. Den stannar i din webbläsare. |
+| editor.empty | Klistra in text här eller släpp en textfil. Den stannar i din webbläsare. |
 | editor.example | Visa exempel |
 | gate.lead | Skrubba laddar ner en liten svensk språkmodell till din webbläsare. |
 | gate.body | Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den. |
@@ -37,14 +37,14 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | entity.keep | Behåll |
 | selection.scrub | Skrubba markering |
 | action.copy | Kopiera |
-| action.restore | Byt tillbaka |
+| action.restore | Avskrubba |
 | toast.copied | Kopierat. {n} uppgifter skrubbade. |
 | toast.copiedRestored | Kopierat. {n} uppgifter tillbaka. |
 | status.loading | Laddar modell {pct} % |
 | status.ready | Modell laddad |
 | status.rulesOnly | Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv. |
 | status.trust | Inget lämnar din dator |
-| restore.empty | Klistra in svaret från AI här. Platshållarna byts tillbaka till de riktiga uppgifterna. |
+| restore.empty | Klistra in svaret från AI här eller släpp en textfil. Platshållarna byts tillbaka till de riktiga uppgifterna. |
 | restore.unmatched | Hittade {found} i svaret. Menade du {placeholder}, alltså {value}? |
 | restore.accept | Ja |
 | restore.reject | Nej |
@@ -63,7 +63,22 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | key.uploadError | Filen kunde inte läsas som en nyckel. Välj en fil som du har laddat ner från Skrubba. |
 | key.uploadConfirm | Text, uppgifter, egna ord och nyckel ersätts av innehållet i filen. Vill du fortsätta? |
 | unload.warning | Du har en nyckel som inte är nedladdad. Stänger du fliken går den förlorad. |
+| drop.unsupported | Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den. |
+| key.none | Ingen nyckel än |
+| key.close | Stäng |
+| footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency. |
 | caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar. |
+
+## Att granska
+
+Ändrat eller nytt 2026-10-10 för layouten med två kort (Skrubba och Avskrubba). Ägaren granskar ordvalen.
+
+- `mode.restore` och `action.restore`: "Byt tillbaka" blev "Avskrubba", som i skissen.
+- `editor.empty` och `restore.empty`: nämner att man kan släppa en textfil.
+- `drop.unsupported`: när någon släpper en fil som inte är .txt eller .md.
+- `key.none`: på nyckelknappen innan något är kopierat.
+- `key.close`: stänger nyckelkortet.
+- `footer.credits`: sidfoten.
 
 ## Typer
 

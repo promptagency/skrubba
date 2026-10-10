@@ -2,12 +2,9 @@
 // cookies or the URL (see CLAUDE.md).
 import { type Entity, type Key, type KeyEntry, mergeEntries, parseWordList, type RestoreResult } from "../engine/index.ts";
 
-export type Mode = "scrub" | "restore" | "key";
-
 export type ModelState = { status: "loading"; pct: number } | { status: "ready" } | { status: "rulesOnly" };
 
 export interface SessionState {
-  mode: Mode;
   text: string;
   wordListRaw: string;
   manual: string[];
@@ -37,7 +34,6 @@ export interface RestoreState {
 }
 
 export type SessionAction =
-  | { type: "mode"; mode: Mode }
   | { type: "setText"; text: string }
   | { type: "setWordList"; raw: string }
   | { type: "addManual"; term: string }
@@ -58,7 +54,6 @@ export type SessionAction =
   | { type: "suggestion"; found: string; accept: boolean };
 
 export const initialSession: SessionState = {
-  mode: "scrub",
   text: "",
   wordListRaw: "",
   manual: [],
@@ -76,8 +71,6 @@ export const initialSession: SessionState = {
 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   switch (action.type) {
-    case "mode":
-      return { ...state, mode: action.mode };
     case "setText":
       return { ...state, text: action.text };
     case "setWordList":
@@ -105,7 +98,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       return { ...state, kept: new Set([...state.kept].filter((p) => !current.has(p))) };
     }
     case "loadExample":
-      return { ...state, mode: "scrub", text: action.text, wordListRaw: action.wordList.join("\n") };
+      return { ...state, text: action.text, wordListRaw: action.wordList.join("\n") };
     case "model":
       return { ...state, model: action.model };
     case "toast":
@@ -125,14 +118,13 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
     case "loadKey":
       return {
         ...initialSession,
-        mode: state.mode,
         model: state.model,
         wordListRaw: action.key.wordList.join("\n"),
         keyEntries: action.key.entries,
         keyCreatedAt: action.key.createdAt,
       };
     case "clearAll":
-      return { ...initialSession, mode: state.mode, model: state.model };
+      return { ...initialSession, model: state.model };
     case "setAnswer":
       return { ...state, answer: action.text, restore: null };
     case "restored": {

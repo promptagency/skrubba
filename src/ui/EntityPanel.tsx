@@ -3,7 +3,7 @@ import type { Entity } from "../engine/index.ts";
 import { countLabel, t, TYPE_LABEL, typeGroup } from "./copy.ts";
 
 interface Props {
-  /** Narrow screens: whether the bottom sheet is shown. Ignored on wide screens. */
+  /** Whether the item rows are shown; the toggle sits in the row under the card. */
   open: boolean;
   entities: Entity[];
   wordListRaw: string;
@@ -49,9 +49,8 @@ export function EntityPanel(props: Props) {
   }
 
   return (
-    <aside id="entity-panel" className={`panel ${props.open ? "open" : ""}`} aria-label={countLabel(entities.length)}>
-      <h2 className="panel-count">{countLabel(entities.length)}</h2>
-      <ul className="rows" ref={list}>
+    <section className="panel" aria-label={countLabel(entities.length)}>
+      <ul className="rows" id="entity-rows" ref={list} hidden={!props.open}>
         {entities.map((e, i) => (
           <li key={e.placeholder} className={`row ${e.active ? "" : "row-kept"}`}>
             <button
@@ -100,7 +99,7 @@ export function EntityPanel(props: Props) {
           spellCheck={false}
         />
       </details>
-      <div className="panel-actions">
+      <div className="panel-actions" hidden={!props.open}>
         <button type="button" onClick={props.onScrubAll} disabled={entities.length === 0}>
           {t("panel.scrubAll")}
         </button>
@@ -108,6 +107,6 @@ export function EntityPanel(props: Props) {
           {t("panel.keepAll")}
         </button>
       </div>
-    </aside>
+    </section>
   );
 }

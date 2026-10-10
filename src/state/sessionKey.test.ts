@@ -47,13 +47,12 @@ describe("key in the session", () => {
     expect(s.model).toEqual({ status: "ready" });
   });
 
-  it("clears everything except the model and the mode", () => {
+  it("clears everything except the loaded model", () => {
     let s = reduce(initialSession, { type: "setText", text: "Anna" });
     s = reduce(s, { type: "copied", entries: [anna], at: now });
     s = reduce(s, { type: "model", model: { status: "ready" } });
-    s = reduce(s, { type: "mode", mode: "key" });
     s = reduce(s, { type: "clearAll" });
-    expect(s).toEqual({ ...initialSession, model: { status: "ready" }, mode: "key" });
+    expect(s).toEqual({ ...initialSession, model: { status: "ready" } });
   });
 });
 

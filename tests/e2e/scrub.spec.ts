@@ -17,8 +17,9 @@ test("paste, review, keep one, add a word and copy using only the keyboard", asy
   await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
   await expect(rows(page).filter({ hasText: "Nordström Fastigheter" })).toContainText("Organisation");
 
-  // Review: Tab into the panel, walk down to Karin and keep her.
-  await page.keyboard.press("Tab");
+  // Review: Tab past the list toggle and Kopiera into the list, walk down to Karin and keep her.
+  for (let i = 0; i < 5 && !(await rows(page).first().evaluate((el) => el === document.activeElement)); i++)
+    await page.keyboard.press("Tab");
   await expect(rows(page).first()).toBeFocused();
   const karin = rows(page).filter({ hasText: "Karin" });
   for (let i = 0; i < 10 && !(await karin.evaluate((el) => el === document.activeElement)); i++)
@@ -88,7 +89,7 @@ test("highlights line up with the text in the textarea", async ({ page }) => {
   // Put the caret right before "Lerum" and compare positions via a mirror range.
   const offset = await editor(page).evaluate((el: HTMLTextAreaElement) => el.value.indexOf("Lerum"));
   const markBox = await mark.boundingBox();
-  const overlayBox = await page.locator(".editor-overlay").boundingBox();
+  const overlayBox = await page.locator(".editor-overlay").first().boundingBox();
   const inputBox = await editor(page).boundingBox();
   expect(offset).toBeGreaterThan(0);
   expect(overlayBox).toEqual(inputBox);
