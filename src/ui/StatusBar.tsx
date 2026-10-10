@@ -1,5 +1,6 @@
 import type { ModelState } from "../state/session.ts";
 import { t } from "./copy.ts";
+import { followLink, HOW_PATH } from "./route.ts";
 
 interface Props {
   model: ModelState;
@@ -19,7 +20,10 @@ export function StatusBar({ model, primary }: Props) {
         <span className={`dot dot-model-${model.status}`} aria-hidden="true">
           ●
         </span>{" "}
-        {modelText(model)} · {t("status.trust")}
+        {modelText(model)} ·{" "}
+        <a href={HOW_PATH} onClick={followLink}>
+          {t("status.trust")}
+        </a>
       </p>
       {primary && (
         <button type="button" className="primary" onClick={primary.onClick} disabled={primary.disabled}>

@@ -1,6 +1,8 @@
 export const APP_NAME = "Skrubba";
 export const APP_SLUG = "skrubba";
 export const APP_URL = "https://skrubba.promptagency.se";
+/** Public repository, linked from /sa-funkar-det. Empty until the repo is public. */
+export const REPO_URL = "";
 
 // Self-hosted NER model (scripts/fetch-model.ts packs it into public/models/).
 // The directory carries the revision so a new model gets a new URL: the

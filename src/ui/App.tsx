@@ -3,12 +3,14 @@ import { keyFileName, type MaskInput, parseKey, parseWordList } from "../engine/
 import { currentKey, freshEntities, type Mode, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
-import { EXAMPLE, t } from "./copy.ts";
+import { EXAMPLE, HOW, t } from "./copy.ts";
 import { Editor, type EditorHandle } from "./Editor.tsx";
 import { EntityPanel } from "./EntityPanel.tsx";
 import { Gate } from "./Gate.tsx";
+import { HowItWorks } from "./HowItWorks.tsx";
 import { KeyView } from "./KeyView.tsx";
 import { RestoreView } from "./RestoreView.tsx";
+import { followLink, HOW_PATH, usePath } from "./route.ts";
 import { controlledByServiceWorker } from "./serviceWorker.ts";
 import { StatusBar } from "./StatusBar.tsx";
 import { Toast } from "./Toast.tsx";
@@ -23,6 +25,7 @@ const MODES: Array<{ mode: Mode; label: string }> = [
 
 export function App() {
   const { state, dispatch, masker } = useSession();
+  const path = usePath();
   const [flash, setFlash] = useState<string | null>(null);
   const editor = useRef<EditorHandle>(null);
   const pasted = useRef(false);
@@ -198,6 +201,9 @@ export function App() {
 
   const entities = panelEntities(state);
 
+  // The session stays in memory while the page is shown; going back finds it intact.
+  if (path === HOW_PATH) return <HowItWorks />;
+
   return (
     <div className="app">
       <header className="topbar">
@@ -228,6 +234,9 @@ export function App() {
         >
           {t("editor.example")}
         </button>
+        <a className="help" href={HOW_PATH} onClick={followLink} aria-label={HOW.title}>
+          ?
+        </a>
       </header>
 
       {state.mode === "scrub" && (

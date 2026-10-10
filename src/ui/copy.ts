@@ -96,6 +96,27 @@ export function typeGroup(type: EntityType): "name" | "place" | "org" | "word" |
   return "number";
 }
 
+// The page /sa-funkar-det, verbatim from docs/COPY.md.
+export const HOW = {
+  title: "Så funkar Skrubba",
+  paragraphs: [
+    {
+      lead: "Vad som händer.",
+      body: "Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret här för att byta tillbaka.",
+    },
+    {
+      lead: "Så kontrollerar du det själv.",
+      body: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på GitHub.",
+    },
+    {
+      lead: "Det Skrubba inte gör.",
+      body: "Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge nyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
+    },
+  ],
+  credits:
+    "Skrubba bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency",
+};
+
 export const EXAMPLE = {
   text: `Hej Karin,
 

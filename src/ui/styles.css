@@ -586,3 +586,49 @@ code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.9em;
 }
+
+/* Så funkar Skrubba */
+
+a {
+  color: inherit;
+}
+
+.help {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a.brand {
+  font-weight: 700;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+.page {
+  min-height: 100%;
+}
+
+.page-body {
+  max-width: 40em;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.page-body h1 {
+  font-size: 26px;
+  margin: 0 0 20px;
+}
+
+.credits {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 14px;
+}

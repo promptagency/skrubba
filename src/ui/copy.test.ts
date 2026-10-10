@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { COPY, countLabel, EXAMPLE, t, TYPE_LABEL } from "./copy.ts";
+import { COPY, countLabel, EXAMPLE, HOW, t, TYPE_LABEL } from "./copy.ts";
 
 const doc = readFileSync("docs/COPY.md", "utf8");
 const rows = (section: string) => {
@@ -39,5 +39,22 @@ describe("t", () => {
   it("uses the singular for one", () => {
     expect(countLabel(1)).toBe("1 uppgift");
     expect(countLabel(14)).toBe("14 uppgifter");
+  });
+});
+
+describe("Så funkar Skrubba matches docs/COPY.md", () => {
+  const section = doc.slice(doc.indexOf("## Sidan /sa-funkar-det")).split("\n## ")[0];
+
+  it("has the heading", () => {
+    expect(section).toContain(`Rubrik: ${HOW.title}`);
+  });
+
+  it("has the three paragraphs verbatim", () => {
+    const paragraphs = [...section.matchAll(/^\d\. \*\*(.+?)\*\* (.+)$/gm)].map((m) => ({ lead: m[1], body: m[2] }));
+    expect(HOW.paragraphs).toEqual(paragraphs);
+  });
+
+  it("has the credits line", () => {
+    expect(section).toContain(`Sist på sidan: ${HOW.credits}`);
   });
 });
