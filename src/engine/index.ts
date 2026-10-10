@@ -6,3 +6,4 @@ export function createBrowserMasker(): MaskeraMasker {
   return new MaskeraMasker(createWorkerBackend());
 }
 export { parseWordList } from "./wordList.ts";
+export { keyFileName, mergeEntries, parseKey } from "./key.ts";

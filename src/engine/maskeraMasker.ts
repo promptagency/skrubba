@@ -8,7 +8,7 @@ import { tolerantRestore } from "./tolerantRestore.ts";
 import { findTerms } from "./wordList.ts";
 
 export class MaskeraMasker implements Masker {
-  private readonly registry = new EntityRegistry();
+  private registry = new EntityRegistry();
   private readonly ner: NerBackend;
 
   constructor(ner: NerBackend) {
@@ -29,6 +29,15 @@ export class MaskeraMasker implements Masker {
 
   applyMask(text: string, entities: Entity[], wordList: string[]): { masked: string; key: Key } {
     return applyMask(text, entities, wordList);
+  }
+
+  loadKey(key: Key): void {
+    this.registry = new EntityRegistry();
+    this.registry.seed(key.entries);
+  }
+
+  reset(): void {
+    this.registry = new EntityRegistry();
   }
 
   restore(text: string, key: Key, accepted?: ReadonlySet<string>): RestoreResult {

@@ -1,4 +1,4 @@
-import type { Entity, EntityType, Source, Span } from "./Masker.ts";
+import type { Entity, EntityType, KeyEntry, Source, Span } from "./Masker.ts";
 
 const GENITIVE_TYPES: ReadonlySet<EntityType> = new Set(["NAMN", "PLATS", "ORGANISATION"]);
 const SOURCE_RANK: Record<Source, number> = { manual: 0, wordlist: 1, rule: 2, model: 3 };
@@ -36,6 +36,19 @@ export class EntityRegistry {
     const entry = { placeholder: `[${type}_${n}]`, value, type };
     this.entries.set(key, entry);
     return entry;
+  }
+
+  /**
+   * Start from an uploaded key: its values keep their placeholders, and new
+   * values are numbered after the highest number per type.
+   */
+  seed(entries: KeyEntry[]): void {
+    for (const e of entries) {
+      const n = Number(/_(\d+)\]$/.exec(e.placeholder)?.[1] ?? 0);
+      this.counters.set(e.type, Math.max(this.counters.get(e.type) ?? 0, n));
+      const key = norm(e.value);
+      if (!this.entries.has(key)) this.entries.set(key, { placeholder: e.placeholder, value: e.value, type: e.type });
+    }
   }
 
   link(firstName: string, fullKey: string): void {

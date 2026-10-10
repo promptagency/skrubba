@@ -160,3 +160,19 @@ describe("EntityRegistry across edits", () => {
     ]);
   });
 });
+
+describe("EntityRegistry.seed", () => {
+  it("reuses placeholders from a key and numbers new values after them", () => {
+    const registry = new EntityRegistry();
+    registry.seed([
+      { placeholder: "[NAMN_1]", value: "Anna Berg", type: "NAMN" },
+      { placeholder: "[NAMN_4]", value: "Erik Ek", type: "NAMN" },
+    ]);
+    const text = "Erik Ek, Anna Berg och Sara Holm";
+    expect(summary(build(text, [["Erik Ek", "NAMN"], ["Anna Berg", "NAMN"], ["Sara Holm", "NAMN"]], registry))).toEqual([
+      "[NAMN_4]=Erik Ek×1",
+      "[NAMN_1]=Anna Berg×1",
+      "[NAMN_5]=Sara Holm×1",
+    ]);
+  });
+});

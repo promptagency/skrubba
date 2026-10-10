@@ -1,29 +1,32 @@
 // The one interface the app talks to. Nothing outside src/engine/ imports
 // maskera or transformers.js; see docs/ARCHITECTURE.md.
 
-/** maskera's labels verbatim, so placeholders match its format, plus ORD. */
-export type EntityType =
-  | "NAMN"
-  | "PLATS"
-  | "ORGANISATION"
-  | "ADRESS"
-  | "PERSONNUMMER"
-  | "SAMORDNINGSNUMMER"
-  | "ORGANISATIONSNUMMER"
-  | "TELEFON"
-  | "EPOST"
-  | "POSTNUMMER"
-  | "LAGENHETSNUMMER"
-  | "BANKGIRO"
-  | "PLUSGIRO"
-  | "IBAN"
-  | "KORTNUMMER"
-  | "KONTONUMMER"
-  | "IP_ADRESS"
-  | "URL"
-  | "JOURNALNUMMER"
-  | "REGNUMMER"
-  | "ORD"; // manual selection or word list
+/** maskera's labels verbatim, so placeholders match its format, plus ORD (manual selection or word list). */
+export const ENTITY_TYPES = [
+  "NAMN",
+  "PLATS",
+  "ORGANISATION",
+  "ADRESS",
+  "PERSONNUMMER",
+  "SAMORDNINGSNUMMER",
+  "ORGANISATIONSNUMMER",
+  "TELEFON",
+  "EPOST",
+  "POSTNUMMER",
+  "LAGENHETSNUMMER",
+  "BANKGIRO",
+  "PLUSGIRO",
+  "IBAN",
+  "KORTNUMMER",
+  "KONTONUMMER",
+  "IP_ADRESS",
+  "URL",
+  "JOURNALNUMMER",
+  "REGNUMMER",
+  "ORD",
+] as const;
+
+export type EntityType = (typeof ENTITY_TYPES)[number];
 
 export type Source = "manual" | "wordlist" | "rule" | "model";
 
@@ -119,6 +122,10 @@ export interface Masker {
   /** maskRules plus NER, merged. */
   mask(text: string, input: MaskInput): Promise<Entity[]>;
   applyMask(text: string, entities: Entity[], wordList: string[]): { masked: string; key: Key };
+  /** Start over from an uploaded key: its placeholders are reused, new ones numbered after them. */
+  loadKey(key: Key): void;
+  /** Forget all numbering (Rensa allt). */
+  reset(): void;
   /** `accepted` lists `found` strings of suggestions the user confirmed. */
   restore(text: string, key: Key, accepted?: ReadonlySet<string>): RestoreResult;
 }

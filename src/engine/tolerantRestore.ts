@@ -1,11 +1,14 @@
-import type { EntityType, Key, RestoredSpan, RestoreResult, Suggestion, UnknownPlaceholder } from "./Masker.ts";
+import {
+  ENTITY_TYPES,
+  type EntityType,
+  type Key,
+  type RestoredSpan,
+  type RestoreResult,
+  type Suggestion,
+  type UnknownPlaceholder,
+} from "./Masker.ts";
 
-const TYPES: EntityType[] = [
-  "NAMN", "PLATS", "ORGANISATION", "ADRESS", "PERSONNUMMER", "SAMORDNINGSNUMMER",
-  "ORGANISATIONSNUMMER", "TELEFON", "EPOST", "POSTNUMMER", "LAGENHETSNUMMER", "BANKGIRO",
-  "PLUSGIRO", "IBAN", "KORTNUMMER", "KONTONUMMER", "IP_ADRESS", "URL", "JOURNALNUMMER",
-  "REGNUMMER", "ORD",
-];
+const TYPES: readonly EntityType[] = ENTITY_TYPES;
 
 // Translated or reworded type names an LLM tends to produce. Short words that
 // occur in ordinary text ("per", "tel", "ort") are left out on purpose.

@@ -68,3 +68,24 @@ describe("MaskeraMasker round trip", () => {
     expect(masker.restore(masked, key).text).toBe(text);
   });
 });
+
+describe("MaskeraMasker key handling", () => {
+  it("continues an uploaded key's numbering", async () => {
+    const masker = new MaskeraMasker(fakeNer([["Anna", "NAMN"], ["Erik", "NAMN"]]));
+    masker.loadKey({
+      entries: [{ placeholder: "[NAMN_3]", value: "Anna", type: "NAMN" }],
+      wordList: [],
+      createdAt: "2026-10-10T00:00:00.000Z",
+      app: "skrubba",
+      version: 1,
+    });
+    expect(summary(await masker.mask("Erik och Anna", none))).toEqual(["[NAMN_4]=Erik:model", "[NAMN_3]=Anna:model"]);
+  });
+
+  it("starts numbering over after reset", async () => {
+    const masker = new MaskeraMasker(fakeNer([["Anna", "NAMN"], ["Erik", "NAMN"]]));
+    await masker.mask("Anna", none);
+    masker.reset();
+    expect(summary(await masker.mask("Erik", none))).toEqual(["[NAMN_1]=Erik:model"]);
+  });
+});
