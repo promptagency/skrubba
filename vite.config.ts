@@ -106,9 +106,19 @@ function serviceWorker(): Plugin {
   };
 }
 
+// Cross-origin isolation gives onnxruntime SharedArrayBuffer and so several
+// threads. Skrubba loads nothing from other origins, so require-corp costs
+// nothing. The same headers are set for production in public/_headers.
+const ISOLATION_HEADERS = {
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Cross-Origin-Embedder-Policy": "require-corp",
+};
+
 export default defineConfig({
   plugins: [react(), cspMeta(), serveRuntimeInDev(), serviceWorker()],
   define: { __SW_KILL__: JSON.stringify(SW_KILL) },
+  server: { headers: ISOLATION_HEADERS },
+  preview: { headers: ISOLATION_HEADERS },
   // transformers.js and onnxruntime-web break under dependency prebundling.
   optimizeDeps: { exclude: ["@huggingface/transformers"] },
   // The worker dynamic-imports parts of transformers.js; only ES workers can split.

@@ -1,4 +1,11 @@
-# Cloudflare Pages headers. The full set (CSP, caching) comes in Phase 5.
+# Cloudflare Pages headers. CSP and caching rules come in Phase 5.
+
+# Cross-origin isolation: lets onnxruntime run the model on several threads
+# (10 000 characters in about 1.4 s instead of 4.4 s). Skrubba loads nothing
+# from other origins, so require-corp blocks nothing.
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
 
 # Browsers check this file for updates on every visit. It must never be
 # cached, or new deploys and the kill switch stop reaching visitors.
