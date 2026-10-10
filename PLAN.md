@@ -72,12 +72,23 @@ Follow-up 2026-10-09: model before work (owner's decision).
 
 ## Phase 3 – Byt tillbaka and Nyckel modes
 
-- [ ] Byt tillbaka: textarea for the LLM answer, button "Byt tillbaka". Restored spans highlighted. Unmatched placeholders listed with a suggestion and one-click accept.
-- [ ] Nyckel: table placeholder → value → type → count, plus the word list. "Ladda ner nyckel" (JSON, includes word list, with warning), "Ladda upp nyckel", "Rensa allt".
-- [ ] Key and word list in a React context, memory only. Test asserts no storage API is touched.
-- [ ] `beforeunload` warning if a key exists and has not been downloaded.
+- [x] Byt tillbaka: textarea for the LLM answer, button "Byt tillbaka". Restored spans highlighted. Unmatched placeholders listed with a suggestion and one-click accept.
+- [x] Nyckel: table placeholder → value → type → count, plus the word list. "Ladda ner nyckel" (JSON, includes word list, with warning), "Ladda upp nyckel", "Rensa allt".
+- [x] Key and word list in a React context, memory only. Test asserts no storage API is touched.
+- [x] `beforeunload` warning if a key exists and has not been downloaded.
 
 Done when: Phase 1 round trip works through the UI, including suggestions.
+
+Status 2026-10-10: done. `tests/e2e/restore.spec.ts` runs scrub → copy → paste answer → restore with a suggestion (Ja/Nej) and an unknown placeholder, key download → upload in a fresh tab → restore, invalid file, Rensa allt, the unload warning, and a full session with a spy on localStorage, sessionStorage, indexedDB and cookies (none touched, nothing persisted). 153 Vitest tests; 57 Playwright tests green in Chromium, Firefox and WebKit.
+
+Decisions from Phase 3:
+- The key is built up from every copy (a placeholder keeps its first value) and is recorded before the clipboard write. "Inte nedladdad" means it has entries added since the last download.
+- Uploading a key replaces the whole session (text, entities, word list, key) after `key.uploadConfirm`, and the numbering continues from the key, so a returning case keeps its placeholders. Merging two sessions' keys could give one placeholder two values, so it is not offered.
+- Byt tillbaka always restores from the answer as pasted plus the suggestions accepted so far; editing the answer starts over. A restore made before the key had a value is redone when the key grows.
+- In Nyckel mode the status bar has no primary button: the view has its own, with the download warning under it. Cmd+Enter still downloads.
+- New strings approved and in `docs/COPY.md`: `restore.empty`, `key.empty`, `key.uploadError`, `key.uploadConfirm`; table headers moved there from UX.md.
+- The browser shows its own text for the unload warning; `unload.warning` is set but most browsers ignore custom text.
+
 
 ## Phase 4 – Trust and polish
 
@@ -110,4 +121,4 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 - ~~Display names for maskera's extra types.~~ Added to `docs/COPY.md` 2026-10-09.
 - **Enable maskera's `regnummer` rule?** Off by default upstream (plate shape = booking-code shape). Leaning on: a miss is worse than over-masking. Decide in Phase 1.
 - ~~Org.nr with a bad check digit is not masked.~~ Decided 2026-10-09: our own context rule masks any NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer", checksum or not. Not reported upstream.
-- **Copy strings not in `docs/COPY.md`.** (1) What to show when copying fails (clipboard blocked); today nothing is shown. (2) The hover label on a highlight is composed as "Namn · [NAMN_1] · Skrubba". (3) Screen-reader label of a panel row is "value, type, count, Skrubba/Behåll". Owner's copy call.
+- **Copy strings not in `docs/COPY.md`.** (1) What to show when copying fails (clipboard blocked); today nothing is shown, though the key is still recorded. (2) The hover label on a highlight is composed as "Namn · [NAMN_1] · Skrubba". (3) Screen-reader label of a panel row is "value, type, count, Skrubba/Behåll". Owner's copy call.
