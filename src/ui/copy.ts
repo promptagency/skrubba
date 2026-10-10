@@ -31,6 +31,21 @@ export const COPY = {
   "status.rulesOnly":
     "Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv.",
   "status.trust": "Inget lämnar din dator",
+  "restore.empty": "Klistra in svaret från AI här. Platshållarna byts tillbaka till de riktiga uppgifterna.",
+  "restore.unmatched": "Hittade {found} i svaret. Menade du {placeholder}, alltså {value}?",
+  "restore.accept": "Ja",
+  "restore.reject": "Nej",
+  "restore.unknown": "{found} finns inte i nyckeln. Kontrollera svaret själv.",
+  "key.download": "Ladda ner nyckel",
+  "key.upload": "Ladda upp nyckel",
+  "key.clear": "Rensa allt",
+  "key.downloadWarning": "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material.",
+  "key.note": "Nyckeln finns bara i den här fliken. Stänger du fliken försvinner den.",
+  "key.clearConfirm": "Text, uppgifter, egna ord och nyckel raderas. Vill du fortsätta?",
+  "key.empty": "Nyckeln skapas när du kopierar en skrubbad text.",
+  "key.uploadError": "Filen kunde inte läsas som en nyckel. Välj en fil som du har laddat ner från Skrubba.",
+  "key.uploadConfirm": "Text, uppgifter, egna ord och nyckel ersätts av innehållet i filen. Vill du fortsätta?",
+  "unload.warning": "Du har en nyckel som inte är nedladdad. Stänger du fliken går den förlorad.",
   "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar.",
 } as const;
 
