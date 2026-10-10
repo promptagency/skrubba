@@ -1,4 +1,4 @@
-import type { Entity } from "../engine/index.ts";
+import { type Entity, ENTITY_TYPES, type EntityType } from "../engine/index.ts";
 
 export interface Mark<T> {
   start: number;
@@ -36,4 +36,17 @@ export function entityAt(entities: Entity[], start: number, end: number): Entity
   return entities.find((e) =>
     e.occurrences.some((o) => (start === end ? o.start <= start && start <= o.end : o.start < end && o.end > start)),
   );
+}
+
+// Exact placeholders as Skrubba writes them, e.g. [NAMN_1] or [IP_ADRESS_2].
+const PLACEHOLDER = new RegExp(`\\[(${ENTITY_TYPES.join("|")})_\\d+\\]`, "g");
+
+/** Every exact placeholder in a text, marked with its type. */
+export function placeholderMarks(text: string): Mark<EntityType>[] {
+  return [...text.matchAll(PLACEHOLDER)].map((m) => ({ start: m.index, end: m.index + m[0].length, data: m[1] as EntityType }));
+}
+
+/** The first exact placeholder in a text, or null. */
+export function firstPlaceholder(text: string): string | null {
+  return text.match(new RegExp(PLACEHOLDER.source))?.[0] ?? null;
 }

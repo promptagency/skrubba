@@ -116,6 +116,7 @@ Notes from Phase 4:
 The owner's wireframe replaced the three modes with two cards and a key card. Done: large logotype; "Nyckel" + key button opening the key as a dialog; "?" top right; Skrubba and Avskrubba cards side by side (stacked on phones); item list under the Skrubba card with Kopiera beside its toggle; Avskrubba button that becomes Kopiera; `.txt`/`.md` drop on both cards; footer with credits and the trust link. 171 Vitest, 109 Playwright tests green.
 
 - [x] Second round (2026-10-10): "Vanliga frågor" replaces "?" and the `/sa-funkar-det` page with a window; the kodnyckel window shares the same modal; "Nyckel" renamed "Kodnyckel" with an explainer so it is not mistaken for an encryption key.
+- [x] Third round (2026-10-10): click a highlight to keep it (border in a darker shade per type). Skrubba and Avskrubba became two modes picked with a switch: input left, the button between the panes runs the mode, the result appears right and only then Kopiera. Any change clears the result. The kodnyckel is recorded on Skrubba, not on copy. Text with placeholders in Skrubba offers "Flytta till Avskrubba".
 - [ ] Owner reviews UX, branding and the strings under "Att granska" in `docs/COPY.md`.
 - [ ] History of texts (wireframe): left out for now. If it comes back, decide memory-only (this tab) versus saved on the device, which would change a hard rule.
 - [x] `CLAUDE.md` updated 2026-10-10 for the two-card layout and plain-text drop.

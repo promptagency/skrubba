@@ -121,7 +121,7 @@ test.describe("deploys", () => {
 
     // The first tab still runs build a and can still mask with its model.
     expect(await buildId(page)).toBe("a");
-    await page.getByRole("textbox", { name: "Skrubba", exact: true }).fill("Igår ringde Johan Lindqvist.");
+    await page.getByRole("textbox", { name: "Din text", exact: true }).fill("Igår ringde Johan Lindqvist.");
     await expect(page.locator(".row-main").filter({ hasText: "Johan Lindqvist" })).toContainText("Namn");
   });
 });

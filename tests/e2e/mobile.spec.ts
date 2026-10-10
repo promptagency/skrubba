@@ -1,21 +1,24 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { answerBox, copyScrubbed, editor, openKey, openReady, rows } from "./helpers.ts";
+import { editor, openKey, openReady, rows, runButton, scrub, scrubbedBox } from "./helpers.ts";
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
 const noSideScroll = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 
-test("at 390 px the two cards stack, Skrubba first, with nothing scrolling sideways", async ({ page }) => {
+test("at 390 px the panes stack, input, button, result, with nothing scrolling sideways", async ({ page }) => {
   await openReady(page);
   await page.getByRole("button", { name: "Visa exempel" }).click();
   await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
-  const left = await editor(page).boundingBox();
-  const right = await answerBox(page).boundingBox();
-  expect(right!.y).toBeGreaterThan(left!.y + left!.height);
+  const input = await editor(page).boundingBox();
+  const button = await runButton(page).boundingBox();
+  const result = await scrubbedBox(page).boundingBox();
+  expect(button!.y).toBeGreaterThan(input!.y + input!.height);
+  expect(result!.y).toBeGreaterThan(button!.y + button!.height);
   expect(await noSideScroll(page)).toBe(true);
 
-  await copyScrubbed(page).click();
+  await scrub(page);
+  expect(await noSideScroll(page)).toBe(true);
   const dialog = await openKey(page);
   expect(await noSideScroll(page)).toBe(true);
   const box = await dialog.boundingBox();
@@ -27,7 +30,7 @@ test("at 390 px the two cards stack, Skrubba first, with nothing scrolling sidew
   expect(await noSideScroll(page)).toBe(true);
 });
 
-test("the item list folds away under the Skrubba card", async ({ page }) => {
+test("the item list folds away under Din text", async ({ page }) => {
   await openReady(page);
   await page.getByRole("button", { name: "Visa exempel" }).click();
   const toggle = page.getByRole("button", { name: /^\d+ uppgifter$/ });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Entity } from "../engine/index.ts";
-import { freshEntities, initialSession, panelEntities, sessionReducer as reduce } from "./session.ts";
+import { freshEntities, initialSession, panelEntities, type SessionAction, sessionReducer as reduce } from "./session.ts";
 
 const entity = (placeholder: string, type: Entity["type"] = "NAMN"): Entity => ({
   id: placeholder,
@@ -86,5 +86,42 @@ describe("sessionReducer", () => {
     const s = reduce(initialSession, { type: "toast", message: "Kopierat." });
     expect(s.toast).toBe("Kopierat.");
     expect(reduce(s, { type: "toast", message: null }).toast).toBeNull();
+  });
+
+  describe("the Skrubba result", () => {
+    const scrubbed = reduce(withEntities, { type: "scrubbed", masked: "[NAMN_1]", entries: [], at: "2026-10-10T08:00:00.000Z" });
+
+    it("holds the scrubbed text", () => {
+      expect(scrubbed.scrubbed).toBe("[NAMN_1]");
+    });
+
+    it.each([
+      ["editing the text", { type: "setText", text: "Anna B" }],
+      ["editing the word list", { type: "setWordList", raw: "Havsvind" }],
+      ["scrubbing a selection", { type: "addManual", term: "Havsvind" }],
+      ["toggling an item", { type: "toggleKeep", placeholder: "[NAMN_1]" }],
+      ["keeping an item", { type: "keep", placeholder: "[NAMN_1]" }],
+      ["keeping all", { type: "keepAll" }],
+      ["scrubbing all after keeping one", { type: "scrubAll" }],
+      ["loading the example", { type: "loadExample", text: "Hej", wordList: [] }],
+    ] satisfies [string, SessionAction][])("is cleared by %s", (_, action) => {
+      const before = action.type === "scrubAll" ? { ...scrubbed, kept: new Set(["[NAMN_1]"]) } : scrubbed;
+      expect(reduce(before, action).scrubbed).toBeNull();
+    });
+
+    it("survives changes that do not alter what would be scrubbed", () => {
+      expect(reduce(scrubbed, { type: "setText", text: "Anna" }).scrubbed).toBe("[NAMN_1]");
+      expect(reduce(scrubbed, { type: "addManual", term: "  " }).scrubbed).toBe("[NAMN_1]");
+      expect(reduce(scrubbed, { type: "setAnswer", text: "svar" }).scrubbed).toBe("[NAMN_1]");
+    });
+  });
+
+  it("moves text with placeholders over to Avskrubba", () => {
+    const s = reduce(withEntities, { type: "moveToRestore" });
+    expect(s.answer).toBe("Anna");
+    expect(s.text).toBe("");
+    expect(s.entities).toEqual([]);
+    expect(s.scrubbed).toBeNull();
+    expect(s.restore).toBeNull();
   });
 });

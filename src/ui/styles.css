@@ -509,7 +509,7 @@ a {
   border: 0;
 }
 
-/* Page layout: logotype, toolbar, two cards, footer. */
+/* Page layout: logotype, toolbar, mode switch, input | button | result, footer. */
 
 .site {
   max-width: 1160px;
@@ -571,37 +571,92 @@ a {
   margin-left: auto;
 }
 
-.panels {
+/* Skrubba or Avskrubba: decides what the button between the panes does. */
+.mode-switch {
+  display: flex;
+  width: max-content;
+  margin: 0 auto 28px;
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.mode-switch button {
+  border: none;
+  border-radius: 999px;
+  background: none;
+  padding: 10px 28px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.mode-switch button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.workspace {
+  --pane-height: 460px;
+  --pane-head: 36px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 24px;
   align-items: start;
 }
 
-.card-column {
+.pane {
   display: flex;
   flex-direction: column;
   gap: 12px;
   min-width: 0;
 }
 
-.card-head {
+.pane-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 36px;
+  min-height: var(--pane-head);
 }
 
-.card-head h2 {
+.pane-head h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muted);
 }
 
-.card-column .editor,
-.card-column .gate {
+.pane .editor,
+.pane .gate {
   flex: none;
-  height: 460px;
+  height: var(--pane-height);
+}
+
+/* The result is read-only: no white sheet, so it does not look like a place to type. */
+.editor-result {
+  background: none;
+  border-style: dashed;
+}
+
+/* Centred on the panes, beside the text rather than under it. */
+.run-column {
+  margin-top: calc(var(--pane-head) + 12px + var(--pane-height) / 2 - 24px);
+}
+
+.run {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  font-size: 17px;
+}
+
+.run-arrow::after {
+  content: "→";
 }
 
 .dropzone {
@@ -611,12 +666,6 @@ a {
 .dropzone-over {
   outline: 2px dashed var(--accent);
   outline-offset: 4px;
-}
-
-.restore {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .card-actions {
@@ -716,13 +765,27 @@ a {
   .masthead {
     padding: 24px 0 16px;
   }
-  .panels {
-    grid-template-columns: 1fr;
-    gap: 40px;
+  .workspace {
+    --pane-height: 320px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
   }
-  .card-column .editor,
-  .card-column .gate {
-    height: 360px;
+  .run-column {
+    margin-top: 0;
+  }
+  .run {
+    width: 100%;
+    justify-content: center;
+  }
+  .run-arrow::after {
+    content: "↓";
+  }
+  .mode-switch {
+    width: 100%;
+  }
+  .mode-switch button {
+    flex: 1;
+    padding: 10px 12px;
   }
   .toolbar {
     flex-wrap: wrap;

@@ -31,7 +31,7 @@ export const COPY = {
   "status.rulesOnly":
     "Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv.",
   "status.trust": "Inget lämnar din dator",
-  "restore.empty": "Klistra in svaret från AI här eller släpp en textfil. Platshållarna byts tillbaka till de riktiga uppgifterna.",
+  "restore.empty": "Klistra in svaret från AI här eller släpp en textfil.",
   "restore.unmatched": "Hittade {found} i svaret. Menade du {placeholder}, alltså {value}?",
   "restore.accept": "Ja",
   "restore.reject": "Nej",
@@ -46,7 +46,7 @@ export const COPY = {
   "key.downloadWarning": "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material.",
   "key.note": "Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den.",
   "key.clearConfirm": "Text, uppgifter, egna ord och kodnyckel raderas. Vill du fortsätta?",
-  "key.empty": "Kodnyckeln skapas när du kopierar en skrubbad text.",
+  "key.empty": "Kodnyckeln skapas när du skrubbar en text.",
   "key.uploadError": "Filen kunde inte läsas som en kodnyckel. Välj en fil som du har laddat ner från Skrubba.",
   "key.uploadConfirm": "Text, uppgifter, egna ord och kodnyckel ersätts av innehållet i filen. Vill du fortsätta?",
   "unload.warning": "Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad.",
@@ -57,6 +57,16 @@ export const COPY = {
   "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
   "faq.open": "Vanliga frågor",
   "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar.",
+  "mode.switch": "Vad vill du göra?",
+  "pane.scrubIn": "Din text",
+  "pane.scrubOut": "Skrubbad text",
+  "pane.restoreIn": "Svar från AI",
+  "pane.restoreOut": "Avskrubbad text",
+  "action.scrub": "Skrubba",
+  "scrub.resultEmpty": "Tryck Skrubba så visas texten med platshållare här.",
+  "restore.resultEmpty": "Tryck Avskrubba så visas svaret med de riktiga uppgifterna här.",
+  "wrongMode.notice": "Texten innehåller platshållare som {found}. Är det svaret från AI?",
+  "wrongMode.move": "Flytta till Avskrubba",
 } as const;
 
 export type CopyKey = keyof typeof COPY;

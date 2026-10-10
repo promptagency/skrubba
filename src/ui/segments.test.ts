@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Entity } from "../engine/index.ts";
-import { entityAt, entityMarks, segments } from "./segments.ts";
+import { entityAt, entityMarks, firstPlaceholder, placeholderMarks, segments } from "./segments.ts";
 
 const text = "Anna ringde Erik. Anna igen.";
 const anna: Entity = {
@@ -51,5 +51,26 @@ describe("entityAt", () => {
 
   it("finds the entity at a caret", () => {
     expect(entityAt([anna, erik], 2, 2)?.placeholder).toBe("[NAMN_1]");
+  });
+});
+
+describe("placeholderMarks", () => {
+  it("marks exact placeholders with their type", () => {
+    expect(placeholderMarks("Hej [NAMN_1] i [PLATS_12], [IP_ADRESS_2].")).toEqual([
+      { start: 4, end: 12, data: "NAMN" },
+      { start: 15, end: 25, data: "PLATS" },
+      { start: 27, end: 40, data: "IP_ADRESS" },
+    ]);
+  });
+
+  it("ignores bracketed words that are not placeholders", () => {
+    expect(placeholderMarks("[KUND_1] [NAMN] [namn_1] NAMN_1")).toEqual([]);
+  });
+});
+
+describe("firstPlaceholder", () => {
+  it("finds the first placeholder in a text, or nothing", () => {
+    expect(firstPlaceholder("Hej [ORD_3] och [NAMN_1]")).toBe("[ORD_3]");
+    expect(firstPlaceholder("Hej Anna")).toBeNull();
   });
 });

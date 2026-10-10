@@ -2,7 +2,7 @@
 // accessibility score) on every view, in light and dark.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { answerBox, copyScrubbed, MOD, openKey, openReady, rows } from "./helpers.ts";
+import { answerBox, MOD, openKey, openReady, rows, scrub } from "./helpers.ts";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
@@ -37,9 +37,8 @@ test.describe("accessibility", () => {
         await openReady(page);
         await page.getByRole("button", { name: "Visa exempel" }).click();
         await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
-        await copyScrubbed(page).click();
-        await expect(page.locator(".toast")).toBeVisible();
-        await answerBox(page).fill("Hej [NAMN_1] och NAMN 2. [NAMN_9].");
+        await scrub(page);
+        await (await answerBox(page)).fill("Hej [NAMN_1] och NAMN 2. [NAMN_9].");
         await page.keyboard.press(`${MOD}+Enter`);
         await expect(page.getByRole("button", { name: "Ja" })).toBeVisible();
         expect(await violations(page)).toEqual([]);
@@ -49,8 +48,7 @@ test.describe("accessibility", () => {
         await openReady(page);
         await page.getByRole("button", { name: "Visa exempel" }).click();
         await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
-        await copyScrubbed(page).click();
-        await expect(page.locator(".toast")).toBeVisible();
+        await scrub(page);
         await openKey(page);
         expect(await violations(page)).toEqual([]);
       });

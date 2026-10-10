@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { keyFileName, type MaskInput, parseKey, parseWordList } from "../engine/index.ts";
+import { type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, type RestoreResult } from "../engine/index.ts";
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
@@ -12,9 +12,13 @@ import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
 import { KeyDialog } from "./KeyDialog.tsx";
 import { ModelStatus } from "./ModelStatus.tsx";
-import { RestoreView } from "./RestoreView.tsx";
+import { RestoreNotes } from "./RestoreNotes.tsx";
+import { firstPlaceholder, type Mark, placeholderMarks } from "./segments.ts";
 import { controlledByServiceWorker } from "./serviceWorker.ts";
+import { TextPane, type TextPaneHandle } from "./TextPane.tsx";
 import { Toast } from "./Toast.tsx";
+
+type Mode = "scrub" | "restore";
 
 const DEBOUNCE_MS = 300;
 const FLASH_MS = 1200;
@@ -25,9 +29,12 @@ export function App() {
   const [keyOpen, setKeyOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
   const [listOpen, setListOpen] = useState(true);
-  const [dropError, setDropError] = useState<"scrub" | "restore" | null>(null);
+  const [mode, setMode] = useState<Mode>("scrub");
+  const [dropError, setDropError] = useState(false);
   const editor = useRef<EditorHandle>(null);
-  const restorePanel = useRef<HTMLElement>(null);
+  const answerPane = useRef<TextPaneHandle>(null);
+  const copyButton = useRef<HTMLButtonElement>(null);
+  const focusCopy = useRef(false);
   const pasted = useRef(false);
   const latest = useRef(state);
   latest.current = state;
@@ -81,31 +88,32 @@ export function App() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [state.keyDownloaded]);
 
-  // Copy always masks the current text afresh: highlights may be 300 ms old.
-  const copyScrubbed = useCallback(async () => {
+  // Skrubba masks the current text afresh (highlights may be 300 ms old),
+  // records the key and shows the result on the right.
+  const scrub = useCallback(async (): Promise<string | null> => {
     const s = latest.current;
-    if (s.model.status === "loading" || !s.text) return;
+    if (s.model.status === "loading" || !s.text) return null;
     const input: MaskInput = { wordList: parseWordList(s.wordListRaw), manual: s.manual };
     const entities = s.model.status === "ready" ? await masker.mask(s.text, input) : masker.maskRules(s.text, input);
+    if (latest.current.text !== s.text) return null; // edited while the model ran
     dispatch({ type: "setEntities", text: s.text, entities });
     const withKept = entities.map((e) => ({ ...e, active: !latest.current.kept.has(e.placeholder) }));
     const { masked, key } = masker.applyMask(s.text, withKept, input.wordList);
-    // Record the key first: the masked text may reach the AI even if the
-    // clipboard call reports a failure.
-    dispatch({ type: "copied", entries: key.entries, at: key.createdAt });
-    await copyText(masked);
-    dispatch({ type: "toast", message: t("toast.copied", { n: key.entries.length }) });
+    // The key is recorded now, not on copy: the result can be copied by hand too.
+    dispatch({ type: "scrubbed", masked, entries: key.entries, at: key.createdAt });
+    return masked;
   }, [masker, dispatch]);
 
   // Avskrubba always starts from the answer as pasted, with the suggestions
   // accepted so far.
-  const runRestore = useCallback(
-    (accept?: string) => {
+  const restore = useCallback(
+    (accept?: string): RestoreResult | null => {
       const s = latest.current;
-      const original = s.restore?.original ?? s.answer;
-      if (!original) return;
+      if (!s.answer) return null;
       const accepted = new Set([...(s.restore?.accepted ?? []), ...(accept ? [accept] : [])]);
-      dispatch({ type: "restored", original, result: masker.restore(original, currentKey(s), accepted) });
+      const result = masker.restore(s.answer, currentKey(s), accepted);
+      dispatch({ type: "restored", result });
+      return result;
     },
     [masker, dispatch],
   );
@@ -113,21 +121,36 @@ export function App() {
   // A restore made with an older key is redone when the key grows.
   const keySize = state.keyEntries.length;
   useEffect(() => {
-    if (latest.current.restore) runRestore();
-  }, [keySize, runRestore]);
+    if (latest.current.restore) restore();
+  }, [keySize, restore]);
 
-  const copyRestored = useCallback(async () => {
+  /** The button between the panes. Focus moves on to Kopiera once there is a result. */
+  const run = useCallback(async () => {
+    const done = mode === "scrub" ? await scrub() : restore();
+    if (done) focusCopy.current = true;
+  }, [mode, scrub, restore]);
+
+  const copyResult = useCallback(async () => {
     const s = latest.current;
-    if (!s.answer) return;
-    await copyText(s.answer);
-    dispatch({ type: "toast", message: t("toast.copiedRestored", { n: s.restore?.result.restored.length ?? 0 }) });
-  }, [dispatch]);
+    if (mode === "scrub") {
+      const masked = s.scrubbed ?? (await scrub());
+      if (masked === null) return;
+      await copyText(masked);
+      const n = new Set(placeholderMarks(masked).map((m) => masked.slice(m.start, m.end))).size;
+      dispatch({ type: "toast", message: t("toast.copied", { n }) });
+    } else {
+      const result = s.restore?.result ?? restore();
+      if (!result) return;
+      await copyText(result.text);
+      dispatch({ type: "toast", message: t("toast.copiedRestored", { n: result.restored.length }) });
+    }
+  }, [mode, scrub, restore, dispatch]);
 
-  // The right card's one button: Avskrubba, then Kopiera once it is done.
-  const restoreOrCopy = useCallback(() => {
-    if (latest.current.restore) void copyRestored();
-    else runRestore();
-  }, [copyRestored, runRestore]);
+  const hasResult = mode === "scrub" ? state.scrubbed !== null : state.restore !== null;
+  useEffect(() => {
+    if (hasResult && focusCopy.current) copyButton.current?.focus();
+    focusCopy.current = false;
+  }, [hasResult]);
 
   const downloadKey = useCallback(() => {
     const s = latest.current;
@@ -170,28 +193,31 @@ export function App() {
 
   const closeToast = useCallback(() => dispatch({ type: "toast", message: null }), [dispatch]);
 
-  // Shortcuts act on the card that has focus; the Skrubba card otherwise.
+  // Shortcuts act on the current mode.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const mod = e.metaKey || e.ctrlKey;
-      const inRestore = !!restorePanel.current?.contains(document.activeElement);
       if (mod && e.shiftKey && e.key.toLowerCase() === "c") {
         e.preventDefault();
-        if (inRestore) void copyRestored();
-        else void copyScrubbed();
+        void copyResult();
       } else if (mod && e.key === "Enter") {
         e.preventDefault();
-        if (inRestore) restoreOrCopy();
-        else void copyScrubbed();
+        void run();
       } else if (e.key === "Escape" && latest.current.toast) {
         closeToast();
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [copyScrubbed, copyRestored, restoreOrCopy, closeToast]);
+  }, [copyResult, run, closeToast]);
 
   const entities = panelEntities(state);
+  const wrongMode = firstPlaceholder(state.text);
+  const restoredMarks: Mark<EntityType>[] = (state.restore?.result.restored ?? []).map((r) => ({
+    start: r.start,
+    end: r.end,
+    data: r.placeholder.slice(1, r.placeholder.lastIndexOf("_")) as EntityType,
+  }));
 
   return (
     <div className="site">
@@ -224,33 +250,68 @@ export function App() {
         </button>
       </div>
 
-      <main className="panels">
-        <section className="card-column" aria-labelledby="scrub-title">
-          <div className="card-head">
-            <h2 id="scrub-title">{t("mode.scrub")}</h2>
-            <button
-              type="button"
-              className="link"
-              disabled={state.model.status === "loading"}
-              onClick={() => {
-                dispatch({ type: "loadExample", text: EXAMPLE.text, wordList: EXAMPLE.wordList });
-                pasted.current = true;
-                editor.current?.focus();
-              }}
-            >
-              {t("editor.example")}
-            </button>
+      <div className="mode-switch" role="group" aria-label={t("mode.switch")}>
+        {(["scrub", "restore"] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            aria-pressed={mode === m}
+            onClick={() => {
+              setMode(m);
+              setDropError(false);
+            }}
+          >
+            {m === "scrub" ? t("mode.scrub") : t("mode.restore")}
+          </button>
+        ))}
+      </div>
+
+      <main className="workspace">
+        <section className="pane" aria-labelledby="pane-in">
+          <div className="pane-head">
+            <h2 id="pane-in">{mode === "scrub" ? t("pane.scrubIn") : t("pane.restoreIn")}</h2>
+            {mode === "scrub" && (
+              <button
+                type="button"
+                className="link"
+                disabled={state.model.status === "loading"}
+                onClick={() => {
+                  dispatch({ type: "loadExample", text: EXAMPLE.text, wordList: EXAMPLE.wordList });
+                  pasted.current = true;
+                  editor.current?.focus();
+                }}
+              >
+                {t("editor.example")}
+              </button>
+            )}
           </div>
-          {state.model.status === "loading" ? (
+          {mode === "restore" ? (
+            <DropZone
+              onText={(text) => {
+                setDropError(false);
+                dispatch({ type: "setAnswer", text });
+              }}
+              onUnsupported={() => setDropError(true)}
+            >
+              <TextPane
+                ref={answerPane}
+                label={t("pane.restoreIn")}
+                placeholder={t("restore.empty")}
+                value={state.answer}
+                marks={placeholderMarks(state.answer)}
+                onChange={(text) => dispatch({ type: "setAnswer", text })}
+              />
+            </DropZone>
+          ) : state.model.status === "loading" ? (
             <Gate pct={state.model.pct} />
           ) : (
             <DropZone
               onText={(text) => {
-                setDropError(null);
+                setDropError(false);
                 pasted.current = true;
                 dispatch({ type: "setText", text });
               }}
-              onUnsupported={() => setDropError("scrub")}
+              onUnsupported={() => setDropError(true)}
             >
               <Editor
                 ref={editor}
@@ -266,83 +327,110 @@ export function App() {
               />
             </DropZone>
           )}
-          {dropError === "scrub" && (
+          {dropError && (
             <p className="notice" role="alert">
               {t("drop.unsupported")}
             </p>
           )}
           <ModelStatus model={state.model} />
-          <div className="card-actions">
-            {/* Nothing to count or act on before there is text. */}
-            {state.text && (
+          {mode === "scrub" && wrongMode && (
+            <p className="notice wrong-mode" role="status">
+              <span>{t("wrongMode.notice", { found: wrongMode })}</span>{" "}
               <button
                 type="button"
-                className="disclosure"
-                aria-expanded={listOpen}
-                aria-controls="entity-rows"
-                onClick={() => setListOpen((open) => !open)}
+                onClick={() => {
+                  dispatch({ type: "moveToRestore" });
+                  setMode("restore");
+                  setTimeout(() => answerPane.current?.focus());
+                }}
               >
-                {countLabel(entities.length)}{" "}
-                <span className="disclosure-arrow" aria-hidden="true">
-                  {listOpen ? "▾" : "▸"}
-                </span>
+                {t("wrongMode.move")}
               </button>
-            )}
-            <button
-              type="button"
-              className="primary"
-              disabled={state.model.status === "loading" || !state.text}
-              onClick={() => void copyScrubbed()}
-            >
-              {t("action.copy")}
-            </button>
-          </div>
-          <p className="caveat">{t("caveat.short")}</p>
-          <EntityPanel
-            open={listOpen && state.text !== ""}
-            entities={entities}
-            wordListRaw={state.wordListRaw}
-            wordCount={wordList.length}
-            onReveal={reveal}
-            onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
-            onKeep={(placeholder) => dispatch({ type: "keep", placeholder })}
-            onScrubAll={() => dispatch({ type: "scrubAll" })}
-            onKeepAll={() => dispatch({ type: "keepAll" })}
-            onWordList={(raw) => dispatch({ type: "setWordList", raw })}
-          />
-        </section>
-
-        <section className="card-column" aria-labelledby="restore-title" ref={restorePanel}>
-          <div className="card-head">
-            <h2 id="restore-title">{t("mode.restore")}</h2>
-          </div>
-          <DropZone
-            onText={(text) => {
-              setDropError(null);
-              dispatch({ type: "setAnswer", text });
-            }}
-            onUnsupported={() => setDropError("restore")}
-          >
-            <RestoreView
-              answer={state.answer}
-              restore={state.restore}
-              onChange={(text) => dispatch({ type: "setAnswer", text })}
-              onAnswer={(found, accept) => {
-                dispatch({ type: "suggestion", found, accept });
-                if (accept) runRestore(found);
-              }}
-            />
-          </DropZone>
-          {dropError === "restore" && (
-            <p className="notice" role="alert">
-              {t("drop.unsupported")}
             </p>
           )}
-          <div className="card-actions">
-            <button type="button" className="primary" disabled={!state.answer} onClick={restoreOrCopy}>
-              {state.restore ? t("action.copy") : t("action.restore")}
-            </button>
+          {mode === "scrub" && (
+            <>
+              {/* Nothing to count or act on before there is text. */}
+              {state.text && (
+                <div className="card-actions">
+                  <button
+                    type="button"
+                    className="disclosure"
+                    aria-expanded={listOpen}
+                    aria-controls="entity-rows"
+                    onClick={() => setListOpen((open) => !open)}
+                  >
+                    {countLabel(entities.length)}{" "}
+                    <span className="disclosure-arrow" aria-hidden="true">
+                      {listOpen ? "▾" : "▸"}
+                    </span>
+                  </button>
+                </div>
+              )}
+              <p className="caveat">{t("caveat.short")}</p>
+              <EntityPanel
+                open={listOpen && state.text !== ""}
+                entities={entities}
+                wordListRaw={state.wordListRaw}
+                wordCount={wordList.length}
+                onReveal={reveal}
+                onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
+                onKeep={(placeholder) => dispatch({ type: "keep", placeholder })}
+                onScrubAll={() => dispatch({ type: "scrubAll" })}
+                onKeepAll={() => dispatch({ type: "keepAll" })}
+                onWordList={(raw) => dispatch({ type: "setWordList", raw })}
+              />
+            </>
+          )}
+        </section>
+
+        <div className="run-column">
+          <button
+            type="button"
+            className="primary run"
+            disabled={mode === "scrub" ? state.model.status === "loading" || !state.text : !state.answer}
+            onClick={() => void run()}
+          >
+            {mode === "scrub" ? t("action.scrub") : t("action.restore")}
+            <span className="run-arrow" aria-hidden="true" />
+          </button>
+        </div>
+
+        <section className="pane" aria-labelledby="pane-out">
+          <div className="pane-head">
+            <h2 id="pane-out">{mode === "scrub" ? t("pane.scrubOut") : t("pane.restoreOut")}</h2>
           </div>
+          {mode === "scrub" ? (
+            <TextPane
+              label={t("pane.scrubOut")}
+              placeholder={t("scrub.resultEmpty")}
+              value={state.scrubbed ?? ""}
+              marks={placeholderMarks(state.scrubbed ?? "")}
+            />
+          ) : (
+            <TextPane
+              label={t("pane.restoreOut")}
+              placeholder={t("restore.resultEmpty")}
+              value={state.restore?.result.text ?? ""}
+              marks={restoredMarks}
+            />
+          )}
+          {mode === "restore" && (
+            <RestoreNotes
+              restore={state.restore}
+              onAnswer={(found, accept) => {
+                dispatch({ type: "suggestion", found, accept });
+                if (accept) restore(found);
+              }}
+            />
+          )}
+          {hasResult && (
+            <div className="card-actions">
+              <button type="button" className="primary" ref={copyButton} onClick={() => void copyResult()}>
+                {t("action.copy")}
+              </button>
+            </div>
+          )}
         </section>
       </main>
 

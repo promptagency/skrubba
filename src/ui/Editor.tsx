@@ -143,7 +143,7 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
       <textarea
         ref={area}
         className="editor-input"
-        aria-label={t("mode.scrub")}
+        aria-label={t("pane.scrubIn")}
         placeholder={t("editor.empty")}
         value={text}
         spellCheck={false}

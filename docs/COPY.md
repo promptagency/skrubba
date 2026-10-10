@@ -44,7 +44,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | status.ready | Modell laddad |
 | status.rulesOnly | Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv. |
 | status.trust | Inget lämnar din dator |
-| restore.empty | Klistra in svaret från AI här eller släpp en textfil. Platshållarna byts tillbaka till de riktiga uppgifterna. |
+| restore.empty | Klistra in svaret från AI här eller släpp en textfil. |
 | restore.unmatched | Hittade {found} i svaret. Menade du {placeholder}, alltså {value}? |
 | restore.accept | Ja |
 | restore.reject | Nej |
@@ -59,7 +59,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | key.downloadWarning | Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material. |
 | key.note | Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den. |
 | key.clearConfirm | Text, uppgifter, egna ord och kodnyckel raderas. Vill du fortsätta? |
-| key.empty | Kodnyckeln skapas när du kopierar en skrubbad text. |
+| key.empty | Kodnyckeln skapas när du skrubbar en text. |
 | key.uploadError | Filen kunde inte läsas som en kodnyckel. Välj en fil som du har laddat ner från Skrubba. |
 | key.uploadConfirm | Text, uppgifter, egna ord och kodnyckel ersätts av innehållet i filen. Vill du fortsätta? |
 | unload.warning | Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad. |
@@ -70,6 +70,16 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
 | faq.open | Vanliga frågor |
 | caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar. |
+| mode.switch | Vad vill du göra? |
+| pane.scrubIn | Din text |
+| pane.scrubOut | Skrubbad text |
+| pane.restoreIn | Svar från AI |
+| pane.restoreOut | Avskrubbad text |
+| action.scrub | Skrubba |
+| scrub.resultEmpty | Tryck Skrubba så visas texten med platshållare här. |
+| restore.resultEmpty | Tryck Avskrubba så visas svaret med de riktiga uppgifterna här. |
+| wrongMode.notice | Texten innehåller platshållare som {found}. Är det svaret från AI? |
+| wrongMode.move | Flytta till Avskrubba |
 
 ## Att granska
 
@@ -88,6 +98,16 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `key.explainer`: ny, vid knappen och överst i kodnyckelfönstret.
 - `faq.open`: knappen "Vanliga frågor" ersätter "?".
 - Sidan "Så funkar Skrubba" är nu fönstret "Vanliga frågor". De tre styckena är omskrivna till frågor med samma svar, och frågan "Vad är kodnyckeln?" är ny.
+
+Ändrat 2026-10-10, tredje omgången. Skrubba och Avskrubba är två lägen som man väljer överst. Knappen mellan rutorna gör jobbet och resultatet visas i högra rutan, där Kopiera dyker upp.
+
+- `mode.switch`: osynlig etikett för lägesväljaren, läses upp av skärmläsare.
+- `pane.scrubIn`, `pane.scrubOut`, `pane.restoreIn`, `pane.restoreOut`: små rubriker ovanför rutorna.
+- `action.scrub`: knappen mellan rutorna i läget Skrubba.
+- `scrub.resultEmpty`, `restore.resultEmpty`: högra rutan innan knappen är tryckt.
+- `wrongMode.notice`, `wrongMode.move`: när någon klistrar in ett svar med platshållare i läget Skrubba.
+- `key.empty`: kodnyckeln skapas nu när man trycker Skrubba, inte när man kopierar.
+- `restore.empty`: andra meningen flyttade till `restore.resultEmpty`.
 
 ## Typer
 

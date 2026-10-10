@@ -1,18 +1,19 @@
 # UX.md – the one screen
 
-No wizard. One page, two cards side by side: **Skrubba** (make the text safe) and **Avskrubba** (put the real values back in the AI's answer). The kodnyckel and Vanliga frågor open as windows on top. Layout from the owner's wireframe, 2026-10-10.
+No wizard. One page with two operations, one at a time. A switch at the top picks **Skrubba** (make the text safe) or **Avskrubba** (put the real values back in the AI's answer). The input is on the left, the button between the panes runs the operation, the result appears on the right, and only then does "Kopiera" show up under it. The kodnyckel and Vanliga frågor open as windows on top. Owner's redesign, 2026-10-10.
 
 ```
                           Skrubba                          ← logotype
  Kodnyckel [ 13 uppgifter ]                    [Vanliga frågor]
    Visar vilka riktiga uppgifter platshållarna står för …
- Skrubba            Visa exempel   Avskrubba
- ┌──────────────────────────────┐  ┌──────────────────────────────┐
- │ text, highlights overlaid    │  │ the AI's answer; restored    │
- │ (paste, type or drop .txt/.md)│  │ values highlighted           │
- └──────────────────────────────┘  └──────────────────────────────┘
- 13 uppgifter ▾        [Kopiera]   Hittade NAMN 1 … ? [Ja] [Nej]
- Skrubba hittar inte allt …                          [Avskrubba]
+                     ( Skrubba | Avskrubba )               ← mode switch
+ Din text            Visa exempel        Skrubbad text
+ ┌────────────────────────────┐          ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┐
+ │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
+ │ click a highlight to keep  │ [Skrubba →] (read-only)             │
+ └────────────────────────────┘          └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘
+ 13 uppgifter ▾                                             [Kopiera]
+ Skrubba hittar inte allt …
  ● Anna Berg    Namn  ×3 Skrubba
  ○ Göteborg     Plats ×1 Behåll
  ▸ Egna ord (1)
@@ -22,9 +23,11 @@ No wizard. One page, two cards side by side: **Skrubba** (make the text safe) an
                      Inget lämnar din dator
 ```
 
+In Avskrubba the left pane is "Svar från AI", the button says "Avskrubba →" and the right pane is "Avskrubbad text", with any "Menade du …?" questions under it.
+
 History of texts (in the wireframe) is left out for now: text may only live in memory, and saved cases are out of scope for v1.
 
-## Skrubba card
+## Skrubba
 
 **Input.** Paste or type. Processing starts on paste immediately and on typing after 300 ms idle.
 
@@ -42,15 +45,17 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 
 **Egna ord.** Collapsible section under the list. One term per line. Placeholder text: "Kundnamn, projektnamn, produkter …". Edits re-run matching live. The list is part of the key and is saved with it.
 
-**Copy.** "Kopiera" copies the text with all active entities replaced. Toast: "Kopierat. 14 uppgifter skrubbade." Counter updates live.
+**Skrubba and Kopiera.** The button between the panes masks the current text afresh, shows the result in "Skrubbad text" (placeholders highlighted in their type colour) and records the kodnyckel. Focus moves to "Kopiera", which appears under the result and copies it. Toast: "Kopierat. 14 uppgifter skrubbade." Any change that alters what would be scrubbed (editing the text, a click on a highlight, the list, Egna ord, the example) clears the result and hides "Kopiera", so nothing stale is copied; press Skrubba again.
+
+**Wrong mode.** Text with exact placeholders like `[NAMN_1]` in Skrubba is probably the AI's answer. A notice says so (`wrongMode.notice`) with a button "Flytta till Avskrubba" that moves the text over and switches mode. Nothing switches by itself.
 
 **Empty state.** "Klistra in text här. Den stannar i din webbläsare." plus "Visa exempel". The item count and "Skrubba alla" / "Behåll alla" stay hidden until there is text; "Egna ord" is always there so terms can be added first.
 
-## Avskrubba card
+## Avskrubba
 
-Textarea for the AI's answer, usable while the model loads. The button under the card says "Avskrubba" (also `Cmd/Ctrl+Enter` in the card); the result replaces the content with restored values highlighted, and the same button becomes "Kopiera". Editing the answer turns it back into "Avskrubba".
+"Svar från AI" takes the AI's answer, usable while the model loads; its placeholders are highlighted. The button between the panes puts the real values back in "Avskrubbad text" on the right, restored values highlighted in their type colour, and "Kopiera" appears under it. The answer on the left stays as pasted. Editing it clears the result.
 
-Unmatched placeholders are listed under the text:
+Unmatched placeholders are listed under the result:
 
 > Hittade `Namn 1` i svaret. Menade du `[NAMN_1]`, alltså Anna Berg?  [Ja] [Nej]
 
@@ -72,11 +77,11 @@ The button "Vanliga frågor" top right, and "Inget lämnar din dator" in the foo
 
 ## Model state
 
-Loading progress shows inside the Skrubba card (`gate.lead`, `gate.body`, "Laddar modell 43 %"). The Avskrubba card and the key card work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Inget lämnar din dator" sits in the footer and opens Vanliga frågor.
+Loading progress shows in Skrubba's left pane (`gate.lead`, `gate.body`, "Laddar modell 43 %"). Avskrubba and the kodnyckel work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Inget lämnar din dator" sits in the footer and opens Vanliga frågor.
 
 ## Dropping files
 
-Each card accepts a dropped `.txt` or `.md` file, read in the browser. Anything else gets `drop.unsupported` and leaves the card as it was. Word and PDF are out of scope for v1.
+The left pane in either mode accepts a dropped `.txt` or `.md` file, read in the browser. Anything else gets `drop.unsupported` and leaves the pane as it was. Word and PDF are out of scope for v1.
 
 ## Keyboard
 
@@ -84,14 +89,14 @@ Each card accepts a dropped `.txt` or `.md` file, read in the browser. Anything 
 |---|---|
 | `M` (with selection) | Skrubba selection |
 | `B` (with selection or focused row) | Behåll |
-| `Cmd/Ctrl+Shift+C` | Copy from the card in focus (Skrubba otherwise) |
-| `Cmd/Ctrl+Enter` | Skrubba card: Kopiera. Avskrubba card: Avskrubba, then Kopiera |
+| `Cmd/Ctrl+Enter` | Run the current mode (the button between the panes) |
+| `Cmd/Ctrl+Shift+C` | Kopiera the result, running the mode first if there is none |
 | `↑ ↓` in the list, `Space` | Navigate rows, toggle |
 | `Esc` | Close the kodnyckel or Vanliga frågor window, or the toast |
 
 ## Mobile (≥ 390 px)
 
-The cards stack, Skrubba first; the item list stays under the Skrubba card and folds with its toggle. The windows fit the screen width. Nothing scrolls sideways.
+The mode switch spans the width. Input, button (arrow pointing down) and result stack; the item list stays under the input and folds with its toggle. The windows fit the screen width. Nothing scrolls sideways.
 
 ## What this screen must never do
 

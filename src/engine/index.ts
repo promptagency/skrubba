@@ -7,3 +7,4 @@ export function createBrowserMasker(): MaskeraMasker {
 }
 export { parseWordList } from "./wordList.ts";
 export { keyFileName, mergeEntries, parseKey } from "./key.ts";
+export { ENTITY_TYPES } from "./Masker.ts";

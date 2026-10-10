@@ -14,20 +14,21 @@ export interface SessionState {
   /** The text `entities` were computed for. */
   entitiesText: string;
   model: ModelState;
+  /** Skrubba's result: the text as it will be copied, or null until Skrubba is pressed again. */
+  scrubbed: string | null;
   toast: string | null;
-  /** Placeholder → value for everything copied so far, or loaded from a key file. */
+  /** Placeholder → value for everything scrubbed so far, or loaded from a key file. */
   keyEntries: KeyEntry[];
   keyCreatedAt: string | null;
   /** False once the key has entries the user has not downloaded. */
   keyDownloaded: boolean;
-  /** Byt tillbaka: the text in the answer box. */
+  /** Avskrubba: the AI's answer as pasted. */
   answer: string;
-  /** The last restore of `original` (the answer as pasted), or null if the answer changed since. */
+  /** Avskrubba's result for `answer`, or null until Avskrubba is pressed again. */
   restore: RestoreState | null;
 }
 
 export interface RestoreState {
-  original: string;
   result: RestoreResult;
   accepted: string[];
   rejected: string[];
@@ -45,12 +46,13 @@ export type SessionAction =
   | { type: "loadExample"; text: string; wordList: string[] }
   | { type: "model"; model: ModelState }
   | { type: "toast"; message: string | null }
-  | { type: "copied"; entries: KeyEntry[]; at: string }
+  | { type: "scrubbed"; masked: string; entries: KeyEntry[]; at: string }
   | { type: "keyDownloaded" }
   | { type: "loadKey"; key: Key }
   | { type: "clearAll" }
   | { type: "setAnswer"; text: string }
-  | { type: "restored"; original: string; result: RestoreResult }
+  | { type: "restored"; result: RestoreResult }
+  | { type: "moveToRestore" }
   | { type: "suggestion"; found: string; accept: boolean };
 
 export const initialSession: SessionState = {
@@ -61,6 +63,7 @@ export const initialSession: SessionState = {
   entities: [],
   entitiesText: "",
   model: { status: "loading", pct: 0 },
+  scrubbed: null,
   toast: null,
   keyEntries: [],
   keyCreatedAt: null,
@@ -69,10 +72,28 @@ export const initialSession: SessionState = {
   restore: null,
 };
 
+// Actions that change what Skrubba would produce. Its result is then out of
+// date and is cleared, so nothing stale can be copied.
+const CHANGES_SCRUB = new Set<SessionAction["type"]>([
+  "setText",
+  "setWordList",
+  "addManual",
+  "toggleKeep",
+  "keep",
+  "keepAll",
+  "scrubAll",
+  "loadExample",
+]);
+
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
+  const next = reduce(state, action);
+  return next !== state && CHANGES_SCRUB.has(action.type) && next.scrubbed !== null ? { ...next, scrubbed: null } : next;
+}
+
+function reduce(state: SessionState, action: SessionAction): SessionState {
   switch (action.type) {
     case "setText":
-      return { ...state, text: action.text };
+      return action.text === state.text ? state : { ...state, text: action.text };
     case "setWordList":
       return { ...state, wordListRaw: action.raw };
     case "addManual": {
@@ -103,11 +124,12 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       return { ...state, model: action.model };
     case "toast":
       return { ...state, toast: action.message };
-    case "copied": {
+    case "scrubbed": {
       const keyEntries = mergeEntries(state.keyEntries, action.entries);
       const grew = keyEntries.length > state.keyEntries.length;
       return {
         ...state,
+        scrubbed: action.masked,
         keyEntries,
         keyCreatedAt: state.keyCreatedAt ?? action.at,
         keyDownloaded: state.keyDownloaded && !grew,
@@ -126,20 +148,15 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
     case "clearAll":
       return { ...initialSession, model: state.model };
     case "setAnswer":
-      return { ...state, answer: action.text, restore: null };
-    case "restored": {
-      const same = state.restore?.original === action.original;
+      return action.text === state.answer ? state : { ...state, answer: action.text, restore: null };
+    case "restored":
+      // An existing result always belongs to the current answer: setAnswer clears it.
       return {
         ...state,
-        answer: action.result.text,
-        restore: {
-          original: action.original,
-          result: action.result,
-          accepted: same ? state.restore!.accepted : [],
-          rejected: same ? state.restore!.rejected : [],
-        },
+        restore: { result: action.result, accepted: state.restore?.accepted ?? [], rejected: state.restore?.rejected ?? [] },
       };
-    }
+    case "moveToRestore":
+      return { ...state, answer: state.text, restore: null, text: "", entities: [], entitiesText: "", scrubbed: null };
     case "suggestion": {
       if (!state.restore) return state;
       const list = action.accept ? "accepted" : "rejected";
@@ -162,7 +179,7 @@ export function freshEntities(state: SessionState): Entity[] {
   return state.entitiesText === state.text ? withKept(state, state.entities) : [];
 }
 
-/** The key as it is downloaded and used for Byt tillbaka. */
+/** The key as it is downloaded and used for Avskrubba. */
 export function currentKey(state: SessionState): Key {
   return {
     entries: state.keyEntries,
