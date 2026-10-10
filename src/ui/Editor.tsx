@@ -31,6 +31,7 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
   const area = useRef<HTMLTextAreaElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
   const pasted = useRef(false);
+  const clickToggled = useRef<string | null>(null);
   const [selection, setSelection] = useState("");
   const [tip, setTip] = useState<Tip | null>(null);
 
@@ -79,12 +80,36 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
 
   // The overlay sits under the textarea, so find the mark under the pointer
   // through the whole element stack.
-  function onMouseMove(e: React.MouseEvent) {
+  function entityUnder(e: React.MouseEvent): Entity | undefined {
     const mark = document
       .elementsFromPoint(e.clientX, e.clientY)
       .find((el): el is HTMLElement => el instanceof HTMLElement && el.dataset.ph !== undefined);
-    if (!mark) return setTip(null);
-    const entity = entities.find((x) => x.placeholder === mark.dataset.ph);
+    return mark && entities.find((x) => x.placeholder === mark.dataset.ph);
+  }
+
+  // A plain click on a highlight switches Skrubba / Behåll. Dragging out a
+  // selection or a modifier key leaves it alone, and the second click of a
+  // double-click (selecting the word) undoes the first.
+  function onClick(e: React.MouseEvent) {
+    if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.detail === 2 && clickToggled.current) {
+      onToggleKeep(clickToggled.current);
+      clickToggled.current = null;
+      return;
+    }
+    clickToggled.current = null;
+    const el = area.current;
+    if (e.detail !== 1 || !el || el.selectionStart !== el.selectionEnd) return;
+    const entity = entityUnder(e);
+    if (!entity) return;
+    onToggleKeep(entity.placeholder);
+    clickToggled.current = entity.placeholder;
+    setTip(null);
+  }
+
+  function onMouseMove(e: React.MouseEvent) {
+    const entity = entityUnder(e);
+    if (area.current) area.current.style.cursor = entity ? "pointer" : "";
     if (!entity) return setTip(null);
     const box = e.currentTarget.getBoundingClientRect();
     const state = entity.active ? t("entity.scrub") : t("entity.keep");
@@ -92,7 +117,7 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
   }
 
   return (
-    <div className="editor" onMouseMove={onMouseMove} onMouseLeave={() => setTip(null)}>
+    <div className="editor" onMouseMove={onMouseMove} onMouseLeave={() => setTip(null)} onClick={onClick}>
       <div className="editor-overlay" ref={overlay} aria-hidden="true">
         {segments(text, entityMarks(entities)).map((s) =>
           s.data ? (

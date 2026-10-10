@@ -96,3 +96,47 @@ test("highlights line up with the text in the textarea", async ({ page }) => {
   expect(markBox!.width).toBeGreaterThan(10);
   await page.screenshot({ path: "test-results/phase2-example.png" });
 });
+
+test.describe("clicking a highlighted word in the text", () => {
+  const SHORT = "Johan Lindqvist ringde från Umeå.";
+
+  async function clickMark(page: import("@playwright/test").Page, placeholder: string, clickCount = 1) {
+    const box = await page.locator(`mark[data-ph="${placeholder}"]`).first().boundingBox();
+    if (!box) throw new Error(`no mark for ${placeholder}`);
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2, { clickCount });
+  }
+
+  test("switches it between Skrubba and Behåll", async ({ page }) => {
+    await openReady(page);
+    await editor(page).fill(SHORT);
+    const johan = rows(page).filter({ hasText: "Johan Lindqvist" });
+    await expect(johan).toHaveAccessibleName(/Skrubba$/);
+    const ph = await page.locator("mark.hl-name").getAttribute("data-ph");
+
+    await clickMark(page, ph!);
+    await expect(johan).toHaveAccessibleName(/Behåll$/);
+    await expect(page.locator(`mark[data-ph="${ph}"]`)).toHaveClass(/hl-kept/);
+
+    await clickMark(page, ph!);
+    await expect(johan).toHaveAccessibleName(/Skrubba$/);
+    await expect(page.locator(`mark[data-ph="${ph}"]`)).not.toHaveClass(/hl-kept/);
+  });
+
+  test("a double-click selects the word and leaves it as it was", async ({ page }) => {
+    await openReady(page);
+    await editor(page).fill(SHORT);
+    const umea = rows(page).filter({ hasText: "Umeå" });
+    const ph = await page.locator("mark.hl-place").getAttribute("data-ph");
+    await clickMark(page, ph!, 2);
+    await expect(umea).toHaveAccessibleName(/Skrubba$/);
+    await expect(page.getByRole("button", { name: /Skrubba markering/ })).toBeVisible();
+  });
+
+  test("clicking plain text does nothing to the items", async ({ page }) => {
+    await openReady(page);
+    await editor(page).fill(SHORT);
+    const box = await page.locator(".editor-overlay span", { hasText: "ringde" }).boundingBox();
+    await page.mouse.click(box!.x + 4, box!.y + box!.height / 2);
+    for (const row of await rows(page).all()) await expect(row).toHaveAccessibleName(/Skrubba$/);
+  });
+});

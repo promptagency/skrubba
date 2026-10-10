@@ -189,10 +189,10 @@ kbd {
   background: var(--hl-word);
 }
 
-/* Behåll: still found, shown as an outline only. */
+/* Behåll: still found, shown as a border only. Click to switch back. */
 .hl-kept {
   background: none;
-  box-shadow: inset 0 -2px 0 var(--muted);
+  box-shadow: inset 0 0 0 1.5px var(--muted);
 }
 
 .hl-flash {
