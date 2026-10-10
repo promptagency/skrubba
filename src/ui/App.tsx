@@ -11,6 +11,7 @@ import { EntityPanel } from "./EntityPanel.tsx";
 import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
 import { KeyDialog } from "./KeyDialog.tsx";
+import { KeyUpload } from "./KeyUpload.tsx";
 import { ModelStatus } from "./ModelStatus.tsx";
 import { RestoreNotes } from "./RestoreNotes.tsx";
 import { firstPlaceholder, type Mark, placeholderMarks } from "./segments.ts";
@@ -170,7 +171,8 @@ export function App() {
       const key = parseKey(raw);
       if (!key) return "invalid";
       const s = latest.current;
-      const hasWork = s.text || s.answer || s.keyEntries.length > 0;
+      // The AI answer is kept, so it does not count as work that would be lost.
+      const hasWork = s.text || s.keyEntries.length > 0;
       if (hasWork && !window.confirm(t("key.uploadConfirm"))) return "cancelled";
       masker.loadKey(key);
       dispatch({ type: "loadKey", key });
@@ -226,25 +228,6 @@ export function App() {
       </header>
 
       <div className="toolbar">
-        <div className="toolbar-key">
-          <span className="toolbar-label" id="key-label">
-            {t("mode.key")}
-          </span>
-          <button
-            type="button"
-            className="key-button"
-            aria-labelledby="key-label key-button"
-            aria-describedby="key-explainer"
-            id="key-button"
-            aria-haspopup="dialog"
-            onClick={() => setKeyOpen(true)}
-          >
-            {state.keyEntries.length > 0 ? countLabel(state.keyEntries.length) : t("key.none")}
-          </button>
-          <p className="toolbar-explainer" id="key-explainer">
-            {t("key.explainer")}
-          </p>
-        </div>
         <button type="button" className="faq-button" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
           {t("faq.open")}
         </button>
@@ -326,6 +309,12 @@ export function App() {
                 onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
               />
             </DropZone>
+          )}
+          {mode === "restore" && state.keyEntries.length === 0 && (
+            <div className="notice key-missing">
+              <p>{t("key.missing")}</p>
+              <KeyUpload onUpload={uploadKey} />
+            </div>
           )}
           {dropError && (
             <p className="notice" role="alert">
@@ -424,11 +413,18 @@ export function App() {
               }}
             />
           )}
-          {hasResult && (
+          {(hasResult || state.keyEntries.length > 0) && (
             <div className="card-actions">
-              <button type="button" className="primary" ref={copyButton} onClick={() => void copyResult()}>
-                {t("action.copy")}
-              </button>
+              {state.keyEntries.length > 0 && (
+                <button type="button" className="link key-link" aria-haspopup="dialog" onClick={() => setKeyOpen(true)}>
+                  {t("key.link", { n: state.keyEntries.length })}
+                </button>
+              )}
+              {hasResult && (
+                <button type="button" className="primary" ref={copyButton} onClick={() => void copyResult()}>
+                  {t("action.copy")}
+                </button>
+              )}
             </div>
           )}
         </section>

@@ -31,8 +31,3 @@ test("the trust line in the footer opens Vanliga frågor too", async ({ page }) 
   await faq.getByRole("button", { name: "Stäng" }).click();
   await expect(faq).toBeHidden();
 });
-
-test("the key button explains what the kodnyckel is", async ({ page }) => {
-  await openReady(page);
-  await expect(page.getByText("Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.").first()).toBeVisible();
-});

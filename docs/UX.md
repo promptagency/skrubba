@@ -4,15 +4,14 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
 
 ```
                           Skrubba                          ← logotype
- Kodnyckel [ 13 uppgifter ]                    [Vanliga frågor]
-   Visar vilka riktiga uppgifter platshållarna står för …
+                                               [Vanliga frågor]
                      ( Skrubba | Avskrubba )               ← mode switch
  Din text            Visa exempel        Skrubbad text
  ┌────────────────────────────┐          ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┐
  │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
  │ click a highlight to keep  │ [Skrubba →] (read-only)             │
  └────────────────────────────┘          └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘
- 13 uppgifter ▾                                             [Kopiera]
+ 13 uppgifter ▾                       Kodnyckel (13)        [Kopiera]
  Skrubba hittar inte allt …
  ● Anna Berg    Namn  ×3 Skrubba
  ○ Göteborg     Plats ×1 Behåll
@@ -24,6 +23,8 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
 ```
 
 In Avskrubba the left pane is "Svar från AI", the button says "Avskrubba →" and the right pane is "Avskrubbad text", with any "Menade du …?" questions under it.
+
+The kodnyckel is not on screen all the time: Avskrubba uses it by itself within the tab. It shows up where it is needed. "Kodnyckel (13)" sits beside Kopiera once the tab has one (in both modes, and also after the result is cleared, so it can still be downloaded). In Avskrubba, a tab without one shows `key.missing` and "Ladda upp kodnyckel" under "Svar från AI"; uploading keeps the pasted answer.
 
 History of texts (in the wireframe) is left out for now: text may only live in memory, and saved cases are out of scope for v1.
 
@@ -63,7 +64,7 @@ Tolerant matching rules live in `docs/ARCHITECTURE.md`. The tool asks when unsur
 
 ## Kodnyckel window
 
-"Kodnyckel" is the established Swedish word for a list linking codes to real identities; it is not an encryption key, and the explainer (`key.explainer`) next to the button and at the top of the window says so by example. Opened from the button next to "Kodnyckel" (it reads "Ingen kodnyckel än", then "{n} uppgifter"). A window over the page: title "Kodnyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
+"Kodnyckel" is the established Swedish word for a list linking codes to real identities; it is not an encryption key, and the explainer (`key.explainer`) at the top of the window says so by example. Opened from "Kodnyckel ({n})" beside Kopiera. A window over the page: title "Kodnyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
 
 - "Ladda ner kodnyckel" → `skrubba-kodnyckel-YYYY-MM-DD.json` (entities + word list). Line under: "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material."
 - "Ladda upp kodnyckel" → file picker, restores key and word list into memory.

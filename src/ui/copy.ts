@@ -51,7 +51,6 @@ export const COPY = {
   "key.uploadConfirm": "Text, uppgifter, egna ord och kodnyckel ersätts av innehållet i filen. Vill du fortsätta?",
   "unload.warning": "Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad.",
   "drop.unsupported": "Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den.",
-  "key.none": "Ingen kodnyckel än",
   "key.close": "Stäng",
   "footer.credits": "Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency.",
   "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
@@ -67,6 +66,8 @@ export const COPY = {
   "restore.resultEmpty": "Tryck Avskrubba så visas svaret med de riktiga uppgifterna här.",
   "wrongMode.notice": "Texten innehåller platshållare som {found}. Är det svaret från AI?",
   "wrongMode.move": "Flytta till Avskrubba",
+  "key.link": "Kodnyckel ({n})",
+  "key.missing": "Den här fliken har ingen kodnyckel. Har du sparat en kan du ladda upp den, så byts platshållarna tillbaka.",
 } as const;
 
 export type CopyKey = keyof typeof COPY;

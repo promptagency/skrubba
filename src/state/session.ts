@@ -138,9 +138,11 @@ function reduce(state: SessionState, action: SessionAction): SessionState {
     case "keyDownloaded":
       return { ...state, keyDownloaded: true };
     case "loadKey":
+      // The AI answer stays: it is often pasted first, then the key it needs.
       return {
         ...initialSession,
         model: state.model,
+        answer: state.answer,
         wordListRaw: action.key.wordList.join("\n"),
         keyEntries: action.key.entries,
         keyCreatedAt: action.key.createdAt,

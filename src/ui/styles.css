@@ -537,36 +537,6 @@ a {
   margin-bottom: 24px;
 }
 
-.toolbar-label {
-  font-weight: 600;
-}
-
-.key-button {
-  min-width: 220px;
-  text-align: left;
-  padding: 8px 12px;
-}
-
-.toolbar {
-  align-items: flex-start;
-}
-
-.toolbar-key {
-  display: grid;
-  grid-template-columns: auto auto;
-  align-items: center;
-  column-gap: 12px;
-  row-gap: 4px;
-}
-
-.toolbar-explainer {
-  grid-column: 2;
-  margin: 0;
-  max-width: 34em;
-  font-size: 13px;
-  color: var(--muted);
-}
-
 .faq-button {
   margin-left: auto;
 }
@@ -675,8 +645,22 @@ a {
   gap: 12px;
 }
 
-.card-actions .disclosure {
+.card-actions .disclosure,
+.card-actions .key-link {
   margin-right: auto;
+}
+
+/* Avskrubba in a tab without a kodnyckel. */
+.key-missing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.key-missing p {
+  margin: 0;
+  flex: 1 1 20em;
 }
 
 .notice {
@@ -786,22 +770,6 @@ a {
   .mode-switch button {
     flex: 1;
     padding: 10px 12px;
-  }
-  .toolbar {
-    flex-wrap: wrap;
-  }
-  .toolbar-key {
-    grid-template-columns: auto 1fr;
-    flex: 1 1 100%;
-  }
-  .toolbar-explainer {
-    grid-column: 1 / -1;
-  }
-  .key-button {
-    min-width: 0;
-  }
-  .faq-button {
-    margin-left: 0;
   }
   .key-table {
     font-size: 13px;

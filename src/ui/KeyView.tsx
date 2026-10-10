@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
 import type { Entity, KeyEntry } from "../engine/index.ts";
 import { t, TYPE_LABEL } from "./copy.ts";
+import { KeyUpload } from "./KeyUpload.tsx";
 
 export interface KeyViewProps {
   entries: KeyEntry[];
@@ -13,8 +13,6 @@ export interface KeyViewProps {
 
 /** Kodnyckel: what each placeholder stands for, download, upload, clear. */
 export function KeyView({ entries, wordList, entities, onDownload, onUpload, onClear }: KeyViewProps) {
-  const file = useRef<HTMLInputElement>(null);
-  const [uploadFailed, setUploadFailed] = useState(false);
   const counts = new Map(entities.map((e) => [e.placeholder, e.occurrences.length]));
 
   return (
@@ -65,30 +63,7 @@ export function KeyView({ entries, wordList, entities, onDownload, onUpload, onC
           </button>
           <p className="key-warning">{t("key.downloadWarning")}</p>
         </div>
-        <div>
-          <button type="button" onClick={() => file.current?.click()}>
-            {t("key.upload")}
-          </button>
-          <input
-            ref={file}
-            type="file"
-            accept="application/json,.json"
-            className="offscreen"
-            tabIndex={-1}
-            aria-hidden="true"
-            onChange={async (e) => {
-              const f = e.target.files?.[0];
-              e.target.value = "";
-              if (!f) return;
-              setUploadFailed(onUpload(await f.text()) === "invalid");
-            }}
-          />
-          {uploadFailed && (
-            <p className="key-error" role="alert">
-              {t("key.uploadError")}
-            </p>
-          )}
-        </div>
+        <KeyUpload onUpload={onUpload} />
         <div>
           <button type="button" onClick={onClear}>
             {t("key.clear")}

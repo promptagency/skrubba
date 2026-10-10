@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
-import { answerBox, editor, openReady, rows, scrub } from "./helpers.ts";
+import { answerBox, editor, openReady, rows } from "./helpers.ts";
 
 // Simulate dropping one file on an element.
 async function dropFile(page: Page, target: Locator, name: string, type: string, content: string) {
@@ -37,16 +37,6 @@ test("a dropped PDF is refused with a message and nothing changes", async ({ pag
     "Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den.",
   );
   await expect(editor(page)).toHaveValue("Befintlig text.");
-});
-
-test("the key button says there is no key, then counts what the key holds", async ({ page }) => {
-  await openReady(page);
-  const keyButton = page.getByRole("button", { name: /^Kodnyckel/ });
-  await expect(keyButton).toHaveText("Ingen kodnyckel än");
-  await editor(page).fill("Johan Lindqvist ringde från Umeå.");
-  await expect(rows(page)).toHaveCount(2);
-  await scrub(page);
-  await expect(keyButton).toHaveText("2 uppgifter");
 });
 
 test("the item count and Skrubba alla / Behåll alla stay hidden until there is text", async ({ page }) => {

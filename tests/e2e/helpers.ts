@@ -29,7 +29,7 @@ export async function scrub(page: Page) {
   await runButton(page).click();
   await expect(scrubbedBox(page)).not.toHaveValue("");
 }
-/** The key card, opened from the key button next to "Kodnyckel". */
+/** The kodnyckel window, opened from the link beside Kopiera (there once the tab has a key). */
 export async function openKey(page: Page) {
   await page.getByRole("button", { name: /^Kodnyckel/ }).click();
   const dialog = page.getByRole("dialog", { name: "Kodnyckel" });

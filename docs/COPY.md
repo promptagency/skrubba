@@ -64,7 +64,6 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | key.uploadConfirm | Text, uppgifter, egna ord och kodnyckel ersätts av innehållet i filen. Vill du fortsätta? |
 | unload.warning | Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad. |
 | drop.unsupported | Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den. |
-| key.none | Ingen kodnyckel än |
 | key.close | Stäng |
 | footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency. |
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
@@ -80,6 +79,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | restore.resultEmpty | Tryck Avskrubba så visas svaret med de riktiga uppgifterna här. |
 | wrongMode.notice | Texten innehåller platshållare som {found}. Är det svaret från AI? |
 | wrongMode.move | Flytta till Avskrubba |
+| key.link | Kodnyckel ({n}) |
+| key.missing | Den här fliken har ingen kodnyckel. Har du sparat en kan du ladda upp den, så byts platshållarna tillbaka. |
 
 ## Att granska
 
@@ -88,7 +89,6 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `mode.restore` och `action.restore`: "Byt tillbaka" blev "Avskrubba", som i skissen.
 - `editor.empty` och `restore.empty`: nämner att man kan släppa en textfil.
 - `drop.unsupported`: när någon släpper en fil som inte är .txt eller .md.
-- `key.none`: på nyckelknappen innan något är kopierat.
 - `key.close`: stänger nyckelkortet.
 - `footer.credits`: sidfoten.
 
@@ -108,6 +108,13 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `wrongMode.notice`, `wrongMode.move`: när någon klistrar in ett svar med platshållare i läget Skrubba.
 - `key.empty`: kodnyckeln skapas nu när man trycker Skrubba, inte när man kopierar.
 - `restore.empty`: andra meningen flyttade till `restore.resultEmpty`.
+
+Ändrat 2026-10-10, fjärde omgången. Kodnyckeln syns inte längre överst. Den visas där den behövs.
+
+- `key.link`: länken bredvid Kopiera när fliken har en kodnyckel, öppnar kodnyckelfönstret.
+- `key.missing`: i läget Avskrubba när fliken saknar kodnyckel, med knappen `key.upload` bredvid.
+- `key.none` är borttagen.
+- `key.explainer` visas bara överst i kodnyckelfönstret.
 
 ## Typer
 

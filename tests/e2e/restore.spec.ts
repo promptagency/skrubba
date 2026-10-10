@@ -57,22 +57,17 @@ test("the key downloads, uploads into a fresh tab, and restores there", async ({
   expect(key.app).toBe("skrubba");
   const johan = key.entries.find((e: { value: string }) => e.value === "Johan Lindqvist").placeholder;
 
+  // A fresh tab has no key: Avskrubba offers the upload (more in key.spec.ts).
   const fresh = await context.newPage();
   await fresh.goto("/");
+  const answer = await answerBox(fresh);
+  await fresh.locator('.key-missing input[type="file"]').setInputFiles(path);
   const freshKey = await openKey(fresh);
-  await fresh.locator('input[type="file"]').setInputFiles(path);
   await expect(freshKey.getByRole("row").filter({ hasText: "Johan Lindqvist" })).toBeVisible();
   await fresh.keyboard.press("Escape");
-  await (await answerBox(fresh)).fill(`Hälsa ${johan}.`);
+  await answer.fill(`Hälsa ${johan}.`);
   await fresh.keyboard.press(`${MOD}+Enter`);
   await expect(restoredBox(fresh)).toHaveValue("Hälsa Johan Lindqvist.");
-});
-
-test("a file that is not a key is refused with a message", async ({ page }) => {
-  await page.goto("/");
-  await openKey(page);
-  await page.locator('input[type="file"]').setInputFiles({ name: "x.json", mimeType: "application/json", buffer: Buffer.from("{}") });
-  await expect(page.getByText("Filen kunde inte läsas som en kodnyckel.", { exact: false })).toBeVisible();
 });
 
 test("Rensa allt clears text, entities, words and key after confirming", async ({ page }) => {
@@ -86,7 +81,7 @@ test("Rensa allt clears text, entities, words and key after confirming", async (
   await dialog.getByRole("button", { name: "Rensa allt" }).click();
   await expect(dialog.getByText("Kodnyckeln skapas när du skrubbar en text.")).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveText("Ingen kodnyckel än");
+  await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveCount(0);
   await expect(editor(page)).toHaveValue("");
   await expect(rows(page)).toHaveCount(0);
 });

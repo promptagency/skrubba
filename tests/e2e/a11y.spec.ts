@@ -44,6 +44,13 @@ test.describe("accessibility", () => {
         expect(await violations(page)).toEqual([]);
       });
 
+      test("Avskrubba without a kodnyckel", async ({ page }) => {
+        await openReady(page);
+        await (await answerBox(page)).fill("Hej [NAMN_1].");
+        await expect(page.getByRole("button", { name: "Ladda upp kodnyckel" })).toBeVisible();
+        expect(await violations(page)).toEqual([]);
+      });
+
       test("the key card with a key", async ({ page }) => {
         await openReady(page);
         await page.getByRole("button", { name: "Visa exempel" }).click();

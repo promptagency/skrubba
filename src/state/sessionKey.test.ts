@@ -33,13 +33,15 @@ describe("key in the session", () => {
     expect(currentKey(s)).toEqual({ entries: [anna], wordList: ["Havsvind", "Nordljus"], createdAt: now, app: "skrubba", version: 1 });
   });
 
-  it("replaces the whole session with an uploaded key", () => {
+  it("replaces the whole session with an uploaded key, except the AI answer waiting for it", () => {
     let s = reduce(initialSession, { type: "setText", text: "Anna" });
+    s = reduce(s, { type: "setAnswer", text: "Hej [NAMN_2]" });
     s = reduce(s, { type: "addManual", term: "Anna" });
     s = reduce(s, { type: "model", model: { status: "ready" } });
     const key: Key = { entries: [erik], wordList: ["Havsvind"], createdAt: now, app: "skrubba", version: 1 };
     s = reduce(s, { type: "loadKey", key });
     expect(s.text).toBe("");
+    expect(s.answer).toBe("Hej [NAMN_2]");
     expect(s.manual).toEqual([]);
     expect(s.keyEntries).toEqual([erik]);
     expect(s.wordListRaw).toBe("Havsvind");
