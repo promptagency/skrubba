@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Entity } from "../engine/index.ts";
-import { entityAt, segments } from "./segments.ts";
+import { entityAt, entityMarks, segments } from "./segments.ts";
 
 const text = "Anna ringde Erik. Anna igen.";
 const anna: Entity = {
@@ -19,7 +19,7 @@ const erik: Entity = { ...anna, id: "[NAMN_2]", placeholder: "[NAMN_2]", value: 
 
 describe("segments", () => {
   it("splits text into plain and highlighted runs in order", () => {
-    expect(segments(text, [erik, anna]).map((s) => [s.text, s.entity?.placeholder ?? null])).toEqual([
+    expect(segments(text, entityMarks([erik, anna])).map((s) => [s.text, s.data?.placeholder ?? null])).toEqual([
       ["Anna", "[NAMN_1]"],
       [" ringde ", null],
       ["Erik", "[NAMN_2]"],
@@ -29,8 +29,17 @@ describe("segments", () => {
     ]);
   });
 
-  it("returns one plain run without entities", () => {
+  it("returns one plain run without marks", () => {
     expect(segments("Hej", [])).toEqual([{ text: "Hej", start: 0 }]);
+  });
+
+  it("works on any marked ranges, such as restored values", () => {
+    const out = segments("Hej Anna Berg.", [{ start: 4, end: 13, data: "[NAMN_1]" }]);
+    expect(out.map((s) => [s.text, s.data ?? null])).toEqual([
+      ["Hej ", null],
+      ["Anna Berg", "[NAMN_1]"],
+      [".", null],
+    ]);
   });
 });
 

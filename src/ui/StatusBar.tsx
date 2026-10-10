@@ -3,8 +3,7 @@ import { t } from "./copy.ts";
 
 interface Props {
   model: ModelState;
-  copyDisabled: boolean;
-  onCopy(): void;
+  primary: { label: string; disabled: boolean; onClick(): void } | null;
 }
 
 function modelText(model: ModelState): string {
@@ -13,7 +12,7 @@ function modelText(model: ModelState): string {
   return t("status.rulesOnly");
 }
 
-export function StatusBar({ model, copyDisabled, onCopy }: Props) {
+export function StatusBar({ model, primary }: Props) {
   return (
     <footer className="statusbar">
       <p className="status" role="status" data-state={model.status}>
@@ -22,9 +21,11 @@ export function StatusBar({ model, copyDisabled, onCopy }: Props) {
         </span>{" "}
         {modelText(model)} · {t("status.trust")}
       </p>
-      <button type="button" className="primary" onClick={onCopy} disabled={copyDisabled}>
-        {t("action.copy")}
-      </button>
+      {primary && (
+        <button type="button" className="primary" onClick={primary.onClick} disabled={primary.disabled}>
+          {primary.label}
+        </button>
+      )}
     </footer>
   );
 }

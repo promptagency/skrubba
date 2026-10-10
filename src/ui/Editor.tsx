@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import type { Entity } from "../engine/index.ts";
 import { t, TYPE_LABEL, typeGroup } from "./copy.ts";
-import { entityAt, segments } from "./segments.ts";
+import { entityAt, entityMarks, segments } from "./segments.ts";
 
 export interface EditorHandle {
   /** Scroll the first occurrence of an entity into view. */
@@ -94,16 +94,16 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
   return (
     <div className="editor" onMouseMove={onMouseMove} onMouseLeave={() => setTip(null)}>
       <div className="editor-overlay" ref={overlay} aria-hidden="true">
-        {segments(text, entities).map((s) =>
-          s.entity ? (
+        {segments(text, entityMarks(entities)).map((s) =>
+          s.data ? (
             <mark
               key={s.start}
-              data-ph={s.entity.placeholder}
+              data-ph={s.data.placeholder}
               className={[
                 "hl",
-                `hl-${typeGroup(s.entity.type)}`,
-                s.entity.active ? "" : "hl-kept",
-                flash === s.entity.placeholder ? "hl-flash" : "",
+                `hl-${typeGroup(s.data.type)}`,
+                s.data.active ? "" : "hl-kept",
+                flash === s.data.placeholder ? "hl-flash" : "",
               ].join(" ")}
             >
               {s.text}

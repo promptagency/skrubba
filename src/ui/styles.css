@@ -476,3 +476,113 @@ kbd {
     box-shadow: 0 0 0 3px var(--focus);
   }
 }
+
+/* Byt tillbaka and Nyckel */
+
+.workspace-single {
+  grid-template-columns: 1fr;
+  overflow-y: auto;
+}
+
+.restore,
+.keyview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  min-height: 0;
+}
+
+.restore .editor {
+  min-height: 280px;
+}
+
+.hl-restored {
+  background: var(--hl-place);
+}
+
+.restore-notes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.restore-notes li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.restore-unknown {
+  color: var(--muted);
+}
+
+.restore-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.key-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 900px;
+}
+
+.key-table th,
+.key-table td {
+  text-align: left;
+  padding: 6px 12px 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.key-table th {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.key-empty,
+.key-note,
+.key-warning {
+  color: var(--muted);
+  margin: 0;
+}
+
+.key-warning {
+  font-size: 13px;
+  margin-top: 6px;
+  max-width: 28em;
+}
+
+.key-heading {
+  font-size: 15px;
+  margin: 8px 0 4px;
+}
+
+.key-words {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.key-actions {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: 8px;
+}
+
+.key-error {
+  color: #b8436a;
+  margin: 6px 0 0;
+  max-width: 28em;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}

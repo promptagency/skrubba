@@ -49,6 +49,10 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | restore.accept | Ja |
 | restore.reject | Nej |
 | restore.unknown | {found} finns inte i nyckeln. Kontrollera svaret själv. |
+| key.col.placeholder | Platshållare |
+| key.col.value | Värde |
+| key.col.type | Typ |
+| key.col.count | Förekomster |
 | key.download | Ladda ner nyckel |
 | key.upload | Ladda upp nyckel |
 | key.clear | Rensa allt |
