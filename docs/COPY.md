@@ -79,6 +79,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | pane.restoreIn | Svar från AI |
 | pane.restoreOut | Avskrubbad text |
 | action.scrub | Skrubba |
+| action.newText | Ny text |
 | scrub.resultEmpty | Tryck Skrubba så visas texten med platshållare här. |
 | restore.resultEmpty | Tryck Avskrubba så visas svaret med de riktiga uppgifterna här. |
 | wrongMode.notice | Texten innehåller platshållare som {found}. Är det svaret från AI? |
@@ -141,6 +142,10 @@ Nytt 2026-10-11. Länken "Så här funkar det" efter Vanliga frågor öppnar en 
 - `howto.open`: länken, och rubriken på fönstret.
 - Stegen under "Så här funkar det" är textremsorna i filmen. Ändras de måste filmen spelas in igen.
 - `panel.count`, `panel.count.one`: samma text som förut, nu som länk utan pil.
+
+Nytt 2026-10-11. Länken "Ny text" under knappen mellan rutorna börjar om med en ny text. Den tömmer rutorna men behåller egna ord och kodnyckeln, så att svar på tidigare texter fortfarande kan avskrubbas. Ingen fråga först, eftersom inget går förlorat. "Rensa allt" i kodnyckeln tar fortfarande bort allt.
+
+- `action.newText`: länken.
 
 ## Typer
 

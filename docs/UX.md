@@ -10,6 +10,7 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
  ┌────────────────────────────┐          ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┐
  │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
  │ click a highlight to keep  │ [Skrubba →] (read-only)             │
+ │                            │  Ny text │                           │
  └────────────────────────────┘          └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘
  ●●●● 13 uppgifter  Visa ›          ●●●● Kodnyckel · 13 platshållare  Visa ›  [Kopiera]
  Skrubba hittar inte allt …
@@ -46,6 +47,8 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 **Egna ord.** Folded section under the left pane, not in the Uppgifter window, so terms can be added before there is text. It stays folded when the example loads. One term per line. Placeholder text: "Kundnamn, projektnamn, produkter …". Edits re-run matching live. The list is part of the key and is saved with it.
 
 **Skrubba and Kopiera.** The button between the panes masks the current text afresh, shows the result in "Skrubbad text" (placeholders highlighted in their type colour) and records the kodnyckel. Focus moves to "Kopiera", which appears under the result and copies it. Toast: "Kopierat. 14 uppgifter skrubbade." Any change that alters what would be scrubbed (editing the text, a click on a highlight, the list, Egna ord, the example) clears the result and hides "Kopiera", so nothing stale is copied; press Skrubba again.
+
+**Ny text.** A quiet link under the button between the panes, shown once the left pane has text. In Skrubba it empties both panes and drops the text's own choices (kept items, words marked by selection); in Avskrubba it empties the answer and its result. Egna ord and the kodnyckel stay: the words are reused across texts, and the key is still needed for answers to texts scrubbed earlier (numbering already carries on across texts). No confirmation, since nothing is lost for good. Focus goes to the emptied pane. "Rensa allt" in the kodnyckel window still wipes everything. Owner's addition, 2026-10-11.
 
 **Wrong mode.** Text with exact placeholders like `[NAMN_1]` in Skrubba is probably the AI's answer. A notice says so (`wrongMode.notice`) with a button "Flytta till Avskrubba" that moves the text over and switches mode. Nothing switches by itself.
 

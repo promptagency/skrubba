@@ -639,6 +639,10 @@ a {
 
 /* Centred on the panes, beside the text rather than under it. */
 .run-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
   margin-top: calc(var(--pane-head) + var(--space-3) + var(--pane-height) / 2 - 24px);
 }
 

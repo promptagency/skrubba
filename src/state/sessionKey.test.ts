@@ -58,6 +58,43 @@ describe("key in the session", () => {
   });
 });
 
+describe("Ny text", () => {
+  const scrubbedSession = () => {
+    let s = reduce(initialSession, { type: "setWordList", raw: "Havsvind" });
+    s = reduce(s, { type: "setText", text: "Anna" });
+    s = reduce(s, { type: "addManual", term: "Anna" });
+    s = reduce(s, { type: "toggleKeep", placeholder: "[NAMN_1]" });
+    s = reduce(s, { type: "scrubbed", masked: "[NAMN_1]", entries: [anna], at: now });
+    s = reduce(s, { type: "setAnswer", text: "Hej [NAMN_1]" });
+    return reduce(s, { type: "model", model: { status: "ready" } });
+  };
+
+  it("in Skrubba clears the text, its result and its choices, and keeps Egna ord, the kodnyckel and the AI answer", () => {
+    const s = reduce(scrubbedSession(), { type: "newText", mode: "scrub" });
+    expect(s.text).toBe("");
+    expect(s.scrubbed).toBeNull();
+    expect(s.entities).toEqual([]);
+    expect(s.manual).toEqual([]);
+    expect(s.kept.size).toBe(0);
+    expect(s.wordListRaw).toBe("Havsvind");
+    expect(s.keyEntries).toEqual([anna]);
+    expect(s.keyDownloaded).toBe(false);
+    expect(s.answer).toBe("Hej [NAMN_1]");
+    expect(s.model).toEqual({ status: "ready" });
+  });
+
+  it("in Avskrubba clears the answer and its result, and keeps everything else", () => {
+    let s = reduce(scrubbedSession(), { type: "restored", result: { text: "Hej Anna", restored: [], unknown: [], suggestions: [] } });
+    const before = s;
+    s = reduce(s, { type: "newText", mode: "restore" });
+    expect(s.answer).toBe("");
+    expect(s.restore).toBeNull();
+    expect(s.text).toBe(before.text);
+    expect(s.manual).toEqual(before.manual);
+    expect(s.keyEntries).toEqual([anna]);
+  });
+});
+
 describe("Avskrubba in the session", () => {
   const result: RestoreResult = { text: "Hej Anna", restored: [{ start: 4, end: 8, placeholder: "[NAMN_1]", value: "Anna" }], suggestions: [], unknown: [] };
 

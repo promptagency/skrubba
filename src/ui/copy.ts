@@ -66,6 +66,7 @@ export const COPY = {
   "pane.restoreIn": "Svar från AI",
   "pane.restoreOut": "Avskrubbad text",
   "action.scrub": "Skrubba",
+  "action.newText": "Ny text",
   "scrub.resultEmpty": "Tryck Skrubba så visas texten med platshållare här.",
   "restore.resultEmpty": "Tryck Avskrubba så visas svaret med de riktiga uppgifterna här.",
   "wrongMode.notice": "Texten innehåller platshållare som {found}. Är det svaret från AI?",

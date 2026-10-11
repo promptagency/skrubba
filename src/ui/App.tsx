@@ -379,6 +379,18 @@ export function App() {
             {mode === "scrub" ? t("action.scrub") : t("action.restore")}
             <span className="run-arrow" aria-hidden="true" />
           </button>
+          {(mode === "scrub" ? state.text : state.answer) && (
+            <button
+              type="button"
+              className="link new-text"
+              onClick={() => {
+                dispatch({ type: "newText", mode });
+                setTimeout(() => (mode === "scrub" ? editor.current : answerPane.current)?.focus());
+              }}
+            >
+              {t("action.newText")}
+            </button>
+          )}
         </div>
 
         <section className="pane" aria-labelledby="pane-out">
