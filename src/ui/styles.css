@@ -518,9 +518,11 @@ a {
   padding: 0 var(--space-6) var(--space-8);
 }
 
+/* Free space of half the logotype's height above and below it, per DESIGN.md. */
 .masthead {
+  --logo-height: clamp(40px, 7vw, 80px);
   text-align: center;
-  padding: 40px 0 var(--space-6);
+  padding: calc(var(--logo-height) / 2) 0;
 }
 
 .logotype {
@@ -529,7 +531,7 @@ a {
 }
 
 .logotype img {
-  height: clamp(56px, 11vw, 120px);
+  height: var(--logo-height);
   width: auto;
 }
 
@@ -721,7 +723,7 @@ a {
   padding: var(--space-6);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background: var(--bg);
+  background: var(--surface);
   color: var(--text);
 }
 
@@ -767,9 +769,6 @@ a {
 @media (max-width: 860px) {
   .site {
     padding: 0 var(--space-4) var(--space-6);
-  }
-  .masthead {
-    padding: var(--space-6) 0 var(--space-4);
   }
   .toolbar {
     position: static;
