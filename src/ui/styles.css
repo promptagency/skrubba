@@ -275,28 +275,12 @@ kbd {
   accent-color: var(--accent);
 }
 
-/* Entity panel */
+/* Items found: the rows in the Uppgifter window */
 
 .panel {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-}
-
-.panel-count {
-  margin: 0;
-  font-size: 16px;
-}
-
-.disclosure {
-  border: none;
-  background: none;
-  padding: var(--space-1) 0;
-  font-weight: 600;
-}
-
-.disclosure-arrow {
-  color: var(--muted);
 }
 
 .panel-actions {
@@ -672,9 +656,14 @@ a {
   gap: var(--space-3);
 }
 
-.card-actions .disclosure,
+.card-actions .items-link,
 .card-actions .key-link {
   margin-right: auto;
+}
+
+/* Flush with the caveat and Egna ord under it. */
+.items-link {
+  padding-inline: 0;
 }
 
 /* Avskrubba in a tab without a kodnyckel. */

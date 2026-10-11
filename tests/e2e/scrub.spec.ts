@@ -17,7 +17,11 @@ test("paste, review, keep one, add a word and copy using only the keyboard", asy
   await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
   await expect(rows(page).filter({ hasText: "Nordström Fastigheter" })).toContainText("Organisation");
 
-  // Review: Tab past the list toggle and Kopiera into the list, walk down to Karin and keep her.
+  // Review: Tab to the count, open the Uppgifter window, walk down to Karin and keep her.
+  const count = page.getByRole("button", { name: /^\d+ uppgifter$/ });
+  for (let i = 0; i < 5 && !(await count.evaluate((el) => el === document.activeElement)); i++)
+    await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
   for (let i = 0; i < 5 && !(await rows(page).first().evaluate((el) => el === document.activeElement)); i++)
     await page.keyboard.press("Tab");
   await expect(rows(page).first()).toBeFocused();
@@ -27,6 +31,8 @@ test("paste, review, keep one, add a word and copy using only the keyboard", asy
   await expect(karin).toBeFocused();
   await page.keyboard.press("Space");
   await expect(karin).toHaveAccessibleName(/Behåll$/);
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: "Uppgifter" })).toBeHidden();
 
   // Add a word: Tab to Egna ord, open it, type.
   const words = page.getByRole("textbox", { name: "Egna ord" });
@@ -66,10 +72,10 @@ test("B on a selection inside a highlight sets it to Behåll", async ({ page }) 
   await openReady(page);
   await editor(page).fill("Ring 070-1740612 i dag.");
   const row = rows(page).filter({ hasText: "070-1740612" });
-  await expect(row).toHaveAccessibleName(/Skrubba$/);
+  await expect(row).toHaveAttribute("aria-label", /Skrubba$/);
   await editor(page).evaluate((el: HTMLTextAreaElement) => el.setSelectionRange(6, 9));
   await page.keyboard.press("b");
-  await expect(row).toHaveAccessibleName(/Behåll$/);
+  await expect(row).toHaveAttribute("aria-label", /Behåll$/);
   await expect(editor(page)).toHaveValue("Ring 070-1740612 i dag.");
 });
 
@@ -77,7 +83,7 @@ test("Visa exempel loads the example with Projekt Havsvind under Egna ord", asyn
   await openReady(page);
   await page.getByRole("button", { name: "Visa exempel" }).click();
   await expect(editor(page)).toHaveValue(/^Hej Karin,/);
-  await expect(page.getByRole("textbox", { name: "Egna ord" })).toHaveValue("Projekt Havsvind");
+  await expect(page.locator(".words textarea")).toHaveValue("Projekt Havsvind");
   await expect(rows(page).filter({ hasText: "Projekt Havsvind" })).toContainText("Ord");
 });
 
@@ -110,15 +116,15 @@ test.describe("clicking a highlighted word in the text", () => {
     await openReady(page);
     await editor(page).fill(SHORT);
     const johan = rows(page).filter({ hasText: "Johan Lindqvist" });
-    await expect(johan).toHaveAccessibleName(/Skrubba$/);
+    await expect(johan).toHaveAttribute("aria-label", /Skrubba$/);
     const ph = await page.locator("mark.hl-name").getAttribute("data-ph");
 
     await clickMark(page, ph!);
-    await expect(johan).toHaveAccessibleName(/Behåll$/);
+    await expect(johan).toHaveAttribute("aria-label", /Behåll$/);
     await expect(page.locator(`mark[data-ph="${ph}"]`)).toHaveClass(/hl-kept/);
 
     await clickMark(page, ph!);
-    await expect(johan).toHaveAccessibleName(/Skrubba$/);
+    await expect(johan).toHaveAttribute("aria-label", /Skrubba$/);
     await expect(page.locator(`mark[data-ph="${ph}"]`)).not.toHaveClass(/hl-kept/);
   });
 
@@ -147,7 +153,7 @@ test.describe("clicking a highlighted word in the text", () => {
     const umea = rows(page).filter({ hasText: "Umeå" });
     const ph = await page.locator("mark.hl-place").getAttribute("data-ph");
     await clickMark(page, ph!, 2);
-    await expect(umea).toHaveAccessibleName(/Skrubba$/);
+    await expect(umea).toHaveAttribute("aria-label", /Skrubba$/);
     await expect(page.getByRole("button", { name: /Skrubba markering/ })).toBeVisible();
   });
 
@@ -156,6 +162,6 @@ test.describe("clicking a highlighted word in the text", () => {
     await editor(page).fill(SHORT);
     const box = await page.locator(".editor-overlay span", { hasText: "ringde" }).boundingBox();
     await page.mouse.click(box!.x + 4, box!.y + box!.height / 2);
-    for (const row of await rows(page).all()) await expect(row).toHaveAccessibleName(/Skrubba$/);
+    for (const row of await rows(page).all()) await expect(row).toHaveAttribute("aria-label", /Skrubba$/);
   });
 });

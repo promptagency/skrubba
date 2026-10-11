@@ -10,12 +10,9 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
  │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
  │ click a highlight to keep  │ [Skrubba →] (read-only)             │
  └────────────────────────────┘          └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘
- 13 uppgifter ▾                       Kodnyckel (13)        [Kopiera]
+ 13 uppgifter                         Kodnyckel (13)        [Kopiera]
  Skrubba hittar inte allt …
- ● Anna Berg    Namn  ×3 Skrubba
- ○ Göteborg     Plats ×1 Behåll
  ▸ Egna ord (1)
- [Skrubba alla] [Behåll alla]
  ─────────────────────────────────────────────────────────────────
    Bygger på maskera (MIT) … Öppen källkod från Prompt Agency.
                      Inget lämnar din dator
@@ -37,19 +34,19 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 
 **Highlights.** Overlay behind a transparent textarea so editing keeps working. Each type has a colour **and** a label on hover. Never colour alone.
 
-**Entity panel.** One row per unique value (merged across casing and genitive, "Anna" / "Annas"). Columns: toggle dot, value, type, count. Toggle = Skrubba / Behåll. Clicking a row scrolls to the first occurrence and flashes all. Organisations are on by default. Word-list and manual entries show type "Ord".
+**Uppgifter window.** The items found are not listed on the page. "13 uppgifter" under the left pane is a link that opens them in a window over the page, like the kodnyckel: title "Uppgifter", "Stäng", Esc closes. One row per unique value (merged across casing and genitive, "Anna" / "Annas"). Columns: toggle dot, value, type, count. Toggle = Skrubba / Behåll. "Skrubba alla" and "Behåll alla" sit under the rows. Clicking a row closes the window, scrolls to the first occurrence and flashes all. Organisations are on by default. Word-list and manual entries show type "Ord". Owner's change, 2026-10-11.
 
 **Manual masking.** Select text → press `M` or the floating "Skrubba markering" button. All occurrences of the selection become one `ORD` entity. Selecting inside a highlight and pressing `B` toggles it to Behåll.
 
 **Clicking in the text.** A plain click on a highlight switches it between Skrubba (filled with the type colour) and Behåll (a border in a darker shade of the type colour, the same as its dot in the list, 1px off the text), for every occurrence. The pointer turns into a hand over highlights. A drag that selects text, a click with Shift/Cmd/Ctrl/Alt, or a double-click (which selects the word) does not switch anything. Trade-off: placing the caret inside a highlight with a single click also switches it; click again to switch back.
 
-**Egna ord.** Collapsible section under the list. One term per line. Placeholder text: "Kundnamn, projektnamn, produkter …". Edits re-run matching live. The list is part of the key and is saved with it.
+**Egna ord.** Folded section under the left pane, not in the Uppgifter window, so terms can be added before there is text. It stays folded when the example loads. One term per line. Placeholder text: "Kundnamn, projektnamn, produkter …". Edits re-run matching live. The list is part of the key and is saved with it.
 
 **Skrubba and Kopiera.** The button between the panes masks the current text afresh, shows the result in "Skrubbad text" (placeholders highlighted in their type colour) and records the kodnyckel. Focus moves to "Kopiera", which appears under the result and copies it. Toast: "Kopierat. 14 uppgifter skrubbade." Any change that alters what would be scrubbed (editing the text, a click on a highlight, the list, Egna ord, the example) clears the result and hides "Kopiera", so nothing stale is copied; press Skrubba again.
 
 **Wrong mode.** Text with exact placeholders like `[NAMN_1]` in Skrubba is probably the AI's answer. A notice says so (`wrongMode.notice`) with a button "Flytta till Avskrubba" that moves the text over and switches mode. Nothing switches by itself.
 
-**Empty state.** "Klistra in text här. Den stannar i din webbläsare." plus "Visa exempel". The item count and "Skrubba alla" / "Behåll alla" stay hidden until there is text; "Egna ord" is always there so terms can be added first.
+**Empty state.** "Klistra in text här. Den stannar i din webbläsare." plus "Visa exempel". The item count stays hidden until there is text; "Egna ord" is always there so terms can be added first.
 
 ## Avskrubba
 
@@ -91,12 +88,12 @@ The left pane in either mode accepts a dropped `.txt` or `.md` file, read in the
 | `B` (with selection or focused row) | Behåll |
 | `Cmd/Ctrl+Enter` | Run the current mode (the button between the panes) |
 | `Cmd/Ctrl+Shift+C` | Kopiera the result, running the mode first if there is none |
-| `↑ ↓` in the list, `Space` | Navigate rows, toggle |
-| `Esc` | Close the kodnyckel or Vanliga frågor window, or the toast |
+| `↑ ↓` in the Uppgifter window, `Space` | Navigate rows, toggle |
+| `Esc` | Close the Uppgifter, kodnyckel or Vanliga frågor window, or the toast |
 
 ## Mobile (≥ 390 px)
 
-The mode switch spans the width. Input, button (arrow pointing down) and result stack; the item list stays under the input and folds with its toggle. The windows fit the screen width. Nothing scrolls sideways.
+The mode switch spans the width. Input, button (arrow pointing down) and result stack; the item count and Egna ord stay under the input. The windows fit the screen width. Nothing scrolls sideways.
 
 ## What this screen must never do
 

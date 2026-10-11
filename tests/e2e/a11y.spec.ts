@@ -2,7 +2,7 @@
 // accessibility score) on every view, in light and dark.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { answerBox, MOD, openKey, openReady, rows, scrub } from "./helpers.ts";
+import { answerBox, MOD, openItems, openKey, openReady, rows, scrub } from "./helpers.ts";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
@@ -29,7 +29,14 @@ test.describe("accessibility", () => {
         await openReady(page);
         await page.getByRole("button", { name: "Visa exempel" }).click();
         await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
-        await page.getByRole("button", { name: "Johan Lindqvist" }).first().click();
+        expect(await violations(page)).toEqual([]);
+      });
+
+      test("the Uppgifter window", async ({ page }) => {
+        await openReady(page);
+        await page.getByRole("button", { name: "Visa exempel" }).click();
+        await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
+        await openItems(page);
         expect(await violations(page)).toEqual([]);
       });
 

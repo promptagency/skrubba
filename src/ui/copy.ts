@@ -15,6 +15,7 @@ export const COPY = {
   "gate.body": "Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den.",
   "panel.count": "{n} uppgifter",
   "panel.count.one": "1 uppgift",
+  "items.title": "Uppgifter",
   "panel.scrubAll": "Skrubba alla",
   "panel.keepAll": "Behåll alla",
   "panel.words": "Egna ord",

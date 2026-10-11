@@ -39,24 +39,17 @@ test("a dropped PDF is refused with a message and nothing changes", async ({ pag
   await expect(editor(page)).toHaveValue("Befintlig text.");
 });
 
-test("the item count and Skrubba alla / Behåll alla stay hidden until there is text", async ({ page }) => {
+test("the item count stays hidden until there is text; Egna ord is always there", async ({ page }) => {
   await openReady(page);
-  const toggle = page.getByRole("button", { name: /^\d+ uppgift(er)?$/ });
-  const scrubAll = page.getByRole("button", { name: "Skrubba alla" });
-  const keepAll = page.getByRole("button", { name: "Behåll alla" });
-  await expect(toggle).toHaveCount(0);
-  await expect(scrubAll).toBeHidden();
-  await expect(keepAll).toBeHidden();
+  const count = page.getByRole("button", { name: /^\d+ uppgift(er)?$/ });
+  await expect(count).toHaveCount(0);
   await expect(page.getByText(/^Egna ord/)).toBeVisible();
 
   await editor(page).fill("Johan Lindqvist ringde.");
-  await expect(toggle).toHaveAccessibleName("1 uppgift");
-  await expect(scrubAll).toBeVisible();
-  await expect(keepAll).toBeVisible();
+  await expect(count).toHaveAccessibleName("1 uppgift");
 
   await editor(page).fill("");
-  await expect(toggle).toHaveCount(0);
-  await expect(scrubAll).toBeHidden();
+  await expect(count).toHaveCount(0);
 });
 
 for (const width of [1280, 390]) {

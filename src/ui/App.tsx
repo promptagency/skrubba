@@ -9,9 +9,9 @@ import { REPO_URL } from "../config.ts";
 import { countLabel, EXAMPLE, t } from "./copy.ts";
 import { DropZone } from "./DropZone.tsx";
 import { Editor, type EditorHandle } from "./Editor.tsx";
-import { EntityPanel } from "./EntityPanel.tsx";
 import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
+import { ItemsDialog } from "./ItemsDialog.tsx";
 import { KeyDialog } from "./KeyDialog.tsx";
 import { KeyUpload } from "./KeyUpload.tsx";
 import { ModelStatus } from "./ModelStatus.tsx";
@@ -20,6 +20,7 @@ import { firstPlaceholder, type Mark, placeholderMarks } from "./segments.ts";
 import { controlledByServiceWorker } from "./serviceWorker.ts";
 import { TextPane, type TextPaneHandle } from "./TextPane.tsx";
 import { Toast } from "./Toast.tsx";
+import { WordList } from "./WordList.tsx";
 
 type Mode = "scrub" | "restore";
 
@@ -31,7 +32,7 @@ export function App() {
   const [flash, setFlash] = useState<string | null>(null);
   const [keyOpen, setKeyOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
-  const [listOpen, setListOpen] = useState(true);
+  const [itemsOpen, setItemsOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("scrub");
   const [dropError, setDropError] = useState(false);
   const editor = useRef<EditorHandle>(null);
@@ -346,32 +347,16 @@ export function App() {
               {/* Nothing to count or act on before there is text. */}
               {state.text && (
                 <div className="card-actions">
-                  <button
-                    type="button"
-                    className="disclosure"
-                    aria-expanded={listOpen}
-                    aria-controls="entity-rows"
-                    onClick={() => setListOpen((open) => !open)}
-                  >
-                    {countLabel(entities.length)}{" "}
-                    <span className="disclosure-arrow" aria-hidden="true">
-                      {listOpen ? "▾" : "▸"}
-                    </span>
+                  <button type="button" className="link items-link" aria-haspopup="dialog" onClick={() => setItemsOpen(true)}>
+                    {countLabel(entities.length)}
                   </button>
                 </div>
               )}
               <p className="caveat">{t("caveat.short")}</p>
-              <EntityPanel
-                open={listOpen && state.text !== ""}
-                entities={entities}
-                wordListRaw={state.wordListRaw}
-                wordCount={wordList.length}
-                onReveal={reveal}
-                onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
-                onKeep={(placeholder) => dispatch({ type: "keep", placeholder })}
-                onScrubAll={() => dispatch({ type: "scrubAll" })}
-                onKeepAll={() => dispatch({ type: "keepAll" })}
-                onWordList={(raw) => dispatch({ type: "setWordList", raw })}
+              <WordList
+                raw={state.wordListRaw}
+                count={wordList.length}
+                onChange={(raw) => dispatch({ type: "setWordList", raw })}
               />
             </>
           )}
@@ -449,6 +434,20 @@ export function App() {
         </p>
       </footer>
 
+      <ItemsDialog
+        open={itemsOpen}
+        onClose={() => setItemsOpen(false)}
+        entities={entities}
+        onReveal={(placeholder) => {
+          // Close the window first: the text behind it is inert while it is open.
+          setItemsOpen(false);
+          setTimeout(() => reveal(placeholder));
+        }}
+        onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
+        onKeep={(placeholder) => dispatch({ type: "keep", placeholder })}
+        onScrubAll={() => dispatch({ type: "scrubAll" })}
+        onKeepAll={() => dispatch({ type: "keepAll" })}
+      />
       <KeyDialog
         open={keyOpen}
         onClose={() => setKeyOpen(false)}

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { clipboard, editor, MOD, openReady, rows } from "./helpers.ts";
+import { clipboard, editor, MOD, openItems, openReady, rows } from "./helpers.ts";
 
 // Two operations, one at a time: the switch picks Skrubba or Avskrubba, the
 // button between the panes runs it, the result appears on the right and only
@@ -44,8 +44,10 @@ test("changing the text or what is scrubbed clears the result", async ({ page })
 
   await run(page).click();
   await expect(copy(page)).toBeVisible();
-  await rows(page).first().click();
+  await openItems(page);
+  await rows(page).first().focus();
   await page.keyboard.press("Space");
+  await page.keyboard.press("Escape");
   await expect(result(page, "Skrubbad text")).toHaveValue("");
 });
 

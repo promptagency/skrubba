@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { editor, openKey, openReady, rows, runButton, scrub, scrubbedBox } from "./helpers.ts";
+import { editor, openItems, openKey, openReady, rows, runButton, scrub, scrubbedBox } from "./helpers.ts";
 
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true });
 
@@ -30,17 +30,15 @@ test("at 390 px the panes stack, input, button, result, with nothing scrolling s
   expect(await noSideScroll(page)).toBe(true);
 });
 
-test("the item list folds away under Din text", async ({ page }) => {
+test("the Uppgifter window fits the screen", async ({ page }) => {
   await openReady(page);
   await page.getByRole("button", { name: "Visa exempel" }).click();
-  const toggle = page.getByRole("button", { name: /^\d+ uppgifter$/ });
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
-  await expect(rows(page).first()).toBeVisible();
-  await toggle.click();
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
-  await expect(rows(page).first()).toBeHidden();
-  // Egna ord stays reachable with the list folded.
-  await expect(page.locator(".words summary")).toBeVisible();
+  await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
+  const dialog = await openItems(page);
+  expect(await noSideScroll(page)).toBe(true);
+  const box = (await dialog.boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(390);
 });
 
 test("loading the model causes no layout shift", async ({ page }) => {
@@ -60,7 +58,7 @@ test("at 390 px the screen passes axe", async ({ page, browserName }) => {
   test.skip(browserName !== "chromium", "axe results are the same across engines");
   await openReady(page);
   await page.getByRole("button", { name: "Visa exempel" }).click();
-  await expect(rows(page).first()).toBeVisible();
+  await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
   expect(violations.map((v) => v.id)).toEqual([]);
 });

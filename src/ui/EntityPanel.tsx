@@ -1,32 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import type { Entity } from "../engine/index.ts";
 import { countLabel, t, TYPE_LABEL, typeGroup } from "./copy.ts";
 
-interface Props {
-  /** Whether the item rows are shown; the toggle sits in the row under the card. */
-  open: boolean;
+export interface EntityPanelProps {
   entities: Entity[];
-  wordListRaw: string;
-  wordCount: number;
   onReveal(placeholder: string): void;
   onToggleKeep(placeholder: string): void;
   onKeep(placeholder: string): void;
   onScrubAll(): void;
   onKeepAll(): void;
-  onWordList(raw: string): void;
 }
 
-export function EntityPanel(props: Props) {
+/** One row per item found, with Skrubba alla / Behåll alla. Shown in the Uppgifter window. */
+export function EntityPanel(props: EntityPanelProps) {
   const { entities } = props;
   const list = useRef<HTMLUListElement>(null);
-  const [wordsOpen, setWordsOpen] = useState(false);
-  const hadWords = useRef(props.wordCount > 0);
-
-  // Open "Egna ord" when words arrive from outside (the example), not on every edit.
-  useEffect(() => {
-    if (props.wordCount > 0 && !hadWords.current) setWordsOpen(true);
-    hadWords.current = props.wordCount > 0;
-  }, [props.wordCount]);
 
   function moveFocus(from: HTMLElement, step: number) {
     const rows = [...(list.current?.querySelectorAll<HTMLButtonElement>(".row-main") ?? [])];
@@ -50,7 +38,7 @@ export function EntityPanel(props: Props) {
 
   return (
     <section className="panel" aria-label={countLabel(entities.length)}>
-      <ul className="rows" id="entity-rows" ref={list} hidden={!props.open}>
+      <ul className="rows" ref={list}>
         {entities.map((e, i) => (
           <li key={e.placeholder} className={`row ${e.active ? "" : "row-kept"}`}>
             <button
@@ -86,20 +74,7 @@ export function EntityPanel(props: Props) {
           </li>
         ))}
       </ul>
-      <details className="words" open={wordsOpen} onToggle={(e) => setWordsOpen(e.currentTarget.open)}>
-        <summary>
-          {t("panel.words")} ({props.wordCount})
-        </summary>
-        <textarea
-          aria-label={t("panel.words")}
-          placeholder={t("panel.wordsPlaceholder")}
-          value={props.wordListRaw}
-          onChange={(e) => props.onWordList(e.target.value)}
-          rows={4}
-          spellCheck={false}
-        />
-      </details>
-      <div className="panel-actions" hidden={!props.open}>
+      <div className="panel-actions">
         <button type="button" onClick={props.onScrubAll} disabled={entities.length === 0}>
           {t("panel.scrubAll")}
         </button>

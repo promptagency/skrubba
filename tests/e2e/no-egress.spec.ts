@@ -13,7 +13,7 @@ test("masking and copying with the model makes no request outside our origin", a
 
   await openReady(page);
   await editor(page).fill("Johan Lindqvist (19850312-4471) flyttar till Umeå. Ring 070-1740612.");
-  await expect(page.locator(".row-main").first()).toBeVisible();
+  await expect(page.locator(".row-main")).not.toHaveCount(0);
   await page.keyboard.press(`${MOD}+Shift+KeyC`);
   await expect(page.locator(".toast")).toBeVisible();
   if (browserName === "chromium") {

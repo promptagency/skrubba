@@ -35,5 +35,5 @@ test("the editor unlocks in rules-only mode when the model cannot load", async (
   await expect(page.locator(".model-status")).toHaveAttribute("data-state", "rulesOnly", { timeout: 90_000 });
   await expect(editor(page)).toBeFocused();
   await editor(page).fill("Pnr 19850312-4471");
-  await expect(page.locator(".row-main").filter({ hasText: "19850312-4471" })).toBeVisible();
+  await expect(page.locator(".row-main").filter({ hasText: "19850312-4471" })).toHaveCount(1);
 });

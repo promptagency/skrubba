@@ -29,6 +29,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | gate.body | Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den. |
 | panel.count | {n} uppgifter |
 | panel.count.one | 1 uppgift |
+| items.title | Uppgifter |
 | panel.scrubAll | Skrubba alla |
 | panel.keepAll | Behåll alla |
 | panel.words | Egna ord |
@@ -115,6 +116,11 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `key.missing`: i läget Avskrubba när fliken saknar kodnyckel, med knappen `key.upload` bredvid.
 - `key.none` är borttagen.
 - `key.explainer` visas bara överst i kodnyckelfönstret.
+
+Ändrat 2026-10-11. Listan med uppgifter ligger inte längre under rutan. Antalet under rutan är en länk som öppnar listan i ett fönster, som kodnyckeln.
+
+- `items.title`: rubriken på fönstret med uppgifterna.
+- `panel.count`, `panel.count.one`: samma text som förut, nu som länk utan pil.
 
 ## Typer
 
