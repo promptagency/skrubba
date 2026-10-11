@@ -69,3 +69,29 @@ function joinModelSpans(text: string, spans: Span[]): Span[] {
   }
   return out;
 }
+
+const PROPER_NOUN = /^\p{Lu}/u;
+
+/**
+ * The model can find a name in one place and miss it in another, for example
+ * "Norrström Media" in a sentence but not in "Norrström Media AB" in a header. Every
+ * value the model found that looks like a proper noun (capital first letter,
+ * three characters or more) is also marked wherever else it occurs as a whole
+ * word, genitive included. Line breaks inside a value match any whitespace.
+ * Lowercase and short values are left alone so a stray hit does not spread.
+ */
+export function spreadModelValues(text: string, resolved: Span[]): Span[] {
+  const values = new Map<string, Span["type"]>();
+  for (const s of resolved) {
+    const value = text.slice(s.start, s.end).replace(/\s+/g, " ");
+    if (s.source === "model" && value.length >= 3 && PROPER_NOUN.test(value) && !values.has(value))
+      values.set(value, s.type);
+  }
+  const spread: Span[] = [];
+  for (const [value, type] of values) {
+    const pattern = value.split(" ").map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s+");
+    for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${pattern}(?::?s)?(?![\\p{L}\\p{N}])`, "gu")))
+      spread.push({ start: m.index, end: m.index + m[0].length, type, source: "model" });
+  }
+  return spread;
+}

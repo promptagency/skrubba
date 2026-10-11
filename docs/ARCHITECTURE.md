@@ -12,7 +12,7 @@ src/
     rules.ts             rule layer (@maskera/core detectors + our context rules)
     contextRules.ts      our own rules, e.g. labelled org.nr with a bad checksum
     wordList.ts          manual and word-list terms → ORD spans, whole word, case-insensitive
-    spans.ts             priority, clipping, joining split model spans
+    spans.ts             priority, clipping, joining split model spans, spreading model values
     entities.ts          session numbering, value merging, first-name linking
     applyMask.ts         masked text + key
     tolerantRestore.ts   placeholder normalisation + suggestions
@@ -95,6 +95,8 @@ Numbering is assigned once per session per unique value and never reused. A sess
 Priority on overlap: manual > word list > rules > model. A lower-priority span wholly inside a higher-priority one is dropped. One that partially overlaps is clipped to its uncovered part, as maskera does, so that part stays masked. Organisations from the model are active by default.
 
 Adjacent model spans separated only by a space or an apostrophe are joined into one span ("Arc'teryx" came back as ORGANISATION + NAMN). The joined span is ORGANISATION if either part was, otherwise the first part's type.
+
+The model can find a value in one place and miss it in another (a real case: "Norrström Media" found in a sentence, "Norrström Media AB" on the Arbetsgivare line missed). So every value the model found that starts with a capital letter and has three characters or more is also marked wherever else it occurs in the text as a whole word, genitive included, with any whitespace (a PDF line break) between its words. The spread spans rank as model spans. Lowercase and shorter values are not spread, so a stray hit like "teknik" or "AI" stays where it was found.
 
 Our own context rule masks NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer" as ORGANISATIONSNUMMER even when the checksum fails. maskera only masks Luhn-valid org.nr.
 

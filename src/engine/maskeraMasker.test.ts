@@ -58,6 +58,47 @@ describe("MaskeraMasker.mask", () => {
   });
 });
 
+// Stands in for a model that finds each word in one place only: the nth occurrence.
+function onceNer(marks: Array<[string, EntityType, number]>): NerBackend {
+  return {
+    init: async () => {},
+    detect: async (text) =>
+      marks.map(([word, type, nth]) => {
+        let start = -1;
+        for (let i = 0; i <= nth; i++) start = text.indexOf(word, start + 1);
+        return { start, end: start + word.length, type, source: "model" as const };
+      }),
+  };
+}
+
+const masked = async (masker: MaskeraMasker, text: string) =>
+  masker.applyMask(text, await masker.mask(text, none), []).masked;
+
+describe("a name the model finds in one place", () => {
+  it("is masked wherever else it occurs in the text", async () => {
+    const masker = new MaskeraMasker(onceNer([["Norrström Media", "ORGANISATION", 1]]));
+    const text = "Arbetsgivare, Norrström Media AB.\nNorrström Media har gjort en omorganisation.";
+    expect(await masked(masker, text)).toBe(
+      "Arbetsgivare, [ORGANISATION_1] AB.\n[ORGANISATION_1] har gjort en omorganisation.",
+    );
+  });
+
+  it("is masked in the genitive too", async () => {
+    const masker = new MaskeraMasker(onceNer([["Anna Berg", "NAMN", 1]]));
+    expect(await masked(masker, "Anna Bergs lön. Anna Berg ringde.")).toBe("[NAMN_1]s lön. [NAMN_1] ringde.");
+  });
+
+  it("is masked as a whole word only", async () => {
+    const masker = new MaskeraMasker(onceNer([["Anna", "NAMN", 0]]));
+    expect(await masked(masker, "Anna bor på Annagatan.")).toBe("[NAMN_1] bor på Annagatan.");
+  });
+
+  it("is not spread when it is a lowercase word or shorter than three letters", async () => {
+    const masker = new MaskeraMasker(onceNer([["teknik", "ORGANISATION", 0], ["AI", "ORGANISATION", 0]]));
+    expect(await masked(masker, "AI, teknik. AI och teknik.")).toBe("[ORGANISATION_1], [ORGANISATION_2]. AI och teknik.");
+  });
+});
+
 describe("MaskeraMasker round trip", () => {
   it("restores the masked text to the original", async () => {
     const masker = new MaskeraMasker(fakeNer([["Anna Berg", "NAMN"], ["Umeå", "PLATS"]]));
