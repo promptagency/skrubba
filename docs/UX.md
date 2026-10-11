@@ -4,7 +4,7 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
 
 ```
                           Skrubba                          ← logotype
-                     ( Skrubba | Avskrubba ) [Vanliga frågor]  ← mode switch
+              ( Skrubba | Avskrubba )  Vanliga frågor | Så här funkar det  ← mode switch
  Din text            Visa exempel        Skrubbad text
  ┌────────────────────────────┐          ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┐
  │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
@@ -70,9 +70,13 @@ Tolerant matching rules live in `docs/ARCHITECTURE.md`. The tool asks when unsur
 
 Note under the table: "Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den."
 
+## Så här funkar det window
+
+"Så här funkar det", after "Vanliga frågor" behind a thin vertical line, opens a window with a 51 second video of the whole round trip with the example text, captioned in Swedish (`HOWTO` in `docs/COPY.md`). No sound. The steps are also in the window as hidden text for screen readers. The video loads only when the window opens and stops when it closes; the offline cache leaves it out, so it needs a connection. Re-record it after visible changes with `npm run demo-video` (needs ffmpeg and `npm run preview`). On a phone both links sit centred under the switch. Owner's addition, 2026-10-11.
+
 ## Vanliga frågor window
 
-The button "Vanliga frågor" beside the mode switch, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
+The link "Vanliga frågor" beside the mode switch, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
 
 ## Model state
 
@@ -91,7 +95,7 @@ The left pane in either mode accepts a dropped `.txt` or `.md` file, read in the
 | `Cmd/Ctrl+Enter` | Run the current mode (the button between the panes) |
 | `Cmd/Ctrl+Shift+C` | Kopiera the result, running the mode first if there is none |
 | `↑ ↓` in the Uppgifter window, `Space` | Navigate rows, toggle |
-| `Esc` | Close the Uppgifter, kodnyckel or Vanliga frågor window, or the toast |
+| `Esc` | Close the Uppgifter, kodnyckel, Vanliga frågor or Så här funkar det window, or the toast |
 
 ## Mobile (≥ 390 px)
 

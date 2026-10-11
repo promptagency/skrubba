@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cacheKey, MANIFEST_KEY, precacheList, staleKeys } from "./core.ts";
+import { cacheKey, inOfflineCache, MANIFEST_KEY, precacheList, staleKeys } from "./core.ts";
 
 const manifest = {
   "/index.html": "aaa",
@@ -12,6 +12,15 @@ const manifest = {
 describe("cacheKey", () => {
   it("adds the content revision so a changed file never hits an old entry", () => {
     expect(cacheKey("/runtime/ort.mjs", "abc")).toBe("/runtime/ort.mjs?__rev=abc");
+  });
+});
+
+describe("inOfflineCache", () => {
+  it("leaves the demo video out, so only people who open it download it", () => {
+    expect(inOfflineCache("/video/skrubba-demo.mp4")).toBe(false);
+    expect(inOfflineCache("/video/skrubba-demo.jpg")).toBe(false);
+    expect(inOfflineCache("/index.html")).toBe(true);
+    expect(inOfflineCache("/models/m/onnx/model.onnx.gzpart0")).toBe(true);
   });
 });
 

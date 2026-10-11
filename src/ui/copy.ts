@@ -58,6 +58,7 @@ export const COPY = {
   "footer.credits": "Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency.",
   "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
   "faq.open": "Vanliga frågor",
+  "howto.open": "Så här funkar det",
   "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar.",
   "mode.switch": "Vad vill du göra?",
   "pane.scrubIn": "Din text",
@@ -116,6 +117,21 @@ export function typeGroup(type: EntityType): "name" | "place" | "org" | "word" |
   if (type === "ORD") return "word";
   return "number";
 }
+
+// Så här funkar det: the steps captioned in the video, also its text alternative. Verbatim from docs/COPY.md.
+export const HOWTO = {
+  title: "Så här funkar det",
+  steps: [
+    "Klistra in din text. Skrubba markerar namn, nummer och företag.",
+    "Klicka på en markering för att behålla ordet. Det får en ram i stället för färg.",
+    "Under rutan ser du vad som hittades. Visa öppnar hela listan.",
+    "Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_1].",
+    "Kopiera texten och klistra in den i valfri AI-tjänst.",
+    "Kodnyckeln visar vilken platshållare som står för vad.",
+    "Byt till Avskrubba och klistra in svaret från AI.",
+    "Tryck Avskrubba. De riktiga uppgifterna kommer tillbaka.",
+  ],
+};
 
 // Vanliga frågor, verbatim from docs/COPY.md.
 export const FAQ = {

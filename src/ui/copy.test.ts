@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { COPY, countLabel, EXAMPLE, FAQ, t, TYPE_LABEL } from "./copy.ts";
+import { COPY, countLabel, EXAMPLE, FAQ, HOWTO, t, TYPE_LABEL } from "./copy.ts";
 
 const doc = readFileSync("docs/COPY.md", "utf8");
 const rows = (section: string) => {
@@ -28,6 +28,11 @@ describe("copy matches docs/COPY.md", () => {
       .map((l) => l.replace(/^> ?/, ""))
       .join("\n");
     expect(EXAMPLE.text).toBe(quoted);
+  });
+
+  it("has the video steps verbatim, in order", () => {
+    const steps = [...doc.slice(doc.indexOf("## Så här funkar det")).split("\n## ")[0].matchAll(/^\d+\. (.+)$/gm)].map((m) => m[1]);
+    expect(HOWTO.steps).toEqual(steps);
   });
 });
 

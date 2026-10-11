@@ -67,6 +67,13 @@ test.describe("accessibility", () => {
         expect(await violations(page)).toEqual([]);
       });
 
+      test("Så här funkar det", async ({ page }) => {
+        await openReady(page);
+        await page.getByRole("button", { name: "Så här funkar det" }).click();
+        await expect(page.getByRole("dialog", { name: "Så här funkar det" }).locator("video")).toBeVisible();
+        expect(await violations(page)).toEqual([]);
+      });
+
       test("Vanliga frågor", async ({ page }) => {
         await openReady(page);
         await page.getByRole("button", { name: "Vanliga frågor" }).click();

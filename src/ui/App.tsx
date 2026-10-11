@@ -11,6 +11,7 @@ import { DropZone } from "./DropZone.tsx";
 import { Editor, type EditorHandle } from "./Editor.tsx";
 import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
+import { HowtoDialog } from "./HowtoDialog.tsx";
 import { ItemsDialog } from "./ItemsDialog.tsx";
 import { KeyDialog } from "./KeyDialog.tsx";
 import { KeyUpload } from "./KeyUpload.tsx";
@@ -33,6 +34,7 @@ export function App() {
   const [flash, setFlash] = useState<string | null>(null);
   const [keyOpen, setKeyOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
+  const [howtoOpen, setHowtoOpen] = useState(false);
   const [itemsOpen, setItemsOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("scrub");
   const [dropError, setDropError] = useState(false);
@@ -250,9 +252,15 @@ export function App() {
             </button>
           ))}
         </div>
-        <button type="button" className="link faq-button" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
-          {t("faq.open")}
-        </button>
+        <div className="help-links">
+          <button type="button" className="link" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
+            {t("faq.open")}
+          </button>
+          <span className="help-sep" aria-hidden="true" />
+          <button type="button" className="link" aria-haspopup="dialog" onClick={() => setHowtoOpen(true)}>
+            {t("howto.open")}
+          </button>
+        </div>
       </div>
 
       <main className="workspace">
@@ -460,6 +468,7 @@ export function App() {
         onClear={clearAll}
       />
       <FaqDialog open={faqOpen} onClose={() => setFaqOpen(false)} />
+      <HowtoDialog open={howtoOpen} onClose={() => setHowtoOpen(false)} />
       <Toast message={state.toast} onClose={closeToast} />
     </div>
   );

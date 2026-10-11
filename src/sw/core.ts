@@ -5,6 +5,12 @@ export type SwManifest = Record<string, string>;
 
 export const cacheKey = (path: string, rev: string) => `${path}?__rev=${rev}`;
 
+/**
+ * Files the offline cache leaves alone. The demo video is watched by few and
+ * would add to every first visit; it is fetched from the network when played.
+ */
+export const inOfflineCache = (path: string) => !path.startsWith("/video/");
+
 /** Small files are fetched on install. Packed parts are cached when the app first fetches them. */
 export function precacheList(manifest: SwManifest): string[] {
   return Object.keys(manifest).filter((path) => !/\.gzpart\d+$/.test(path));

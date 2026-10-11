@@ -546,9 +546,29 @@ a {
   margin-bottom: 28px;
 }
 
-.faq-button {
+.help-links {
   justify-self: start;
-  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* The vertical line between Vanliga frågor and Så här funkar det. */
+.help-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--line-control);
+}
+
+/* The walkthrough video: whole frame visible, never taller than the screen allows. */
+.howto video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 180px);
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: var(--yta-sankt);
 }
 
 /* Skrubba or Avskrubba: decides what the button between the panes does. */
@@ -820,13 +840,17 @@ a {
     order: -1;
     width: 100%;
   }
+  /* Two links do not fit beside the switch: they go centred under it. */
   .controls {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-2);
   }
   .mode-switch {
     grid-column: 1;
     width: 100%;
+  }
+  .help-links {
+    justify-self: center;
   }
   .mode-switch button {
     flex: 1;

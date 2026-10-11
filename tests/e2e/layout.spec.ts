@@ -52,18 +52,27 @@ test("the item count stays hidden until there is text; Egna ord is always there"
   await expect(count).toHaveCount(0);
 });
 
-for (const width of [1280, 390]) {
-  test(`at ${width} px Vanliga frågor sits beside the Skrubba / Avskrubba switch, the switch centred`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await openReady(page);
-    const pill = (await page.getByRole("group", { name: "Vad vill du göra?" }).boundingBox())!;
-    const faq = (await page.getByRole("button", { name: "Vanliga frågor" }).boundingBox())!;
-    expect(Math.abs(pill.y + pill.height / 2 - (faq.y + faq.height / 2))).toBeLessThan(2);
-    expect(faq.x).toBeGreaterThan(pill.x + pill.width);
-    expect(faq.x + faq.width).toBeLessThanOrEqual(width);
-    if (width > 860) expect(Math.abs(pill.x + pill.width / 2 - width / 2)).toBeLessThan(10);
-  });
-}
+test("at 1280 px Vanliga frågor and Så här funkar det sit beside the switch, the switch centred", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await openReady(page);
+  const pill = (await page.getByRole("group", { name: "Vad vill du göra?" }).boundingBox())!;
+  const faq = (await page.getByRole("button", { name: "Vanliga frågor" }).boundingBox())!;
+  const howto = (await page.getByRole("button", { name: "Så här funkar det" }).boundingBox())!;
+  expect(Math.abs(pill.y + pill.height / 2 - (faq.y + faq.height / 2))).toBeLessThan(2);
+  expect(faq.x).toBeGreaterThan(pill.x + pill.width);
+  expect(howto.x + howto.width).toBeLessThanOrEqual(1280);
+  expect(Math.abs(pill.x + pill.width / 2 - 640)).toBeLessThan(10);
+});
+
+test("at 390 px the two links sit centred under the switch, nothing scrolling sideways", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  await openReady(page);
+  const pill = (await page.getByRole("group", { name: "Vad vill du göra?" }).boundingBox())!;
+  const links = (await page.locator(".help-links").boundingBox())!;
+  expect(links.y).toBeGreaterThanOrEqual(pill.y + pill.height);
+  expect(Math.abs(links.x + links.width / 2 - 195)).toBeLessThan(4);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
 
 test("Vanliga frågor looks like a quiet link, not a button", async ({ page }) => {
   await openReady(page);

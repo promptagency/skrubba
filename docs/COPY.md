@@ -71,6 +71,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency. |
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
 | faq.open | Vanliga frågor |
+| howto.open | Så här funkar det |
 | caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar. |
 | mode.switch | Vad vill du göra? |
 | pane.scrubIn | Din text |
@@ -134,6 +135,11 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `entity.keepAction`: knappen på en rad som skrubbas.
 - `entity.scrubAction`: knappen på en rad som behålls.
 - `entity.scrub` och `entity.keep` finns kvar som läget i radens namn för skärmläsare och i tipset över markeringar.
+
+Nytt 2026-10-11. Länken "Så här funkar det" efter Vanliga frågor öppnar en film.
+
+- `howto.open`: länken, och rubriken på fönstret.
+- Stegen under "Så här funkar det" är textremsorna i filmen. Ändras de måste filmen spelas in igen.
 - `panel.count`, `panel.count.one`: samma text som förut, nu som länk utan pil.
 
 ## Typer
@@ -174,6 +180,19 @@ Visar båda sorters uppgifter i samma text. Personuppgifter som modellen hittar,
 >
 > Hälsningar
 > Micke
+
+## Så här funkar det
+
+Fönstret med filmen. Stegen är textremsorna i filmen och läses också upp av skärmläsare.
+
+1. Klistra in din text. Skrubba markerar namn, nummer och företag.
+2. Klicka på en markering för att behålla ordet. Det får en ram i stället för färg.
+3. Under rutan ser du vad som hittades. Visa öppnar hela listan.
+4. Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_1].
+5. Kopiera texten och klistra in den i valfri AI-tjänst.
+6. Kodnyckeln visar vilken platshållare som står för vad.
+7. Byt till Avskrubba och klistra in svaret från AI.
+8. Tryck Avskrubba. De riktiga uppgifterna kommer tillbaka.
 
 ## Vanliga frågor
 
