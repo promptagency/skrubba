@@ -1,52 +1,46 @@
+/* Every value comes from design/tokens.css, loaded before this file. These names
+   are what the components use; each points at a token. --text is a token itself.
+   The theme follows the system setting through the tokens' own media query. */
 :root {
   color-scheme: light dark;
-  --bg: #fbfaf7;
-  --surface: #ffffff;
-  --text: #1d1c1a;
-  --muted: #66625b;
-  --line: #e3e0d9;
-  --accent: #1f5f4a;
-  --accent-text: #ffffff;
-  --focus: #2b6cb0;
+  --bg: var(--grund);
+  --surface: var(--yta);
+  --muted: var(--text-dampad);
+  --line: var(--kant);
+  --line-control: var(--kant-kontroll);
+  --accent: var(--sapa);
+  --accent-text: var(--pa-sapa);
+  --focus: var(--fokus);
 
   /* Highlight colours per type group. Labels are always available too. */
-  --hl-name: #ffd9a8;
-  --hl-place: #c9e7d2;
-  --hl-org: #d3dcfb;
-  --hl-number: #f4c9d6;
-  --hl-word: #e6d7f5;
+  --hl-name: var(--mask-namn);
+  --hl-place: var(--mask-plats);
+  --hl-org: var(--mask-organisation);
+  --hl-number: var(--mask-nummer);
+  --hl-word: var(--mask-ord);
 
-  /* Darker shade per type: list dots and the border of a kept highlight.
-     At least 3:1 against both the light and the dark background. */
-  --hl-name-edge: #c27a1e;
-  --hl-place-edge: #2f8a52;
-  --hl-org-edge: #3f5fc9;
-  --hl-number-edge: #b8436a;
-  --hl-word-edge: #7d4fb5;
+  /* Strong shade per type: list dots and the border of a kept highlight. */
+  --hl-name-edge: var(--mask-namn-stark);
+  --hl-place-edge: var(--mask-plats-stark);
+  --hl-org-edge: var(--mask-organisation-stark);
+  --hl-number-edge: var(--mask-nummer-stark);
+  --hl-word-edge: var(--mask-ord-stark);
 
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --radius: 6px;
-  --editor-font-size: 16px;
+  --font: var(--font-text);
+  --radius: var(--radius-md);
+  --editor-font-size: 16px; /* brod; tokens.css has no type sizes */
   --editor-line: 1.6;
-  --editor-pad: 16px;
+  --editor-pad: var(--space-4);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #161614;
-    --surface: #1f1f1c;
-    --text: #ecebe7;
-    --muted: #a8a49c;
-    --line: #34332f;
-    --accent: #6fc3a3;
-    --accent-text: #0d1f18;
-    --focus: #8bb8f0;
-    --hl-name: #6b4a1e;
-    --hl-place: #234a33;
-    --hl-org: #2a3768;
-    --hl-number: #63283a;
-    --hl-word: #4a3566;
-  }
+/* Every heading in the app is rubrik-s. The display font needs these settings to match the logotype. */
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 36, "SOFT" 100, "WONK" 0;
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 700;
 }
 
 * {
@@ -69,16 +63,17 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 26px;
 }
 
 button {
   font: inherit;
   color: inherit;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-control);
   border-radius: var(--radius);
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
   cursor: pointer;
 }
 
@@ -92,7 +87,7 @@ button.primary {
   color: var(--accent-text);
   border-color: var(--accent);
   font-weight: 600;
-  padding: 8px 20px;
+  padding: var(--space-2) 20px;
 }
 
 button.link {
@@ -111,8 +106,8 @@ kbd {
   font: inherit;
   font-size: 0.8em;
   border: 1px solid currentColor;
-  border-radius: 3px;
-  padding: 0 4px;
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-1);
   opacity: 0.7;
 }
 
@@ -124,7 +119,8 @@ kbd {
 
 .caveat {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 20px;
   color: var(--muted);
 }
 
@@ -135,7 +131,7 @@ kbd {
   flex: 1;
   min-height: 0;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-control);
   border-radius: var(--radius);
 }
 
@@ -177,7 +173,7 @@ kbd {
 
 .hl {
   color: transparent;
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 0 0 1px transparent;
   background: var(--hl);
 }
@@ -227,7 +223,7 @@ kbd {
 
 .selection-scrub {
   position: absolute;
-  top: 8px;
+  top: var(--space-2);
   right: 20px;
   z-index: 2;
   background: var(--accent);
@@ -241,9 +237,10 @@ kbd {
   pointer-events: none;
   background: var(--text);
   color: var(--bg);
-  font-size: 13px;
-  padding: 3px 8px;
-  border-radius: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-sm);
   white-space: nowrap;
 }
 
@@ -252,14 +249,14 @@ kbd {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;
-  padding: 32px;
+  gap: var(--space-1);
+  padding: var(--space-8);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-control);
   border-radius: var(--radius);
   color: var(--muted);
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 26px;
 }
 
 .gate p {
@@ -283,18 +280,18 @@ kbd {
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .panel-count {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .disclosure {
   border: none;
   background: none;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   font-weight: 600;
 }
 
@@ -304,7 +301,7 @@ kbd {
 
 .panel-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .rows {
@@ -316,7 +313,7 @@ kbd {
 .row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   border-bottom: 1px solid var(--line);
 }
 
@@ -324,12 +321,12 @@ kbd {
   flex: 1;
   display: grid;
   grid-template-columns: 18px 1fr auto;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
   text-align: left;
   border: none;
   background: none;
-  padding: 7px 4px;
+  padding: 7px var(--space-1);
   min-width: 0;
 }
 
@@ -349,6 +346,7 @@ kbd {
 .row-count {
   color: var(--muted);
   font-size: 12px;
+  line-height: 16px;
 }
 
 .row-kept .row-value {
@@ -357,7 +355,8 @@ kbd {
 
 .row-toggle {
   font-size: 12px;
-  padding: 2px 8px;
+  line-height: 16px;
+  padding: 2px var(--space-2);
   min-width: 64px;
 }
 
@@ -379,15 +378,15 @@ kbd {
 
 .words summary {
   cursor: pointer;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
 }
 
 .words textarea {
   width: 100%;
   margin-top: 6px;
   font: inherit;
-  padding: 8px;
-  border: 1px solid var(--line);
+  padding: var(--space-2);
+  border: 1px solid var(--line-control);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
@@ -397,7 +396,7 @@ kbd {
 .toast {
   background: var(--text);
   color: var(--bg);
-  padding: 10px 16px;
+  padding: 10px var(--space-4);
   border-radius: var(--radius);
 }
 
@@ -418,13 +417,13 @@ kbd {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .restore-notes li {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
@@ -441,12 +440,13 @@ kbd {
 .key-table th,
 .key-table td {
   text-align: left;
-  padding: 6px 12px 6px 0;
+  padding: 6px var(--space-3) 6px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .key-table th {
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 20px;
   color: var(--muted);
   font-weight: 600;
 }
@@ -459,14 +459,14 @@ kbd {
 }
 
 .key-warning {
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 20px;
   margin-top: 6px;
   max-width: 28em;
 }
 
 .key-heading {
-  font-size: 15px;
-  margin: 8px 0 4px;
+  margin: var(--space-2) 0 var(--space-1);
 }
 
 .key-words {
@@ -476,20 +476,20 @@ kbd {
 
 .key-actions {
   display: flex;
-  gap: 24px;
+  gap: var(--space-6);
   flex-wrap: wrap;
   align-items: flex-start;
-  margin-top: 8px;
+  margin-top: var(--space-2);
 }
 
 .key-error {
-  color: #b8436a;
+  color: var(--falurod);
   margin: 6px 0 0;
   max-width: 28em;
 }
 
 code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.9em;
 }
 
@@ -515,27 +515,48 @@ a {
   position: relative;
   max-width: 1160px;
   margin: 0 auto;
-  padding: 0 24px 32px;
+  padding: 0 var(--space-6) var(--space-8);
 }
 
 .masthead {
   text-align: center;
-  padding: 40px 0 24px;
+  padding: 40px 0 var(--space-6);
 }
 
 .logotype {
   margin: 0;
-  font-size: clamp(56px, 11vw, 120px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1;
+  line-height: 0;
+}
+
+.logotype img {
+  height: clamp(56px, 11vw, 120px);
+  width: auto;
+}
+
+/* Positive logotype in light, negative in dark, on the same selectors as the tokens. */
+.logo-dark {
+  display: none;
+}
+[data-theme="mork"] .logo-light {
+  display: none;
+}
+[data-theme="mork"] .logo-dark {
+  display: inline;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .logo-light {
+    display: none;
+  }
+  :root:not([data-theme]) .logo-dark {
+    display: inline;
+  }
 }
 
 /* Vanliga frågor in the top right corner, beside the logotype. */
 .toolbar {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: var(--space-6);
+  right: var(--space-6);
 }
 
 .faq-button {
@@ -547,19 +568,19 @@ a {
   display: flex;
   width: max-content;
   margin: 0 auto 28px;
-  padding: 4px;
-  gap: 4px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  padding: var(--space-1);
+  gap: var(--space-1);
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-full);
   background: var(--surface);
 }
 
 .mode-switch button {
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: none;
   padding: 10px 28px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--muted);
 }
@@ -574,14 +595,14 @@ a {
   --pane-head: 36px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 24px;
+  gap: var(--space-6);
   align-items: start;
 }
 
 .pane {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
   min-width: 0;
 }
 
@@ -589,14 +610,12 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   min-height: var(--pane-head);
 }
 
 .pane-head h2 {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
   color: var(--muted);
 }
 
@@ -614,7 +633,7 @@ a {
 
 /* Centred on the panes, beside the text rather than under it. */
 .run-column {
-  margin-top: calc(var(--pane-head) + 12px + var(--pane-height) / 2 - 24px);
+  margin-top: calc(var(--pane-head) + var(--space-3) + var(--pane-height) / 2 - 24px);
 }
 
 /* Same width in both modes, so the panes do not move when switching. */
@@ -623,10 +642,10 @@ a {
   align-items: center;
   justify-content: center;
   min-width: 11em;
-  gap: 8px;
+  gap: var(--space-2);
   min-height: 48px;
   padding: 0 20px;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .run-arrow::after {
@@ -646,7 +665,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .card-actions .disclosure,
@@ -659,7 +678,7 @@ a {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 16px;
+  gap: var(--space-2) var(--space-4);
 }
 
 .key-missing p {
@@ -673,21 +692,22 @@ a {
 }
 
 .site-footer {
-  margin-top: 64px;
-  padding-top: 24px;
+  margin-top: var(--space-16);
+  padding-top: var(--space-6);
   border-top: 2px solid var(--line);
   text-align: center;
   color: var(--muted);
   font-size: 14px;
+  line-height: 20px;
 }
 
 .site-footer p {
-  margin: 4px 0;
+  margin: var(--space-1) 0;
 }
 
 .toast-region {
   position: fixed;
-  bottom: 24px;
+  bottom: var(--space-6);
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -698,9 +718,9 @@ a {
 .modal {
   width: min(900px, calc(100vw - 32px));
   max-height: calc(100vh - 64px);
-  padding: 24px;
+  padding: var(--space-6);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--bg);
   color: var(--text);
 }
@@ -713,16 +733,15 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 
 .modal-head h2 {
   margin: 0;
-  font-size: 20px;
 }
 
 .modal-lead {
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
   color: var(--muted);
 }
 
@@ -732,8 +751,7 @@ a {
 }
 
 .faq h3 {
-  font-size: 16px;
-  margin: 20px 0 4px;
+  margin: 20px 0 var(--space-1);
 }
 
 .faq p {
@@ -743,26 +761,26 @@ a {
 .keyview {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 @media (max-width: 860px) {
   .site {
-    padding: 0 16px 24px;
+    padding: 0 var(--space-4) var(--space-6);
   }
   .masthead {
-    padding: 24px 0 16px;
+    padding: var(--space-6) 0 var(--space-4);
   }
   .toolbar {
     position: static;
     display: flex;
     justify-content: flex-end;
-    padding-top: 12px;
+    padding-top: var(--space-3);
   }
   .workspace {
     --pane-height: 320px;
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
+    gap: var(--space-4);
   }
   .run-column {
     margin-top: 0;
@@ -779,10 +797,10 @@ a {
   }
   .mode-switch button {
     flex: 1;
-    padding: 10px 12px;
+    padding: 10px var(--space-3);
   }
   .key-table {
-    font-size: 13px;
+    font-size: 14px;
   }
   .key-table code {
     word-break: break-all;
