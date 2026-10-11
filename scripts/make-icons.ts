@@ -1,22 +1,23 @@
-// Render the app icon (an SVG) to the PNG sizes the manifest needs. Run once
-// after changing the icon: npx tsx scripts/make-icons.ts. Outputs are committed.
-import { writeFileSync } from "node:fs";
+// Copy the Skrubba symbol from design/logo/ to the favicon files and render the
+// PNG sizes the manifest needs. Run once after the symbol changes:
+// npx tsx scripts/make-icons.ts. Outputs are committed.
+import { copyFileSync, readFileSync } from "node:fs";
 import { chromium } from "@playwright/test";
 
-// A placeholder in brackets: [ ▬ ]. Drawn with shapes, no font needed.
-const mark = (scale: number) => {
-  const s = (n: number) => 256 + (n - 256) * scale;
-  return `
-  <path d="M${s(184)} ${s(136)} H${s(132)} V${s(376)} H${s(184)}" fill="none" stroke="#fff" stroke-width="${36 * scale}" stroke-linejoin="round"/>
-  <path d="M${s(328)} ${s(136)} H${s(380)} V${s(376)} H${s(328)}" fill="none" stroke="#fff" stroke-width="${36 * scale}" stroke-linejoin="round"/>
-  <rect x="${s(196)}" y="${s(232)}" width="${120 * scale}" height="${48 * scale}" rx="${10 * scale}" fill="#a8e6c9"/>`;
-};
+const POSITIVE = "design/logo/skrubba-symbol-positiv.svg";
+const NEGATIVE = "design/logo/skrubba-symbol-negativ.svg";
 
-const ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#1f5f4a"/>${mark(1)}</svg>`;
-// Maskable: full-bleed background, mark inside the 80 % safe zone.
-const MASKABLE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#1f5f4a"/>${mark(0.78)}</svg>`;
+// The files are used as they are.
+copyFileSync(POSITIVE, "public/icon.svg");
+copyFileSync(NEGATIVE, "public/icon-dark.svg");
 
-writeFileSync("public/icon.svg", `${ICON}\n`);
+const ICON = readFileSync(POSITIVE, "utf8").trim();
+// Maskable: the symbol's own ground, full bleed, with the symbol inside the 80 % safe zone.
+const ground = ICON.match(/<rect [^>]*fill="([^"]+)"/)![1];
+const MASKABLE = ICON.replace(/(<svg [^>]*>)/, `$1<rect width="512" height="512" fill="${ground}"/><g transform="translate(256 256) scale(0.78) translate(-256 -256)">`).replace(
+  "</svg>",
+  "</g></svg>",
+);
 
 const browser = await chromium.launch();
 const page = await browser.newPage();

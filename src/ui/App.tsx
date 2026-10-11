@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import logoDark from "../../design/logo/skrubba-logotyp-negativ.svg";
+import logoLight from "../../design/logo/skrubba-logotyp-positiv.svg";
 import { type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, type RestoreResult } from "../engine/index.ts";
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
@@ -224,7 +226,10 @@ export function App() {
   return (
     <div className="site">
       <header className="masthead">
-        <h1 className="logotype">{t("app.name")}</h1>
+        <h1 className="logotype">
+          <img className="logo-light" src={logoLight} alt={t("app.name")} />
+          <img className="logo-dark" src={logoDark} alt={t("app.name")} />
+        </h1>
       </header>
 
       <div className="toolbar">
