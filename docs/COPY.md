@@ -36,6 +36,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | panel.wordsPlaceholder | Kundnamn, projektnamn, produkter. Ett per rad. |
 | entity.scrub | Skrubba |
 | entity.keep | Behåll |
+| entity.scrubAction | Skrubba uppgift |
+| entity.keepAction | Behåll uppgift |
 | selection.scrub | Skrubba markering |
 | action.copy | Kopiera |
 | action.restore | Avskrubba |
@@ -126,6 +128,12 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 
 - `summary.show`: "Visa" till höger i båda remsorna.
 - `key.summary`: ersätter `key.link` ("Kodnyckel ({n})").
+
+Ändrat 2026-10-11, tredje omgången. Knappen på varje rad i fönstret Uppgifter visade läget ("Skrubba") men gjorde tvärtom när man tryckte. Nu säger knappen vad som händer.
+
+- `entity.keepAction`: knappen på en rad som skrubbas.
+- `entity.scrubAction`: knappen på en rad som behålls.
+- `entity.scrub` och `entity.keep` finns kvar som läget i radens namn för skärmläsare och i tipset över markeringar.
 - `panel.count`, `panel.count.one`: samma text som förut, nu som länk utan pil.
 
 ## Typer

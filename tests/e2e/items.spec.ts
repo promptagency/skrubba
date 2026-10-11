@@ -62,3 +62,16 @@ test("Egna ord stays under the pane, folded, also after Visa exempel", async ({ 
   await expect(words).toBeHidden();
   await expect(words).toHaveValue("Projekt Havsvind");
 });
+
+test("each row's button says what clicking it does: Behåll uppgift, then Skrubba uppgift", async ({ page }) => {
+  await withText(page);
+  const dialog = items(page);
+  await countLink(page).click();
+  const row = dialog.locator(".row").filter({ hasText: "Johan Lindqvist" });
+  const main = row.locator(".row-main");
+  await expect(main).toHaveAccessibleName(/Skrubba$/); // state: scrubbed
+  await row.getByRole("button", { name: "Behåll uppgift" }).click();
+  await expect(main).toHaveAccessibleName(/Behåll$/);
+  await row.getByRole("button", { name: "Skrubba uppgift" }).click();
+  await expect(main).toHaveAccessibleName(/Skrubba$/);
+});

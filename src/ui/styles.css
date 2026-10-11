@@ -341,7 +341,7 @@ kbd {
   font-size: 12px;
   line-height: 16px;
   padding: 2px var(--space-2);
-  min-width: 64px;
+  min-width: 8.75em; /* same width for both labels, so the column does not jump */
 }
 
 .dot-name {

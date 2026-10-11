@@ -22,6 +22,8 @@ export const COPY = {
   "panel.wordsPlaceholder": "Kundnamn, projektnamn, produkter. Ett per rad.",
   "entity.scrub": "Skrubba",
   "entity.keep": "Behåll",
+  "entity.scrubAction": "Skrubba uppgift",
+  "entity.keepAction": "Behåll uppgift",
   "selection.scrub": "Skrubba markering",
   "action.copy": "Kopiera",
   "action.restore": "Avskrubba",

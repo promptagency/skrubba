@@ -66,10 +66,10 @@ export function EntityPanel(props: EntityPanelProps) {
               type="button"
               className="row-toggle"
               tabIndex={-1}
-              aria-pressed={!e.active}
               onClick={() => props.onToggleKeep(e.placeholder)}
             >
-              {e.active ? t("entity.scrub") : t("entity.keep")}
+              {/* Names the action, not the state: the dot and the row label carry the state. */}
+              {e.active ? t("entity.keepAction") : t("entity.scrubAction")}
             </button>
           </li>
         ))}
