@@ -509,10 +509,9 @@ a {
   border: 0;
 }
 
-/* Page layout: logotype, toolbar, mode switch, input | button | result, footer. */
+/* Page layout: logotype, mode switch with Vanliga frågor, input | button | result, footer. */
 
 .site {
-  position: relative;
   max-width: 1160px;
   margin: 0 auto;
   padding: 0 var(--space-6) var(--space-8);
@@ -554,22 +553,25 @@ a {
   }
 }
 
-/* Vanliga frågor in the top right corner, beside the logotype. */
-.toolbar {
-  position: absolute;
-  top: var(--space-6);
-  right: var(--space-6);
+/* The Skrubba / Avskrubba switch, centred, with Vanliga frågor beside it. */
+.controls {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: 28px;
 }
 
 .faq-button {
+  justify-self: start;
   margin: 0;
 }
 
 /* Skrubba or Avskrubba: decides what the button between the panes does. */
 .mode-switch {
   display: flex;
+  grid-column: 2;
   width: max-content;
-  margin: 0 auto 28px;
   padding: var(--space-1);
   gap: var(--space-1);
   border: 1px solid var(--line-control);
@@ -770,12 +772,6 @@ a {
   .site {
     padding: 0 var(--space-4) var(--space-6);
   }
-  .toolbar {
-    position: static;
-    display: flex;
-    justify-content: flex-end;
-    padding-top: var(--space-3);
-  }
   .workspace {
     --pane-height: 320px;
     grid-template-columns: minmax(0, 1fr);
@@ -791,7 +787,12 @@ a {
   .run-arrow::after {
     content: "↓";
   }
+  .controls {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-2);
+  }
   .mode-switch {
+    grid-column: 1;
     width: 100%;
   }
   .mode-switch button {

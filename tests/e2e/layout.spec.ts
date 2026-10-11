@@ -58,3 +58,16 @@ test("the item count and Skrubba alla / Behåll alla stay hidden until there is 
   await expect(toggle).toHaveCount(0);
   await expect(scrubAll).toBeHidden();
 });
+
+for (const width of [1280, 390]) {
+  test(`at ${width} px Vanliga frågor sits beside the Skrubba / Avskrubba switch, the switch centred`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await openReady(page);
+    const pill = (await page.getByRole("group", { name: "Vad vill du göra?" }).boundingBox())!;
+    const faq = (await page.getByRole("button", { name: "Vanliga frågor" }).boundingBox())!;
+    expect(Math.abs(pill.y + pill.height / 2 - (faq.y + faq.height / 2))).toBeLessThan(2);
+    expect(faq.x).toBeGreaterThan(pill.x + pill.width);
+    expect(faq.x + faq.width).toBeLessThanOrEqual(width);
+    if (width > 860) expect(Math.abs(pill.x + pill.width / 2 - width / 2)).toBeLessThan(10);
+  });
+}

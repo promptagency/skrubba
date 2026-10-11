@@ -4,8 +4,7 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
 
 ```
                           Skrubba                          ← logotype
-                                               [Vanliga frågor]
-                     ( Skrubba | Avskrubba )               ← mode switch
+                     ( Skrubba | Avskrubba ) [Vanliga frågor]  ← mode switch
  Din text            Visa exempel        Skrubbad text
  ┌────────────────────────────┐          ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┐
  │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
@@ -74,7 +73,7 @@ Note under the table: "Kodnyckeln finns bara i den här fliken. Stänger du flik
 
 ## Vanliga frågor window
 
-The button "Vanliga frågor" top right, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
+The button "Vanliga frågor" beside the mode switch, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
 
 ## Model state
 

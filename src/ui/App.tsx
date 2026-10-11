@@ -232,26 +232,25 @@ export function App() {
         </h1>
       </header>
 
-      <div className="toolbar">
+      <div className="controls">
+        <div className="mode-switch" role="group" aria-label={t("mode.switch")}>
+          {(["scrub", "restore"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              aria-pressed={mode === m}
+              onClick={() => {
+                setMode(m);
+                setDropError(false);
+              }}
+            >
+              {m === "scrub" ? t("mode.scrub") : t("mode.restore")}
+            </button>
+          ))}
+        </div>
         <button type="button" className="faq-button" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
           {t("faq.open")}
         </button>
-      </div>
-
-      <div className="mode-switch" role="group" aria-label={t("mode.switch")}>
-        {(["scrub", "restore"] as const).map((m) => (
-          <button
-            key={m}
-            type="button"
-            aria-pressed={mode === m}
-            onClick={() => {
-              setMode(m);
-              setDropError(false);
-            }}
-          >
-            {m === "scrub" ? t("mode.scrub") : t("mode.restore")}
-          </button>
-        ))}
       </div>
 
       <main className="workspace">
