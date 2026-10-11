@@ -4,7 +4,8 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
 
 ```
                           Skrubba                          ← logotype
-              ( Skrubba | Avskrubba )  Vanliga frågor | Så här funkar det  ← mode switch
+                  ( Skrubba | Avskrubba )                  ← mode switch
+             Vanliga frågor | Så här funkar det            ← help links
  Din text            Visa exempel        Skrubbad text
  ┌────────────────────────────┐          ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┐
  │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
@@ -72,11 +73,11 @@ Note under the table: "Kodnyckeln finns bara i den här fliken. Stänger du flik
 
 ## Så här funkar det window
 
-"Så här funkar det", after "Vanliga frågor" behind a thin vertical line, opens a window with a 51 second video of the whole round trip with the example text, captioned in Swedish (`HOWTO` in `docs/COPY.md`). No sound. The steps are also in the window as hidden text for screen readers. The video loads only when the window opens and stops when it closes; the offline cache leaves it out, so it needs a connection. Re-record it after visible changes with `npm run demo-video` (needs ffmpeg and `npm run preview`). On a phone both links sit centred under the switch. Owner's addition, 2026-10-11.
+"Så här funkar det", after "Vanliga frågor" behind a thin vertical line, opens a window with a 51 second video of the whole round trip with the example text, captioned in Swedish (`HOWTO` in `docs/COPY.md`). No sound. The steps are also in the window as hidden text for screen readers. The video loads only when the window opens and stops when it closes; the offline cache leaves it out, so it needs a connection. Re-record it after visible changes with `npm run demo-video` (needs ffmpeg and `npm run preview`). Both links sit centred under the switch at every width (owner's change, 2026-10-11); the captions sit well above the bottom edge so the video controls do not cover them. Owner's addition, 2026-10-11.
 
 ## Vanliga frågor window
 
-The link "Vanliga frågor" beside the mode switch, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
+The link "Vanliga frågor" under the mode switch, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
 
 ## Model state
 

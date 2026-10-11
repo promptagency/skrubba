@@ -52,15 +52,13 @@ test("the item count stays hidden until there is text; Egna ord is always there"
   await expect(count).toHaveCount(0);
 });
 
-test("at 1280 px Vanliga frågor and Så här funkar det sit beside the switch, the switch centred", async ({ page }) => {
+test("at 1280 px Vanliga frågor and Så här funkar det sit centred under the switch, the switch centred", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await openReady(page);
   const pill = (await page.getByRole("group", { name: "Vad vill du göra?" }).boundingBox())!;
-  const faq = (await page.getByRole("button", { name: "Vanliga frågor" }).boundingBox())!;
-  const howto = (await page.getByRole("button", { name: "Så här funkar det" }).boundingBox())!;
-  expect(Math.abs(pill.y + pill.height / 2 - (faq.y + faq.height / 2))).toBeLessThan(2);
-  expect(faq.x).toBeGreaterThan(pill.x + pill.width);
-  expect(howto.x + howto.width).toBeLessThanOrEqual(1280);
+  const links = (await page.locator(".help-links").boundingBox())!;
+  expect(links.y).toBeGreaterThanOrEqual(pill.y + pill.height);
+  expect(Math.abs(links.x + links.width / 2 - 640)).toBeLessThan(4);
   expect(Math.abs(pill.x + pill.width / 2 - 640)).toBeLessThan(10);
 });
 

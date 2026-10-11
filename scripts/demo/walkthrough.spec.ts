@@ -13,7 +13,7 @@ const CURSOR = `
     const cap = document.createElement("div");
     cap.id = "demo-caption";
     cap.popover = "manual";
-    cap.style.cssText = "position:fixed;inset:auto;margin:0;border:0;z-index:99998;left:50%;bottom:28px;transform:translateX(-50%);max-width:900px;" +
+    cap.style.cssText = "position:fixed;inset:auto;margin:0;border:0;z-index:99998;left:50%;bottom:120px;transform:translateX(-50%);max-width:900px;" +
       "padding:14px 24px;border-radius:16px;background:var(--sapa);color:var(--pa-sapa);font:600 20px/28px var(--font-text);" +
       "text-align:center;opacity:0;transition:opacity .35s;pointer-events:none;box-shadow:0 0 0 1px var(--kant)";
     document.body.append(cap);

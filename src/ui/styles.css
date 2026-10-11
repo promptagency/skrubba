@@ -537,17 +537,16 @@ a {
   }
 }
 
-/* The Skrubba / Avskrubba switch, centred, with Vanliga frågor beside it. */
+/* The Skrubba / Avskrubba switch, centred, with the help links centred under it. */
 .controls {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: var(--space-4);
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: var(--space-2);
   margin-bottom: 28px;
 }
 
 .help-links {
-  justify-self: start;
   display: flex;
   align-items: center;
   gap: var(--space-1);
@@ -574,7 +573,6 @@ a {
 /* Skrubba or Avskrubba: decides what the button between the panes does. */
 .mode-switch {
   display: flex;
-  grid-column: 2;
   width: max-content;
   padding: var(--space-1);
   gap: var(--space-1);
@@ -840,17 +838,8 @@ a {
     order: -1;
     width: 100%;
   }
-  /* Two links do not fit beside the switch: they go centred under it. */
-  .controls {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-2);
-  }
   .mode-switch {
-    grid-column: 1;
     width: 100%;
-  }
-  .help-links {
-    justify-self: center;
   }
   .mode-switch button {
     flex: 1;
