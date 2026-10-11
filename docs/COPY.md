@@ -85,6 +85,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | restore.resultEmpty | Tryck Avskrubba så visas svaret med de riktiga uppgifterna här. |
 | wrongMode.notice | Texten innehåller platshållare som {found}. Är det svaret från AI? |
 | wrongMode.move | Flytta till Avskrubba |
+| paste.joined | Radbrytningar mitt i meningar är borttagna. |
+| paste.undo | Ångra |
 | key.summary | Kodnyckel · {n} platshållare |
 | summary.show | Visa |
 | key.missing | Den här fliken har ingen kodnyckel. Har du sparat en kan du ladda upp den, så byts platshållarna tillbaka. |
@@ -148,6 +150,11 @@ Nytt 2026-10-11. Länken "Ny text" under knappen mellan rutorna börjar om med e
 
 - `action.newText`: länken.
 - `action.newTextConfirm`: frågan innan kodnyckeln töms. Knapparna är webbläsarens egna (OK och Avbryt), som för "Rensa allt".
+
+Nytt 2026-10-11. Text som klistras in i Din text städas. Osynliga tecken från PDF:er fixas alltid. Ser texten ut att komma från en PDF, med radbrytningar mitt i meningarna, slås raderna ihop till stycken och en rad visas under rutan.
+
+- `paste.joined`: raden under rutan efter att raderna slagits ihop.
+- `paste.undo`: knappen som lägger tillbaka texten som den klistrades in.
 
 ## Typer
 

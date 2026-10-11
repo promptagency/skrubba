@@ -8,7 +8,7 @@ import { copyText } from "./clipboard.ts";
 import { REPO_URL } from "../config.ts";
 import { countLabel, EXAMPLE, t } from "./copy.ts";
 import { DropZone } from "./DropZone.tsx";
-import { Editor, type EditorHandle } from "./Editor.tsx";
+import { Editor, type EditorHandle, type PasteUndo } from "./Editor.tsx";
 import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
 import { HowtoDialog } from "./HowtoDialog.tsx";
@@ -38,6 +38,8 @@ export function App() {
   const [itemsOpen, setItemsOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("scrub");
   const [dropError, setDropError] = useState(false);
+  // Set after a paste whose broken lines were joined, for Ångra.
+  const [pasteUndo, setPasteUndo] = useState<PasteUndo | null>(null);
   const editor = useRef<EditorHandle>(null);
   const answerPane = useRef<TextPaneHandle>(null);
   const copyButton = useRef<HTMLButtonElement>(null);
@@ -319,6 +321,7 @@ export function App() {
                   pasted.current = wasPaste;
                   dispatch({ type: "setText", text });
                 }}
+                onPasteJoined={setPasteUndo}
                 onScrubSelection={(term) => dispatch({ type: "addManual", term })}
                 onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
               />
@@ -336,6 +339,22 @@ export function App() {
             </p>
           )}
           <ModelStatus model={state.model} />
+          {mode === "scrub" && pasteUndo?.cleaned === state.text && (
+            <p className="notice paste-joined" role="status">
+              <span>{t("paste.joined")}</span>{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  pasted.current = true;
+                  dispatch({ type: "setText", text: pasteUndo.original });
+                  setPasteUndo(null);
+                  editor.current?.focus();
+                }}
+              >
+                {t("paste.undo")}
+              </button>
+            </p>
+          )}
           {mode === "scrub" && wrongMode && (
             <p className="notice wrong-mode" role="status">
               <span>{t("wrongMode.notice", { found: wrongMode })}</span>{" "}

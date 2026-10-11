@@ -73,6 +73,8 @@ export const COPY = {
   "restore.resultEmpty": "Tryck Avskrubba så visas svaret med de riktiga uppgifterna här.",
   "wrongMode.notice": "Texten innehåller platshållare som {found}. Är det svaret från AI?",
   "wrongMode.move": "Flytta till Avskrubba",
+  "paste.joined": "Radbrytningar mitt i meningar är borttagna.",
+  "paste.undo": "Ångra",
   "key.summary": "Kodnyckel · {n} platshållare",
   "summary.show": "Visa",
   "key.missing": "Den här fliken har ingen kodnyckel. Har du sparat en kan du ladda upp den, så byts platshållarna tillbaka.",

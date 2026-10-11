@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import type { Entity } from "../engine/index.ts";
 import { t, TYPE_LABEL, typeGroup } from "./copy.ts";
+import { cleanPaste } from "./pasteCleanup.ts";
 import { entityAt, entityMarks, segments } from "./segments.ts";
 
 export interface EditorHandle {
@@ -14,8 +15,15 @@ interface Props {
   entities: Entity[]; // fresh only: offsets match `text`
   flash: string | null;
   onChange(text: string, pasted: boolean): void;
+  /** After a paste whose lines were joined: the text now, and as it would have been pasted. Null otherwise. */
+  onPasteJoined(undo: PasteUndo | null): void;
   onScrubSelection(term: string): void;
   onToggleKeep(placeholder: string): void;
+}
+
+export interface PasteUndo {
+  cleaned: string;
+  original: string;
 }
 
 interface Tip {
@@ -25,7 +33,7 @@ interface Tip {
 }
 
 export const Editor = forwardRef<EditorHandle, Props>(function Editor(
-  { text, entities, flash, onChange, onScrubSelection, onToggleKeep },
+  { text, entities, flash, onChange, onPasteJoined, onScrubSelection, onToggleKeep },
   ref,
 ) {
   const area = useRef<HTMLTextAreaElement>(null);
@@ -152,8 +160,23 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
           onChange(e.target.value, pasted.current);
           pasted.current = false;
         }}
-        onPaste={() => {
+        onPaste={(e) => {
           pasted.current = true;
+          const raw = e.clipboardData.getData("text/plain");
+          if (!raw) return;
+          e.preventDefault();
+          const el = e.currentTarget;
+          const { text: clean, joined } = cleanPaste(raw);
+          const before = el.value.slice(0, el.selectionStart);
+          const after = el.value.slice(el.selectionEnd);
+          // insertText keeps the browser's own undo; it fires onChange.
+          if (!document.execCommand("insertText", false, clean)) {
+            onChange(before + clean + after, true);
+            pasted.current = false;
+            const caret = before.length + clean.length;
+            requestAnimationFrame(() => el.setSelectionRange(caret, caret));
+          }
+          onPasteJoined(joined ? { cleaned: before + clean + after, original: before + raw + after } : null);
         }}
         onScroll={syncScroll}
         onKeyDown={onKeyDown}
