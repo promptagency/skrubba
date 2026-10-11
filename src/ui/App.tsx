@@ -19,6 +19,7 @@ import { RestoreNotes } from "./RestoreNotes.tsx";
 import { firstPlaceholder, type Mark, placeholderMarks } from "./segments.ts";
 import { controlledByServiceWorker } from "./serviceWorker.ts";
 import { TextPane, type TextPaneHandle } from "./TextPane.tsx";
+import { Summary } from "./Summary.tsx";
 import { Toast } from "./Toast.tsx";
 import { WordList } from "./WordList.tsx";
 
@@ -347,9 +348,7 @@ export function App() {
               {/* Nothing to count or act on before there is text. */}
               {state.text && (
                 <div className="card-actions">
-                  <button type="button" className="link items-link" aria-haspopup="dialog" onClick={() => setItemsOpen(true)}>
-                    {countLabel(entities.length)}
-                  </button>
+                  <Summary types={entities.map((e) => e.type)} label={countLabel(entities.length)} onOpen={() => setItemsOpen(true)} />
                 </div>
               )}
               <p className="caveat">{t("caveat.short")}</p>
@@ -405,9 +404,11 @@ export function App() {
           {(hasResult || state.keyEntries.length > 0) && (
             <div className="card-actions">
               {state.keyEntries.length > 0 && (
-                <button type="button" className="link key-link" aria-haspopup="dialog" onClick={() => setKeyOpen(true)}>
-                  {t("key.link", { n: state.keyEntries.length })}
-                </button>
+                <Summary
+                  types={state.keyEntries.map((e) => e.type)}
+                  label={t("key.summary", { n: state.keyEntries.length })}
+                  onOpen={() => setKeyOpen(true)}
+                />
               )}
               {hasResult && (
                 <button type="button" className="primary" ref={copyButton} onClick={() => void copyResult()}>

@@ -10,7 +10,7 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
  │ text, highlights overlaid  │          │ [NAMN_1] ringde …         │
  │ click a highlight to keep  │ [Skrubba →] (read-only)             │
  └────────────────────────────┘          └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┘
- 13 uppgifter                         Kodnyckel (13)        [Kopiera]
+ ●●●● 13 uppgifter  Visa ›          ●●●● Kodnyckel · 13 platshållare  Visa ›  [Kopiera]
  Skrubba hittar inte allt …
  ▸ Egna ord (1)
  ─────────────────────────────────────────────────────────────────
@@ -20,7 +20,7 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
 
 In Avskrubba the left pane is "Svar från AI", the button says "Avskrubba →" and the right pane is "Avskrubbad text", with any "Menade du …?" questions under it.
 
-The kodnyckel is not on screen all the time: Avskrubba uses it by itself within the tab. It shows up where it is needed. "Kodnyckel (13)" sits beside Kopiera once the tab has one (in both modes, and also after the result is cleared, so it can still be downloaded). In Avskrubba, a tab without one shows `key.missing` and "Ladda upp kodnyckel" under "Svar från AI"; uploading keeps the pasted answer.
+The kodnyckel is not on screen all the time: Avskrubba uses it by itself within the tab. It shows up where it is needed. The strip "Kodnyckel · 13 platshållare  Visa ›" sits beside Kopiera once the tab has one (in both modes, and also after the result is cleared, so it can still be downloaded). In Avskrubba, a tab without one shows `key.missing` and "Ladda upp kodnyckel" under "Svar från AI"; uploading keeps the pasted answer.
 
 History of texts (in the wireframe) is left out for now: text may only live in memory, and saved cases are out of scope for v1.
 
@@ -34,7 +34,9 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 
 **Highlights.** Overlay behind a transparent textarea so editing keeps working. Each type has a colour **and** a label on hover. Never colour alone.
 
-**Uppgifter window.** The items found are not listed on the page. "13 uppgifter" under the left pane is a link that opens them in a window over the page, like the kodnyckel: title "Uppgifter", "Stäng", Esc closes. One row per unique value (merged across casing and genitive, "Anna" / "Annas"). Columns: toggle dot, value, type, count. Toggle = Skrubba / Behåll. "Skrubba alla" and "Behåll alla" sit under the rows. Clicking a row closes the window, scrolls to the first occurrence and flashes all. Organisations are on by default. Word-list and manual entries show type "Ord". Owner's change, 2026-10-11.
+**Summary strips.** "13 uppgifter" and the kodnyckel are strips, not plain links, so it is clear they open something: a dot per kind found (in the type's strong colour, fixed order Namn, Plats, Organisation, Nummer, Ord), the count, and "Visa ›" in the brand colour. They sit on `yta`, without a border until hover. Not on `lodder`: some strong colours drop under 3:1 there. Owner's change, 2026-10-11.
+
+**Uppgifter window.** The items found are not listed on the page. "13 uppgifter" under the left pane is a summary strip that opens them in a window over the page, like the kodnyckel: title "Uppgifter", "Stäng", Esc closes. One row per unique value (merged across casing and genitive, "Anna" / "Annas"). Columns: toggle dot, value, type, count. Toggle = Skrubba / Behåll. "Skrubba alla" and "Behåll alla" sit under the rows. Clicking a row closes the window, scrolls to the first occurrence and flashes all. Organisations are on by default. Word-list and manual entries show type "Ord". Owner's change, 2026-10-11.
 
 **Manual masking.** Select text → press `M` or the floating "Skrubba markering" button. All occurrences of the selection become one `ORD` entity. Selecting inside a highlight and pressing `B` toggles it to Behåll.
 
@@ -60,7 +62,7 @@ Tolerant matching rules live in `docs/ARCHITECTURE.md`. The tool asks when unsur
 
 ## Kodnyckel window
 
-"Kodnyckel" is the established Swedish word for a list linking codes to real identities; it is not an encryption key, and the explainer (`key.explainer`) at the top of the window says so by example. Opened from "Kodnyckel ({n})" beside Kopiera. A window over the page: title "Kodnyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
+"Kodnyckel" is the established Swedish word for a list linking codes to real identities; it is not an encryption key, and the explainer (`key.explainer`) at the top of the window says so by example. Opened from the kodnyckel strip beside Kopiera. A window over the page: title "Kodnyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
 
 - "Ladda ner kodnyckel" → `skrubba-kodnyckel-YYYY-MM-DD.json` (entities + word list). Line under: "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material."
 - "Ladda upp kodnyckel" → file picker, restores key and word list into memory.

@@ -80,7 +80,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | restore.resultEmpty | Tryck Avskrubba så visas svaret med de riktiga uppgifterna här. |
 | wrongMode.notice | Texten innehåller platshållare som {found}. Är det svaret från AI? |
 | wrongMode.move | Flytta till Avskrubba |
-| key.link | Kodnyckel ({n}) |
+| key.summary | Kodnyckel · {n} platshållare |
+| summary.show | Visa |
 | key.missing | Den här fliken har ingen kodnyckel. Har du sparat en kan du ladda upp den, så byts platshållarna tillbaka. |
 
 ## Att granska
@@ -120,6 +121,11 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 Ändrat 2026-10-11. Listan med uppgifter ligger inte längre under rutan. Antalet under rutan är en länk som öppnar listan i ett fönster, som kodnyckeln.
 
 - `items.title`: rubriken på fönstret med uppgifterna.
+
+Ändrat 2026-10-11, andra omgången. Länkarna "13 uppgifter" och kodnyckeln var för lätta att missa. De är nu en remsa med en prick per sorts uppgift, antalet och "Visa ›".
+
+- `summary.show`: "Visa" till höger i båda remsorna.
+- `key.summary`: ersätter `key.link` ("Kodnyckel ({n})").
 - `panel.count`, `panel.count.one`: samma text som förut, nu som länk utan pil.
 
 ## Typer

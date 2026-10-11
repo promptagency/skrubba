@@ -656,14 +656,50 @@ a {
   gap: var(--space-3);
 }
 
-.card-actions .items-link,
-.card-actions .key-link {
+/* Summary strip: what was found, as type dots and a count, opening a window.
+   On --surface (yta) because the strong mask colours only hold 3:1 on yta and grund. */
+.summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 36px;
   margin-right: auto;
+  padding: 0 var(--space-3);
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--text);
 }
 
-/* Flush with the caveat and Egna ord under it. */
-.items-link {
-  padding-inline: 0;
+.summary:hover {
+  border-color: var(--line-control);
+}
+
+.summary-dots {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.summary-dots:empty {
+  display: none;
+}
+
+.summary-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+}
+
+.summary-label,
+.summary-show {
+  white-space: nowrap;
+}
+
+.summary-show {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 /* Avskrubba in a tab without a kodnyckel. */
@@ -775,6 +811,14 @@ a {
   }
   .run-arrow::after {
     content: "↓";
+  }
+  /* Kopiera spans the width, like the run button, with the kodnyckel strip under it. */
+  .card-actions {
+    flex-wrap: wrap;
+  }
+  .card-actions .primary {
+    order: -1;
+    width: 100%;
   }
   .controls {
     grid-template-columns: minmax(0, 1fr) auto;

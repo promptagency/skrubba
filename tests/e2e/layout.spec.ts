@@ -41,12 +41,12 @@ test("a dropped PDF is refused with a message and nothing changes", async ({ pag
 
 test("the item count stays hidden until there is text; Egna ord is always there", async ({ page }) => {
   await openReady(page);
-  const count = page.getByRole("button", { name: /^\d+ uppgift(er)?$/ });
+  const count = page.getByRole("button", { name: /^\d+ uppgift(er)? Visa$/ });
   await expect(count).toHaveCount(0);
   await expect(page.getByText(/^Egna ord/)).toBeVisible();
 
   await editor(page).fill("Johan Lindqvist ringde.");
-  await expect(count).toHaveAccessibleName("1 uppgift");
+  await expect(count).toHaveAccessibleName("1 uppgift Visa");
 
   await editor(page).fill("");
   await expect(count).toHaveCount(0);

@@ -18,7 +18,7 @@ test("paste, review, keep one, add a word and copy using only the keyboard", asy
   await expect(rows(page).filter({ hasText: "Nordström Fastigheter" })).toContainText("Organisation");
 
   // Review: Tab to the count, open the Uppgifter window, walk down to Karin and keep her.
-  const count = page.getByRole("button", { name: /^\d+ uppgifter$/ });
+  const count = page.getByRole("button", { name: /^\d+ uppgifter Visa$/ });
   for (let i = 0; i < 5 && !(await count.evaluate((el) => el === document.activeElement)); i++)
     await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");

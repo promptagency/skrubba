@@ -6,7 +6,7 @@ import { answerBox, editor, modeButton, openReady, restoredBox, rows, runButton,
 // needed: beside Kopiera once there is one, and in Avskrubba when this tab
 // has none.
 
-const keyLink = (page: Page) => page.getByRole("button", { name: /^Kodnyckel \(\d+\)$/ });
+const keyLink = (page: Page) => page.getByRole("button", { name: /^Kodnyckel · \d+ platshållare Visa$/ });
 const missing = (page: Page) => page.getByText("Den här fliken har ingen kodnyckel.", { exact: false });
 const upload = (page: Page) => page.getByRole("button", { name: "Ladda upp kodnyckel" });
 
@@ -22,7 +22,7 @@ test("there is no kodnyckel at the top; after Skrubba it sits beside Kopiera", a
   await expect(page.getByText("Visar vilka riktiga uppgifter", { exact: false })).toBeHidden(); // only inside the closed window
 
   await scrubJohan(page);
-  await expect(keyLink(page)).toHaveText("Kodnyckel (2)");
+  await expect(keyLink(page)).toHaveAccessibleName("Kodnyckel · 2 platshållare Visa");
   const link = await keyLink(page).boundingBox();
   const copy = await page.getByRole("button", { name: "Kopiera" }).boundingBox();
   expect(Math.abs(link!.y + link!.height / 2 - (copy!.y + copy!.height / 2))).toBeLessThan(4); // same row
@@ -38,7 +38,7 @@ test("the kodnyckel link stays after the result is cleared, so it can still be d
   await scrubJohan(page);
   await editor(page).fill("Något annat.");
   await expect(page.getByRole("button", { name: "Kopiera" })).toHaveCount(0);
-  await expect(keyLink(page)).toHaveText("Kodnyckel (2)");
+  await expect(keyLink(page)).toHaveAccessibleName("Kodnyckel · 2 platshållare Visa");
 });
 
 test("Avskrubba in a tab without a kodnyckel offers to upload one, and keeps the answer", async ({ page, context }) => {
@@ -63,7 +63,7 @@ test("Avskrubba in a tab without a kodnyckel offers to upload one, and keeps the
   await expect(answer).toHaveValue(`Hälsa ${johan}.`);
   await runButton(fresh).click();
   await expect(restoredBox(fresh)).toHaveValue("Hälsa Johan Lindqvist.");
-  await expect(keyLink(fresh)).toHaveText("Kodnyckel (2)");
+  await expect(keyLink(fresh)).toHaveAccessibleName("Kodnyckel · 2 platshållare Visa");
 });
 
 test("a file that is not a kodnyckel is refused with a message", async ({ page }) => {

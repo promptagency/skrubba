@@ -27,7 +27,7 @@ test("Skrubba shows the scrubbed text on the right, then offers Kopiera", async 
   await expect(result(page, "Skrubbad text")).toHaveAttribute("readonly", "");
   await expect(copy(page)).toBeVisible();
   await expect(copy(page)).toBeFocused();
-  await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveText("Kodnyckel (2)");
+  await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveAccessibleName("Kodnyckel · 2 platshållare Visa");
 });
 
 test("changing the text or what is scrubbed clears the result", async ({ page }) => {

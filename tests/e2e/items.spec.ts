@@ -5,7 +5,7 @@ import { editor, openReady, rows } from "./helpers.ts";
 // opens them in a window, like the kodnyckel. Egna ord stays under the pane.
 
 const TEXT = "Johan Lindqvist ringde från Umeå.";
-const countLink = (page: Page) => page.getByRole("button", { name: /^\d+ uppgift(er)?$/ });
+const countLink = (page: Page) => page.getByRole("button", { name: /^\d+ uppgift(er)? Visa$/ });
 const items = (page: Page) => page.getByRole("dialog", { name: "Uppgifter" });
 
 async function withText(page: Page) {
@@ -16,7 +16,7 @@ async function withText(page: Page) {
 
 test("the count under the pane opens the items in a window; no list on the page", async ({ page }) => {
   await withText(page);
-  await expect(countLink(page)).toHaveText("2 uppgifter");
+  await expect(countLink(page)).toHaveAccessibleName("2 uppgifter Visa");
   await expect(countLink(page)).toHaveAttribute("aria-haspopup", "dialog");
   await expect(rows(page).first()).toBeHidden();
   await expect(page.getByRole("button", { name: "Skrubba alla" })).toBeHidden();

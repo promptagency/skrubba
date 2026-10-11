@@ -31,7 +31,7 @@ export async function scrub(page: Page) {
 }
 /** The Uppgifter window, opened from the count under Din text. */
 export async function openItems(page: Page) {
-  await page.getByRole("button", { name: /^\d+ uppgift(er)?$/ }).click();
+  await page.getByRole("button", { name: /^\d+ uppgift(er)? Visa$/ }).click();
   const dialog = page.getByRole("dialog", { name: "Uppgifter" });
   await expect(dialog).toBeVisible();
   return dialog;
