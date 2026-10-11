@@ -11,6 +11,9 @@ export const cacheKey = (path: string, rev: string) => `${path}?__rev=${rev}`;
  */
 export const inOfflineCache = (path: string) => !path.startsWith("/video/");
 
+/** Message the page sends a new build that is still waiting, to make it take over. */
+export const SKIP_WAITING = "skip-waiting";
+
 /** Small files are fetched on install. Packed parts are cached when the app first fetches them. */
 export function precacheList(manifest: SwManifest): string[] {
   return Object.keys(manifest).filter((path) => !/\.gzpart\d+$/.test(path));

@@ -5,7 +5,7 @@
 // is downloaded twice. Entries are keyed by content revision, so a deploy
 // never mixes old and new files, and the previous build's files are kept one
 // more cycle for tabs that still run it.
-import { cacheKey, MANIFEST_KEY, precacheList, type SwManifest, staleKeys } from "./core.ts";
+import { cacheKey, MANIFEST_KEY, precacheList, SKIP_WAITING, type SwManifest, staleKeys } from "./core.ts";
 
 declare const self: ServiceWorkerGlobalScope;
 declare const __SW_MANIFEST__: SwManifest;
@@ -29,6 +29,12 @@ self.addEventListener("install", (event) => {
       await self.skipWaiting();
     })(),
   );
+});
+
+// The page asks again when the skipWaiting() above did not take (see
+// retryWaitingActivation in src/ui/serviceWorker.ts).
+self.addEventListener("message", (event) => {
+  if (event.data === SKIP_WAITING) event.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener("activate", (event) => {

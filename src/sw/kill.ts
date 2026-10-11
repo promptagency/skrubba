@@ -7,10 +7,18 @@
 // the network. The same build's app code does not register a service worker,
 // so nothing comes back until a normal build is deployed again.
 
+import { SKIP_WAITING } from "./core.ts";
+
 declare const self: ServiceWorkerGlobalScope;
 
 self.addEventListener("install", () => {
   void self.skipWaiting();
+});
+
+// Tabs still running a normal build ask again if that handover was dropped
+// (retryWaitingActivation in src/ui/serviceWorker.ts).
+self.addEventListener("message", (event) => {
+  if (event.data === SKIP_WAITING) event.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener("activate", (event) => {
