@@ -126,7 +126,7 @@ export const HOWTO = {
     "Klistra in din text. Skrubba markerar namn, nummer och företag.",
     "Klicka på en markering för att behålla ordet. Det får en ram i stället för färg.",
     "Under rutan ser du vad som hittades. Visa öppnar hela listan.",
-    "Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_1].",
+    "Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_2].",
     "Kopiera texten och klistra in den i valfri AI-tjänst.",
     "Kodnyckeln visar vilken platshållare som står för vad.",
     "Byt till Avskrubba och klistra in svaret från AI.",

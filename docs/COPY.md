@@ -193,7 +193,7 @@ Fönstret med filmen. Stegen är textremsorna i filmen och läses också upp av 
 1. Klistra in din text. Skrubba markerar namn, nummer och företag.
 2. Klicka på en markering för att behålla ordet. Det får en ram i stället för färg.
 3. Under rutan ser du vad som hittades. Visa öppnar hela listan.
-4. Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_1].
+4. Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_2].
 5. Kopiera texten och klistra in den i valfri AI-tjänst.
 6. Kodnyckeln visar vilken platshållare som står för vad.
 7. Byt till Avskrubba och klistra in svaret från AI.

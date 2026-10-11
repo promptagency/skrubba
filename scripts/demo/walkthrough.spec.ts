@@ -87,7 +87,7 @@ test("Skrubba walkthrough", async ({ page }) => {
   await click(page, dialog.getByRole("button", { name: "Stäng" }), 900);
 
   // 4. Skrubba, then Kopiera.
-  await caption(page, "Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_1].", 1200);
+  await caption(page, "Tryck Skrubba. Uppgifterna byts mot platshållare som [NAMN_2].", 1200);
   await click(page, page.locator(".run"), 2800);
   await caption(page, "Kopiera texten och klistra in den i valfri AI-tjänst.", 1200);
   await click(page, page.getByRole("button", { name: "Kopiera" }), 2500);
