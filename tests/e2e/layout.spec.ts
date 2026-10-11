@@ -71,3 +71,11 @@ for (const width of [1280, 390]) {
     if (width > 860) expect(Math.abs(pill.x + pill.width / 2 - width / 2)).toBeLessThan(10);
   });
 }
+
+test("Vanliga frågor looks like a quiet link, not a button", async ({ page }) => {
+  await openReady(page);
+  const faq = page.getByRole("button", { name: "Vanliga frågor" });
+  await expect(faq).toHaveCSS("border-top-style", "none");
+  await expect(faq).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(faq).toHaveCSS("text-decoration-line", "underline");
+});

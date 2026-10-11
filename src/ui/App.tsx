@@ -248,7 +248,7 @@ export function App() {
             </button>
           ))}
         </div>
-        <button type="button" className="faq-button" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
+        <button type="button" className="link faq-button" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
           {t("faq.open")}
         </button>
       </div>
