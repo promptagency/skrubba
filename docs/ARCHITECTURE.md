@@ -82,13 +82,13 @@ export interface Masker {
   applyMask(text: string, entities: Entity[]): { masked: string; key: Key };
   restore(text: string, key: Key, accepted?: ReadonlySet<string>): RestoreResult;
   loadKey(key: Key): void;   // uploaded key: placeholders reused, numbering continues after them
-  reset(): void;             // Rensa allt
+  reset(): void;             // Rensa allt, and Ny text in Skrubba
 }
 ```
 
 ## Placeholder numbering
 
-Numbering is assigned once per session per unique value and never reused. If the user edits the text and an entity disappears, its number is retired, not recycled. This keeps the key stable across edits.
+Numbering is assigned once per session per unique value and never reused. A session ends with Rensa allt, a key upload, or Ny text in Skrubba; numbering then starts again at `_1`. If the user edits the text and an entity disappears, its number is retired, not recycled. This keeps the key stable across edits.
 
 ## Merging rules and model
 

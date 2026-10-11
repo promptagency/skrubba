@@ -384,6 +384,10 @@ export function App() {
               type="button"
               className="link new-text"
               onClick={() => {
+                if (mode === "scrub") {
+                  if (state.keyEntries.length > 0 && !window.confirm(t("action.newTextConfirm"))) return;
+                  masker.reset();
+                }
                 dispatch({ type: "newText", mode });
                 setTimeout(() => (mode === "scrub" ? editor.current : answerPane.current)?.focus());
               }}

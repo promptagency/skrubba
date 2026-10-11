@@ -67,6 +67,8 @@ export const COPY = {
   "pane.restoreOut": "Avskrubbad text",
   "action.scrub": "Skrubba",
   "action.newText": "Ny text",
+  "action.newTextConfirm":
+    "Den nya texten får en ny kodnyckel. Svar på den förra texten går då inte att byta tillbaka, om du inte har laddat ner kodnyckeln. Vill du fortsätta?",
   "scrub.resultEmpty": "Tryck Skrubba så visas texten med platshållare här.",
   "restore.resultEmpty": "Tryck Avskrubba så visas svaret med de riktiga uppgifterna här.",
   "wrongMode.notice": "Texten innehåller platshållare som {found}. Är det svaret från AI?",

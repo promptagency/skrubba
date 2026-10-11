@@ -69,17 +69,19 @@ describe("Ny text", () => {
     return reduce(s, { type: "model", model: { status: "ready" } });
   };
 
-  it("in Skrubba clears the text, its result and its choices, and keeps Egna ord, the kodnyckel and the AI answer", () => {
+  it("in Skrubba starts over with a new kodnyckel and keeps only Egna ord", () => {
     const s = reduce(scrubbedSession(), { type: "newText", mode: "scrub" });
     expect(s.text).toBe("");
     expect(s.scrubbed).toBeNull();
     expect(s.entities).toEqual([]);
     expect(s.manual).toEqual([]);
     expect(s.kept.size).toBe(0);
+    expect(s.keyEntries).toEqual([]);
+    expect(s.keyCreatedAt).toBeNull();
+    expect(s.keyDownloaded).toBe(true);
+    // The answer belongs to the old key, which is gone.
+    expect(s.answer).toBe("");
     expect(s.wordListRaw).toBe("Havsvind");
-    expect(s.keyEntries).toEqual([anna]);
-    expect(s.keyDownloaded).toBe(false);
-    expect(s.answer).toBe("Hej [NAMN_1]");
     expect(s.model).toEqual({ status: "ready" });
   });
 

@@ -151,10 +151,10 @@ function reduce(state: SessionState, action: SessionAction): SessionState {
     case "clearAll":
       return { ...initialSession, model: state.model };
     case "newText":
-      // Egna ord and the kodnyckel stay: the words are reused across texts, and
-      // the key is still needed for answers to texts scrubbed earlier.
+      // In Skrubba a new text gets a new kodnyckel, so one key never mixes
+      // unrelated texts. Only Egna ord stay: they are reused across texts.
       return action.mode === "scrub"
-        ? { ...state, text: "", entities: [], entitiesText: "", manual: [], kept: new Set(), scrubbed: null }
+        ? { ...initialSession, model: state.model, wordListRaw: state.wordListRaw }
         : { ...state, answer: "", restore: null };
     case "setAnswer":
       return action.text === state.answer ? state : { ...state, answer: action.text, restore: null };

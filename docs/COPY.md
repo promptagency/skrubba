@@ -80,6 +80,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | pane.restoreOut | Avskrubbad text |
 | action.scrub | Skrubba |
 | action.newText | Ny text |
+| action.newTextConfirm | Den nya texten får en ny kodnyckel. Svar på den förra texten går då inte att byta tillbaka, om du inte har laddat ner kodnyckeln. Vill du fortsätta? |
 | scrub.resultEmpty | Tryck Skrubba så visas texten med platshållare här. |
 | restore.resultEmpty | Tryck Avskrubba så visas svaret med de riktiga uppgifterna här. |
 | wrongMode.notice | Texten innehåller platshållare som {found}. Är det svaret från AI? |
@@ -143,9 +144,10 @@ Nytt 2026-10-11. Länken "Så här funkar det" efter Vanliga frågor öppnar en 
 - Stegen under "Så här funkar det" är textremsorna i filmen. Ändras de måste filmen spelas in igen.
 - `panel.count`, `panel.count.one`: samma text som förut, nu som länk utan pil.
 
-Nytt 2026-10-11. Länken "Ny text" under knappen mellan rutorna börjar om med en ny text. Den tömmer rutorna men behåller egna ord och kodnyckeln, så att svar på tidigare texter fortfarande kan avskrubbas. Ingen fråga först, eftersom inget går förlorat. "Rensa allt" i kodnyckeln tar fortfarande bort allt.
+Nytt 2026-10-11. Länken "Ny text" under knappen mellan rutorna börjar om med en ny text. I Skrubba får den nya texten en ny kodnyckel, så att en kodnyckel aldrig blandar texter som inte hör ihop. Egna ord finns kvar. Finns det redan en kodnyckel frågar Skrubba först. I Avskrubba tömmer länken bara svaret, så att nästa svar kan bytas tillbaka med samma kodnyckel. "Rensa allt" i kodnyckeln tar fortfarande bort allt, även egna ord.
 
 - `action.newText`: länken.
+- `action.newTextConfirm`: frågan innan kodnyckeln töms. Knapparna är webbläsarens egna (OK och Avbryt), som för "Rensa allt".
 
 ## Typer
 

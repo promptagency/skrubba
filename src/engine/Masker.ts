@@ -124,7 +124,7 @@ export interface Masker {
   applyMask(text: string, entities: Entity[], wordList: string[]): { masked: string; key: Key };
   /** Start over from an uploaded key: its placeholders are reused, new ones numbered after them. */
   loadKey(key: Key): void;
-  /** Forget all numbering (Rensa allt). */
+  /** Forget all numbering (Rensa allt, and Ny text in Skrubba). */
   reset(): void;
   /** `accepted` lists `found` strings of suggestions the user confirmed. */
   restore(text: string, key: Key, accepted?: ReadonlySet<string>): RestoreResult;
