@@ -57,3 +57,15 @@ File upload (docx/pdf; dropping a plain `.txt` or `.md` file is in), history of 
 ## When unsure
 
 Add a note under "Open questions" in `PLAN.md` rather than guessing on anything that touches privacy, copy or restore logic.
+
+## Design
+
+- The visual identity is defined in `design/DESIGN.md`. Read it before any change to the interface.
+- Colours, fonts, spacing and radii come from `design/tokens.css`. Never write a hex value, an `rgb()` value or a font name in component CSS. Use the variables.
+- Both themes must work. Check every interface change in light and in dark.
+- Masking colours follow `typeGroup()` in `src/ui/copy.ts`. Fill is `--mask-<group>`, outline on a kept item and the list dot are `--mask-<group>-stark`. Colour is never the only cue, the type name is always shown in text.
+- The logo files in `design/logo/` are used as they are. Never retype, recolour or redraw the logo.
+- `design/reference/` is illustration, not source. The copy and the key format shown there are placeholders.
+- Fonts are served from the repo. Never add a font CDN or any other third-party request for styling.
+- If a design decision is not covered by `DESIGN.md`, ask instead of inventing one.
+

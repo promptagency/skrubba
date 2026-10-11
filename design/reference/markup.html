@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skrubba reference markup</title>
+    <!-- REFERENCE ONLY. Rendered markup of the example components. Open in a browser to see them.
+     Add data-theme="mork" on <html> for the dark theme. Copy and the key are placeholders. -->
+    <link rel="stylesheet" href="../fonts.css" />
+    <link rel="stylesheet" href="../tokens.css" />
+    <link rel="stylesheet" href="components.css" />
+    <style>
+      section {
+        max-width: 760px;
+        margin: 0 auto;
+        border-bottom: 1px solid var(--kant);
+        padding-bottom: var(--space-4);
+      }
+      .ref-h {
+        margin: 0;
+        padding: var(--space-6) var(--space-4) 0;
+        font: 600 14px/20px var(--font-text);
+        color: var(--text-dampad);
+      }
+      .ref-h small {
+        font-weight: 400;
+      }
+      /* Layout used only by these examples */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) .vy .logo-positiv {
+          display: none;
+        }
+        :root:not([data-theme]) .vy .logo-negativ {
+          display: block;
+        }
+      }
+      /* Mask chip */
+      .prov {
+        max-width: 620px;
+      }
+      .prov p {
+        margin: 0;
+      }
+      .prov .rubrik {
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--text-dampad);
+      }
+      .prov .stycke {
+        line-height: 30px;
+      }
+      /* Mask dot */
+      .lista {
+        list-style: none;
+        margin: 0;
+        padding: var(--space-4);
+        max-width: 420px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+      .lista li {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+      .lista .antal {
+        margin-left: auto;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--text-dampad);
+      }
+      /* Masking view */
+      .vy {
+        box-sizing: border-box;
+        max-width: 640px;
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-4) var(--space-12);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+      }
+      .vy h1,
+      .vy p {
+        margin: 0;
+      }
+      .vy .topp {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        padding-top: var(--space-6);
+      }
+      .vy .ingress {
+        color: var(--text-dampad);
+      }
+      .vy .logo-positiv {
+        display: block;
+      }
+      .vy .logo-negativ {
+        display: none;
+      }
+      [data-theme="mork"] .vy .logo-positiv {
+        display: none;
+      }
+      [data-theme="mork"] .vy .logo-negativ {
+        display: block;
+      }
+      .vy .handling {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h2 class="ref-h">Button <small>Knapp</small></h2>
+      <div>
+        <div class="sk-rad">
+          <button type="button" class="sk-knapp sk-knapp-primar sk-knapp-m">Maskera texten</button
+          ><button type="button" class="sk-knapp sk-knapp-sekundar sk-knapp-m">Kopiera resultatet</button
+          ><button type="button" class="sk-knapp sk-knapp-tyst sk-knapp-m">Rensa</button
+          ><button disabled="" type="button" class="sk-knapp sk-knapp-primar sk-knapp-m">Maskera texten</button>
+        </div>
+        <div class="sk-rad" style="padding-top: 0px">
+          <button type="button" class="sk-knapp sk-knapp-primar sk-knapp-s">Maskera</button
+          ><button type="button" class="sk-knapp sk-knapp-sekundar sk-knapp-s">Kopiera</button>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Text field <small>Textfalt</small></h2>
+      <div class="sk-stapel" style="max-width: 560px">
+        <div class="sk-falt">
+          <label class="sk-falt-etikett" for=":r0:">Din text</label
+          ><textarea
+            placeholder="Klistra in texten här"
+            id=":r0:"
+            class="sk-falt-kontroll"
+            aria-describedby=":r0:-under"
+            rows="4"
+          ></textarea>
+          <p class="sk-falt-hjalp" id=":r0:-under">Namn, adresser och andra personuppgifter byts ut.</p>
+        </div>
+        <div class="sk-falt sk-falt-mono">
+          <label class="sk-falt-etikett" for=":r1:">Nyckel</label
+          ><input id=":r1:" class="sk-falt-kontroll" type="text" value="skr-7f3a-91c2-e04b-55d8" />
+        </div>
+        <div class="sk-falt sk-falt-fel sk-falt-mono">
+          <label class="sk-falt-etikett" for=":r2:">Nyckel</label
+          ><input id=":r2:" class="sk-falt-kontroll" aria-describedby=":r2:-under" aria-invalid="true" type="text" value="skr-7f3a" />
+          <p class="sk-falt-felrad" id=":r2:-under" role="alert">Fel: Nyckeln är för kort. Klistra in hela nyckeln.</p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Segmented switch <small>Vaxel</small></h2>
+      <div class="sk-rad">
+        <fieldset class="sk-vaxel" aria-label="Läge">
+          <label class="sk-vaxel-val"><input type="radio" name=":r0:" value="maskera" checked="" /><span>Maskera</span></label
+          ><label class="sk-vaxel-val"><input type="radio" name=":r0:" value="aterstall" /><span>Återställ</span></label>
+        </fieldset>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Mask chip <small>Maskbricka</small></h2>
+      <div class="sk-stapel prov">
+        <p class="rubrik">Markering före maskering</p>
+        <p class="stycke">
+          Hej, jag heter <span class="sk-bricka sk-bricka-namn sk-bricka-markering">Anna Lind</span> och arbetar på
+          <span class="sk-bricka sk-bricka-organisation sk-bricka-markering">Lindbergs Bygg AB</span> i
+          <span class="sk-bricka sk-bricka-plats sk-bricka-markering">Alingsås</span>. Ring
+          <span class="sk-bricka sk-bricka-nummer sk-bricka-markering">070-123 45 67</span> om
+          <span class="sk-bricka sk-bricka-ord sk-bricka-markering">projekt Norrsken</span>.
+        </p>
+        <p class="rubrik">Platshållare efter maskering</p>
+        <p class="stycke">
+          Hej, jag heter <span class="sk-bricka sk-bricka-namn">[NAMN_1]</span> och arbetar på
+          <span class="sk-bricka sk-bricka-organisation">[ORGANISATION_1]</span> i <span class="sk-bricka sk-bricka-plats">[PLATS_1]</span>.
+          Ring <span class="sk-bricka sk-bricka-nummer">[TELEFON_1]</span> om <span class="sk-bricka sk-bricka-ord">[ORD_1]</span>.
+        </p>
+        <p class="rubrik">Uppgifter som behålls</p>
+        <p class="stycke">
+          Hej, jag heter <span class="sk-bricka sk-bricka-namn sk-bricka-markering sk-bricka-behallen">Anna Lind</span> och arbetar på
+          <span class="sk-bricka sk-bricka-organisation sk-bricka-markering sk-bricka-behallen">Lindbergs Bygg AB</span> i
+          <span class="sk-bricka sk-bricka-plats sk-bricka-markering sk-bricka-behallen">Alingsås</span>. Ring
+          <span class="sk-bricka sk-bricka-nummer sk-bricka-markering sk-bricka-behallen">070-123 45 67</span> om
+          <span class="sk-bricka sk-bricka-ord sk-bricka-markering sk-bricka-behallen">projekt Norrsken</span>.
+        </p>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Mask dot <small>Maskprick</small></h2>
+      <div>
+        <ul class="lista">
+          <li><span class="sk-prick sk-prick-namn" aria-hidden="true"></span><span>Namn</span><span class="antal">2 träffar</span></li>
+          <li><span class="sk-prick sk-prick-plats" aria-hidden="true"></span><span>Adress</span><span class="antal">1 träff</span></li>
+          <li>
+            <span class="sk-prick sk-prick-organisation" aria-hidden="true"></span><span>Organisation</span
+            ><span class="antal">1 träff</span>
+          </li>
+          <li><span class="sk-prick sk-prick-nummer" aria-hidden="true"></span><span>Telefon</span><span class="antal">1 träff</span></li>
+          <li><span class="sk-prick sk-prick-nummer" aria-hidden="true"></span><span>E-post</span><span class="antal">1 träff</span></li>
+          <li><span class="sk-prick sk-prick-ord" aria-hidden="true"></span><span>Ord</span><span class="antal">3 träffar</span></li>
+        </ul>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Key box <small>Nyckelruta</small></h2>
+      <div class="sk-stapel" style="max-width: 560px">
+        <div class="sk-nyckel">
+          <p class="sk-nyckel-etikett">Din nyckel</p>
+          <p class="sk-nyckel-varde">skr-7f3a-91c2-e04b-55d8-a6b1-0c9e-42f7</p>
+          <div class="sk-nyckel-rad">
+            <button type="button" class="sk-knapp sk-knapp-sekundar sk-knapp-s">Kopiera nyckeln</button
+            ><span class="sk-nyckel-status" role="status"></span>
+          </div>
+          <p class="sk-nyckel-hjalp">Spara nyckeln. Du behöver den för att få tillbaka uppgifterna.</p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Notice <small>Notis</small></h2>
+      <div class="sk-stapel" style="max-width: 560px">
+        <div class="sk-notis sk-notis-info" role="status">
+          <p class="sk-notis-rubrik">Bra att veta</p>
+          <p class="sk-notis-text">Långa texter kan ta en liten stund att gå igenom.</p>
+        </div>
+        <div class="sk-notis sk-notis-klart" role="status">
+          <p class="sk-notis-rubrik">Klart</p>
+          <p class="sk-notis-text">Fyra uppgifter är maskerade. Kopiera texten och spara nyckeln.</p>
+        </div>
+        <div class="sk-notis sk-notis-fel" role="alert">
+          <p class="sk-notis-rubrik">Något gick fel</p>
+          <p class="sk-notis-text">Nyckeln passar inte den här texten. Kontrollera att du har klistrat in rätt nyckel.</p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Card <small>Kort</small></h2>
+      <div class="sk-stapel" style="max-width: 560px">
+        <section class="sk-kort">
+          <h3 class="sk-kort-rubrik">Maskerad text</h3>
+          <p style="margin: 0px">
+            Hej, jag heter <span class="sk-bricka sk-bricka-namn">[NAMN_1]</span> och vill ha hjälp att formulera ett svar till
+            <span class="sk-bricka sk-bricka-namn">[NAMN_2]</span>.
+          </p>
+        </section>
+      </div>
+    </section>
+    <section>
+      <h2 class="ref-h">Masking view <small>Maskeringsvy</small></h2>
+      <div>
+        <main class="vy">
+          <div>
+            <img class="logo-positiv" src="../logo/skrubba-logotyp-positiv.svg" width="160" height="33" alt="Skrubba" /><img
+              class="logo-negativ"
+              src="../logo/skrubba-logotyp-negativ.svg"
+              width="160"
+              height="33"
+              alt="Skrubba"
+            />
+          </div>
+          <div class="topp">
+            <h1 class="rubrik-l">Skrubba texten ren</h1>
+            <p class="ingress">Gör personuppgifter anonyma innan texten klistras in i en AI.</p>
+          </div>
+          <fieldset class="sk-vaxel" aria-label="Läge">
+            <label class="sk-vaxel-val"><input type="radio" name=":r0:" value="maskera" checked="" /><span>Maskera</span></label
+            ><label class="sk-vaxel-val"><input type="radio" name=":r0:" value="aterstall" /><span>Återställ</span></label>
+          </fieldset>
+          <div class="sk-falt">
+            <label class="sk-falt-etikett" for=":r1:">Din text</label
+            ><textarea id=":r1:" class="sk-falt-kontroll" rows="5">
+Hej, jag heter Anna Lind och vill ha hjälp att formulera ett svar till Karl Berg på Storgatan 12 i Alingsås.</textarea
+            >
+          </div>
+          <div class="handling">
+            <button type="button" class="sk-knapp sk-knapp-primar sk-knapp-m">Maskera texten</button
+            ><button type="button" class="sk-knapp sk-knapp-tyst sk-knapp-m">Rensa</button>
+          </div>
+          <div class="sk-notis sk-notis-klart" role="status">
+            <p class="sk-notis-rubrik">Klart</p>
+            <p class="sk-notis-text">Fyra uppgifter är maskerade. Kopiera texten och spara nyckeln.</p>
+          </div>
+          <section class="sk-kort">
+            <h3 class="sk-kort-rubrik">Maskerad text</h3>
+            <p style="margin: 0px 0px 16px">
+              Hej, jag heter <span class="sk-bricka sk-bricka-namn">[NAMN_1]</span> och vill ha hjälp att formulera ett svar till
+              <span class="sk-bricka sk-bricka-namn">[NAMN_2]</span> på <span class="sk-bricka sk-bricka-plats">[ADRESS_1]</span> i
+              <span class="sk-bricka sk-bricka-plats">[PLATS_1]</span>.
+            </p>
+            <button type="button" class="sk-knapp sk-knapp-sekundar sk-knapp-m">Kopiera texten</button>
+          </section>
+          <div class="sk-nyckel">
+            <p class="sk-nyckel-etikett">Din nyckel</p>
+            <p class="sk-nyckel-varde">skr-7f3a-91c2-e04b-55d8-a6b1-0c9e-42f7</p>
+            <div class="sk-nyckel-rad">
+              <button type="button" class="sk-knapp sk-knapp-sekundar sk-knapp-s">Kopiera nyckeln</button
+              ><span class="sk-nyckel-status" role="status"></span>
+            </div>
+            <p class="sk-nyckel-hjalp">Spara nyckeln. Du behöver den för att få tillbaka uppgifterna.</p>
+          </div>
+        </main>
+      </div>
+    </section>
+  </body>
+</html>

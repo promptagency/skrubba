@@ -1,0 +1,4 @@
+/* Skrubba fonts, served from the repo. Never load them from a font CDN. All three are SIL OFL 1.1, see fonts/. */
+@font-face { font-family: "Fraunces"; src: url("./fonts/Fraunces-latin-variable.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Figtree"; src: url("./fonts/Figtree-latin-variable.woff2") format("woff2"); font-weight: 300 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("./fonts/JetBrainsMono-latin-variable.woff2") format("woff2"); font-weight: 100 800; font-style: normal; font-display: swap; }

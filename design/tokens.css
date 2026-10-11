@@ -1,0 +1,116 @@
+/* Skrubba design tokens. Generated from the Skrubba design system (tokens v5, 2026-10-11).
+   Do not edit values here by hand. Change the design system first, then regenerate.
+   Rules for how to use each token are in DESIGN.md. */
+
+/* Light theme ("positiv"): cream ground, soap-green brand. */
+:root,
+[data-theme="ljus"] {
+  --grund: #F3EBD6; /* page background */
+  --yta: #FBF7EC; /* raised surface: cards, fields, dialogs */
+  --yta-sankt: #E8DEC3; /* sunken surface: code, footer, disabled fields */
+  --text: #16261D; /* body text and headings */
+  --text-dampad: #4F5B4E; /* secondary text, help text */
+  --sapa: #1E4A35; /* brand colour: logo, primary button fill, links */
+  --pa-sapa: #F3EBD6; /* text on a --sapa fill */
+  --lodder: #CFE0C6; /* selected rows and states, masked item with no group */
+
+  --mask-namn: #F4CD97; /* Name: fill behind the item */
+  --mask-namn-stark: #AA742B; /* Name: outline on a kept item, list dot */
+  --mask-plats: #99E7C9; /* Place: fill behind the item */
+  --mask-plats-stark: #099086; /* Place: outline on a kept item, list dot */
+  --mask-organisation: #98C1F4; /* Organisation: fill behind the item */
+  --mask-organisation-stark: #5F73CA; /* Organisation: outline on a kept item, list dot */
+  --mask-nummer: #DDAFBC; /* Numbers and identifiers: fill behind the item */
+  --mask-nummer-stark: #8F344B; /* Numbers and identifiers: outline on a kept item, list dot */
+  --mask-ord: #E4DAFF; /* Your own words: fill behind the item */
+  --mask-ord-stark: #533E90; /* Your own words: outline on a kept item, list dot */
+
+  --kant: #D6CCAE; /* decorative dividers, card borders (carries no meaning) */
+  --kant-kontroll: #7A8268; /* borders on inputs and controls (3:1) */
+  --diskhandske: #FFD43B; /* accent fill, at most one per view */
+  --pa-diskhandske: #17140F; /* text on a --diskhandske fill */
+  --falurod: #8E2B1D; /* error text, always with words */
+  --fokus: #1E4A35; /* focus ring, 2px solid, 2px offset */
+}
+
+/* Dark theme ("negativ"): soap-green ground, cream brand.
+   Wire this block to the theme switch the app already has. Do not add a second mechanism. */
+[data-theme="mork"] {
+  --grund: #1E4A35; /* page background */
+  --yta: #173B2A; /* raised surface: cards, fields, dialogs */
+  --yta-sankt: #122F22; /* sunken surface: code, footer, disabled fields */
+  --text: #F3EBD6; /* body text and headings */
+  --text-dampad: #C3CCB3; /* secondary text, help text */
+  --sapa: #F3EBD6; /* brand colour: logo, primary button fill, links */
+  --pa-sapa: #1E4A35; /* text on a --sapa fill */
+  --lodder: #2F6549; /* selected rows and states, masked item with no group */
+
+  --mask-namn: #7E613A; /* Name: fill behind the item */
+  --mask-namn-stark: #F7BD7C; /* Name: outline on a kept item, list dot */
+  --mask-plats: #1C756E; /* Place: fill behind the item */
+  --mask-plats-stark: #91F5D4; /* Place: outline on a kept item, list dot */
+  --mask-organisation: #4469A9; /* Organisation: fill behind the item */
+  --mask-organisation-stark: #6DA5E1; /* Organisation: outline on a kept item, list dot */
+  --mask-nummer: #853644; /* Numbers and identifiers: fill behind the item */
+  --mask-nummer-stark: #D88291; /* Numbers and identifiers: outline on a kept item, list dot */
+  --mask-ord: #634183; /* Your own words: fill behind the item */
+  --mask-ord-stark: #D3B8FE; /* Your own words: outline on a kept item, list dot */
+
+  --kant: #33604A; /* decorative dividers, card borders (carries no meaning) */
+  --kant-kontroll: #8FAE94; /* borders on inputs and controls (3:1) */
+  --diskhandske: #FFD43B; /* accent fill, at most one per view */
+  --pa-diskhandske: #17140F; /* text on a --diskhandske fill */
+  --falurod: #FFB4A2; /* error text, always with words */
+  --fokus: #FFD43B; /* focus ring, 2px solid, 2px offset */
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --grund: #1E4A35; /* page background */
+    --yta: #173B2A; /* raised surface: cards, fields, dialogs */
+    --yta-sankt: #122F22; /* sunken surface: code, footer, disabled fields */
+    --text: #F3EBD6; /* body text and headings */
+    --text-dampad: #C3CCB3; /* secondary text, help text */
+    --sapa: #F3EBD6; /* brand colour: logo, primary button fill, links */
+    --pa-sapa: #1E4A35; /* text on a --sapa fill */
+    --lodder: #2F6549; /* selected rows and states, masked item with no group */
+
+    --mask-namn: #7E613A; /* Name: fill behind the item */
+    --mask-namn-stark: #F7BD7C; /* Name: outline on a kept item, list dot */
+    --mask-plats: #1C756E; /* Place: fill behind the item */
+    --mask-plats-stark: #91F5D4; /* Place: outline on a kept item, list dot */
+    --mask-organisation: #4469A9; /* Organisation: fill behind the item */
+    --mask-organisation-stark: #6DA5E1; /* Organisation: outline on a kept item, list dot */
+    --mask-nummer: #853644; /* Numbers and identifiers: fill behind the item */
+    --mask-nummer-stark: #D88291; /* Numbers and identifiers: outline on a kept item, list dot */
+    --mask-ord: #634183; /* Your own words: fill behind the item */
+    --mask-ord-stark: #D3B8FE; /* Your own words: outline on a kept item, list dot */
+
+    --kant: #33604A; /* decorative dividers, card borders (carries no meaning) */
+    --kant-kontroll: #8FAE94; /* borders on inputs and controls (3:1) */
+    --diskhandske: #FFD43B; /* accent fill, at most one per view */
+    --pa-diskhandske: #17140F; /* text on a --diskhandske fill */
+    --falurod: #FFB4A2; /* error text, always with words */
+    --fokus: #FFD43B; /* focus ring, 2px solid, 2px offset */
+  }
+}
+
+/* Same in both themes. */
+:root {
+  --font-display: Fraunces, Georgia, serif;
+  --font-text: Figtree, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+}

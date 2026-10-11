@@ -1,0 +1,100 @@
+/* REFERENCE ONLY. Styles for the example components in the Skrubba design system.
+   Shows how the tokens are meant to be combined. Do not import this file in the app;
+   restyle the app's own components to match instead. Class names are Swedish:
+   knapp = button, falt = field, vaxel = segmented switch, bricka = mask chip, prick = dot,
+   nyckel = key box, notis = notice, kort = card. */
+body { margin: 0; font-family: var(--font-text); font-size: 16px; line-height: 26px; background: var(--grund); color: var(--text); }
+
+/* Type styles, see the table in DESIGN.md */
+.rubrik-xl { font-family: var(--font-display); font-size: 56px; line-height: 60px; font-weight: 900; letter-spacing: -0.01em; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 0; }
+.rubrik-l { font-family: var(--font-display); font-size: 40px; line-height: 46px; font-weight: 900; font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 0; }
+.rubrik-m { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 700; font-variation-settings: "opsz" 72, "SOFT" 100, "WONK" 0; }
+.rubrik-s { font-family: var(--font-display); font-size: 20px; line-height: 26px; font-weight: 700; font-variation-settings: "opsz" 36, "SOFT" 100, "WONK" 0; }
+.ingress { font-family: var(--font-text); font-size: 20px; line-height: 30px; font-weight: 400; }
+.brod { font-family: var(--font-text); font-size: 16px; line-height: 26px; font-weight: 400; }
+.brod-stark { font-family: var(--font-text); font-size: 16px; line-height: 26px; font-weight: 600; }
+.liten { font-family: var(--font-text); font-size: 14px; line-height: 20px; font-weight: 400; }
+.etikett { font-family: var(--font-text); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.04em; }
+.mask { font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 500; }
+
+/* Hjälpklasser för uppställning */
+.sk-rad { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-4); }
+.sk-stapel { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-4); }
+
+/* Knapp */
+.sk-knapp { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-6); border: 2px solid transparent; border-radius: var(--radius-md); font-family: var(--font-text); font-size: 16px; line-height: 26px; font-weight: 600; cursor: pointer; text-decoration: none; }
+.sk-knapp-s { min-height: 36px; padding: 0 var(--space-4); font-size: 14px; line-height: 20px; }
+.sk-knapp-primar { background: var(--sapa); border-color: var(--sapa); color: var(--pa-sapa); }
+.sk-knapp-sekundar { background: transparent; border-color: var(--kant-kontroll); color: var(--text); }
+.sk-knapp-tyst { background: transparent; color: var(--sapa); padding-left: var(--space-2); padding-right: var(--space-2); text-decoration: underline; text-underline-offset: 3px; }
+.sk-knapp-primar:hover:not(:disabled) { filter: brightness(0.9); }
+.sk-knapp-sekundar:hover:not(:disabled) { background: var(--yta-sankt); border-color: var(--text); }
+.sk-knapp-tyst:hover:not(:disabled) { text-decoration-thickness: 2px; }
+.sk-knapp:focus-visible { outline: 2px solid var(--fokus); outline-offset: 2px; }
+.sk-knapp:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Textfält */
+.sk-falt { display: flex; flex-direction: column; gap: var(--space-2); }
+.sk-falt-etikett { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--text); }
+.sk-falt-kontroll { box-sizing: border-box; width: 100%; padding: var(--space-3) var(--space-4); border: 1.5px solid var(--kant-kontroll); border-radius: var(--radius-md); background: var(--yta); color: var(--text); font-family: var(--font-text); font-size: 16px; line-height: 26px; }
+textarea.sk-falt-kontroll { resize: vertical; min-height: 96px; }
+.sk-falt-mono .sk-falt-kontroll { font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 500; }
+.sk-falt-kontroll::placeholder { color: var(--text-dampad); opacity: 1; }
+.sk-falt-kontroll:focus-visible { outline: 2px solid var(--fokus); outline-offset: 2px; }
+.sk-falt-kontroll:disabled { background: var(--yta-sankt); cursor: not-allowed; }
+.sk-falt-hjalp { margin: 0; font-size: 14px; line-height: 20px; color: var(--text-dampad); }
+.sk-falt-fel .sk-falt-kontroll { border-color: var(--falurod); border-width: 2px; }
+.sk-falt-felrad { margin: 0; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--falurod); }
+
+/* Växel */
+.sk-vaxel { display: inline-flex; width: fit-content; align-self: flex-start; margin: 0; padding: var(--space-1); border: 0; border-radius: var(--radius-md); background: var(--yta-sankt); gap: var(--space-1); }
+.sk-vaxel-val { position: relative; display: inline-flex; }
+.sk-vaxel-val input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.sk-vaxel-val span { display: inline-flex; align-items: center; min-height: 36px; padding: 0 var(--space-4); border: 1.5px solid transparent; border-radius: var(--radius-sm); font-size: 16px; line-height: 26px; color: var(--text-dampad); }
+.sk-vaxel-val input:checked + span { background: var(--yta); border-color: var(--kant-kontroll); color: var(--text); font-weight: 600; }
+.sk-vaxel-val input:focus-visible + span { outline: 2px solid var(--fokus); outline-offset: 2px; }
+
+/* Maskbricka */
+.sk-bricka { display: inline-block; padding: 0 6px; border-radius: var(--radius-sm); background: var(--lodder); color: var(--text); font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 500; white-space: nowrap; }
+
+.sk-bricka-markering { font-family: inherit; font-size: inherit; line-height: inherit; font-weight: inherit; white-space: normal; padding: 1px 4px; }
+.sk-bricka-namn { background: var(--mask-namn); }
+.sk-bricka-plats { background: var(--mask-plats); }
+.sk-bricka-organisation { background: var(--mask-organisation); }
+.sk-bricka-nummer { background: var(--mask-nummer); }
+.sk-bricka-ord { background: var(--mask-ord); }
+.sk-bricka-behallen { background: transparent; outline: 2px solid var(--kant-kontroll); outline-offset: 1px; margin: 0 3px; }
+.sk-bricka-behallen.sk-bricka-namn { outline-color: var(--mask-namn-stark); }
+.sk-bricka-behallen.sk-bricka-plats { outline-color: var(--mask-plats-stark); }
+.sk-bricka-behallen.sk-bricka-organisation { outline-color: var(--mask-organisation-stark); }
+.sk-bricka-behallen.sk-bricka-nummer { outline-color: var(--mask-nummer-stark); }
+.sk-bricka-behallen.sk-bricka-ord { outline-color: var(--mask-ord-stark); }
+
+/* Maskprick */
+.sk-prick { display: inline-block; flex: none; width: 10px; height: 10px; border-radius: var(--radius-full); background: var(--kant-kontroll); }
+.sk-prick-namn { background: var(--mask-namn-stark); }
+.sk-prick-plats { background: var(--mask-plats-stark); }
+.sk-prick-organisation { background: var(--mask-organisation-stark); }
+.sk-prick-nummer { background: var(--mask-nummer-stark); }
+.sk-prick-ord { background: var(--mask-ord-stark); }
+
+/* Nyckelruta */
+.sk-nyckel { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); border: 1px solid var(--kant); border-radius: var(--radius-lg); background: var(--yta-sankt); }
+.sk-nyckel-etikett { margin: 0; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-dampad); }
+.sk-nyckel-varde { margin: 0; font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 500; color: var(--text); overflow-wrap: anywhere; }
+.sk-nyckel-rad { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.sk-nyckel-status { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--text); }
+.sk-nyckel-hjalp { margin: 0; font-size: 14px; line-height: 20px; color: var(--text-dampad); }
+
+/* Notis */
+.sk-notis { padding: var(--space-4) var(--space-6); border: 1.5px solid var(--kant-kontroll); border-radius: var(--radius-lg); background: var(--yta); color: var(--text); }
+.sk-notis-klart { border-color: var(--sapa); }
+.sk-notis-fel { border-color: var(--falurod); border-width: 2px; }
+.sk-notis-rubrik { margin: 0; font-size: 16px; line-height: 26px; font-weight: 600; }
+.sk-notis-fel .sk-notis-rubrik { color: var(--falurod); }
+.sk-notis-text { margin: 0; font-size: 16px; line-height: 26px; }
+
+/* Kort */
+.sk-kort { padding: var(--space-6); border: 1px solid var(--kant); border-radius: var(--radius-lg); background: var(--yta); color: var(--text); }
+.sk-kort-rubrik { margin: 0 0 var(--space-3); font-family: var(--font-display); font-size: 20px; line-height: 26px; font-weight: 700; font-variation-settings: "opsz" 36, "SOFT" 100, "WONK" 0; }
+.sk-kort > :last-child { margin-bottom: 0; }
