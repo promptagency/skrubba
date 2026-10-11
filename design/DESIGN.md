@@ -12,7 +12,6 @@ This folder is the source of truth for how the app looks. Read this file before 
 | `fonts.css`, `fonts/` | The three typefaces as self-hosted variable fonts, with their licences | Import it. Never load fonts from a CDN |
 | `logo/` | Logotype and symbol as SVG | Use the files as they are |
 | `reference/` | Styles, markup and screenshots of example components | Look, do not import. See "Reference material" below |
-| `MIGRATION.md` | The first task: moving the app onto the tokens | Follow once |
 
 ## Vocabulary
 
