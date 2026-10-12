@@ -51,6 +51,7 @@ The system has two themes that mirror each other. Light is the positive version,
 | `kant-kontroll` | `#7A8268` | `#8FAE94` | Borders on inputs and controls |
 | `diskhandske` | `#FFD43B` | `#FFD43B` | Accent fill |
 | `pa-diskhandske` | `#17140F` | `#17140F` | Text on the accent fill |
+| `backdrop` | `rgb(0 0 0 / 0.35)` | `rgb(0 0 0 / 0.55)` | Dims the page behind a window (Uppgifter, Kodnyckel, Vanliga frågor) |
 | `falurod` | `#8E2B1D` | `#FFB4A2` | Error text |
 | `fokus` | `#1E4A35` | `#FFD43B` | Focus ring |
 
@@ -60,7 +61,7 @@ Rules:
 - Let `grund` and `text` carry almost everything. A page is first of all background and text.
 - `sapa` flips between the themes. A primary button is green with cream text in light, and cream with green text in dark. Always pair a `sapa` fill with `pa-sapa` text, never with white.
 - Put cards and fields on `yta`, and what should step back on `yta-sankt`.
-- Use `diskhandske` as a fill for at most one thing per view, with text in `pa-diskhandske`. It is an accent, not a base colour, and never a text colour on a light ground.
+- Use `diskhandske` as a fill for at most one thing per view, with text in `pa-diskhandske`. It is an accent, not a base colour, and never a text colour on a light ground. Decided 2026-10-12: not used in v1, so it does not compete with the masking colours.
 - Show errors in `falurod` and always say in words what is wrong.
 - Draw control borders in `kant-kontroll`. Use `kant` only for dividers that carry no meaning.
 - Separate surfaces with colour and a thin `kant` border, not with shadows.
@@ -136,7 +137,7 @@ Rules:
 - `skrubba-logotyp-svart.svg` and `skrubba-logotyp-vit.svg` only where colour is not available.
 - The files have no built-in margin. Leave free space of half the logotype's height on all sides.
 - Never show the logotype narrower than 120 px. Below that the streaks run together, so use the symbol instead. The aspect ratio is 4.88:1.
-- `skrubba-symbol-positiv.svg` and `skrubba-symbol-negativ.svg` are for favicon, app icon and profile picture. The symbol replaces the logotype on small surfaces and never stands next to it.
+- `skrubba-symbol-positiv.svg` and `skrubba-symbol-negativ.svg` are for favicon, app icon and profile picture. The symbol replaces the logotype on small surfaces and never stands next to it. Safari ignores the dark-mode favicon and shows the positive symbol in both themes. Accepted 2026-10-12, since the logo files are not edited.
 - Do not tilt, stretch or recolour the logo. No shadow, outline or effect.
 
 ## Tone
@@ -167,7 +168,7 @@ Two things in the reference are placeholders and must not be treated as decision
 
 Ask before building on any of these.
 
-- Icons. None are defined. Write actions out in words.
+- Icons. None are defined. Write actions out in words. Confirmed for v1, 2026-10-12.
 - Whether a kept item keeps its fill inside the outline. The reference shows outline only.
 - Print colours (CMYK and Pantone).
 - A two-tone version of the logotype streaks.

@@ -108,7 +108,7 @@ Notes from Phase 4:
 - No own chunking: a 10 000-character test with ~200 different names through the real model leaks no name, so maskera's splitting is enough. Rules on 10 000 characters run in under 50 ms.
 - The status line is read to screen readers in quarters while loading; the visible line shows every percent with fixed-width digits, and on narrow screens the trust link has its own line. Together that took layout shift to 0.
 - Mobile: the entity panel is a bottom sheet behind an "{n} uppgifter" chip; Esc or a tap outside closes it.
-- The app icon (`[ ▬ ]` in white on green, `scripts/make-icons.ts`) is a placeholder for the owner to replace.
+- ~~The app icon is a placeholder.~~ Replaced by the Skrubba symbol from `design/logo/` (`scripts/make-icons.ts`).
 
 
 ## Phase 4b – Owner's layout (2026-10-10)
