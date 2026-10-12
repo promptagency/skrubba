@@ -91,7 +91,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | pane.restoreOut | Avskrubbad text |
 | action.scrub | Skrubba |
 | action.newText | Ny text |
-| action.newTextConfirm | Den nya texten får en ny kodnyckel. Svar på den förra texten går då inte att byta tillbaka, om du inte har laddat ner kodnyckeln. Vill du fortsätta? |
+| action.newTextConfirm | Den nya texten får en ny kodnyckel. Svar på den förra texten går då inte att avskrubba, om du inte har laddat ner kodnyckeln. Vill du fortsätta? |
 | scrub.resultEmpty | Tryck Skrubba så visas texten med platshållare här. |
 | restore.resultEmpty | Tryck Avskrubba så visas svaret med de riktiga uppgifterna här. |
 | wrongMode.notice | Texten innehåller platshållare som {found}. Är det svaret från AI? |
@@ -102,9 +102,11 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | summary.show | Visa |
 | key.missing | Den här fliken har ingen kodnyckel. Har du sparat en kan du ladda upp den, så byts platshållarna tillbaka. |
 
-## Att granska
+## Ändringar
 
-Ändrat eller nytt 2026-10-10 för layouten med två kort (Skrubba och Avskrubba). Ägaren granskar ordvalen.
+Ägaren har granskat och godkänt alla strängar nedan, 2026-10-12. `action.newTextConfirm` säger "avskrubba" i stället för "byta tillbaka", efter bytet till Avskrubba. Nya eller ändrade strängar läggs till här och granskas av ägaren.
+
+Ändrat eller nytt 2026-10-10 för layouten med två kort (Skrubba och Avskrubba).
 
 - `mode.restore` och `action.restore`: "Byt tillbaka" blev "Avskrubba", som i skissen.
 - `editor.empty` och `restore.empty`: nämner att man kan släppa en textfil.

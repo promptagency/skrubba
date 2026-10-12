@@ -44,7 +44,7 @@ test("in Skrubba, Ny text asks first, then starts a new kodnyckel and keeps Egna
   });
   await newText(page).click();
   expect(asked).toEqual([
-    "Den nya texten får en ny kodnyckel. Svar på den förra texten går då inte att byta tillbaka, om du inte har laddat ner kodnyckeln. Vill du fortsätta?",
+    "Den nya texten får en ny kodnyckel. Svar på den förra texten går då inte att avskrubba, om du inte har laddat ner kodnyckeln. Vill du fortsätta?",
   ]);
   await expect(editor(page)).toHaveValue("");
   await expect(editor(page)).toBeFocused();
