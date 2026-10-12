@@ -1,8 +1,8 @@
 export const APP_NAME = "Skrubba";
 export const APP_SLUG = "skrubba";
 export const APP_URL = "https://skrubba.promptagency.se";
-/** Public repository, linked from "GitHub" in the footer credits. Empty until the repo is public. */
-export const REPO_URL = "";
+/** Public repository, linked from "Github" in the footer credits. Leave empty to show the word without a link. */
+export const REPO_URL = "https://github.com/promptagency/skrubba";
 /** Linked from the footer byline. */
 export const AUTHOR_URL = "https://mickequick.se";
 export const AGENCY_URL = "https://promptagency.se";
