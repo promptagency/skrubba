@@ -17,8 +17,9 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
  ▸ Egna ord (1)
  ─────────────────────────────────────────────────────────────────
                Skrubba av Micke Quick (Prompt Agency).
-   Bygger på maskera (MIT) … Öppen källkod finns på GitHub.
+   Bygger på maskera (MIT) … Källkod finns på Github.
                      Inget lämnar din dator
+                         Version 0.9.0
 ```
 
 In Avskrubba the left pane is "Svar från AI", the button says "Avskrubba →" and the right pane is "Avskrubbad text", with any "Menade du …?" questions under it.

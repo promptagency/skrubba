@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import { REPO_URL } from "../../src/config.ts";
 import { openReady } from "./helpers.ts";
@@ -23,9 +24,16 @@ test("the credits end with where the source code is", async ({ page }) => {
   await openReady(page);
   const credits = page.locator(".site-footer p").nth(1);
   await expect(credits).toHaveText(
-    "Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod finns på GitHub.",
+    "Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Källkod finns på Github.",
   );
-  // GitHub is a link once the repository is public and REPO_URL is set.
+  // Github is a link once the repository is public and REPO_URL is set.
   await expect(credits.getByRole("link")).toHaveCount(REPO_URL ? 1 : 0);
-  if (REPO_URL) await expect(credits.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", REPO_URL);
+  if (REPO_URL) await expect(credits.getByRole("link", { name: "Github" })).toHaveAttribute("href", REPO_URL);
+});
+
+test("the footer ends with the version from package.json", async ({ page }) => {
+  const { version } = JSON.parse(readFileSync("package.json", "utf8")) as { version: string };
+  expect(version).toMatch(/^\d+\.\d+\.\d+$/);
+  await openReady(page);
+  await expect(page.locator(".site-footer p").last()).toHaveText(`Version ${version}`);
 });

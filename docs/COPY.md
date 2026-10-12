@@ -71,8 +71,9 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | footer.byline | {app} av {author} ({agency}). |
 | footer.author | Micke Quick |
 | footer.agency | Prompt Agency |
-| footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod finns på {github}. |
-| footer.github | GitHub |
+| footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Källkod finns på {github}. |
+| footer.github | Github |
+| footer.version | Version {version} |
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
 | faq.open | Vanliga frågor |
 | howto.open | Så här funkar det |
@@ -104,7 +105,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `drop.unsupported`: när någon släpper en fil som inte är .txt eller .md.
 - `key.close`: stänger nyckelkortet.
 - `footer.byline`: första raden i sidfoten. {app} är Skrubba i fetstil, {author} länkar till mickequick.se och {agency} till promptagency.se, båda i en ny flik så att texten i Skrubba finns kvar. Nytt 2026-10-12, ägarens formulering.
-- `footer.credits`: andra raden i sidfoten. {github} länkar till kodförrådet i en ny flik när det är publikt (`REPO_URL` i `src/config.ts`), annars är det vanlig text. Ändrad 2026-10-12, ägarens formulering; "Github" skrivs GitHub, som tjänsten själv skriver det.
+- `footer.credits`: andra raden i sidfoten. {github} länkar till kodförrådet i en ny flik när det är publikt (`REPO_URL` i `src/config.ts`), annars är det vanlig text. Ändrad 2026-10-12, ägarens formulering, med ägarens stavning "Github".
+- `footer.version`: sista raden i sidfoten. {version} är versionen i `package.json`, satt när appen byggs. Nytt 2026-10-12.
 
 Ändrat 2026-10-10, andra omgången:
 

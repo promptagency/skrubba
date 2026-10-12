@@ -1,5 +1,5 @@
 /// <reference types="vitest/config" />
-import { createReadStream, existsSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
 import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
@@ -114,9 +114,12 @@ const ISOLATION_HEADERS = {
   "Cross-Origin-Embedder-Policy": "require-corp",
 };
 
+// Shown in the footer. Bump it in package.json for each release.
+const APP_VERSION = (JSON.parse(readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8")) as { version: string }).version;
+
 export default defineConfig({
   plugins: [react(), cspMeta(), serveRuntimeInDev(), serviceWorker()],
-  define: { __SW_KILL__: JSON.stringify(SW_KILL) },
+  define: { __SW_KILL__: JSON.stringify(SW_KILL), __APP_VERSION__: JSON.stringify(APP_VERSION) },
   server: { headers: ISOLATION_HEADERS },
   preview: { headers: ISOLATION_HEADERS },
   // transformers.js and onnxruntime-web break under dependency prebundling.

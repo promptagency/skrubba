@@ -7,6 +7,7 @@ import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
 import { AGENCY_URL, APP_NAME, AUTHOR_URL, REPO_URL } from "../config.ts";
 import { countLabel, EXAMPLE, t } from "./copy.ts";
+import { APP_VERSION } from "./version.ts";
 import { DropZone } from "./DropZone.tsx";
 import { Editor, type EditorHandle, type PasteUndo } from "./Editor.tsx";
 import { Gate } from "./Gate.tsx";
@@ -481,6 +482,7 @@ export function App() {
             {t("status.trust")}
           </button>
         </p>
+        <p>{t("footer.version", { version: APP_VERSION })}</p>
       </footer>
 
       <ItemsDialog
