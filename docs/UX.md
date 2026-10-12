@@ -16,7 +16,8 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
  Skrubba hittar inte allt …
  ▸ Egna ord (1)
  ─────────────────────────────────────────────────────────────────
-   Bygger på maskera (MIT) … Öppen källkod från Prompt Agency.
+               Skrubba av Micke Quick (Prompt Agency).
+   Bygger på maskera (MIT) … Öppen källkod finns på GitHub.
                      Inget lämnar din dator
 ```
 
