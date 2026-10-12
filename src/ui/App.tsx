@@ -5,7 +5,7 @@ import { type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, 
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
-import { AGENCY_URL, APP_NAME, AUTHOR_URL, KBBERT_URL, MASKERA_URL, REPO_URL } from "../config.ts";
+import { AGENCY_URL, APP_NAME, AUTHOR_URL, FEEDBACK_EMAIL, KBBERT_URL, MASKERA_URL, REPO_URL } from "../config.ts";
 import { countLabel, EXAMPLE, t } from "./copy.ts";
 import { APP_VERSION } from "./version.ts";
 import { DropZone } from "./DropZone.tsx";
@@ -386,7 +386,9 @@ export function App() {
                   <Summary types={entities.map((e) => e.type)} label={countLabel(entities.length)} onOpen={() => setItemsOpen(true)} />
                 </div>
               )}
-              <p className="caveat">{t("caveat.short")}</p>
+              <p className="caveat">
+                {t("caveat.short")} <a href={feedbackMailto()}>{t("feedback.link")}</a>
+              </p>
               <WordList
                 raw={state.wordListRaw}
                 count={wordList.length}
@@ -526,6 +528,13 @@ export function App() {
 }
 
 /** A copy string with {name} slots filled by elements. */
+// The email only describes what was missed: the user's text never goes into it.
+function feedbackMailto(): string {
+  const subject = encodeURIComponent(t("feedback.subject"));
+  const body = encodeURIComponent(t("feedback.body"));
+  return `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
+}
+
 function fill(template: string, parts: Record<string, ReactNode>): ReactNode[] {
   return template.split(/\{(\w+)\}/).map((piece, i) => (i % 2 ? <Fragment key={i}>{parts[piece]}</Fragment> : piece));
 }

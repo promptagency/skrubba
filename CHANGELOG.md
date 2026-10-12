@@ -7,6 +7,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 ### Added
 
 - **Anonymous visit counting** with Prompt Agency's self-hosted Plausible. One page view per load goes to Skrubba's own address, which passes it on; the browser still talks to no other server. No cookies, no stored IP address, and Do Not Track and Global Privacy Control are respected. A new question in *Vanliga frågor* explains it.
+- **Report a miss.** *Missade Skrubba något? Berätta.* under the text opens an email to the maker with a short guide. The user's text is never put into it.
 
 ## [1.0.0] - 2026-10-12
 

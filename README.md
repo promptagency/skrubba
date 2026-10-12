@@ -68,6 +68,8 @@ Skrubba is a tool that helps you share less, not a guarantee that a text is anon
 - It does not make you compliant with GDPR or your employer's AI policy. Follow your organisation's rules.
 - It only works on Swedish text.
 
+Found something Skrubba missed? Use *Missade Skrubba något? Berätta.* under the text box, or email [micke@promptagency.se](mailto:micke@promptagency.se). Describe what kind of detail it was and what it looked like, never the real detail or your text.
+
 ## Run it locally
 
 You need [Node.js](https://nodejs.org) 22 or later.

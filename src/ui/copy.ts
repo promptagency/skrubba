@@ -72,6 +72,10 @@ export const COPY = {
   "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
   "faq.open": "Vanliga frågor",
   "howto.open": "Så här funkar det",
+  "feedback.link": "Missade Skrubba något? Berätta.",
+  "feedback.subject": "Skrubba missade något",
+  "feedback.body":
+    "Berätta vilken sorts uppgift Skrubba missade och hur den såg ut, till exempel ett kundnummer i stil med AB-1234-567. Skicka inte den riktiga uppgiften eller din text.",
   "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Kontrollera dina val innan du kopierar.",
   "mode.switch": "Vad vill du göra?",
   "pane.scrubIn": "Din text",
