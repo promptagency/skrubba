@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import logoDark from "../../design/logo/skrubba-logotyp-negativ.svg";
 import logoLight from "../../design/logo/skrubba-logotyp-positiv.svg";
 import { type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, type RestoreResult } from "../engine/index.ts";
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
-import { REPO_URL } from "../config.ts";
+import { AGENCY_URL, APP_NAME, AUTHOR_URL, REPO_URL } from "../config.ts";
 import { countLabel, EXAMPLE, t } from "./copy.ts";
 import { DropZone } from "./DropZone.tsx";
 import { Editor, type EditorHandle, type PasteUndo } from "./Editor.tsx";
@@ -465,6 +465,13 @@ export function App() {
 
       <footer className="site-footer">
         <p>
+          {fill(t("footer.byline"), {
+            app: <strong>{APP_NAME}</strong>,
+            author: <ExternalLink href={AUTHOR_URL}>{t("footer.author")}</ExternalLink>,
+            agency: <ExternalLink href={AGENCY_URL}>{t("footer.agency")}</ExternalLink>,
+          })}
+        </p>
+        <p>
           {REPO_URL ? (
             <a href={REPO_URL}>{t("footer.credits")}</a>
           ) : (
@@ -506,5 +513,19 @@ export function App() {
       <HowtoDialog open={howtoOpen} onClose={() => setHowtoOpen(false)} />
       <Toast message={state.toast} onClose={closeToast} />
     </div>
+  );
+}
+
+/** A copy string with {name} slots filled by elements. */
+function fill(template: string, parts: Record<string, ReactNode>): ReactNode[] {
+  return template.split(/\{(\w+)\}/).map((piece, i) => (i % 2 ? <Fragment key={i}>{parts[piece]}</Fragment> : piece));
+}
+
+/** Opens in a new tab, so leaving never loses the text and kodnyckel in this one. */
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
   );
 }

@@ -68,6 +68,9 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | unload.warning | Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad. |
 | drop.unsupported | Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den. |
 | key.close | Stäng |
+| footer.byline | {app} av {author} ({agency}). |
+| footer.author | Micke Quick |
+| footer.agency | Prompt Agency |
 | footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Öppen källkod från Prompt Agency. |
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
 | faq.open | Vanliga frågor |
@@ -99,6 +102,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `editor.empty` och `restore.empty`: nämner att man kan släppa en textfil.
 - `drop.unsupported`: när någon släpper en fil som inte är .txt eller .md.
 - `key.close`: stänger nyckelkortet.
+- `footer.byline`: första raden i sidfoten. {app} är Skrubba i fetstil, {author} länkar till mickequick.se och {agency} till promptagency.se, båda i en ny flik så att texten i Skrubba finns kvar. Nytt 2026-10-12, ägarens formulering.
 - `footer.credits`: sidfoten.
 
 Ändrat 2026-10-10, andra omgången:
