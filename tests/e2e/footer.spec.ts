@@ -20,14 +20,23 @@ test("the footer starts with who made Skrubba, linked in new tabs", async ({ pag
   }
 });
 
-test("the credits end with where the source code is", async ({ page }) => {
+test("the credits link maskera and KB-BERT and end with where the source code is", async ({ page }) => {
   await openReady(page);
   const credits = page.locator(".site-footer p").nth(1);
   await expect(credits).toHaveText(
-    "Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Källkod finns på Github.",
+    "Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Källkod till Skrubba finns på Github.",
   );
+  for (const [name, href] of [
+    ["maskera", "https://github.com/joelhagvall/maskera"],
+    ["KB-BERT", "https://huggingface.co/KBLab"],
+  ]) {
+    const link = credits.getByRole("link", { name, exact: true });
+    await expect(link).toHaveAttribute("href", href);
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  }
   // Github is a link once the repository is public and REPO_URL is set.
-  await expect(credits.getByRole("link")).toHaveCount(REPO_URL ? 1 : 0);
+  await expect(credits.getByRole("link")).toHaveCount(REPO_URL ? 3 : 2);
   if (REPO_URL) await expect(credits.getByRole("link", { name: "Github" })).toHaveAttribute("href", REPO_URL);
 });
 

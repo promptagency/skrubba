@@ -6,6 +6,9 @@ export const REPO_URL = "";
 /** Linked from the footer byline. */
 export const AUTHOR_URL = "https://mickequick.se";
 export const AGENCY_URL = "https://promptagency.se";
+/** Linked from the footer credits. KB-BERT is KBLab's page on Hugging Face; it has no GitHub repo of its own. */
+export const MASKERA_URL = "https://github.com/joelhagvall/maskera";
+export const KBBERT_URL = "https://huggingface.co/KBLab";
 
 // Self-hosted NER model (scripts/fetch-model.ts packs it into public/models/).
 // The directory carries the revision so a new model gets a new URL: the

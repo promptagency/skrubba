@@ -5,7 +5,7 @@ import { type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, 
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
-import { AGENCY_URL, APP_NAME, AUTHOR_URL, REPO_URL } from "../config.ts";
+import { AGENCY_URL, APP_NAME, AUTHOR_URL, KBBERT_URL, MASKERA_URL, REPO_URL } from "../config.ts";
 import { countLabel, EXAMPLE, t } from "./copy.ts";
 import { APP_VERSION } from "./version.ts";
 import { DropZone } from "./DropZone.tsx";
@@ -481,6 +481,8 @@ export function App() {
         </p>
         <p>
           {fill(t("footer.credits"), {
+            maskera: <ExternalLink href={MASKERA_URL}>{t("footer.maskera")}</ExternalLink>,
+            kbbert: <ExternalLink href={KBBERT_URL}>{t("footer.kbbert")}</ExternalLink>,
             github: REPO_URL ? <ExternalLink href={REPO_URL}>{t("footer.github")}</ExternalLink> : t("footer.github"),
           })}
         </p>

@@ -77,7 +77,9 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | footer.byline | {app} av {author} ({agency}). |
 | footer.author | Micke Quick |
 | footer.agency | Prompt Agency |
-| footer.credits | Bygger på maskera (MIT) av Hägvall Labs och KB-BERT (CC0) från Kungliga biblioteket. Källkod finns på {github}. |
+| footer.credits | Bygger på {maskera} (MIT) av Hägvall Labs och {kbbert} (CC0) från Kungliga biblioteket. Källkod till Skrubba finns på {github}. |
+| footer.maskera | maskera |
+| footer.kbbert | KB-BERT |
 | footer.github | Github |
 | footer.version | Version {version} |
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
@@ -173,6 +175,20 @@ Nytt 2026-10-11. Text som klistras in i Din text städas. Osynliga tecken från 
 
 Nytt 2026-10-12. Har gått igenom COPY.md manuellt och gjort vissa korrigeringar.
 
+Nytt 2026-10-12, ägarens godkännande av utkasten.
+
+- `toast.copyFailed`: när webbläsaren stoppar kopieringen, i både Skrubba och Avskrubba. Högra rutan går att markera, så rådet fungerar.
+- `entity.tip.scrub` och `entity.tip.keep`: tipset när man håller musen över en markering. {type} är typens namn, till exempel Namn eller Förnamn, och {placeholder} är platshållaren som markeringen blir.
+- `entity.row`, `entity.count`, `entity.count.one`, `entity.state.scrub`, `entity.state.keep`: radens namn för skärmläsare i fönstret Uppgifter, till exempel "Johan Lindqvist, namn, 3 gånger, skrubbas". Typen skrivs med liten bokstav mitt i meningen, utom förkortningar som IBAN och IP-adress. Knappen på raden säger fortfarande vad som händer (`entity.keepAction`, `entity.scrubAction`).
+
+Ändrat 2026-10-12, ägarens granskning: `app.title`, `app.tagline`, `editor.empty`, `gate.body`, `status.trust`, `restore.empty`, `key.downloadWarning` och `caveat.short`.
+
+Ändrat 2026-10-12, efter granskningen.
+
+- `footer.credits`: "Källkod till Skrubba finns på {github}", ägarens formulering. {maskera} och {kbbert} är länkar till maskera på GitHub och KBLab på Hugging Face, i en ny flik.
+- `footer.maskera`, `footer.kbbert`: länktexterna.
+- Vanliga frågor är ett dragspel. Alla frågor är stängda från början, och en öppnad fråga stänger den som var öppen.
+
 ## Typer
 
 | Intern typ | Visas som |
@@ -228,7 +244,7 @@ Fönstret med filmen. Stegen är textremsorna i filmen och läses också upp av 
 
 ## Vanliga frågor
 
-Öppnas som ett fönster ovanpå sidan, från knappen "Vanliga frågor" uppe till höger och från "Inget lämnar din dator" i sidfoten. Rubriken är "Vanliga frågor". Varje fråga är en underrubrik med svaret under.
+Öppnas som ett fönster ovanpå sidan, från länken "Vanliga frågor" under lägesväljaren och från "Allt sker på din dator" i sidfoten. Rubriken är "Vanliga frågor". Frågorna visas som ett dragspel. Alla är stängda från början, och klickar man på en fråga stängs den som var öppen.
 
 ### Vad händer med min text?
 
@@ -245,11 +261,3 @@ Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan 
 ### Vad är kodnyckeln?
 
 En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att byta tillbaka i svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.
-
-Nytt 2026-10-12, ägarens godkännande av utkasten.
-
-- `toast.copyFailed`: när webbläsaren stoppar kopieringen, i både Skrubba och Avskrubba. Högra rutan går att markera, så rådet fungerar.
-- `entity.tip.scrub` och `entity.tip.keep`: tipset när man håller musen över en markering. {type} är typens namn, till exempel Namn eller Förnamn, och {placeholder} är platshållaren som markeringen blir.
-- `entity.row`, `entity.count`, `entity.count.one`, `entity.state.scrub`, `entity.state.keep`: radens namn för skärmläsare i fönstret Uppgifter, till exempel "Johan Lindqvist, namn, 3 gånger, skrubbas". Typen skrivs med liten bokstav mitt i meningen, utom förkortningar som IBAN och IP-adress. Knappen på raden säger fortfarande vad som händer (`entity.keepAction`, `entity.scrubAction`).
-
-Ändrat 2026-10-12, ägarens granskning: `app.title`, `app.tagline`, `editor.empty`, `gate.body`, `status.trust`, `restore.empty`, `key.downloadWarning` och `caveat.short`.

@@ -801,12 +801,23 @@ a {
   line-height: 1.6;
 }
 
-.faq h3 {
-  margin: var(--space-6) 0 var(--space-1);
+.faq details {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq summary {
+  cursor: pointer;
+  padding: var(--space-3) 0;
+}
+
+.faq summary h3 {
+  display: inline;
+  margin: 0;
+  font-size: inherit;
 }
 
 .faq p {
-  margin: 0;
+  margin: 0 0 var(--space-4);
 }
 
 .keyview {
