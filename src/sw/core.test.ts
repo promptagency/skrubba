@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cacheKey, inOfflineCache, MANIFEST_KEY, precacheList, staleKeys } from "./core.ts";
+import { cacheKey, inOfflineCache, MANIFEST_KEY, networkPath, precacheList, staleKeys, unredirected } from "./core.ts";
 
 const manifest = {
   "/index.html": "aaa",
@@ -55,5 +55,31 @@ describe("staleKeys", () => {
 
   it("never drops the stored manifest itself", () => {
     expect(staleKeys([`${origin}${MANIFEST_KEY}`], manifest, previous)).toEqual([]);
+  });
+});
+
+describe("networkPath", () => {
+  it("fetches the app shell from /, since hosts like Cloudflare Pages redirect /index.html there", () => {
+    expect(networkPath("/index.html")).toBe("/");
+  });
+
+  it("fetches every other file from its own path", () => {
+    expect(networkPath("/assets/index-abc.js")).toBe("/assets/index-abc.js");
+  });
+});
+
+describe("unredirected", () => {
+  it("returns a redirected response as a plain copy, which browsers accept for a page load", async () => {
+    const res = new Response("<html>", { status: 200, headers: { "content-type": "text/html" } });
+    Object.defineProperty(res, "redirected", { value: true });
+    const copy = await unredirected(res);
+    expect(copy.redirected).toBe(false);
+    expect(copy.headers.get("content-type")).toBe("text/html");
+    expect(await copy.text()).toBe("<html>");
+  });
+
+  it("returns any other response as it is", async () => {
+    const res = new Response("x");
+    expect(await unredirected(res)).toBe(res);
   });
 });

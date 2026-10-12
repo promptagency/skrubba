@@ -15,6 +15,7 @@
     "predev": "npm run fetch-model",
     "prebuild": "npm run fetch-model",
     "e2e": "playwright test",
+    "smoke": "playwright test --config playwright.live.config.ts",
     "postbuild": "tsx scripts/check-sizes.ts",
     "pretypecheck": "npm run fetch-model",
     "demo-video": "tsx scripts/demo/make-video.ts"

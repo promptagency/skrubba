@@ -35,3 +35,17 @@ export function staleKeys(cachedUrls: string[], current: SwManifest, previous: S
     return current[pathname] !== rev && previous[pathname] !== rev;
   });
 }
+
+/**
+ * The URL to fetch a file from. The app shell is cached as /index.html but
+ * fetched from /: Cloudflare Pages answers /index.html with a redirect to /,
+ * and browsers refuse a redirected response from a service worker for a page
+ * load, so returning visitors would get an error page.
+ */
+export const networkPath = (path: string) => (path === "/index.html" ? "/" : path);
+
+/** A redirected response, copied so it no longer counts as redirected. A second guard for other hosts. */
+export async function unredirected(res: Response): Promise<Response> {
+  if (!res.redirected) return res;
+  return new Response(await res.blob(), { status: res.status, statusText: res.statusText, headers: res.headers });
+}

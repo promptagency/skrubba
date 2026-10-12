@@ -5,7 +5,7 @@
 // is downloaded twice. Entries are keyed by content revision, so a deploy
 // never mixes old and new files, and the previous build's files are kept one
 // more cycle for tabs that still run it.
-import { cacheKey, MANIFEST_KEY, precacheList, SKIP_WAITING, type SwManifest, staleKeys } from "./core.ts";
+import { cacheKey, MANIFEST_KEY, networkPath, precacheList, SKIP_WAITING, type SwManifest, staleKeys, unredirected } from "./core.ts";
 
 declare const self: ServiceWorkerGlobalScope;
 declare const __SW_MANIFEST__: SwManifest;
@@ -21,7 +21,7 @@ self.addEventListener("install", (event) => {
         precacheList(MANIFEST).map(async (path) => {
           const key = cacheKey(path, MANIFEST[path]);
           if (await cache.match(key)) return;
-          const res = await fetch(path, { cache: "no-cache" });
+          const res = await unredirected(await fetch(networkPath(path), { cache: "no-cache" }));
           if (!res.ok) throw new Error(`precache ${path}: ${res.status}`);
           await cache.put(key, res);
         }),
@@ -69,7 +69,7 @@ async function cacheFirst(path: string, rev: string): Promise<Response> {
   const key = cacheKey(path, rev);
   const hit = await cache.match(key);
   if (hit) return hit;
-  const res = await fetch(path);
+  const res = await unredirected(await fetch(networkPath(path)));
   if (res.ok) await cache.put(key, res.clone());
   return res;
 }
