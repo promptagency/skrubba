@@ -15,3 +15,20 @@ SW_KILL=1 npm run build   # then deploy dist/ as usual
 On their next visit, every returning visitor gets a service worker that deletes all of Skrubba's caches, unregisters itself and reloads the tab from the network. The app in that build does not register a service worker, so it stays off. Caches hold app files and the model only; Skrubba never stores user text. To turn the cache back on, deploy a normal build.
 
 `npx playwright test deploy` checks all of this against three local builds (update, kill switch, old tab).
+
+## Releasing a version
+
+Versions follow [Semantic Versioning](https://semver.org/): a bug fix bumps the last number (1.0.1), a new feature the middle one (1.1.0), and a change that breaks something users rely on, such as the kodnyckel file format, the first (2.0.0).
+
+1. While working, note each user-visible change under `## [Unreleased]` in `CHANGELOG.md`.
+2. To release, rename that section to `## [X.Y.Z] - YYYY-MM-DD`, add a new empty `## [Unreleased]` above it, and update the compare links at the bottom.
+3. Set the version, commit and tag:
+
+   ```sh
+   npm version X.Y.Z --no-git-tag-version   # package.json and package-lock.json
+   git commit -am "Release X.Y.Z"
+   git tag -a vX.Y.Z -m "Skrubba X.Y.Z"
+   git push --follow-tags
+   ```
+
+The footer shows the version from `package.json`, set when the app is built. A unit test (`scripts/changelog.test.ts`) fails if `CHANGELOG.md` has no entry for that version.

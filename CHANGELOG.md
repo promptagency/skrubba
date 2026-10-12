@@ -1,0 +1,28 @@
+# Changelog
+
+Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow [Semantic Versioning](https://semver.org/). Each version is tagged `vX.Y.Z` in git, and the version is shown in the app's footer. How to release: [docs/DEPLOY.md](docs/DEPLOY.md#releasing-a-version).
+
+## [Unreleased]
+
+## [0.9.0] - 2026-10-12
+
+First tagged version, before the public launch. 1.0.0 is planned for the launch at skrubba.promptagency.se.
+
+### Added
+
+- **Skrubba (mask).** Swedish text is scanned as you type or paste. Names, places and organisations come from maskera's Swedish NER model (KB-BERT, q8), run in a Web Worker. Personnummer, samordningsnummer, organisationsnummer, phone numbers, email, addresses, postcodes, bank details, IBAN, card numbers, IP addresses, URLs, journal and registration numbers come from rules. Each value gets a stable placeholder like `[NAMN_1]`.
+- **Your own words.** *Egna ord* hides a list of terms every time; selecting text hides it once. Both become `[ORD_n]`.
+- **Review.** Highlights in the text, colour-coded by type with the type always named in text. Click a highlight, or use the *Uppgifter* window, to keep a word. Organisations are masked by default.
+- **Avskrubba (restore).** Paste the AI's answer to put the real values back. Restoring tolerates placeholders the AI has changed, with suggestions to confirm and a note on placeholders that are not in the key.
+- **Kodnyckel.** The placeholder → value list, in memory only. Download it as JSON and upload it later to continue a case. A warning before closing the tab with a key that has not been downloaded.
+- **Ny text.** Starts over with a new text and a new kodnyckel, keeping *Egna ord*.
+- **Pasting from a PDF.** Lines broken mid-sentence are joined and hidden PDF characters are fixed, with *Ångra* to get the text back as pasted.
+- **A name found once is masked everywhere.** A proper noun the model finds in one place is also masked where it missed it.
+- **Dropping a `.txt` or `.md` file** into either pane.
+- **Help.** *Vanliga frågor*, and *Så här funkar det* with a captioned demo video.
+- **Offline.** A service worker caches the app and the model after the first visit, with a kill switch (`SW_KILL=1`).
+- **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
+- **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
+
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/promptagency/skrubba/releases/tag/v0.9.0
