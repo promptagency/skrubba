@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { COPY, countLabel, EXAMPLE, FAQ, HOWTO, t, TYPE_LABEL } from "./copy.ts";
+import { COPY, countLabel, EXAMPLE, FAQ, HOWTO, rowLabel, t, TYPE_LABEL } from "./copy.ts";
 
 const doc = readFileSync("docs/COPY.md", "utf8");
 const rows = (section: string) => {
@@ -62,5 +62,19 @@ describe("index.html and the manifest use app.tagline", () => {
     expect(html).toContain(`<meta name="description" content="${COPY["app.tagline"]}" />`);
     expect(manifest.description).toBe(COPY["app.tagline"]);
     expect(html).toContain(`<title>${COPY["app.title"]}</title>`);
+  });
+});
+
+describe("rowLabel", () => {
+  it("reads value, type in lower case, how many times and the state", () => {
+    expect(rowLabel({ value: "Johan Lindqvist", type: "NAMN", count: 3, active: true })).toBe(
+      "Johan Lindqvist, namn, 3 gånger, skrubbas",
+    );
+    expect(rowLabel({ value: "Umeå", type: "PLATS", count: 1, active: false })).toBe("Umeå, plats, 1 gång, behålls");
+  });
+
+  it("keeps abbreviations in capitals", () => {
+    expect(rowLabel({ value: "x", type: "IBAN", count: 1, active: true })).toBe("x, IBAN, 1 gång, skrubbas");
+    expect(rowLabel({ value: "x", type: "IP_ADRESS", count: 1, active: true })).toBe("x, IP-adress, 1 gång, skrubbas");
   });
 });

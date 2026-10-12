@@ -44,7 +44,7 @@ test("in the window, Space keeps an item and its highlight gets a border", async
   const johan = items(page).locator(".row-main").filter({ hasText: "Johan Lindqvist" });
   await johan.focus();
   await page.keyboard.press("Space");
-  await expect(johan).toHaveAccessibleName(/Behåll$/);
+  await expect(johan).toHaveAccessibleName(/behålls$/);
   await expect(items(page)).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.locator(".hl-kept")).toHaveCount(1);
@@ -69,9 +69,17 @@ test("each row's button says what clicking it does: Behåll uppgift, then Skrubb
   await countLink(page).click();
   const row = dialog.locator(".row").filter({ hasText: "Johan Lindqvist" });
   const main = row.locator(".row-main");
-  await expect(main).toHaveAccessibleName(/Skrubba$/); // state: scrubbed
+  await expect(main).toHaveAccessibleName(/skrubbas$/); // state: scrubbed
   await row.getByRole("button", { name: "Behåll uppgift" }).click();
-  await expect(main).toHaveAccessibleName(/Behåll$/);
+  await expect(main).toHaveAccessibleName(/behålls$/);
   await row.getByRole("button", { name: "Skrubba uppgift" }).click();
-  await expect(main).toHaveAccessibleName(/Skrubba$/);
+  await expect(main).toHaveAccessibleName(/skrubbas$/);
+});
+
+test("a row reads out its value, type, how many times and its state", async ({ page }) => {
+  await withText(page);
+  await countLink(page).click();
+  await expect(items(page).locator(".row-main").filter({ hasText: "Johan Lindqvist" })).toHaveAccessibleName(
+    "Johan Lindqvist, namn, 1 gång, skrubbas",
+  );
 });

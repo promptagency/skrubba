@@ -30,7 +30,7 @@ test("paste, review, keep one, add a word and copy using only the keyboard", asy
     await page.keyboard.press("ArrowDown");
   await expect(karin).toBeFocused();
   await page.keyboard.press("Space");
-  await expect(karin).toHaveAccessibleName(/Behåll$/);
+  await expect(karin).toHaveAccessibleName(/behålls$/);
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "Uppgifter" })).toBeHidden();
 
@@ -72,10 +72,10 @@ test("B on a selection inside a highlight sets it to Behåll", async ({ page }) 
   await openReady(page);
   await editor(page).fill("Ring 070-1740612 i dag.");
   const row = rows(page).filter({ hasText: "070-1740612" });
-  await expect(row).toHaveAttribute("aria-label", /Skrubba$/);
+  await expect(row).toHaveAttribute("aria-label", /skrubbas$/);
   await editor(page).evaluate((el: HTMLTextAreaElement) => el.setSelectionRange(6, 9));
   await page.keyboard.press("b");
-  await expect(row).toHaveAttribute("aria-label", /Behåll$/);
+  await expect(row).toHaveAttribute("aria-label", /behålls$/);
   await expect(editor(page)).toHaveValue("Ring 070-1740612 i dag.");
 });
 
@@ -116,16 +116,29 @@ test.describe("clicking a highlighted word in the text", () => {
     await openReady(page);
     await editor(page).fill(SHORT);
     const johan = rows(page).filter({ hasText: "Johan Lindqvist" });
-    await expect(johan).toHaveAttribute("aria-label", /Skrubba$/);
+    await expect(johan).toHaveAttribute("aria-label", /skrubbas$/);
     const ph = await page.locator("mark.hl-name").getAttribute("data-ph");
 
     await clickMark(page, ph!);
-    await expect(johan).toHaveAttribute("aria-label", /Behåll$/);
+    await expect(johan).toHaveAttribute("aria-label", /behålls$/);
     await expect(page.locator(`mark[data-ph="${ph}"]`)).toHaveClass(/hl-kept/);
 
     await clickMark(page, ph!);
-    await expect(johan).toHaveAttribute("aria-label", /Skrubba$/);
+    await expect(johan).toHaveAttribute("aria-label", /skrubbas$/);
     await expect(page.locator(`mark[data-ph="${ph}"]`)).not.toHaveClass(/hl-kept/);
+  });
+
+  test("hovering a highlight says what it becomes and what a click does", async ({ page }) => {
+    await openReady(page);
+    await editor(page).fill(SHORT);
+    const mark = page.locator("mark.hl-name");
+    const ph = (await mark.getAttribute("data-ph"))!;
+    const box = (await mark.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(page.getByRole("tooltip")).toHaveText(`Namn blir ${ph}. Klicka för att behålla.`);
+    await clickMark(page, ph);
+    await page.mouse.move(box.x + box.width / 2 + 1, box.y + box.height / 2);
+    await expect(page.getByRole("tooltip")).toHaveText("Namn behålls. Klicka för att skrubba.");
   });
 
   test("a kept word gets a border in its type's darker shade, set off from the text", async ({ page }) => {
@@ -153,7 +166,7 @@ test.describe("clicking a highlighted word in the text", () => {
     const umea = rows(page).filter({ hasText: "Umeå" });
     const ph = await page.locator("mark.hl-place").getAttribute("data-ph");
     await clickMark(page, ph!, 2);
-    await expect(umea).toHaveAttribute("aria-label", /Skrubba$/);
+    await expect(umea).toHaveAttribute("aria-label", /skrubbas$/);
     await expect(page.getByRole("button", { name: /Skrubba markering/ })).toBeVisible();
   });
 
@@ -162,6 +175,20 @@ test.describe("clicking a highlighted word in the text", () => {
     await editor(page).fill(SHORT);
     const box = await page.locator(".editor-overlay span", { hasText: "ringde" }).boundingBox();
     await page.mouse.click(box!.x + 4, box!.y + box!.height / 2);
-    for (const row of await rows(page).all()) await expect(row).toHaveAttribute("aria-label", /Skrubba$/);
+    for (const row of await rows(page).all()) await expect(row).toHaveAttribute("aria-label", /skrubbas$/);
   });
+});
+
+test("when the clipboard is blocked, Kopiera says so and how to copy by hand", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", { value: { writeText: () => Promise.reject(new Error("blocked")) } });
+    document.execCommand = () => false;
+  });
+  await openReady(page);
+  await editor(page).fill("Johan Lindqvist ringde.");
+  await expect(rows(page)).toHaveCount(1);
+  await page.keyboard.press(`${MOD}+Shift+KeyC`);
+  await expect(page.locator(".toast")).toHaveText(
+    "Texten kunde inte kopieras. Markera den i rutan till höger och kopiera den själv.",
+  );
 });

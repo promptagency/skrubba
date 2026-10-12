@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import type { Entity } from "../engine/index.ts";
-import { countLabel, t, TYPE_LABEL, typeGroup } from "./copy.ts";
+import { countLabel, rowLabel, t, TYPE_LABEL, typeGroup } from "./copy.ts";
 
 export interface EntityPanelProps {
   entities: Entity[];
@@ -51,7 +51,7 @@ export function EntityPanel(props: EntityPanelProps) {
               }}
               onClick={() => props.onReveal(e.placeholder)}
               onKeyDown={(ev) => onRowKey(ev, e)}
-              aria-label={`${e.value}, ${TYPE_LABEL[e.type]}, ${e.occurrences.length}, ${e.active ? t("entity.scrub") : t("entity.keep")}`}
+              aria-label={rowLabel({ value: e.value, type: e.type, count: e.occurrences.length, active: e.active })}
             >
               <span className={`dot dot-${typeGroup(e.type)}`} aria-hidden="true">
                 {e.active ? "●" : "○"}

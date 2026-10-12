@@ -140,19 +140,26 @@ export function App() {
     if (done) focusCopy.current = true;
   }, [mode, scrub, restore]);
 
+  // The result is already in the right pane when copying fails, so the toast
+  // says how to copy it by hand.
   const copyResult = useCallback(async () => {
     const s = latest.current;
+    const copy = async (text: string, done: string) => {
+      const ok = await copyText(text).then(
+        () => true,
+        () => false,
+      );
+      dispatch({ type: "toast", message: ok ? done : t("toast.copyFailed") });
+    };
     if (mode === "scrub") {
       const masked = s.scrubbed ?? (await scrub());
       if (masked === null) return;
-      await copyText(masked);
       const n = new Set(placeholderMarks(masked).map((m) => masked.slice(m.start, m.end))).size;
-      dispatch({ type: "toast", message: t("toast.copied", { n }) });
+      await copy(masked, t("toast.copied", { n }));
     } else {
       const result = s.restore?.result ?? restore();
       if (!result) return;
-      await copyText(result.text);
-      dispatch({ type: "toast", message: t("toast.copiedRestored", { n: result.restored.length }) });
+      await copy(result.text, t("toast.copiedRestored", { n: result.restored.length }));
     }
   }, [mode, scrub, restore, dispatch]);
 

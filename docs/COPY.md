@@ -18,15 +18,15 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | Nyckel | Text |
 |---|---|
 | app.name | Skrubba |
-| app.title | Skrubba. Gör texten ofarlig innan du klistrar in den i AI. |
-| app.tagline | Namn, personnummer och hemligheter byts ut mot platshållare. Allt sker i din webbläsare. |
+| app.title | Skrubba. Gör texten säkrare att klistra in i AI. |
+| app.tagline | Namn, personnummer och känsliga uppgifter byts ut mot platshållare. Allt sker i din webbläsare. |
 | mode.scrub | Skrubba |
 | mode.restore | Avskrubba |
 | mode.key | Kodnyckel |
-| editor.empty | Klistra in text här eller släpp en textfil. Den stannar i din webbläsare. |
+| editor.empty | Klistra in text här eller släpp en textfil. Den stannar i din webbläsare och inget laddas upp. |
 | editor.example | Visa exempel |
 | gate.lead | Skrubba laddar ner en liten svensk språkmodell till din webbläsare. |
-| gate.body | Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den. |
+| gate.body | Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den. Efter det fungerar Skrubba utan internet. |
 | panel.count | {n} uppgifter |
 | panel.count.one | 1 uppgift |
 | items.title | Uppgifter |
@@ -34,8 +34,13 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | panel.keepAll | Behåll alla |
 | panel.words | Egna ord |
 | panel.wordsPlaceholder | Kundnamn, projektnamn, produkter. Ett per rad. |
-| entity.scrub | Skrubba |
-| entity.keep | Behåll |
+| entity.tip.scrub | {type} blir {placeholder}. Klicka för att behålla. |
+| entity.tip.keep | {type} behålls. Klicka för att skrubba. |
+| entity.row | {value}, {type}, {count}, {state} |
+| entity.count | {n} gånger |
+| entity.count.one | 1 gång |
+| entity.state.scrub | skrubbas |
+| entity.state.keep | behålls |
 | entity.scrubAction | Skrubba uppgift |
 | entity.keepAction | Behåll uppgift |
 | selection.scrub | Skrubba markering |
@@ -43,11 +48,12 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | action.restore | Avskrubba |
 | toast.copied | Kopierat. {n} uppgifter skrubbade. |
 | toast.copiedRestored | Kopierat. {n} uppgifter tillbaka. |
+| toast.copyFailed | Texten kunde inte kopieras. Markera den i rutan till höger och kopiera den själv. |
 | status.loading | Laddar modell {pct} % |
 | status.ready | Modell laddad |
 | status.rulesOnly | Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv. |
-| status.trust | Inget lämnar din dator |
-| restore.empty | Klistra in svaret från AI här eller släpp en textfil. |
+| status.trust | Allt sker på din dator |
+| restore.empty | Klistra in svaret från AI här eller släpp en skrubbad textfil. |
 | restore.unmatched | Hittade {found} i svaret. Menade du {placeholder}, alltså {value}? |
 | restore.accept | Ja |
 | restore.reject | Nej |
@@ -59,7 +65,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | key.download | Ladda ner kodnyckel |
 | key.upload | Ladda upp kodnyckel |
 | key.clear | Rensa allt |
-| key.downloadWarning | Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material. |
+| key.downloadWarning | Filen innehåller riktiga uppgifter. Spara den säkert. |
 | key.note | Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den. |
 | key.clearConfirm | Text, uppgifter, egna ord och kodnyckel raderas. Vill du fortsätta? |
 | key.empty | Kodnyckeln skapas när du skrubbar en text. |
@@ -77,7 +83,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
 | faq.open | Vanliga frågor |
 | howto.open | Så här funkar det |
-| caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar. |
+| caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Kontrollera dina val innan du kopierar. |
 | mode.switch | Vad vill du göra? |
 | pane.scrubIn | Din text |
 | pane.scrubOut | Skrubbad text |
@@ -145,7 +151,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 
 - `entity.keepAction`: knappen på en rad som skrubbas.
 - `entity.scrubAction`: knappen på en rad som behålls.
-- `entity.scrub` och `entity.keep` finns kvar som läget i radens namn för skärmläsare och i tipset över markeringar.
+- Läget i radens namn för skärmläsare och i tipset över markeringar har egna strängar sedan 2026-10-12, se nedan.
 
 Nytt 2026-10-11. Länken "Så här funkar det" efter Vanliga frågor öppnar en film.
 
@@ -162,6 +168,8 @@ Nytt 2026-10-11. Text som klistras in i Din text städas. Osynliga tecken från 
 
 - `paste.joined`: raden under rutan efter att raderna slagits ihop.
 - `paste.undo`: knappen som lägger tillbaka texten som den klistrades in.
+
+Nytt 2026-10-12. Har gått igenom COPY.md manuellt och gjort vissa korrigeringar.
 
 ## Typer
 
@@ -235,3 +243,11 @@ Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan 
 ### Vad är kodnyckeln?
 
 En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att byta tillbaka i svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.
+
+Nytt 2026-10-12, ägarens godkännande av utkasten.
+
+- `toast.copyFailed`: när webbläsaren stoppar kopieringen, i både Skrubba och Avskrubba. Högra rutan går att markera, så rådet fungerar.
+- `entity.tip.scrub` och `entity.tip.keep`: tipset när man håller musen över en markering. {type} är typens namn, till exempel Namn eller Förnamn, och {placeholder} är platshållaren som markeringen blir.
+- `entity.row`, `entity.count`, `entity.count.one`, `entity.state.scrub`, `entity.state.keep`: radens namn för skärmläsare i fönstret Uppgifter, till exempel "Johan Lindqvist, namn, 3 gånger, skrubbas". Typen skrivs med liten bokstav mitt i meningen, utom förkortningar som IBAN och IP-adress. Knappen på raden säger fortfarande vad som händer (`entity.keepAction`, `entity.scrubAction`).
+
+Ändrat 2026-10-12, ägarens granskning: `app.title`, `app.tagline`, `editor.empty`, `gate.body`, `status.trust`, `restore.empty`, `key.downloadWarning` och `caveat.short`.

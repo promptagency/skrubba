@@ -18,7 +18,7 @@ No wizard. One page with two operations, one at a time. A switch at the top pick
  ─────────────────────────────────────────────────────────────────
                Skrubba av Micke Quick (Prompt Agency).
    Bygger på maskera (MIT) … Källkod finns på Github.
-                     Inget lämnar din dator
+                     Allt sker på din dator
                          Version 0.9.0
 ```
 
@@ -56,7 +56,7 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 
 **Wrong mode.** Text with exact placeholders like `[NAMN_1]` in Skrubba is probably the AI's answer. A notice says so (`wrongMode.notice`) with a button "Flytta till Avskrubba" that moves the text over and switches mode. Nothing switches by itself.
 
-**Empty state.** "Klistra in text här. Den stannar i din webbläsare." plus "Visa exempel". The item count stays hidden until there is text; "Egna ord" is always there so terms can be added first.
+**Empty state.** "Klistra in text här eller släpp en textfil. Den stannar i din webbläsare och inget laddas upp." plus "Visa exempel". The item count stays hidden until there is text; "Egna ord" is always there so terms can be added first.
 
 ## Avskrubba
 
@@ -72,7 +72,7 @@ Tolerant matching rules live in `docs/ARCHITECTURE.md`. The tool asks when unsur
 
 "Kodnyckel" is the established Swedish word for a list linking codes to real identities; it is not an encryption key, and the explainer (`key.explainer`) at the top of the window says so by example. Opened from the kodnyckel strip beside Kopiera. A window over the page: title "Kodnyckel", "Stäng", Esc closes. Table: Platshållare · Värde · Typ · Förekomster. Below it, the word list. Buttons:
 
-- "Ladda ner kodnyckel" → `skrubba-kodnyckel-YYYY-MM-DD.json` (entities + word list). Line under: "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material."
+- "Ladda ner kodnyckel" → `skrubba-kodnyckel-YYYY-MM-DD.json` (entities + word list). Line under: "Filen innehåller riktiga uppgifter. Spara den säkert."
 - "Ladda upp kodnyckel" → file picker, restores key and word list into memory.
 - "Rensa allt" → clears text, entities, word list, key. Confirmation required.
 
@@ -88,7 +88,7 @@ The link "Vanliga frågor" under the mode switch, and "Inget lämnar din dator" 
 
 ## Model state
 
-Loading progress shows in Skrubba's left pane (`gate.lead`, `gate.body`, "Laddar modell 43 %"). Avskrubba and the kodnyckel work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Inget lämnar din dator" sits in the footer and opens Vanliga frågor.
+Loading progress shows in Skrubba's left pane (`gate.lead`, `gate.body`, "Laddar modell 43 %"). Avskrubba and the kodnyckel work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Allt sker på din dator" sits in the footer and opens Vanliga frågor.
 
 ## Dropping files
 

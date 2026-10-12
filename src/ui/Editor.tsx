@@ -124,12 +124,14 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
     if (area.current) area.current.style.cursor = entity ? "pointer" : "";
     if (!entity) return setTip(null);
     const box = e.currentTarget.getBoundingClientRect();
-    const state = entity.active ? t("entity.scrub") : t("entity.keep");
     const [type, placeholder] =
       markUnder(e)?.dataset.first === undefined
         ? [entity.type, entity.placeholder]
         : (["FÖRNAMN", firstNamePlaceholder(entity.placeholder)] as const);
-    setTip({ label: `${TYPE_LABEL[type]} · ${placeholder} · ${state}`, x: e.clientX - box.left, y: e.clientY - box.top });
+    const label = entity.active
+      ? t("entity.tip.scrub", { type: TYPE_LABEL[type], placeholder })
+      : t("entity.tip.keep", { type: TYPE_LABEL[type] });
+    setTip({ label, x: e.clientX - box.left, y: e.clientY - box.top });
   }
 
   return (

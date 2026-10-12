@@ -4,15 +4,15 @@ import type { EntityType } from "../engine/index.ts";
 
 export const COPY = {
   "app.name": "Skrubba",
-  "app.title": "Skrubba. Gör texten ofarlig innan du klistrar in den i AI.",
-  "app.tagline": "Namn, personnummer och hemligheter byts ut mot platshållare. Allt sker i din webbläsare.",
+  "app.title": "Skrubba. Gör texten säkrare att klistra in i AI.",
+  "app.tagline": "Namn, personnummer och känsliga uppgifter byts ut mot platshållare. Allt sker i din webbläsare.",
   "mode.scrub": "Skrubba",
   "mode.restore": "Avskrubba",
   "mode.key": "Kodnyckel",
-  "editor.empty": "Klistra in text här eller släpp en textfil. Den stannar i din webbläsare.",
+  "editor.empty": "Klistra in text här eller släpp en textfil. Den stannar i din webbläsare och inget laddas upp.",
   "editor.example": "Visa exempel",
   "gate.lead": "Skrubba laddar ner en liten svensk språkmodell till din webbläsare.",
-  "gate.body": "Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den.",
+  "gate.body": "Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den. Efter det fungerar Skrubba utan internet.",
   "panel.count": "{n} uppgifter",
   "panel.count.one": "1 uppgift",
   "items.title": "Uppgifter",
@@ -20,8 +20,13 @@ export const COPY = {
   "panel.keepAll": "Behåll alla",
   "panel.words": "Egna ord",
   "panel.wordsPlaceholder": "Kundnamn, projektnamn, produkter. Ett per rad.",
-  "entity.scrub": "Skrubba",
-  "entity.keep": "Behåll",
+  "entity.tip.scrub": "{type} blir {placeholder}. Klicka för att behålla.",
+  "entity.tip.keep": "{type} behålls. Klicka för att skrubba.",
+  "entity.row": "{value}, {type}, {count}, {state}",
+  "entity.count": "{n} gånger",
+  "entity.count.one": "1 gång",
+  "entity.state.scrub": "skrubbas",
+  "entity.state.keep": "behålls",
   "entity.scrubAction": "Skrubba uppgift",
   "entity.keepAction": "Behåll uppgift",
   "selection.scrub": "Skrubba markering",
@@ -29,12 +34,13 @@ export const COPY = {
   "action.restore": "Avskrubba",
   "toast.copied": "Kopierat. {n} uppgifter skrubbade.",
   "toast.copiedRestored": "Kopierat. {n} uppgifter tillbaka.",
+  "toast.copyFailed": "Texten kunde inte kopieras. Markera den i rutan till höger och kopiera den själv.",
   "status.loading": "Laddar modell {pct} %",
   "status.ready": "Modell laddad",
   "status.rulesOnly":
     "Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv.",
-  "status.trust": "Inget lämnar din dator",
-  "restore.empty": "Klistra in svaret från AI här eller släpp en textfil.",
+  "status.trust": "Allt sker på din dator",
+  "restore.empty": "Klistra in svaret från AI här eller släpp en skrubbad textfil.",
   "restore.unmatched": "Hittade {found} i svaret. Menade du {placeholder}, alltså {value}?",
   "restore.accept": "Ja",
   "restore.reject": "Nej",
@@ -46,7 +52,7 @@ export const COPY = {
   "key.download": "Ladda ner kodnyckel",
   "key.upload": "Ladda upp kodnyckel",
   "key.clear": "Rensa allt",
-  "key.downloadWarning": "Filen innehåller riktiga uppgifter. Spara den där du sparar känsligt material.",
+  "key.downloadWarning": "Filen innehåller riktiga uppgifter. Spara den säkert.",
   "key.note": "Kodnyckeln finns bara i den här fliken. Stänger du fliken försvinner den.",
   "key.clearConfirm": "Text, uppgifter, egna ord och kodnyckel raderas. Vill du fortsätta?",
   "key.empty": "Kodnyckeln skapas när du skrubbar en text.",
@@ -64,7 +70,7 @@ export const COPY = {
   "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
   "faq.open": "Vanliga frågor",
   "howto.open": "Så här funkar det",
-  "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Läs igenom innan du kopierar.",
+  "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Kontrollera dina val innan du kopierar.",
   "mode.switch": "Vad vill du göra?",
   "pane.scrubIn": "Din text",
   "pane.scrubOut": "Skrubbad text",
@@ -93,6 +99,19 @@ export function t(key: CopyKey, vars: Record<string, string | number> = {}): str
 
 export function countLabel(n: number): string {
   return n === 1 ? t("panel.count.one") : t("panel.count", { n });
+}
+
+/** A row's name for screen readers: "Johan Lindqvist, namn, 3 gånger, skrubbas". */
+export function rowLabel(row: { value: string; type: EntityType; count: number; active: boolean }): string {
+  const label = TYPE_LABEL[row.type];
+  // Lower case mid-sentence, but not an abbreviation ("IBAN", "IP-adress").
+  const type = /^\p{Lu}\p{Ll}/u.test(label) ? label[0].toLowerCase() + label.slice(1) : label;
+  return t("entity.row", {
+    value: row.value,
+    type,
+    count: row.count === 1 ? t("entity.count.one") : t("entity.count", { n: row.count }),
+    state: row.active ? t("entity.state.scrub") : t("entity.state.keep"),
+  });
 }
 
 export const TYPE_LABEL: Record<EntityType, string> = {

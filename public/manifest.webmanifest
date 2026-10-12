@@ -1,7 +1,7 @@
 {
   "name": "Skrubba",
   "short_name": "Skrubba",
-  "description": "Namn, personnummer och hemligheter byts ut mot platshållare. Allt sker i din webbläsare.",
+  "description": "Namn, personnummer och känsliga uppgifter byts ut mot platshållare. Allt sker i din webbläsare.",
   "lang": "sv",
   "start_url": "/",
   "scope": "/",

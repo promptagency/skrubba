@@ -25,7 +25,7 @@ test("Vanliga frågor opens as a modal over the app, and closing it leaves the t
 
 test("the trust line in the footer opens Vanliga frågor too", async ({ page }) => {
   await openReady(page);
-  await page.getByRole("button", { name: "Inget lämnar din dator" }).click();
+  await page.getByRole("button", { name: "Allt sker på din dator" }).click();
   const faq = page.getByRole("dialog", { name: "Vanliga frågor" });
   await expect(faq).toBeVisible();
   await faq.getByRole("button", { name: "Stäng" }).click();
