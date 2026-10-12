@@ -127,7 +127,7 @@ The owner's wireframe replaced the three modes with two cards and a key card. Do
 - [x] Fit the 25 MiB per-file cap on Cloudflare Pages. Done 2026-10-09: model gzipped in two parts, plain runtime gzipped, other variants and Vite's duplicate dropped, build fails on any file over 25 MiB. See ARCHITECTURE.md, Delivery and offline.
 - [ ] Cloudflare Pages deploy to `skrubba.promptagency.se` with `_headers` for CSP and caching.
 - [x] Public `README.md`: what it is, what it is not (not a compliance guarantee), run locally, verify no network calls, credits to maskera and KBLab, MIT license. Done 2026-10-12, with logo and screenshots; deploy notes moved to `docs/DEPLOY.md`. `LICENSE` added 2026-10-12 (MIT, Prompt Agency).
-- [ ] Footer: "Bygger på maskera (MIT) och KB-BERT (CC0). Öppen källkod."
+- [x] Footer credits. Done 2026-10-12: byline, credits with links to maskera and KB-BERT, "Källkod till Skrubba finns på Github", version.
 
 ## Later (not v1)
 

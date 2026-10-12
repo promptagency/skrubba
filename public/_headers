@@ -1,11 +1,25 @@
-# Cloudflare Pages headers. CSP and caching rules come in Phase 5.
+# Cloudflare Pages headers. A test (scripts/headers.test.ts) keeps them in
+# step with the CSP in vite.config.ts.
 
-# Cross-origin isolation: lets onnxruntime run the model on several threads
-# (10 000 characters in about 1.4 s instead of 4.4 s). Skrubba loads nothing
-# from other origins, so require-corp blocks nothing.
+# The CSP is also in a meta tag in index.html, so the privacy rule holds
+# under any host. The header adds frame-ancestors, which a meta tag cannot
+# set: no other site may frame Skrubba.
+#
+# Cross-origin isolation (COOP + COEP) lets onnxruntime run the model on
+# several threads (10 000 characters in about 1.4 s instead of 4.4 s).
+# Skrubba loads nothing from other origins, so require-corp blocks nothing.
 /*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; worker-src 'self' blob:; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+
+# Vite names these files after their content, so they never change.
+# The model and runtime are left to revalidate: a rebuild can repack their
+# gzip parts under the same name.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
 
 # Browsers check this file for updates on every visit. It must never be
 # cached, or new deploys and the kill switch stop reaching visitors.

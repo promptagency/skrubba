@@ -1,5 +1,21 @@
 # Deploys and the offline cache
 
+## Hosting
+
+Skrubba is a static site on Cloudflare Pages, project `skrubba`, built from `main` on GitHub (`promptagency/skrubba`). Every push to `main` deploys; other branches get preview URLs.
+
+| Setting | Value |
+|---|---|
+| Framework preset | None |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Node version | from `.node-version` (24) |
+| Custom domain | `skrubba.promptagency.se`, a CNAME to `skrubba.pages.dev` at the DNS host of promptagency.se |
+| Web Analytics | Off. It injects a script from another origin, which the CSP blocks and the privacy promise forbids |
+
+The build downloads the model from Hugging Face and checks it against pinned sha256 hashes, so a build never ships weights that differ from the ones tested. `public/_headers` sets the CSP (also as a meta tag), cross-origin isolation, hardening headers and caching; `scripts/headers.test.ts` keeps its CSP equal to the one in `vite.config.ts`.
+
+
 Skrubba has a service worker so the 53 MB language model is downloaded once and the app works offline.
 
 **How a deploy reaches returning visitors.** Browsers fetch `/sw.js` fresh on every visit. Each build bakes a content hash of every file into it, so any change gives a new `sw.js`. The visit that finds it is still served by the old build and installs the new one in the background; the next load is the new build. The previous build's files are kept one more cycle, so a tab left open on the old build keeps working. Every served path except `index.html` is content-addressed, so old and new files never mix.
