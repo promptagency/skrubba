@@ -37,5 +37,11 @@
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.3"
+  },
+  "allowScripts": {
+    "onnxruntime-node@1.30.0": true,
+    "esbuild": false,
+    "protobufjs": false,
+    "fsevents": false
   }
 }

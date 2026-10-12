@@ -31,4 +31,6 @@ Versions follow [Semantic Versioning](https://semver.org/): a bug fix bumps the 
    git push --follow-tags
    ```
 
+Pushing the tag also runs the full browser suite on GitHub (`.github/workflows/test.yml`); ordinary pushes to `main` only run the type check and unit tests, to stay within the free Actions minutes of a private repo. Run `npm run e2e` locally before tagging.
+
 The footer shows the version from `package.json`, set when the app is built. A unit test (`scripts/changelog.test.ts`) fails if `CHANGELOG.md` has no entry for that version.
