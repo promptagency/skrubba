@@ -1,14 +1,10 @@
 // 10 000 characters through the real model: nothing leaks where maskera
 // splits long text into chunks, and it is fast enough. Uses the raw model
 // in .cache/model-src/ (npm run fetch-model).
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { performance } from "node:perf_hooks";
 import { beforeAll, describe, expect, it } from "vitest";
-import { MODEL, MODEL_SRC_DIR } from "../config.ts";
 import { MaskeraMasker } from "./maskeraMasker.ts";
-import type { NerBackend } from "./ner.ts";
-import { createRecognizer, modelSpans } from "./nerModel.ts";
+import { backend, runModelTests } from "./modelForTests.ts";
 
 const FIRST = ["Anna", "Erik", "Sara", "Johan", "Maria", "Lars", "Karin", "Ahmed", "Fatima", "Nils", "Eva", "Oskar", "Lina", "Per", "Ingrid"];
 const LAST = ["Berg", "Lindqvist", "Holm", "Ekström", "Hassan", "Sundberg", "Nyberg", "Wallin", "Brandt", "Strand", "Persson", "Lundgren", "Olsson", "Svensson"];
@@ -27,11 +23,9 @@ function longText(): { text: string; names: string[] } {
   return { text, names: [...new Set(names)] };
 }
 
-const modelPresent = existsSync(join(MODEL_SRC_DIR, MODEL.directory, MODEL.onnxFile));
-const recognizer = createRecognizer({ localModelPath: MODEL_SRC_DIR, device: "cpu" });
-const backend: NerBackend = { init: () => recognizer.ready, detect: (text) => modelSpans(text, recognizer) };
+const run = await runModelTests();
 
-describe.skipIf(!modelPresent)("10 000 characters", () => {
+describe.skipIf(!run)("10 000 characters", () => {
   beforeAll(() => backend.init(() => {}), 60_000);
 
   it("masks every name, including at chunk boundaries", async () => {
