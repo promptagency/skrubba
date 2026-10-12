@@ -11,6 +11,12 @@ function at(text: string, needle: string, type: EntityType, source: Source, from
 const show = (text: string, spans: Span[]) => spans.map((s) => `${text.slice(s.start, s.end)}:${s.type}:${s.source}`);
 
 describe("resolveSpans priority", () => {
+  it("drops a company form left over when a rule claims the name", () => {
+    const t = "Avtal med Norrström Media AB i dag";
+    const spans = [at(t, "Norrström Media AB", "ORGANISATION", "model"), at(t, "Norrström Media", "ORGANISATION", "rule")];
+    expect(show(t, resolveSpans(t, spans))).toEqual(["Norrström Media:ORGANISATION:rule"]);
+  });
+
   it("keeps non-overlapping spans sorted by position", () => {
     const t = "Anna bor i Umeå";
     expect(show(t, resolveSpans(t, [at(t, "Umeå", "PLATS", "model"), at(t, "Anna", "NAMN", "model")]))).toEqual([

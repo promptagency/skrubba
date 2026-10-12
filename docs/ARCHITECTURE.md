@@ -9,7 +9,7 @@ src/
     Masker.ts            interface + types (Entity, Span, Key, RestoreResult)
     index.ts             createBrowserMasker()
     maskeraMasker.ts     Masker implementation: merges all span sources
-    rules.ts             rule layer (@maskera/core detectors + our context rules)
+    rules.ts             rule layer (@maskera/core detectors + our own rules in contextRules.ts)
     contextRules.ts      our own rules, e.g. labelled org.nr with a bad checksum
     wordList.ts          manual and word-list terms → ORD spans, whole word, case-insensitive
     spans.ts             priority, clipping, joining split model spans, spreading model values
@@ -99,6 +99,14 @@ Adjacent model spans separated only by a space or an apostrophe are joined into 
 The model can find a value in one place and miss it in another (a real case: "Norrström Media" found in a sentence, "Norrström Media AB" on the Arbetsgivare line missed). So every value the model found that starts with a capital letter and has three characters or more is also marked wherever else it occurs in the text as a whole word, genitive included, with any whitespace (a PDF line break) between its words. The spread spans rank as model spans. Lowercase and shorter values are not spread, so a stray hit like "teknik" or "AI" stays where it was found.
 
 Our own context rule masks NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer" as ORGANISATIONSNUMMER even when the checksum fails. maskera only masks Luhn-valid org.nr.
+
+Three more rules of our own (`contextRules.ts`) cover what the owner's real texts showed maskera and the model missing:
+
+- **Company names.** Up to five capitalised words before a company form (AB, HB, KB, Aktiebolag, Ltd, GmbH, AS, Oy and others, optionally "(publ)") are an ORGANISATION. Only the name is masked, so the text reads "[ORGANISATION_1] AB" and the name alone elsewhere gets the same placeholder: every occurrence of the name is marked, genitive included. Common sentence openers in front ("Enligt", "Kontakta", "Bolaget") are left out of the name, and when one found name ends with another ("Tillsammans Norrström Media" and "Norrström Media"), the shorter is used. When a rule claims the name inside a model span, a leftover that is only a company form is dropped instead of getting its own placeholder.
+- **Bare web addresses.** A domain without https:// or www. ("foretaget.se", with an optional path) is a URL when its top-level domain is on a short lowercase list, so "t.ex." and "rapport.pdf" stay out. The domain of any email address in the text is also masked where it stands alone, whatever its top-level domain.
+- **VAT numbers.** SE + ten digits + 01, spaces and a dash allowed, as ORGANISATIONSNUMMER (it contains one, or a sole trader's personnummer).
+
+Reference codes like "AB-1234-567" and bare eight-digit numbers have no fixed format and are not masked: a rule for them would also hit amounts and dates. Dates, prices and contract terms are left to *Egna ord* and selection.
 
 Values are merged across surface forms: case-insensitive, trailing genitive `s` stripped for NAMN/PLATS/ORGANISATION, whitespace normalised. "Anna Berg", "anna berg" and "Anna Bergs" share one placeholder. The merge ignores type: the same value found as PLATS and as ORGANISATION ("Göteborg") is one entity, typed by the first type seen in the session.
 

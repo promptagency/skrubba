@@ -1,8 +1,10 @@
+import { COMPANY_FORM } from "./contextRules.ts";
 import type { Source, Span } from "./Masker.ts";
 
 const PRIORITY: Record<Source, number> = { manual: 0, wordlist: 1, rule: 2, model: 3 };
 const WORD_CHAR = /[\p{L}\p{N}]/u;
 const JOIN_GAP = /^[ '’]$/u;
+const ONLY_COMPANY_FORM = new RegExp(`^${COMPANY_FORM}$`, "u");
 
 /**
  * Turn spans from all sources into one non-overlapping list, sorted by start.
@@ -10,7 +12,9 @@ const JOIN_GAP = /^[ '’]$/u;
  * Higher-priority spans claim their text first (manual > word list > rule >
  * model; within a source, earliest start then longest). A later span wholly
  * inside claimed text is dropped; one that partially overlaps is clipped to
- * its unclaimed parts, as maskera does, so the remainder is not leaked.
+ * its unclaimed parts, as maskera does, so the remainder is not leaked. A
+ * remainder that is only a company form ("AB" after a claimed name) is
+ * dropped, since it identifies no one.
  * Finally, model spans separated only by a space or apostrophe are joined.
  */
 export function resolveSpans(text: string, spans: Span[]): Span[] {
@@ -24,6 +28,7 @@ export function resolveSpans(text: string, spans: Span[]): Span[] {
       if (!trimmed) continue;
       const wasClipped = trimmed[0] !== span.start || trimmed[1] !== span.end;
       if (wasClipped && trimmed[1] - trimmed[0] < 2) continue;
+      if (wasClipped && ONLY_COMPANY_FORM.test(text.slice(trimmed[0], trimmed[1]))) continue;
       kept.push({ ...span, start: trimmed[0], end: trimmed[1] });
     }
   }

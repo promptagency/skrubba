@@ -1,11 +1,11 @@
 import { hybridDefaultDetectors } from "maskera";
 import { describe, expect, it } from "vitest";
-import { orgnrInContext } from "./contextRules.ts";
+import { companyName, domainName, momsnummer, orgnrInContext } from "./contextRules.ts";
 import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
-  it("is maskera's hybrid default set plus our context rule", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, orgnrInContext]);
+  it("is maskera's hybrid default set plus our own rules", () => {
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, orgnrInContext, momsnummer, companyName, domainName]);
   });
 });
 
@@ -17,6 +17,25 @@ describe("ruleSpans", () => {
       ["19850312-4471", "PERSONNUMMER", "rule"],
       ["070-1740612", "TELEFON", "rule"],
       ["556147-9036", "ORGANISATIONSNUMMER", "rule"],
+    ]);
+  });
+
+  it("finds company names, VAT numbers and bare domains", () => {
+    const text = "Norrström Media AB (SE556147903601) finns på norrstrommedia.se. Norrström Media svarar.";
+    const spans = ruleSpans(text);
+    expect(spans.map((s) => [text.slice(s.start, s.end), s.type])).toEqual([
+      ["Norrström Media", "ORGANISATION"],
+      ["SE556147903601", "ORGANISATIONSNUMMER"],
+      ["norrstrommedia.se", "URL"],
+      ["Norrström Media", "ORGANISATION"],
+    ]);
+  });
+
+  it("keeps an email address whole and a URL whole", () => {
+    const text = "anna@norrstrommedia.se, https://norrstrommedia.se/om";
+    expect(ruleSpans(text).map((s) => [text.slice(s.start, s.end), s.type])).toEqual([
+      ["anna@norrstrommedia.se", "EPOST"],
+      ["https://norrstrommedia.se/om", "URL"],
     ]);
   });
 });

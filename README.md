@@ -44,7 +44,7 @@ The *kodnyckel* (key) lists which placeholder stands for what. It exists only in
 ## What it finds
 
 - **With a Swedish language model:** names, places and organisations, including ones it has never seen.
-- **With rules:** personnummer, samordningsnummer, organisationsnummer, phone numbers, email addresses, street addresses, postcodes, apartment numbers, bank and plusgiro, IBAN, card and account numbers, IP addresses, URLs, journal numbers and car registration numbers.
+- **With rules:** personnummer, samordningsnummer, organisationsnummer and VAT numbers, company names followed by AB, HB, Ltd and the like, phone numbers, email addresses, web addresses (also without https://), street addresses, postcodes, apartment numbers, bank and plusgiro, IBAN, card and account numbers, IP addresses, journal numbers and car registration numbers.
 - **From you:** your own word list, plus anything you select by hand.
 
 When in doubt it hides too much rather than too little. You can keep a word with one click, but a detail that slips through is gone.

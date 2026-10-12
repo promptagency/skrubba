@@ -4,6 +4,12 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **Company names.** A name followed by AB, HB, Aktiebolag, Ltd, GmbH and similar is masked, and so is the same name wherever else it appears. The company form stays visible: "[ORGANISATION_1] AB".
+- **Web addresses without https://**, such as "foretaget.se", and the domain of an email address where it appears on its own.
+- **Swedish VAT numbers** (SE + organisationsnummer + 01).
+
 ## [0.9.0] - 2026-10-12
 
 First tagged version, before the public launch. 1.0.0 is planned for the launch at skrubba.promptagency.se.
