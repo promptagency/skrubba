@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import type { Entity } from "../engine/index.ts";
+import { type Entity, firstNamePlaceholder } from "../engine/index.ts";
 import { t, TYPE_LABEL, typeGroup } from "./copy.ts";
 import { cleanPaste } from "./pasteCleanup.ts";
 import { entityAt, entityMarks, segments } from "./segments.ts";
@@ -88,10 +88,14 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
 
   // The overlay sits under the textarea, so find the mark under the pointer
   // through the whole element stack.
-  function entityUnder(e: React.MouseEvent): Entity | undefined {
-    const mark = document
+  function markUnder(e: React.MouseEvent): HTMLElement | undefined {
+    return document
       .elementsFromPoint(e.clientX, e.clientY)
       .find((el): el is HTMLElement => el instanceof HTMLElement && el.dataset.ph !== undefined);
+  }
+
+  function entityUnder(e: React.MouseEvent): Entity | undefined {
+    const mark = markUnder(e);
     return mark && entities.find((x) => x.placeholder === mark.dataset.ph);
   }
 
@@ -121,7 +125,11 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
     if (!entity) return setTip(null);
     const box = e.currentTarget.getBoundingClientRect();
     const state = entity.active ? t("entity.scrub") : t("entity.keep");
-    setTip({ label: `${TYPE_LABEL[entity.type]} · ${entity.placeholder} · ${state}`, x: e.clientX - box.left, y: e.clientY - box.top });
+    const [type, placeholder] =
+      markUnder(e)?.dataset.first === undefined
+        ? [entity.type, entity.placeholder]
+        : (["FÖRNAMN", firstNamePlaceholder(entity.placeholder)] as const);
+    setTip({ label: `${TYPE_LABEL[type]} · ${placeholder} · ${state}`, x: e.clientX - box.left, y: e.clientY - box.top });
   }
 
   return (
@@ -132,6 +140,7 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
             <mark
               key={s.start}
               data-ph={s.data.placeholder}
+              data-first={s.data.occurrences.some((o) => o.start === s.start && o.firstName) ? "" : undefined}
               className={[
                 "hl",
                 `hl-${typeGroup(s.data.type)}`,

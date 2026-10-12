@@ -6,6 +6,7 @@ const key: Key = {
   entries: [
     { placeholder: "[NAMN_1]", value: "Anna Berg", type: "NAMN" },
     { placeholder: "[NAMN_2]", value: "Anders", type: "NAMN" },
+    { placeholder: "[FÖRNAMN_1]", value: "Anna", type: "FÖRNAMN" },
     { placeholder: "[ORGANISATION_1]", value: "Atea", type: "ORGANISATION" },
     { placeholder: "[ORGANISATIONSNUMMER_1]", value: "556677-8899", type: "ORGANISATIONSNUMMER" },
     { placeholder: "[IP_ADRESS_1]", value: "10.0.0.1", type: "IP_ADRESS" },
@@ -27,6 +28,8 @@ describe("tolerantRestore silent matches", () => {
     ["Hej [Namn_1].", "Hej Anna Berg."],
     ['Hon skrev "[NAMN_1]".', 'Hon skrev "Anna Berg".'],
     ["[NAMN_1]s lön", "Anna Bergs lön"],
+    ["Hej [FÖRNAMN_1], [NAMN_1] ska få [FÖRNAMN_1]s lön.", "Hej Anna, Anna Berg ska få Annas lön."],
+    ["Hej [förnamn_1].", "Hej Anna."],
     ["[ORGANISATIONSNUMMER_1] för [ORGANISATION_1]", "556677-8899 för Atea"],
     ["IP [IP_ADRESS_1].", "IP 10.0.0.1."],
   ])("%s", (input, expected) => {
@@ -55,6 +58,12 @@ describe("tolerantRestore suggestions", () => {
       ]);
     },
   );
+
+  it.each(["FORNAMN_1", "[FIRST_NAME_1]", "FIRSTNAME_1"])("suggests the first name for %s", (found) => {
+    expect(restore(`Hej ${found}.`).suggestions).toEqual([
+      { start: 4, end: 4 + found.length, found, placeholder: "[FÖRNAMN_1]", value: "Anna" },
+    ]);
+  });
 
   it("restores a suggestion the user accepted", () => {
     expect(restore("Hej NAMN 1 och NAME_1", new Set(["NAMN 1"])).text).toBe("Hej Anna Berg och NAME_1");

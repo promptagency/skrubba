@@ -89,6 +89,12 @@ describe("buildEntities first-name linking", () => {
     expect(e.occurrences.map((o) => o.surface)).toEqual(["Johan Lindqvist", "Johan", "Johan"]);
   });
 
+  it("flags the linked first-name occurrences so they can be written as [FÖRNAMN_1]", () => {
+    const text = "Johan Lindqvist är sjuk. Johan ringde. Johans lön.";
+    const [e] = build(text, [["Johan Lindqvist", "NAMN"], ["Johan", "NAMN"], ["Johans", "NAMN"]]);
+    expect(e.occurrences.map((o) => o.firstName ?? false)).toEqual([false, true, true]);
+  });
+
   it("leaves the genitive s outside the occurrence so the output reads [NAMN_1]s", () => {
     const text = "Anna Berg. Anna Bergs lön. Atea:s avtal med Atea.";
     const out = build(text, [["Anna Berg", "NAMN"], ["Anna Bergs", "NAMN"], ["Atea:s", "ORGANISATION"], ["Atea", "ORGANISATION"]]);
@@ -146,7 +152,9 @@ describe("EntityRegistry across edits", () => {
   it("keeps a first-name link after the full name is edited away", () => {
     const registry = new EntityRegistry();
     build("Johan Lindqvist. Johan.", [["Johan Lindqvist", "NAMN"], ["Johan", "NAMN"]], registry);
-    expect(summary(build("Johan ringde.", [["Johan", "NAMN"]], registry))).toEqual(["[NAMN_1]=Johan Lindqvist×1"]);
+    const [e] = build("Johan ringde.", [["Johan", "NAMN"]], registry);
+    expect(summary([e])).toEqual(["[NAMN_1]=Johan Lindqvist×1"]);
+    expect(e.occurrences[0].firstName).toBe(true);
   });
 
   it("drops a remembered link when the text now has two matching full names", () => {
@@ -174,5 +182,16 @@ describe("EntityRegistry.seed", () => {
       "[NAMN_1]=Anna Berg×1",
       "[NAMN_5]=Sara Holm×1",
     ]);
+  });
+
+  it("reads a [FÖRNAMN_n] row as the first name of [NAMN_n], not as a value of its own", () => {
+    const registry = new EntityRegistry();
+    registry.seed([
+      { placeholder: "[NAMN_1]", value: "Johan Lindqvist", type: "NAMN" },
+      { placeholder: "[FÖRNAMN_1]", value: "Johan", type: "FÖRNAMN" },
+    ]);
+    const [e] = build("Johan ringde. Erik Ek svarade.", [["Johan", "NAMN"], ["Erik Ek", "NAMN"]], registry);
+    expect(summary([e])).toEqual(["[NAMN_1]=Johan Lindqvist×1"]);
+    expect(e.occurrences[0].firstName).toBe(true);
   });
 });

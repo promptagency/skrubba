@@ -1,4 +1,4 @@
-import type { Entity, EntityType, KeyEntry, Source, Span } from "./Masker.ts";
+import type { Entity, EntityType, KeyEntry, Occurrence, Source, Span } from "./Masker.ts";
 
 const GENITIVE_TYPES: ReadonlySet<EntityType> = new Set(["NAMN", "PLATS", "ORGANISATION"]);
 const SOURCE_RANK: Record<Source, number> = { manual: 0, wordlist: 1, rule: 2, model: 3 };
@@ -40,10 +40,17 @@ export class EntityRegistry {
 
   /**
    * Start from an uploaded key: its values keep their placeholders, and new
-   * values are numbered after the highest number per type.
+   * values are numbered after the highest number per type. A [FÖRNAMN_n] row
+   * links that first name to [NAMN_n] again.
    */
   seed(entries: KeyEntry[]): void {
+    const byPlaceholder = new Map(entries.map((e) => [e.placeholder, e]));
     for (const e of entries) {
+      if (e.type === "FÖRNAMN") {
+        const full = byPlaceholder.get(e.placeholder.replace("[FÖRNAMN_", "[NAMN_"));
+        if (full) this.link(norm(e.value), norm(full.value));
+        continue;
+      }
       const n = Number(/_(\d+)\]$/.exec(e.placeholder)?.[1] ?? 0);
       this.counters.set(e.type, Math.max(this.counters.get(e.type) ?? 0, n));
       const key = norm(e.value);
@@ -75,6 +82,17 @@ interface Resolved {
   surface: string;
   key: string;
   value: string;
+  firstName?: boolean;
+}
+
+/** "[NAMN_3]" → "[FÖRNAMN_3]": the placeholder for the first name alone. */
+export function firstNamePlaceholder(placeholder: string): string {
+  return placeholder.replace(/^\[NAMN_/, "[FÖRNAMN_");
+}
+
+/** The placeholder an occurrence is written as. */
+export function placeholderOf(entity: Entity, occurrence: Occurrence): string {
+  return occurrence.firstName ? firstNamePlaceholder(entity.placeholder) : entity.placeholder;
 }
 
 function stripSuffix(span: Span, surface: string, key: string, n: number): Resolved {
@@ -124,12 +142,14 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
       registry.link(r.key, fullKey);
       r.key = fullKey;
       r.value = fullValue;
+      r.firstName = true;
     } else if (!candidates) {
       const linked = registry.linkedTo(r.key);
       const entry = linked && registry.get(linked);
       if (linked && entry) {
         r.key = linked;
         r.value = entry.value;
+        r.firstName = true;
       }
     }
   }
@@ -150,7 +170,12 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
       };
       byKey.set(r.key, entity);
     }
-    entity.occurrences.push({ start: r.span.start, end: r.span.end, surface: r.surface });
+    entity.occurrences.push({
+      start: r.span.start,
+      end: r.span.end,
+      surface: r.surface,
+      ...(r.firstName && { firstName: true }),
+    });
     if (SOURCE_RANK[r.span.source] < SOURCE_RANK[entity.source]) entity.source = r.span.source;
   }
   return [...byKey.values()];

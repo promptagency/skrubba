@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, type Page, test } from "@playwright/test";
-import { answerBox, editor, modeButton, MOD, openKey, openReady, placeholderOf, restoredBox, rows, scrub } from "./helpers.ts";
+import { answerBox, editor, modeButton, MOD, openKey, openReady, placeholderOf, restoredBox, rows, scrub, scrubbedBox } from "./helpers.ts";
 
 const TEXT = "Hej Karin, Johan Lindqvist (850412-1234) flyttar till Umeå.";
 
@@ -34,6 +34,26 @@ test("Phase 3 round trip: scrub, paste an answer, restore with a suggestion", as
   await expect(page.getByRole("textbox", { name: "Svar från AI" })).toHaveValue(answer);
   await expect(page.getByText(/^Hittade /)).toHaveCount(0);
 });
+
+test("a first name standing alone comes back as the first name", async ({ page }) => {
+  await openReady(page);
+  await editor(page).fill("Johan Lindqvist (850412-1234) flyttar till Umeå. Johan börjar i mars.");
+  await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
+  await scrub(page);
+
+  const full = await placeholderOf(page, "Johan Lindqvist");
+  const first = full.replace("[NAMN_", "[FÖRNAMN_");
+  await expect(scrubbedBox(page)).toHaveValue(new RegExp(`^${escape(full)} .* ${escape(first)} börjar i mars\\.$`));
+  const dialog = await openKey(page);
+  await expect(dialog.getByRole("row").filter({ hasText: first })).toContainText("Förnamn");
+  await page.keyboard.press("Escape");
+
+  await (await answerBox(page)).fill(`Hej ${first}! Vi har registrerat ${full}s flytt.`);
+  await page.keyboard.press(`${MOD}+Enter`);
+  await expect(restoredBox(page)).toHaveValue("Hej Johan! Vi har registrerat Johan Lindqvists flytt.");
+});
+
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 test("Nej hides a suggestion and leaves the text", async ({ page }) => {
   await openReady(page);

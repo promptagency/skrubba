@@ -15,6 +15,9 @@ const TYPES: readonly EntityType[] = ENTITY_TYPES;
 const ALIASES: Record<string, EntityType> = {
   NAME: "NAMN",
   PERSON: "NAMN",
+  FORNAMN: "FÖRNAMN",
+  FIRSTNAME: "FÖRNAMN",
+  FIRST_NAME: "FÖRNAMN",
   PLACE: "PLATS",
   LOCATION: "PLATS",
   CITY: "PLATS",

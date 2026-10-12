@@ -1,9 +1,15 @@
 // The one interface the app talks to. Nothing outside src/engine/ imports
 // maskera or transformers.js; see docs/ARCHITECTURE.md.
 
-/** maskera's labels verbatim, so placeholders match its format, plus ORD (manual selection or word list). */
+/**
+ * maskera's labels verbatim, so placeholders match its format, plus ORD
+ * (manual selection or word list) and FÖRNAMN: a first name standing alone
+ * for a full name in the text, numbered like that name ([FÖRNAMN_1] is the
+ * first name of [NAMN_1]), so restore writes back the form that was there.
+ */
 export const ENTITY_TYPES = [
   "NAMN",
+  "FÖRNAMN",
   "PLATS",
   "ORGANISATION",
   "ADRESS",
@@ -42,6 +48,8 @@ export interface Occurrence {
   start: number;
   end: number;
   surface: string;
+  /** A first name linked to the entity's full name. Masked as [FÖRNAMN_n]. */
+  firstName?: boolean;
 }
 
 export interface Entity {

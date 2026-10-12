@@ -54,7 +54,8 @@ export type EntityType =   // maskera's labels verbatim, so placeholders match i
   | "TELEFON" | "EPOST" | "POSTNUMMER" | "LAGENHETSNUMMER"
   | "BANKGIRO" | "PLUSGIRO" | "IBAN" | "KORTNUMMER" | "KONTONUMMER"
   | "IP_ADRESS" | "URL" | "JOURNALNUMMER" | "REGNUMMER"
-  | "ORD";   // manual selection or word list
+  | "ORD"        // manual selection or word list
+  | "FÖRNAMN";   // a linked first name alone: [FÖRNAMN_n] belongs to [NAMN_n]
 
 export interface Entity {
   id: string;            // stable within session
@@ -112,7 +113,7 @@ Values are merged across surface forms: case-insensitive, trailing genitive `s` 
 
 First names are linked to full names. A single-word NAMN whose normalised form (as above) equals the first word of exactly one multi-word NAMN in the same text joins that entity: "Johan" and "Johans" get the placeholder of "Johan Lindqvist". If two or more full names share the first name ("Anna Berg", "Anna Ek"), a lone "Anna" is not linked and gets its own placeholder, because a wrong link restores the wrong person. Surnames alone are not linked in v1.
 
-A linked entity has one `value`, the full name, and restore writes that for every occurrence: an answer that said "[NAMN_1]" where the original said "Johan" comes back as "Johan Lindqvist". Each occurrence keeps its own `surface`, so the entity panel can show the linked forms.
+A linked first name is masked as `[FÖRNAMN_n]`, numbered like the full name's `[NAMN_n]`, so the AI can tell it is the same person and restore writes back the form that was there: "Johan Lindqvist … Johans chef" becomes "[NAMN_1] … [FÖRNAMN_1]s chef", and an answer that says "Hej [FÖRNAMN_1]" comes back as "Hej Johan" (decided 2026-10-12; before that every linked occurrence restored as the full name). The entity is still one item in the panel, and Behåll keeps both forms. Occurrences carry `firstName: true`; `applyMask` writes them with `placeholderOf()` and adds a `[FÖRNAMN_n]` row to the key with the first word of the full name. An uploaded key's `[FÖRNAMN_n]` row re-links that first name to `[NAMN_n]` instead of becoming a value of its own.
 
 ## Long texts
 

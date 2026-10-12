@@ -32,6 +32,24 @@ describe("applyMask", () => {
     expect(key.entries).toEqual([{ placeholder: "[NAMN_1]", value: "Anna", type: "NAMN" }]);
   });
 
+  it("writes a linked first name as [FÖRNAMN_n] and adds it to the key", () => {
+    const t = "Johan Lindqvist är sjuk. Johans lön.";
+    const johan = entity({
+      placeholder: "[NAMN_1]",
+      value: "Johan Lindqvist",
+      occurrences: [
+        { start: 0, end: 15, surface: "Johan Lindqvist" },
+        { start: 25, end: 30, surface: "Johan", firstName: true },
+      ],
+    });
+    const { masked, key } = applyMask(t, [johan], []);
+    expect(masked).toBe("[NAMN_1] är sjuk. [FÖRNAMN_1]s lön.");
+    expect(key.entries).toEqual([
+      { placeholder: "[NAMN_1]", value: "Johan Lindqvist", type: "NAMN" },
+      { placeholder: "[FÖRNAMN_1]", value: "Johan", type: "FÖRNAMN" },
+    ]);
+  });
+
   it("builds a key with the word list and metadata", () => {
     const { key } = applyMask(text, [anna], ["Nordljus"]);
     expect(key.wordList).toEqual(["Nordljus"]);

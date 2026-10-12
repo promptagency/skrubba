@@ -1,6 +1,6 @@
 import { ENTITY_TYPES, type EntityType, type Key, type KeyEntry } from "./Masker.ts";
 
-const PLACEHOLDER = /^\[([A-Z_]+)_([1-9]\d*)\]$/;
+const PLACEHOLDER = /^\[([A-ZÅÄÖ_]+)_([1-9]\d*)\]$/;
 const isString = (x: unknown): x is string => typeof x === "string";
 
 /**

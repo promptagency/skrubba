@@ -10,6 +10,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 - **Web addresses without https://**, such as "foretaget.se", and the domain of an email address where it appears on its own.
 - **Swedish VAT numbers** (SE + organisationsnummer + 01).
 
+### Changed
+
+- **A first name comes back as a first name.** Where the text has "Johan" alone next to "Johan Lindqvist", the first name becomes `[FÖRNAMN_1]` (numbered like `[NAMN_1]`, so the AI knows it is the same person), and Avskrubba writes back "Johan", not the full name. The kodnyckel gets a *Förnamn* row for it.
+
 ## [0.9.0] - 2026-10-12
 
 First tagged version, before the public launch. 1.0.0 is planned for the launch at skrubba.promptagency.se.

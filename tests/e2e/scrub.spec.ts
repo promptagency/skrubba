@@ -50,7 +50,7 @@ test("paste, review, keep one, add a word and copy using only the keyboard", asy
   expect(copied).toContain("Hej Karin");
   for (const secret of ["Johan", "Lindqvist", "850412-1234", "Sara Holm", "Nordström", "Havsvind"])
     expect(copied).not.toContain(secret);
-  expect(copied).toMatch(/\[NAMN_\d+\]s chef/);
+  expect(copied).toMatch(/\[FÖRNAMN_\d+\]s chef/);
 
   expect(Date.now() - started).toBeLessThan(30_000);
 });

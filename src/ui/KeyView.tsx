@@ -1,4 +1,4 @@
-import type { Entity, KeyEntry } from "../engine/index.ts";
+import { type Entity, type KeyEntry, placeholderOf } from "../engine/index.ts";
 import { t, TYPE_LABEL } from "./copy.ts";
 import { KeyUpload } from "./KeyUpload.tsx";
 
@@ -13,7 +13,9 @@ export interface KeyViewProps {
 
 /** Kodnyckel: what each placeholder stands for, download, upload, clear. */
 export function KeyView({ entries, wordList, entities, onDownload, onUpload, onClear }: KeyViewProps) {
-  const counts = new Map(entities.map((e) => [e.placeholder, e.occurrences.length]));
+  const counts = new Map<string, number>();
+  for (const e of entities)
+    for (const o of e.occurrences) counts.set(placeholderOf(e, o), (counts.get(placeholderOf(e, o)) ?? 0) + 1);
 
   return (
     <div className="keyview">

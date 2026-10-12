@@ -168,6 +168,7 @@ Nytt 2026-10-11. Text som klistras in i Din text städas. Osynliga tecken från 
 | Intern typ | Visas som |
 |---|---|
 | NAMN | Namn |
+| FÖRNAMN | Förnamn |
 | PLATS | Plats |
 | ORGANISATION | Organisation |
 | ADRESS | Adress |

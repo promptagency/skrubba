@@ -18,6 +18,11 @@ describe("parseKey", () => {
     expect(parseKey(JSON.stringify(valid))).toEqual(valid);
   });
 
+  it("accepts a first-name row, Ö and all", () => {
+    const withFirstName = { ...valid, entries: [...valid.entries, { placeholder: "[FÖRNAMN_1]", value: "Anna", type: "FÖRNAMN" }] };
+    expect(parseKey(JSON.stringify(withFirstName))).toEqual(withFirstName);
+  });
+
   it.each([
     ["not JSON", "{"],
     ["another app", JSON.stringify({ ...valid, app: "other" })],
