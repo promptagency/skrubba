@@ -3,6 +3,13 @@
 // the texts). A hand-written "## Decision" section in RESULTS.md survives
 // re-runs.
 //
+// Configs: rules (maskera rules only), q4 and q8 (maskera with its model), and
+// skrubba (Skrubba's own engine as the app runs it: q8 plus our context rules,
+// span merging and spreading of model-found names).
+//
+// The terminal shows counts only, so real values never end up in a terminal
+// log or a chat. Leaked and over-masked values are listed in RESULTS.md.
+//
 // Usage: npm run spike [-- --dtype q4,q8] [-- --show q4]
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -14,17 +21,26 @@ import {
   MASKERA_SV_NER_MODEL,
   MASKERA_SV_NER_REVISION,
   type NerRecognizer,
-  type RedactResult,
   redact,
   redactWithNer,
 } from "maskera";
+import { MODEL_SRC_DIR } from "../src/config.ts";
+import { MaskeraMasker } from "../src/engine/maskeraMasker.ts";
+import { createRecognizer, modelSpans } from "../src/engine/nerModel.ts";
 
 const TEXT_DIR = "spike/texts";
 const RESULTS = "spike/RESULTS.md";
 const CACHE_DIR = ".cache/models";
 
 type Dtype = "q4" | "q8" | "fp32";
-type ConfigName = "rules" | Dtype;
+type ConfigName = "rules" | Dtype | "skrubba";
+
+/** What a config produced for one text: maskera's RedactResult has this shape. */
+interface Outcome {
+  text: string;
+  redactions: Array<{ value: string; label: string }>;
+  restore(masked: string): string;
+}
 
 interface Sample {
   name: string;
@@ -39,7 +55,7 @@ interface TextResult {
   leaks: string[];
   overMasked: string[];
   roundTrip: boolean;
-  redactions: RedactResult["redactions"];
+  redactions: Outcome["redactions"];
 }
 
 interface ConfigResult {
@@ -84,7 +100,7 @@ function norm(s: string): string {
   return s.toLowerCase().replace(/\s+/g, " ").trim();
 }
 
-function evaluate(sample: Sample, result: RedactResult, ms: number): TextResult {
+function evaluate(sample: Sample, result: Outcome, ms: number): TextResult {
   const leaks = sample.expected.filter((e) => occursAsWord(result.text, e));
   const expectedNorm = sample.expected.map(norm);
   // A redaction counts as expected if it overlaps an expected value in either
@@ -133,6 +149,30 @@ async function runModel(samples: Sample[], dtype: Dtype): Promise<ConfigResult> 
     texts.push(evaluate(s, r, performance.now() - t));
   }
   return { config: dtype, loadMs, texts };
+}
+
+async function runSkrubba(samples: Sample[]): Promise<ConfigResult> {
+  const recognizer = createRecognizer({ localModelPath: MODEL_SRC_DIR, device: "cpu" });
+  const backend = { init: () => recognizer.ready, detect: (text: string) => modelSpans(text, recognizer) };
+  const t0 = performance.now();
+  await recognizer.ready;
+  const loadMs = performance.now() - t0;
+  await modelSpans("Hej, jag heter Anna.", recognizer);
+  const texts: TextResult[] = [];
+  for (const s of samples) {
+    // A fresh session per text, like Ny text in the app.
+    const masker = new MaskeraMasker(backend);
+    const t = performance.now();
+    const entities = await masker.mask(s.text, { wordList: [], manual: [] });
+    const { masked, key } = masker.applyMask(s.text, entities, []);
+    const outcome: Outcome = {
+      text: masked,
+      redactions: entities.flatMap((e) => e.occurrences.map((o) => ({ value: o.surface, label: e.type }))),
+      restore: (m) => masker.restore(m, key).text,
+    };
+    texts.push(evaluate(s, outcome, performance.now() - t));
+  }
+  return { config: "skrubba", loadMs, texts };
 }
 
 function summaryTable(results: ConfigResult[]): string {
@@ -193,12 +233,14 @@ async function main() {
     console.error(`Loading ${MASKERA_SV_NER_MODEL} ${d}…`);
     results.push(await runModel(samples, d));
   }
+  console.error("Loading Skrubba's engine (q8)…");
+  results.push(await runSkrubba(samples));
 
   const table = summaryTable(results);
   console.log(table);
-  for (const c of results)
-    for (const t of c.texts)
-      if (t.leaks.length) console.log(`${c.config}/${t.sample.name} leaks: ${t.leaks.join(" | ")}`);
+  const missing = samples.filter((s) => s.expected.length === 0).map((s) => s.name);
+  if (missing.length)
+    console.log(`\nNo ${missing.map((n) => `${n}.expected.txt`).join(", ")}: leaks are not counted for these texts, and every masked value counts as over-masked.`);
 
   const md = [
     "# Spike results",
@@ -208,6 +250,7 @@ async function main() {
     "",
     "Leak = an expected value still present verbatim (whole word, case-insensitive) in the output.",
     "Over-masked = a redaction that does not overlap any expected value.",
+    "Round trip = restoring the masked text gives back the original exactly. For skrubba it shows FAIL whenever a first name stands alone: it shares the full name's placeholder, so it comes back as the full name (\"Johan har\" → \"Johan Lindqvist har\").",
     "",
     "## Summary",
     "",
@@ -219,7 +262,7 @@ async function main() {
     keptDecision(),
   ].join("\n");
   writeFileSync(RESULTS, md);
-  console.error(`Wrote ${RESULTS}`);
+  console.error(`Wrote ${RESULTS}: which values leaked or were over-masked, per text.`);
 }
 
 main().catch((e) => {
