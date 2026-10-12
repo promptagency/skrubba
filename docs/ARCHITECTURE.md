@@ -99,6 +99,8 @@ Adjacent model spans separated only by a space or an apostrophe are joined into 
 
 The model can find a value in one place and miss it in another (a real case: "Norrström Media" found in a sentence, "Norrström Media AB" on the Arbetsgivare line missed). So every value the model found that starts with a capital letter and has three characters or more is also marked wherever else it occurs in the text as a whole word, genitive included, with any whitespace (a PDF line break) between its words. The spread spans rank as model spans. Lowercase and shorter values are not spread, so a stray hit like "teknik" or "AI" stays where it was found.
 
+maskera's `regnummer` rule (ABC 123, ABC 12D) is off by default upstream because booking codes share the shape. We turn it on: a miss is worse than an over-mask, and the user can keep a false hit with one click.
+
 Our own context rule masks NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer" as ORGANISATIONSNUMMER even when the checksum fails. maskera only masks Luhn-valid org.nr.
 
 Three more rules of our own (`contextRules.ts`) cover what the owner's real texts showed maskera and the model missing:

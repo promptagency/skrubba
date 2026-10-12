@@ -1,11 +1,12 @@
+import { regnummer } from "@maskera/core";
 import { hybridDefaultDetectors } from "maskera";
 import { describe, expect, it } from "vitest";
 import { companyName, domainName, momsnummer, orgnrInContext } from "./contextRules.ts";
 import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
-  it("is maskera's hybrid default set plus our own rules", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, orgnrInContext, momsnummer, companyName, domainName]);
+  it("is maskera's hybrid default set plus regnummer and our own rules", () => {
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, domainName]);
   });
 });
 
@@ -28,6 +29,14 @@ describe("ruleSpans", () => {
       ["SE556147903601", "ORGANISATIONSNUMMER"],
       ["norrstrommedia.se", "URL"],
       ["Norrström Media", "ORGANISATION"],
+    ]);
+  });
+
+  it("finds car registration numbers, old and new style, but not currency amounts", () => {
+    const text = "Bilen ABC 123 och DEF45G. Kostar SEK 100 eller EUR 12A.";
+    expect(ruleSpans(text).map((s) => [text.slice(s.start, s.end), s.type])).toEqual([
+      ["ABC 123", "REGNUMMER"],
+      ["DEF45G", "REGNUMMER"],
     ]);
   });
 

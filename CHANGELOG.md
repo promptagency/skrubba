@@ -12,6 +12,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ### Changed
 
+- **Car registration numbers are masked** (ABC 123, ABC 12D). 0.9.0 listed them, but maskera's rule for them was still off.
+
 - **A first name comes back as a first name.** Where the text has "Johan" alone next to "Johan Lindqvist", the first name becomes `[FÖRNAMN_1]` (numbered like `[NAMN_1]`, so the AI knows it is the same person), and Avskrubba writes back "Johan", not the full name. The kodnyckel gets a *Förnamn* row for it.
 
 ## [0.9.0] - 2026-10-12
