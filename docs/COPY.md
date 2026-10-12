@@ -189,6 +189,7 @@ Nytt 2026-10-12, ägarens godkännande av utkasten.
 - `footer.maskera`, `footer.kbbert`: länktexterna.
 - Vanliga frågor är ett dragspel. Alla frågor är stängda från början, och en öppnad fråga stänger den som var öppen.
 - Vanliga frågor har fem nya frågor (vilka uppgifter, hur man döljer något som missades, ändrade platshållare, vilka AI-tjänster, kostnad) och en ny ordning. "Byta tillbaka" heter "avskrubba" i svaren, och Github stavas som i sidfoten. Godkänt av ägaren.
+- Vanliga frågor: ny fråga "Räknar ni besökare?" om den anonyma besöksräkningen med Plausible. "Kostar Skrubba något?" säger inte längre "ingen statistik", och "Hur kan jag kontrollera att inget skickas?" nämner besöksräkningen. Godkänt av ägaren 2026-10-12.
 
 ## Typer
 
@@ -270,7 +271,7 @@ En lista över vilka riktiga uppgifter platshållarna står för, till exempel a
 
 ### Hur kan jag kontrollera att inget skickas?
 
-Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på Github.
+Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Det enda anrop som inte hämtar själva sidan är besöksräkningen när sidan laddas, och inget anrop görs när du skrubbar eller avskrubbar. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på Github.
 
 ### Vad gör Skrubba inte?
 
@@ -282,4 +283,8 @@ Alla. Skrubba gör bara texten säkrare, så du kan klistra in den i ChatGPT, Cl
 
 ### Kostar Skrubba något?
 
-Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam, och sidan samlar ingen statistik om hur du använder den.
+Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam.
+
+### Räknar ni besökare?
+
+Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som skickar det vidare till Prompt Agencys egen Plausible-server i Finland. Plausible ser sidans adress, varifrån du kom, land, webbläsare och typ av enhet, men sätter inga cookies och sparar inte din IP-adress. Det du skriver, uppgifterna och kodnyckeln skickas aldrig. Har webbläsaren Do Not Track eller Global Privacy Control påslaget räknas du inte.

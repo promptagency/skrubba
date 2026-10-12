@@ -27,7 +27,7 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 
 ## Hard rules (privacy)
 
-- **Zero network calls after first load** except fetching our own self-hosted model/runtime files. No analytics, no CDN fonts, no error reporting. Enforce with a strict CSP in `index.html` and verify in a test that lists every request.
+- **The browser talks to our own origin only.** After first load, the only requests are our self-hosted model/runtime files and one anonymous page view per load to `/api/event`, which a Cloudflare Function (`functions/api/event.ts`) passes on to Prompt Agency's self-hosted Plausible (owner's decision, 2026-10-12). It carries the page address (utm_* only), the referrer's origin and path and the site name, never text, entities, word list or key, and is skipped for Do Not Track, Global Privacy Control and automated browsers. No other analytics, no CDN fonts, no error reporting. Enforce with a strict CSP (`connect-src 'self'`) and verify in a test that lists every request.
 - Text, entities, word list and the restore key live **only in memory**. Never `localStorage`, `sessionStorage`, IndexedDB, cookies or URL params. The only persistence is an explicit user-triggered download.
 - Model weights and the ONNX/WASM runtime are served from **our own origin** (`/models/`, `/runtime/`).
 - All inference runs in a **Web Worker**. The main thread never blocks.

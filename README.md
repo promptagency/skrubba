@@ -53,11 +53,12 @@ When in doubt it hides too much rather than too little. You can keep a word with
 
 Nothing you type is sent anywhere. The language model is downloaded once from the same site and then runs on your own computer. After that the app also works offline.
 
-- No analytics, no cookies, no fonts or scripts from other sites.
+- No cookies, and no fonts or scripts from other sites.
+- Visits are counted anonymously: on page load, one page view (the address, where you came from) goes to Skrubba's own address, which passes it on to Prompt Agency's self-hosted [Plausible](https://plausible.io) in Finland. Plausible sets no cookies and stores no IP address. Do Not Track and Global Privacy Control are respected. What you type is never part of it.
 - Your text, the word list and the kodnyckel are kept in memory only. Closing the tab erases them.
 - A strict Content Security Policy stops the page from connecting to any other server, even by mistake.
 
-**Check it yourself.** Open your browser's developer tools (F12), go to the *Network* tab and use Skrubba. Every request goes to Skrubba's own address, and none happens when you press Skrubba or Avskrubba. Or load the page, turn off wifi, and see that everything still works.
+**Check it yourself.** Open your browser's developer tools (F12), go to the *Network* tab and use Skrubba. Every request goes to Skrubba's own address, and none happens when you press Skrubba or Avskrubba. The only one that is not part of the page itself is the visit count (`/api/event`) when the page loads. Or load the page, turn off wifi, and see that everything still works.
 
 ## What it is not
 

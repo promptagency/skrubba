@@ -191,7 +191,7 @@ export const FAQ = {
     },
     {
       q: "Hur kan jag kontrollera att inget skickas?",
-      a: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på Github.",
+      a: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Det enda anrop som inte hämtar själva sidan är besöksräkningen när sidan laddas, och inget anrop görs när du skrubbar eller avskrubbar. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på Github.",
     },
     {
       q: "Vad gör Skrubba inte?",
@@ -203,7 +203,11 @@ export const FAQ = {
     },
     {
       q: "Kostar Skrubba något?",
-      a: "Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam, och sidan samlar ingen statistik om hur du använder den.",
+      a: "Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam.",
+    },
+    {
+      q: "Räknar ni besökare?",
+      a: "Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som skickar det vidare till Prompt Agencys egen Plausible-server i Finland. Plausible ser sidans adress, varifrån du kom, land, webbläsare och typ av enhet, men sätter inga cookies och sparar inte din IP-adress. Det du skriver, uppgifterna och kodnyckeln skickas aldrig. Har webbläsaren Do Not Track eller Global Privacy Control påslaget räknas du inte.",
     },
   ],
 };

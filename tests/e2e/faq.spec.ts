@@ -11,6 +11,7 @@ const QUESTIONS = [
   "Vad gör Skrubba inte?",
   "Vilka AI-tjänster fungerar det med?",
   "Kostar Skrubba något?",
+  "Räknar ni besökare?",
 ];
 
 test("Vanliga frågor opens as a modal over the app, and closing it leaves the text intact", async ({ page }) => {

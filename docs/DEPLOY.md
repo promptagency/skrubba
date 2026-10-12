@@ -11,9 +11,11 @@ Skrubba is a static site on Cloudflare Pages, project `skrubba`, built from `mai
 | Build output directory | `dist` |
 | Node version | from `.node-version` (24) |
 | Custom domain | `skrubba.promptagency.se`, a CNAME to `skrubba.pages.dev` at the DNS host of promptagency.se |
-| Web Analytics | Off. It injects a script from another origin, which the CSP blocks and the privacy promise forbids |
+| Web Analytics | Off. It injects a script from another origin, which the CSP blocks and the privacy promise forbids. Visits are counted with our own Plausible instead (below) |
 
 **If a push does not go live.** At launch (2026-10-12) three of seven deploys failed at the very last step with "Failed to publish your Function. Got error: Unknown internal error occurred", although Skrubba has no Functions and the build had passed. It is on Cloudflare's side, and retrying the same deployment fixed it every time (Workers & Pages → skrubba → Deployments → the failed one → Retry deployment). The live build is in the page: `<meta name="skrubba-build" content="<commit>">`.
+
+**Visit counting.** `functions/` holds one Pages Function, `/api/event`, which passes the page's anonymous page view on to Plausible (`plausible.app.promptagency.se`, site `skrubba.promptagency.se`). Plausible's own script and its optional measurements are not used. To leave your own visits out, add your IP address under the site's Shields in Plausible. Automated browsers (the smoke tests) are never counted.
 
 After a deploy, `npm run smoke` runs the privacy check, the model, a full round trip and offline use in all three browsers against the live site (`SKRUBBA_URL=https://skrubba.pages.dev npm run smoke` for another address). It caught a bug local tests could not: Cloudflare redirects `/index.html` to `/`, and a service worker that cached the redirect broke every return visit. The worker now fetches the app shell from `/`.
 

@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { SessionProvider } from "./state/SessionContext.tsx";
+import { countVisit } from "./ui/analytics.ts";
 import { App } from "./ui/App.tsx";
 import "../design/fonts.css";
 import "../design/tokens.css";
@@ -13,3 +14,5 @@ createRoot(document.getElementById("root")!).render(
     </SessionProvider>
   </StrictMode>,
 );
+
+countVisit();

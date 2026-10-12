@@ -126,5 +126,5 @@ export default defineConfig({
   optimizeDeps: { exclude: ["@huggingface/transformers"] },
   // The worker dynamic-imports parts of transformers.js; only ES workers can split.
   worker: { format: "es", plugins: () => [dropBundledWasm()] },
-  test: { include: ["src/**/*.test.ts", "scripts/**/*.test.ts"] },
+  test: { include: ["src/**/*.test.ts", "scripts/**/*.test.ts", "functions/**/*.test.ts"] },
 });
