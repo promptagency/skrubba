@@ -472,11 +472,9 @@ export function App() {
           })}
         </p>
         <p>
-          {REPO_URL ? (
-            <a href={REPO_URL}>{t("footer.credits")}</a>
-          ) : (
-            t("footer.credits")
-          )}
+          {fill(t("footer.credits"), {
+            github: REPO_URL ? <ExternalLink href={REPO_URL}>{t("footer.github")}</ExternalLink> : t("footer.github"),
+          })}
         </p>
         <p>
           <button type="button" className="link" aria-haspopup="dialog" onClick={() => setFaqOpen(true)}>
