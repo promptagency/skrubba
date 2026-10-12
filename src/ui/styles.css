@@ -73,7 +73,7 @@ button {
   background: var(--surface);
   border: 1px solid var(--line-control);
   border-radius: var(--radius);
-  padding: 6px var(--space-3);
+  padding: var(--space-2) var(--space-3);
   cursor: pointer;
 }
 
@@ -87,7 +87,7 @@ button.primary {
   color: var(--accent-text);
   border-color: var(--accent);
   font-weight: 600;
-  padding: var(--space-2) 20px;
+  padding: var(--space-2) var(--space-6);
 }
 
 button.link {
@@ -224,7 +224,7 @@ kbd {
 .selection-scrub {
   position: absolute;
   top: var(--space-2);
-  right: 20px;
+  right: var(--space-4);
   z-index: 2;
   background: var(--accent);
   color: var(--accent-text);
@@ -239,7 +239,7 @@ kbd {
   color: var(--bg);
   font-size: 14px;
   line-height: 20px;
-  padding: 3px var(--space-2);
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
   white-space: nowrap;
 }
@@ -271,7 +271,7 @@ kbd {
 
 .gate progress {
   width: min(100%, 24em);
-  margin-top: 20px;
+  margin-top: var(--space-6);
   accent-color: var(--accent);
 }
 
@@ -310,7 +310,7 @@ kbd {
   text-align: left;
   border: none;
   background: none;
-  padding: 7px var(--space-1);
+  padding: var(--space-2) var(--space-1);
   min-width: 0;
 }
 
@@ -367,7 +367,7 @@ kbd {
 
 .words textarea {
   width: 100%;
-  margin-top: 6px;
+  margin-top: var(--space-2);
   font: inherit;
   padding: var(--space-2);
   border: 1px solid var(--line-control);
@@ -380,7 +380,7 @@ kbd {
 .toast {
   background: var(--text);
   color: var(--bg);
-  padding: 10px var(--space-4);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius);
 }
 
@@ -424,7 +424,7 @@ kbd {
 .key-table th,
 .key-table td {
   text-align: left;
-  padding: 6px var(--space-3) 6px 0;
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
   border-bottom: 1px solid var(--line);
 }
 
@@ -445,7 +445,7 @@ kbd {
 .key-warning {
   font-size: 14px;
   line-height: 20px;
-  margin-top: 6px;
+  margin-top: var(--space-2);
   max-width: 28em;
 }
 
@@ -455,7 +455,7 @@ kbd {
 
 .key-words {
   margin: 0;
-  padding-left: 20px;
+  padding-left: var(--space-6);
 }
 
 .key-actions {
@@ -468,7 +468,7 @@ kbd {
 
 .key-error {
   color: var(--falurod);
-  margin: 6px 0 0;
+  margin: var(--space-2) 0 0;
   max-width: 28em;
 }
 
@@ -543,7 +543,7 @@ a {
   grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: var(--space-2);
-  margin-bottom: 28px;
+  margin-bottom: var(--space-8);
 }
 
 .help-links {
@@ -585,7 +585,7 @@ a {
   border: none;
   border-radius: var(--radius-full);
   background: none;
-  padding: 10px 28px;
+  padding: var(--space-3) var(--space-8);
   font-size: 16px;
   font-weight: 600;
   color: var(--muted);
@@ -654,7 +654,7 @@ a {
   min-width: 11em;
   gap: var(--space-2);
   min-height: 48px;
-  padding: 0 20px;
+  padding: 0 var(--space-6);
   font-size: 16px;
 }
 
@@ -777,7 +777,7 @@ a {
 }
 
 .modal::backdrop {
-  background: rgb(0 0 0 / 0.35);
+  background: var(--backdrop);
 }
 
 .modal-head {
@@ -802,7 +802,7 @@ a {
 }
 
 .faq h3 {
-  margin: 20px 0 var(--space-1);
+  margin: var(--space-6) 0 var(--space-1);
 }
 
 .faq p {
@@ -847,7 +847,7 @@ a {
   }
   .mode-switch button {
     flex: 1;
-    padding: 10px var(--space-3);
+    padding: var(--space-3) var(--space-3);
   }
   .key-table {
     font-size: 14px;

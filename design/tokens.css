@@ -29,6 +29,7 @@
   --kant-kontroll: #7A8268; /* borders on inputs and controls (3:1) */
   --diskhandske: #FFD43B; /* accent fill, at most one per view */
   --pa-diskhandske: #17140F; /* text on a --diskhandske fill */
+  --backdrop: rgb(0 0 0 / 0.35); /* dims the page behind a window */
   --falurod: #8E2B1D; /* error text, always with words */
   --fokus: #1E4A35; /* focus ring, 2px solid, 2px offset */
 }
@@ -60,6 +61,7 @@
   --kant-kontroll: #8FAE94; /* borders on inputs and controls (3:1) */
   --diskhandske: #FFD43B; /* accent fill, at most one per view */
   --pa-diskhandske: #17140F; /* text on a --diskhandske fill */
+  --backdrop: rgb(0 0 0 / 0.55); /* dims the page behind a window */
   --falurod: #FFB4A2; /* error text, always with words */
   --fokus: #FFD43B; /* focus ring, 2px solid, 2px offset */
 }
@@ -89,6 +91,7 @@
     --kant-kontroll: #8FAE94; /* borders on inputs and controls (3:1) */
     --diskhandske: #FFD43B; /* accent fill, at most one per view */
     --pa-diskhandske: #17140F; /* text on a --diskhandske fill */
+    --backdrop: rgb(0 0 0 / 0.55); /* dims the page behind a window */
     --falurod: #FFB4A2; /* error text, always with words */
     --fokus: #FFD43B; /* focus ring, 2px solid, 2px offset */
   }
