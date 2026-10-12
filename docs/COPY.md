@@ -188,6 +188,7 @@ Nytt 2026-10-12, ägarens godkännande av utkasten.
 - `footer.credits`: "Källkod till Skrubba finns på {github}", ägarens formulering. {maskera} och {kbbert} är länkar till maskera på GitHub och KBLab på Hugging Face, i en ny flik.
 - `footer.maskera`, `footer.kbbert`: länktexterna.
 - Vanliga frågor är ett dragspel. Alla frågor är stängda från början, och en öppnad fråga stänger den som var öppen.
+- Vanliga frågor har fem nya frågor (vilka uppgifter, hur man döljer något som missades, ändrade platshållare, vilka AI-tjänster, kostnad) och en ny ordning. "Byta tillbaka" heter "avskrubba" i svaren, och Github stavas som i sidfoten. Godkänt av ägaren.
 
 ## Typer
 
@@ -246,18 +247,39 @@ Fönstret med filmen. Stegen är textremsorna i filmen och läses också upp av 
 
 Öppnas som ett fönster ovanpå sidan, från länken "Vanliga frågor" under lägesväljaren och från "Allt sker på din dator" i sidfoten. Rubriken är "Vanliga frågor". Frågorna visas som ett dragspel. Alla är stängda från början, och klickar man på en fråga stängs den som var öppen.
 
+
 ### Vad händer med min text?
 
-Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret här för att byta tillbaka.
+Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret under Avskrubba, så kommer de riktiga uppgifterna tillbaka.
+
+### Vilka uppgifter hittar Skrubba?
+
+Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer och registreringsnummer hittas med regler. Datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.
+
+### Hur döljer jag något som Skrubba missade?
+
+Markera ordet i texten och tryck Skrubba markering, så döljs det överallt i texten. Ord som ska döljas varje gång, som kundnamn och projektnamn, skriver du under Egna ord, ett per rad. Vill du behålla något som Skrubba har dolt klickar du på markeringen.
+
+### Vad händer om AI:n ändrar platshållarna?
+
+Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.
+
+### Vad är kodnyckeln?
+
+En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att avskrubba svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.
 
 ### Hur kan jag kontrollera att inget skickas?
 
-Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på GitHub.
+Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på Github.
 
 ### Vad gör Skrubba inte?
 
 Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.
 
-### Vad är kodnyckeln?
+### Vilka AI-tjänster fungerar det med?
 
-En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att byta tillbaka i svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.
+Alla. Skrubba gör bara texten säkrare, så du kan klistra in den i ChatGPT, Claude, Copilot, Gemini eller vilken tjänst du vill.
+
+### Kostar Skrubba något?
+
+Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam, och sidan samlar ingen statistik om hur du använder den.

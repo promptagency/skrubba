@@ -3,9 +3,14 @@ import { editor, openReady } from "./helpers.ts";
 
 const QUESTIONS = [
   "Vad händer med min text?",
+  "Vilka uppgifter hittar Skrubba?",
+  "Hur döljer jag något som Skrubba missade?",
+  "Vad händer om AI:n ändrar platshållarna?",
+  "Vad är kodnyckeln?",
   "Hur kan jag kontrollera att inget skickas?",
   "Vad gör Skrubba inte?",
-  "Vad är kodnyckeln?",
+  "Vilka AI-tjänster fungerar det med?",
+  "Kostar Skrubba något?",
 ];
 
 test("Vanliga frågor opens as a modal over the app, and closing it leaves the text intact", async ({ page }) => {
@@ -43,19 +48,19 @@ test("Vanliga frågor is an accordion: one answer open at a time", async ({ page
   await expect(answer(key)).toBeHidden();
   await expect(answer(check)).toBeHidden();
 
-  await faq.getByText(QUESTIONS[3], { exact: true }).click();
+  await faq.getByText(QUESTIONS[4], { exact: true }).click();
   await expect(answer(key)).toBeVisible();
 
-  await faq.getByText(QUESTIONS[1], { exact: true }).click();
+  await faq.getByText(QUESTIONS[5], { exact: true }).click();
   await expect(answer(check)).toBeVisible();
   await expect(answer(key)).toBeHidden();
 
   // Clicking the open question closes it.
-  await faq.getByText(QUESTIONS[1], { exact: true }).click();
+  await faq.getByText(QUESTIONS[5], { exact: true }).click();
   await expect(answer(check)).toBeHidden();
 
   // The keyboard works too: Enter on a focused question opens it.
-  await faq.locator("summary", { hasText: QUESTIONS[3] }).focus();
+  await faq.locator("summary", { hasText: QUESTIONS[4] }).focus();
   await page.keyboard.press("Enter");
   await expect(answer(key)).toBeVisible();
 });

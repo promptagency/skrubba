@@ -171,19 +171,39 @@ export const FAQ = {
   items: [
     {
       q: "Vad händer med min text?",
-      a: "Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret här för att byta tillbaka.",
+      a: "Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret under Avskrubba, så kommer de riktiga uppgifterna tillbaka.",
+    },
+    {
+      q: "Vilka uppgifter hittar Skrubba?",
+      a: "Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer och registreringsnummer hittas med regler. Datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.",
+    },
+    {
+      q: "Hur döljer jag något som Skrubba missade?",
+      a: "Markera ordet i texten och tryck Skrubba markering, så döljs det överallt i texten. Ord som ska döljas varje gång, som kundnamn och projektnamn, skriver du under Egna ord, ett per rad. Vill du behålla något som Skrubba har dolt klickar du på markeringen.",
+    },
+    {
+      q: "Vad händer om AI:n ändrar platshållarna?",
+      a: "Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.",
+    },
+    {
+      q: "Vad är kodnyckeln?",
+      a: "En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att avskrubba svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.",
     },
     {
       q: "Hur kan jag kontrollera att inget skickas?",
-      a: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på GitHub.",
+      a: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på Github.",
     },
     {
       q: "Vad gör Skrubba inte?",
       a: "Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
     },
     {
-      q: "Vad är kodnyckeln?",
-      a: "En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att byta tillbaka i svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.",
+      q: "Vilka AI-tjänster fungerar det med?",
+      a: "Alla. Skrubba gör bara texten säkrare, så du kan klistra in den i ChatGPT, Claude, Copilot, Gemini eller vilken tjänst du vill.",
+    },
+    {
+      q: "Kostar Skrubba något?",
+      a: "Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam, och sidan samlar ingen statistik om hur du använder den.",
     },
   ],
 };
