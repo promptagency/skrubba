@@ -19,7 +19,7 @@ Skrubba is a static site on Cloudflare Pages, project `skrubba`, built from `mai
 
 After a deploy, `npm run smoke` runs the privacy check, the model, a full round trip and offline use in all three browsers against the live site (`SKRUBBA_URL=https://skrubba.pages.dev npm run smoke` for another address). It caught a bug local tests could not: Cloudflare redirects `/index.html` to `/`, and a service worker that cached the redirect broke every return visit. The worker now fetches the app shell from `/`.
 
-The build downloads the model from Hugging Face and checks it against pinned sha256 hashes, so a build never ships weights that differ from the ones tested. `public/_headers` sets the CSP (also as a meta tag), cross-origin isolation, hardening headers and caching; `scripts/headers.test.ts` keeps its CSP equal to the one in `vite.config.ts`.
+The build downloads the model from Hugging Face and checks it against pinned sha256 hashes, so a build never ships weights that differ from the ones tested. Hugging Face sometimes answers 429 (too many requests) when many builds run close together, so the download waits and tries again up to five times, with growing pauses or as long as its Retry-After header asks (`scripts/retryFetch.ts`). A build that still fails can be retried from the dashboard. `public/_headers` sets the CSP (also as a meta tag), cross-origin isolation, hardening headers and caching; `scripts/headers.test.ts` keeps its CSP equal to the one in `vite.config.ts`.
 
 
 Skrubba has a service worker so the 53 MB language model is downloaded once and the app works offline.

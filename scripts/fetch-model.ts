@@ -32,6 +32,7 @@ import type { PackedManifest } from "../src/engine/packed.ts";
 import { partUrl } from "../src/engine/packed.ts";
 import { assertFileSizes, MAX_PART_BYTES } from "./limits.ts";
 import { pack } from "./pack.ts";
+import { fetchWithRetry } from "./retryFetch.ts";
 
 if (MODEL.hubId !== MASKERA_SV_NER_MODEL || MODEL.revision !== MASKERA_SV_NER_REVISION) {
   console.error(
@@ -55,7 +56,7 @@ for (const [file, expected] of Object.entries(MODEL.files)) {
   if (existsSync(target) && sha256(readFileSync(target)) === expected) continue;
   const url = `https://huggingface.co/${MODEL.hubId}/resolve/${MODEL.revision}/${file}`;
   console.log(`fetching ${file}`);
-  const res = await fetch(url);
+  const res = await fetchWithRetry(url);
   if (!res.ok) {
     console.error(`failed to fetch ${url}: ${res.status} ${res.statusText}`);
     process.exit(1);
