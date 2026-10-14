@@ -1,6 +1,7 @@
 // Reads one file's bytes into a ReadResult: detect the format, run its
 // reader, then the checks every format shares. Runs in the reader worker
 // (readerWorker.ts) and, for tests, in Node.
+import { oleFormat, openCfb } from "./cfb.ts";
 import { detect } from "./detect.ts";
 import { readDocx } from "./formats/docx.ts";
 import { readEml } from "./formats/eml.ts";
@@ -36,6 +37,11 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
       if (format === "odt") return { format, extracted: await readOdt(zip) };
       if (format === "xlsx") return { format, extracted: await readXlsx(zip) };
       if (format === "pptx") return { format, extracted: await readPptx(zip) };
+      throw new ReadError("unsupported");
+    }
+    case "ole": {
+      const cfb = openCfb(bytes);
+      oleFormat(cfb);
       throw new ReadError("unsupported");
     }
     case "pdf":
