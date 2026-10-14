@@ -554,7 +554,8 @@ a {
 }
 
 /* The vertical line between Vanliga frågor and Så här funkar det. */
-.help-sep {
+.help-sep,
+.pane-sep {
   width: 1px;
   height: 20px;
   background: var(--line-control);

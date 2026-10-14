@@ -319,7 +319,7 @@ export function App() {
                   >
                     {t("editor.example")}
                   </button>
-                  <span className="help-sep" aria-hidden="true" />
+                  <span className="pane-sep" aria-hidden="true" />
                 </>
               )}
               <FilePicker
