@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-14
+
+Ready for the public announcement.
+
 ### Added
 
 - **Anonymous visit counting** with Prompt Agency's self-hosted Plausible. One page view per load goes to Skrubba's own address, which passes it on; the browser still talks to no other server. No cookies, no stored IP address, and Do Not Track and Global Privacy Control are respected. A new question in *Vanliga frågor* explains it.
@@ -57,6 +61,7 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/promptagency/skrubba/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/promptagency/skrubba/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/promptagency/skrubba/releases/tag/v0.9.0
