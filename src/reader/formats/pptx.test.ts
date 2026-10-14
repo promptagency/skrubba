@@ -21,6 +21,11 @@ describe("readPptx", () => {
     });
   });
 
+  it("reads a slide the deck lists many times only once", async () => {
+    const pptx = buildPptx([{ texts: ["Anna Berg"] }], { order: Array.from({ length: 300 }, () => 1) });
+    expect(await read(pptx)).toEqual({ text: "Bild 1\nAnna Berg", hidden: false, slides: 1 });
+  });
+
   it("flags nothing in a plain deck", async () => {
     expect((await read(buildPptx([{ texts: ["Anna Berg"] }]))).hidden).toBe(false);
   });

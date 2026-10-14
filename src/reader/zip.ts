@@ -64,11 +64,17 @@ export function openZip(data: Uint8Array): Zip {
     p += 46 + nameLen + extraLen + commentLen;
   }
 
+  // Bytes handed out across every read, so a document that points at one
+  // part many times cannot inflate past the total cap either.
+  let inflated = 0;
+
   async function bytes(name: string): Promise<Uint8Array | null> {
     const e = entries.get(name);
     if (!e) return null;
     if (e.flags & 1) throw new ReadError("encrypted");
     if (e.size > LIMITS.zipEntryBytes) throw fail();
+    inflated += e.size;
+    if (inflated > LIMITS.zipTotalBytes) throw fail();
     if (e.compressedSize > 0 && e.size / e.compressedSize > LIMITS.zipRatio) throw fail();
     if (u32(e.offset) !== 0x04034b50) throw fail();
     const start = e.offset + 30 + u16(e.offset + 26) + u16(e.offset + 28);

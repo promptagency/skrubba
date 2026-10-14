@@ -5,17 +5,25 @@
 import { t } from "../../ui/copy.ts";
 import { relationships } from "../ooxml.ts";
 import { type Extracted, ReadError } from "../types.ts";
-import { xmlEvents } from "../xml.ts";
+import { type XmlEvent, xmlEvents } from "../xml.ts";
 import type { Zip } from "../zip.ts";
 
 const MAX_COLUMNS = 16384;
+
+/**
+ * Elements by local name: Excel writes <c>, the .NET OpenXML SDK often
+ * <x:c>. Attribute names keep their prefix (r:id stays r:id).
+ */
+function* localEvents(xml: string): Generator<XmlEvent> {
+  for (const ev of xmlEvents(xml)) yield ev.type === "text" ? ev : { ...ev, name: ev.name.slice(ev.name.indexOf(":") + 1) };
+}
 
 export function sharedStrings(xml: string): string[] {
   const out: string[] = [];
   let current: string | null = null;
   let skip = 0;
   let inText = false;
-  for (const ev of xmlEvents(xml)) {
+  for (const ev of localEvents(xml)) {
     if (skip) {
       if (ev.type === "open") skip++;
       else if (ev.type === "close") skip--;
@@ -68,7 +76,7 @@ export function sheetText(xml: string, strings: string[]): string {
   let inValue = false;
   let inText = false;
   let skip = 0;
-  for (const ev of xmlEvents(xml)) {
+  for (const ev of localEvents(xml)) {
     if (skip) {
       if (ev.type === "open") skip++;
       else if (ev.type === "close") skip--;
@@ -114,10 +122,14 @@ export async function readXlsx(zip: Zip): Promise<Extracted> {
   let hidden = zip.names().some((n) => /^xl\/(comments\d*|threadedComments\/[^/]+)\.xml$/.test(n));
   const parts: string[] = [];
   let sheets = 0;
-  for (const ev of xmlEvents(workbook)) {
+  const seen = new Set<string>();
+  for (const ev of localEvents(workbook)) {
     if (ev.type !== "open" || ev.name !== "sheet") continue;
     const target = rels.find((r) => r.id === ev.attrs["r:id"])?.target;
-    const xml = target ? await zip.text(target) : null;
+    // A sheet listed again is read once: a workbook could point at one sheet thousands of times.
+    if (!target || seen.has(target)) continue;
+    seen.add(target);
+    const xml = await zip.text(target);
     if (xml === null) continue;
     const text = sheetText(xml, strings);
     if (ev.attrs.state === "hidden" || ev.attrs.state === "veryHidden") {

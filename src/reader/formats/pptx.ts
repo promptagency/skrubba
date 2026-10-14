@@ -47,11 +47,15 @@ export async function readPptx(zip: Zip): Promise<Extracted> {
   const parts: string[] = [];
   let slides = 0;
   let position = 0;
+  const seen = new Set<string>();
   for (const ev of xmlEvents(presentation)) {
     if (ev.type !== "open" || ev.name !== "p:sldId") continue;
     position++;
     const target = rels.find((r) => r.id === ev.attrs["r:id"])?.target;
-    const xml = target ? await zip.text(target) : null;
+    // A slide listed again is read once: a deck could point at one slide thousands of times.
+    if (!target || seen.has(target)) continue;
+    seen.add(target);
+    const xml = await zip.text(target);
     if (xml === null) continue;
     const slide = slideText(xml);
     if (slide.hidden) {

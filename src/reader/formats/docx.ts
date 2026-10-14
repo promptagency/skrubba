@@ -70,11 +70,11 @@ export async function readDocx(zip: Zip): Promise<Extracted> {
   if (body === null) throw new ReadError("failed");
   const rels = relationships((await zip.text("word/_rels/document.xml.rels")) ?? "", "word/");
   const parts = [wordPartText(body)];
-  for (const kind of ["header", "footer"]) {
-    for (const rel of rels.filter((r) => r.type === kind)) {
-      const xml = await zip.text(rel.target);
-      if (xml !== null) parts.push(wordPartText(xml));
-    }
+  // Each header and footer part once, however many relationships point at it.
+  const pageParts = new Set(rels.filter((r) => r.type === "header" || r.type === "footer").map((r) => r.target));
+  for (const target of pageParts) {
+    const xml = await zip.text(target);
+    if (xml !== null) parts.push(wordPartText(xml));
   }
   for (const notes of ["word/footnotes.xml", "word/endnotes.xml"]) {
     const xml = await zip.text(notes);

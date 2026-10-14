@@ -26,6 +26,16 @@ describe("readXlsx", () => {
     expect(await read(xlsx)).toEqual({ text: "Blad: Lista\nAnna\t\tUmeå\nLisa Ek", hidden: false, sheets: 1 });
   });
 
+  it("reads a sheet the workbook lists many times only once", async () => {
+    const xlsx = buildXlsx([{ name: "Lista", rows: [["Anna Berg"]] }], { order: Array.from({ length: 300 }, () => 1) });
+    expect(await read(xlsx)).toEqual({ text: "Blad: Blad1\nAnna Berg", hidden: false, sheets: 1 });
+  });
+
+  it("reads a workbook whose elements carry a namespace prefix", async () => {
+    const xlsx = buildXlsx([{ name: "Personal", rows: [["Namn", "Anna Berg"]] }], { prefix: "x" });
+    expect((await read(xlsx)).text).toBe("Blad: Personal\nNamn\tAnna Berg");
+  });
+
   it("says a cell comment was left out", async () => {
     expect((await read(buildXlsx([{ name: "Lista", rows: [["Anna"]] }], { comment: "Ring Lisa Ek" }))).hidden).toBe(true);
   });
