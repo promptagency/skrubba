@@ -30,7 +30,7 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 - **The browser talks to our own origin only.** After first load, the only requests are our self-hosted model/runtime files and one anonymous page view per load to `/api/event`, which a Cloudflare Function (`functions/api/event.ts`) passes on to Prompt Agency's self-hosted Plausible (owner's decision, 2026-10-12). It carries the page address (utm_* only), the referrer's origin and path and the site name, never text, entities, word list or key, and is skipped for Do Not Track, Global Privacy Control and automated browsers. No other analytics, no CDN fonts, no error reporting. Enforce with a strict CSP (`connect-src 'self'`) and verify in a test that lists every request.
 - Text, entities, word list and the restore key live **only in memory**. Never `localStorage`, `sessionStorage`, IndexedDB, cookies or URL params. The only persistence is an explicit user-triggered download.
 - Model weights and the ONNX/WASM runtime are served from **our own origin** (`/models/`, `/runtime/`).
-- All inference runs in a **Web Worker**. The main thread never blocks.
+- All inference runs in a **Web Worker**, and so does reading a document (a fresh worker per file, terminated after it). The main thread never blocks.
 - A missed entity is worse than an over-masked one. When in doubt, mask and let the user keep.
 - Organisations are masked **by default**. The user can keep them per entity.
 
@@ -38,6 +38,7 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 
 - Vite + React + TypeScript, no UI framework, plain CSS with custom properties. Minimal, audited dependencies.
 - `maskera` + `@huggingface/transformers`. Rules-only (`@maskera/core`) runs instantly; the NER model loads in the background.
+- `pdfjs-dist` (exact version, nothing fetched) for PDF, in a worker of its own inside the reader worker. Every other document format is read by our own code in `src/reader/`.
 - PWA (service worker) so the app works offline after first visit.
 - Deploy: static build to Cloudflare Pages at `skrubba.promptagency.se`.
 - Tests: Vitest for logic, Playwright for the mask/restore round trip and the "no external requests" check.
@@ -46,13 +47,14 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 
 - Code, commits and docs under `docs/` except `COPY.md`: English. UI: Swedish, per `docs/COPY.md`.
 - Engine behind `src/engine/` with a single interface (`Masker`). Nothing outside imports `maskera` directly.
+- Document reading behind `src/reader/` with a single entry, `readDocument`. Nothing outside imports pdf.js or a format reader. Every dropped or chosen file goes through the window Läs in dokument; only text comes out. In Skrubba a document starts a new kodnyckel, as Ny text does.
 - Placeholders follow maskera's format `[NAMN_1]`, `[PLATS_1]`, `[ORGANISATION_1]`, `[ADRESS_1]`, `[PERSONNUMMER_1]`; manual and word-list entries use `[ORD_1]`; a first name standing alone for a full name uses `[FÖRNAMN_1]`, numbered like that name's `[NAMN_1]`. Restore must be tolerant (see `docs/ARCHITECTURE.md`).
 - One page, two operations picked with a switch: Skrubba (mask) and Avskrubba (restore). Input on the left, the button between the panes runs it, the result on the right, then Kopiera. The items found (Uppgifter), the kodnyckel (placeholder → real value list, not an encryption key), Vanliga frågor and Så här funkar det (a captioned video, re-recorded with `npm run demo-video` after visible changes) are windows on top. No wizard. See `docs/UX.md`.
 - Commit small, one feature per commit, with the test that proves it.
 
 ## Out of scope for v1
 
-File upload (docx/pdf; dropping a plain `.txt` or `.md` file is in), history of texts, fake replacement names, role profiles, saved cases, accounts, browser extension. Do not build toward them unless `PLAN.md` says so.
+Saving a scrubbed document back as Word or PDF (documents are read as text only; see `docs/superpowers/specs/2026-10-14-document-import-design.md`), OCR of scanned PDFs, history of texts, fake replacement names, role profiles, saved cases, accounts, browser extension. Do not build toward them unless `PLAN.md` says so.
 
 ## When unsure
 

@@ -260,6 +260,10 @@ export const FAQ = {
       q: "Räknar ni besökare?",
       a: "Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som skickar det vidare till Prompt Agencys egen Plausible-server i Finland. Plausible ser sidans adress, varifrån du kom, land, webbläsare och typ av enhet, men sätter inga cookies och sparar inte din IP-adress. Det du skriver, uppgifterna och kodnyckeln skickas aldrig. Har webbläsaren Do Not Track eller Global Privacy Control påslaget räknas du inte.",
     },
+    {
+      q: "Kan jag släppa in PDF och Word?",
+      a: "Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar och bilagor tas inte med. En skannad PDF utan text går inte att läsa.",
+    },
   ],
 };
 
