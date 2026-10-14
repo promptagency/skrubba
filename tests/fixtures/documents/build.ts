@@ -217,6 +217,106 @@ export function buildPptx(slides: Array<{ texts: string[]; table?: string[][]; h
   });
 }
 
+/**
+ * A compound file (version 3, 512-byte sectors) holding the given streams;
+ * "Storage/Stream" puts a stream in a storage. Layout: the FAT sectors first,
+ * then the directory, then each stream's sectors in order. The mini stream
+ * cutoff is set to 0, so every stream is in regular sectors (real files and
+ * the mini stream are covered by the Tika .msg and .doc).
+ */
+export function buildCfb(streams: Record<string, Uint8Array>): Uint8Array {
+  const SECTOR = 512;
+  const FREE = 0xffffffff;
+  const END = 0xfffffffe;
+  const FATSECT = 0xfffffffd;
+  const NONE = 0xffffffff;
+  type Node = { name: string; type: 1 | 2 | 5; data?: Uint8Array; children: Node[] };
+  const root: Node = { name: "Root Entry", type: 5, children: [] };
+  for (const [path, data] of Object.entries(streams)) {
+    const parts = path.split("/");
+    let dir = root;
+    for (const part of parts.slice(0, -1)) {
+      let next = dir.children.find((c) => c.name === part && c.type === 1);
+      if (!next) {
+        next = { name: part, type: 1, children: [] };
+        dir.children.push(next);
+      }
+      dir = next;
+    }
+    dir.children.push({ name: parts[parts.length - 1], type: 2, data, children: [] });
+  }
+  const nodes: Node[] = [];
+  const parentOf = new Map<Node, Node>();
+  const walk = (n: Node) => {
+    nodes.push(n);
+    for (const c of n.children) {
+      parentOf.set(c, n);
+      walk(c);
+    }
+  };
+  walk(root);
+  const sectorsFor = (bytes: number) => Math.ceil(bytes / SECTOR);
+  const dirSectors = sectorsFor(nodes.length * 128);
+  const dataSectors = nodes.reduce((sum, n) => sum + (n.data ? sectorsFor(n.data.length) : 0), 0);
+  let fatSectors = 1;
+  while (fatSectors * (SECTOR / 4) < fatSectors + dirSectors + dataSectors) fatSectors++;
+  const total = fatSectors + dirSectors + dataSectors;
+  const out = new Uint8Array(SECTOR * (1 + total));
+  const dv = new DataView(out.buffer);
+
+  out.set([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1], 0);
+  dv.setUint16(0x18, 0x3e, true);
+  dv.setUint16(0x1a, 3, true);
+  dv.setUint16(0x1c, 0xfffe, true);
+  dv.setUint16(0x1e, 9, true);
+  dv.setUint16(0x20, 6, true);
+  dv.setUint32(0x2c, fatSectors, true);
+  dv.setUint32(0x30, fatSectors, true);
+  dv.setUint32(0x38, 0, true);
+  dv.setUint32(0x3c, END, true);
+  dv.setUint32(0x44, END, true);
+  for (let i = 0; i < 109; i++) dv.setUint32(0x4c + i * 4, i < fatSectors ? i : FREE, true);
+
+  const fat = new Uint32Array(fatSectors * (SECTOR / 4)).fill(FREE);
+  for (let i = 0; i < fatSectors; i++) fat[i] = FATSECT;
+  const chain = (start: number, count: number) => {
+    for (let i = 0; i < count; i++) fat[start + i] = i === count - 1 ? END : start + i + 1;
+  };
+  chain(fatSectors, dirSectors);
+  const starts = new Map<Node, number>();
+  let next = fatSectors + dirSectors;
+  for (const n of nodes) {
+    if (!n.data || n.data.length === 0) continue;
+    const count = sectorsFor(n.data.length);
+    starts.set(n, next);
+    chain(next, count);
+    out.set(n.data, SECTOR * (1 + next));
+    next += count;
+  }
+  fat.forEach((v, i) => dv.setUint32(SECTOR + i * 4, v, true));
+
+  for (let i = 0; i < dirSectors * (SECTOR / 128); i++) {
+    const at = SECTOR * (1 + fatSectors) + i * 128;
+    dv.setUint32(at + 68, NONE, true);
+    dv.setUint32(at + 72, NONE, true);
+    dv.setUint32(at + 76, NONE, true);
+    const n = nodes[i];
+    if (!n) continue;
+    const name = n.name.slice(0, 31);
+    for (let j = 0; j < name.length; j++) dv.setUint16(at + j * 2, name.charCodeAt(j), true);
+    dv.setUint16(at + 64, (name.length + 1) * 2, true);
+    out[at + 66] = n.type;
+    out[at + 67] = 1;
+    const parent = parentOf.get(n);
+    const sibling = parent ? parent.children[parent.children.indexOf(n) + 1] : undefined;
+    if (sibling) dv.setUint32(at + 72, nodes.indexOf(sibling), true);
+    if (n.children.length) dv.setUint32(at + 76, nodes.indexOf(n.children[0]), true);
+    dv.setUint32(at + 116, starts.get(n) ?? END, true);
+    dv.setUint32(at + 120, n.data?.length ?? 0, true);
+  }
+  return out;
+}
+
 /** A PDF string literal in WinAnsi (latin-1 range), with octal escapes for anything outside ASCII. */
 function pdfString(s: string): string {
   let out = "(";
