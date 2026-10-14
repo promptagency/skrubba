@@ -352,6 +352,49 @@ export function buildDoc(o: { main: string; footnotes?: string; comments?: strin
   return buildCfb({ WordDocument: word, "1Table": table });
 }
 
+/** An Outlook .msg: string properties as UTF-16 (or 8-bit with `ansi`), fixed properties for code page and submit time. */
+export function buildMsg(m: {
+  subject?: string;
+  fromName?: string;
+  fromEmail?: string;
+  to?: string;
+  cc?: string;
+  body?: string;
+  html?: string;
+  date?: Date;
+  attachment?: string;
+  ansi?: boolean;
+  codepage?: number;
+}): Uint8Array {
+  const streams: Record<string, Uint8Array> = {};
+  const put = (id: number, value: string | undefined) => {
+    if (value === undefined) return;
+    const tag = id.toString(16).toUpperCase().padStart(4, "0");
+    if (m.ansi) streams[`__substg1.0_${tag}001E`] = latin1(`${value}\0`);
+    else streams[`__substg1.0_${tag}001F`] = new Uint8Array(Buffer.from(`${value}\0`, "utf16le"));
+  };
+  put(0x0037, m.subject);
+  put(0x0c1a, m.fromName);
+  put(0x5d01, m.fromEmail);
+  put(0x0e04, m.to);
+  put(0x0e03, m.cc);
+  put(0x1000, m.body);
+  if (m.html !== undefined) streams["__substg1.0_10130102"] = new TextEncoder().encode(m.html);
+  const fixed: Array<[number, bigint]> = [];
+  if (m.codepage) fixed.push([0x3fde0003, BigInt(m.codepage)]);
+  if (m.date) fixed.push([0x00390040, (BigInt(m.date.getTime()) + 11644473600000n) * 10000n]);
+  const props = new Uint8Array(32 + fixed.length * 16);
+  const dv = new DataView(props.buffer);
+  fixed.forEach(([tag, value], i) => {
+    dv.setUint32(32 + i * 16, tag, true);
+    dv.setUint32(36 + i * 16, 6, true);
+    dv.setBigUint64(40 + i * 16, value, true);
+  });
+  streams["__properties_version1.0"] = props;
+  if (m.attachment) streams["__attach_version1.0_#00000000/__substg1.0_3707001F"] = new Uint8Array(Buffer.from(`${m.attachment}\0`, "utf16le"));
+  return buildCfb(streams);
+}
+
 /** A PDF string literal in WinAnsi (latin-1 range), with octal escapes for anything outside ASCII. */
 function pdfString(s: string): string {
   let out = "(";

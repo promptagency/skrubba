@@ -7,6 +7,7 @@ import { readDoc } from "./formats/doc.ts";
 import { readDocx } from "./formats/docx.ts";
 import { readEml } from "./formats/eml.ts";
 import { readHtml } from "./formats/html.ts";
+import { readMsg } from "./formats/msg.ts";
 import { readOdt } from "./formats/odt.ts";
 import { readPdf } from "./formats/pdf.ts";
 import { readPptx } from "./formats/pptx.ts";
@@ -44,7 +45,7 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
       const cfb = openCfb(bytes);
       const format = oleFormat(cfb);
       if (format === "doc") return { format, extracted: readDoc(cfb) };
-      throw new ReadError("unsupported");
+      return { format, extracted: readMsg(cfb) };
     }
     case "pdf":
       return { format: "pdf", extracted: await readPdf(bytes, onProgress) };
