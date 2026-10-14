@@ -205,18 +205,26 @@ export function App() {
     setFileJob({ file: files[0], target, multiple: files.length > 1, replaces: current.trim() !== "" });
   }
 
-  /** "Använd texten": the read text goes into the pane the file was for, like a dropped text file did. */
+  /**
+   * "Använd texten": the read text goes into the pane the file was for. In
+   * Skrubba a document is a new case, so it starts a new kodnyckel as Ny text
+   * does, asking first when the key has entries (owner's decision,
+   * 2026-10-14). Saying no leaves the window open. Avskrubba keeps the key.
+   */
   function applyFileText(text: string) {
-    const target = fileJob?.target;
-    setFileJob(null);
-    if (target === "answer") {
+    if (fileJob?.target === "answer") {
+      setFileJob(null);
       dispatch({ type: "setAnswer", text });
       setTimeout(() => answerPane.current?.focus());
-    } else {
-      pasted.current = true;
-      dispatch({ type: "setText", text });
-      setTimeout(() => editor.current?.focus());
+      return;
     }
+    if (state.keyEntries.length > 0 && !window.confirm(t("action.newTextConfirm"))) return;
+    setFileJob(null);
+    masker.reset();
+    dispatch({ type: "newText", mode: "scrub" });
+    pasted.current = true;
+    dispatch({ type: "setText", text });
+    setTimeout(() => editor.current?.focus());
   }
 
   const clearAll = useCallback(() => {
