@@ -4,6 +4,14 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **Documents.** Drop a PDF, Word, OpenDocument, RTF, Excel, PowerPoint, email (.eml, .msg) or web page file on the text, or choose one with *Välj fil*. A window, *Läs in dokument*, shows that the file is being read, then what was read and the start of the text, and nothing changes until *Använd texten*. The file is read in the browser and never uploaded. Comments, hidden parts and attachments are left out, and the window says so. In Skrubba a document starts a new kodnyckel, asking first like *Ny text*.
+
+### Changed
+
+- Text and CSV files saved in the old Windows encoding (windows-1252) now keep their å, ä and ö.
+
 ## [1.1.1] - 2026-10-14
 
 ### Added

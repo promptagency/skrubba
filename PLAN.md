@@ -129,9 +129,21 @@ The owner's wireframe replaced the three modes with two cards and a key card. Do
 - [x] Public `README.md`: what it is, what it is not (not a compliance guarantee), run locally, verify no network calls, credits to maskera and KBLab, MIT license. Done 2026-10-12, with logo and screenshots; deploy notes moved to `docs/DEPLOY.md`. `LICENSE` added 2026-10-12 (MIT, Prompt Agency).
 - [x] Footer credits. Done 2026-10-12: byline, credits with links to maskera and KB-BERT, "Källkod till Skrubba finns på Github", version.
 
+## Phase 6 – Documents (2026-10-14)
+
+Owner's decision, 2026-10-14: read PDF, Word and other documents into text in the browser. Spec: `docs/superpowers/specs/2026-10-14-document-import-design.md`. Plan: `docs/superpowers/plans/2026-10-14-document-import.md`.
+
+- [x] Reader module and worker, detection by bytes, limits (`src/reader/`)
+- [x] The window Läs in dokument and Välj fil; every file goes through it
+- [x] docx, pdf (pdf.js), odt, rtf, html, eml, xlsx, pptx, doc, msg; txt, md and csv now decoded as windows-1252 when not UTF-8
+- [x] Hidden content (comments, deletions, hidden text, notes, hidden slides and sheets) and attachments left out, and the window says so
+- [x] In Skrubba a document starts a new kodnyckel, asking first like Ny text (owner's decision, 2026-10-14); Avskrubba keeps the key
+- [x] No request outside our origin and reading offline, proven in `no-egress.spec.ts` and `offline.spec.ts`
+- [ ] Owner review of the Swedish copy (`file.*`, `read.*`, the new FAQ answer)
+
 ## Later (not v1)
 
-File upload (docx/pdf/xlsx), fake replacement names preserving gender, role profiles (HR, socialtjänst, skola, vård, jurist), encrypted saved cases, browser extension, additional Swedish rule detectors (fastighetsbeteckning, diarienummer, ärendenummer) contributed upstream to maskera, standalone domain (skrubba.nu / skrubba.app registered but unused).
+OCR for scanned PDFs, saving a scrubbed document back as Word or PDF, fake replacement names preserving gender, role profiles (HR, socialtjänst, skola, vård, jurist), encrypted saved cases, browser extension, additional Swedish rule detectors (fastighetsbeteckning, diarienummer, ärendenummer) contributed upstream to maskera, standalone domain (skrubba.nu / skrubba.app registered but unused).
 
 ## Open questions
 
@@ -147,3 +159,6 @@ File upload (docx/pdf/xlsx), fake replacement names preserving gender, role prof
 - ~~Copy strings not in `docs/COPY.md`.~~ Decided 2026-10-12: `toast.copyFailed` when copying fails, `entity.tip.scrub`/`entity.tip.keep` for the hover label, `entity.row` and friends for the screen-reader row label. Owner approved the drafts.
 - ~~Repo URL.~~ Done 2026-10-12: the repo is public and `REPO_URL` is set, so "Github" in the credits links to it.
 - ~~Mask dates?~~ Decided 2026-10-12: no "Dölj datum" option. Dates are often harmless and the AI needs them; *Egna ord* and selection cover the ones that are sensitive.
+- Outlook messages whose only body is compressed RTF (`PR_RTF_COMPRESSED`) give the headers only. Decompressing it (MS-OXRTFCP) is about 80 lines; do it if users report it.
+- `.doc`: deleted revisions are not detected (they need the character formatting tables), so their text comes along; table rows come out on one line.
+- `.xlsx`: dates come out as Excel serial numbers (45943 rather than 2025-10-13). Dates are not masked, so this is about readability for the AI, not privacy.

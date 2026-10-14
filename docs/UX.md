@@ -56,7 +56,7 @@ History of texts (in the wireframe) is left out for now: text may only live in m
 
 **Wrong mode.** Text with exact placeholders like `[NAMN_1]` in Skrubba is probably the AI's answer. A notice says so (`wrongMode.notice`) with a button "Flytta till Avskrubba" that moves the text over and switches mode. Nothing switches by itself.
 
-**Empty state.** "Klistra in text här eller släpp en textfil. Den stannar i din webbläsare och inget laddas upp." plus "Visa exempel". The item count stays hidden until there is text; "Egna ord" is always there so terms can be added first.
+**Empty state.** "Klistra in text här eller släpp ett dokument. Det stannar i din webbläsare och inget laddas upp." plus "Visa exempel". The item count stays hidden until there is text; "Egna ord" is always there so terms can be added first.
 
 ## Avskrubba
 
@@ -84,15 +84,21 @@ Note under the table: "Kodnyckeln finns bara i den här fliken. Stänger du flik
 
 ## Vanliga frågor window
 
-The link "Vanliga frågor" under the mode switch, and "Inget lämnar din dator" in the footer, open a window over the page with four questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
+The link "Vanliga frågor" under the mode switch, and "Inget lämnar din dator" in the footer, open a window over the page with the questions and answers (`docs/COPY.md`, Vanliga frågor). The text and the session stay as they were behind it.
 
 ## Model state
 
 Loading progress shows in Skrubba's left pane (`gate.lead`, `gate.body`, "Laddar modell 43 %"). Avskrubba and the kodnyckel work while the model loads. Screen readers hear the state through a hidden live region, loading only in quarters. "Allt sker på din dator" sits in the footer and opens Vanliga frågor.
 
-## Dropping files
+## Reading documents
 
-The left pane in either mode accepts a dropped `.txt` or `.md` file, read in the browser. Anything else gets `drop.unsupported` and leaves the pane as it was. Word and PDF are out of scope for v1.
+Dropping a file on the left pane in either mode, or choosing one with "Välj fil" (next to "Visa exempel", after a thin vertical line), opens the window "Läs in dokument". Every file goes through it, plain text included, so it is always clear that something is happening and nothing changes behind the user's back. Owner's decision, 2026-10-14.
+
+- **Reading.** The file name and "Läser dokumentet …", or "Läser sida 3 av 12 …" for a PDF. Avbryt, Stäng and Esc stop the read; the pane is untouched.
+- **Done.** The file name, a line like "Word · 1 240 ord" or "PDF · 12 sidor · 4 300 ord", the notes (hidden parts or attachments left out, only the first of several files read, the text in the pane will be replaced), and the start of the text in a scrollable box. "Använd texten" has focus and puts the text in the pane; Avbryt leaves the pane as it was. In Skrubba a document is a new case: "Använd texten" starts a new kodnyckel as Ny text does, asking first with `action.newTextConfirm` when the key has entries; saying no leaves the window open; Egna ord stay. In Avskrubba the key stays. Owner's decision, 2026-10-14.
+- **Error.** One sentence on what happened and what to do, from `file.error.*`. The window's own Stäng closes it.
+
+Formats: PDF, Word (.docx, .doc), OpenDocument (.odt), RTF, Excel (.xlsx), PowerPoint (.pptx), email (.eml, .msg), web pages (.html), CSV, text and Markdown. Comments, deleted text, hidden text, speaker notes, hidden slides and sheets, and attachments are not read. Scanned PDFs have no text and get `file.error.noText`. The text comes out as text; there is no scrubbed document to download.
 
 ## Keyboard
 
@@ -103,7 +109,7 @@ The left pane in either mode accepts a dropped `.txt` or `.md` file, read in the
 | `Cmd/Ctrl+Enter` | Run the current mode (the button between the panes) |
 | `Cmd/Ctrl+Shift+C` | Kopiera the result, running the mode first if there is none |
 | `↑ ↓` in the Uppgifter window, `Space` | Navigate rows, toggle |
-| `Esc` | Close the Uppgifter, kodnyckel, Vanliga frågor or Så här funkar det window, or the toast |
+| `Esc` | Close the Uppgifter, kodnyckel, Vanliga frågor, Så här funkar det or Läs in dokument window, or the toast |
 
 ## Mobile (≥ 390 px)
 
