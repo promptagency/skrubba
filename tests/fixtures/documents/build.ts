@@ -122,6 +122,24 @@ export function buildDocx(parts: { body: string; headers?: string[]; footers?: s
   });
 }
 
+const ODF_NS =
+  'xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/"';
+
+/** An ODF paragraph. */
+export const tp = (text: string) => `<text:p>${esc(text)}</text:p>`;
+
+/** An .odt with the given office:text XML and an optional page header and footer. */
+export function buildOdt(body: string, opts: { header?: string; footer?: string } = {}): Uint8Array {
+  const header = opts.header ? `<style:header>${opts.header}</style:header>` : "";
+  const footer = opts.footer ? `<style:footer>${opts.footer}</style:footer>` : "";
+  return buildZip({
+    mimetype: "application/vnd.oasis.opendocument.text",
+    "content.xml": `<?xml version="1.0" encoding="UTF-8"?><office:document-content ${ODF_NS}><office:body><office:text>${body}</office:text></office:body></office:document-content>`,
+    "styles.xml": `<?xml version="1.0" encoding="UTF-8"?><office:document-styles ${ODF_NS}><office:master-styles><style:master-page style:name="Standard">${header}${footer}</style:master-page></office:master-styles></office:document-styles>`,
+    "META-INF/manifest.xml": "<manifest/>",
+  });
+}
+
 /** A PDF string literal in WinAnsi (latin-1 range), with octal escapes for anything outside ASCII. */
 function pdfString(s: string): string {
   let out = "(";
