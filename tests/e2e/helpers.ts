@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 export const MOD = process.platform === "darwin" ? "Meta" : "Control";
 
@@ -51,3 +51,20 @@ export async function placeholderOf(page: Page, value: string): Promise<string> 
   await expect(dialog).toBeHidden();
   return cell!;
 }
+/** Simulate dropping one or more files on an element. Content is text or bytes. */
+export async function dropFile(page: Page, target: Locator, name: string, type: string, content: string | Uint8Array, extra: string[] = []) {
+  const data = await page.evaluateHandle(
+    ({ name, type, content, extra }) => {
+      const dt = new DataTransfer();
+      const body = typeof content === "string" ? content : new Uint8Array(content);
+      dt.items.add(new File([body], name, { type }));
+      for (const more of extra) dt.items.add(new File(["x"], more, { type: "text/plain" }));
+      return dt;
+    },
+    { name, type, content: typeof content === "string" ? content : Array.from(content), extra },
+  );
+  await target.dispatchEvent("dragover", { dataTransfer: data });
+  await target.dispatchEvent("drop", { dataTransfer: data });
+}
+/** The Läs in dokument window. */
+export const fileWindow = (page: Page) => page.getByRole("dialog", { name: "Läs in dokument" });

@@ -9,6 +9,8 @@ import { AGENCY_URL, APP_NAME, AUTHOR_URL, FEEDBACK_EMAIL, KBBERT_URL, MASKERA_U
 import { countLabel, EXAMPLE, t } from "./copy.ts";
 import { APP_VERSION } from "./version.ts";
 import { DropZone } from "./DropZone.tsx";
+import { FilePicker } from "./FilePicker.tsx";
+import { type FileJob, FileWindow } from "./FileWindow.tsx";
 import { Editor, type EditorHandle, type PasteUndo } from "./Editor.tsx";
 import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
@@ -38,7 +40,7 @@ export function App() {
   const [howtoOpen, setHowtoOpen] = useState(false);
   const [itemsOpen, setItemsOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("scrub");
-  const [dropError, setDropError] = useState(false);
+  const [fileJob, setFileJob] = useState<FileJob | null>(null);
   // Set after a paste whose broken lines were joined, for Ångra.
   const [pasteUndo, setPasteUndo] = useState<PasteUndo | null>(null);
   const editor = useRef<EditorHandle>(null);
@@ -197,6 +199,26 @@ export function App() {
     [masker, dispatch],
   );
 
+  /** Opens the file window for the first of the files, for the left pane of the mode. */
+  function openFiles(files: File[], target: FileJob["target"]) {
+    const current = target === "text" ? state.text : state.answer;
+    setFileJob({ file: files[0], target, multiple: files.length > 1, replaces: current.trim() !== "" });
+  }
+
+  /** "Använd texten": the read text goes into the pane the file was for, like a dropped text file did. */
+  function applyFileText(text: string) {
+    const target = fileJob?.target;
+    setFileJob(null);
+    if (target === "answer") {
+      dispatch({ type: "setAnswer", text });
+      setTimeout(() => answerPane.current?.focus());
+    } else {
+      pasted.current = true;
+      dispatch({ type: "setText", text });
+      setTimeout(() => editor.current?.focus());
+    }
+  }
+
   const clearAll = useCallback(() => {
     if (!window.confirm(t("key.clearConfirm"))) return;
     masker.reset();
@@ -253,10 +275,7 @@ export function App() {
               key={m}
               type="button"
               aria-pressed={mode === m}
-              onClick={() => {
-                setMode(m);
-                setDropError(false);
-              }}
+              onClick={() => setMode(m)}
             >
               {m === "scrub" ? t("mode.scrub") : t("mode.restore")}
             </button>
@@ -277,29 +296,32 @@ export function App() {
         <section className="pane" aria-labelledby="pane-in">
           <div className="pane-head">
             <h2 id="pane-in">{mode === "scrub" ? t("pane.scrubIn") : t("pane.restoreIn")}</h2>
-            {mode === "scrub" && (
-              <button
-                type="button"
-                className="link"
-                disabled={state.model.status === "loading"}
-                onClick={() => {
-                  dispatch({ type: "loadExample", text: EXAMPLE.text, wordList: EXAMPLE.wordList });
-                  pasted.current = true;
-                  editor.current?.focus();
-                }}
-              >
-                {t("editor.example")}
-              </button>
-            )}
+            <div className="pane-links">
+              {mode === "scrub" && (
+                <>
+                  <button
+                    type="button"
+                    className="link"
+                    disabled={state.model.status === "loading"}
+                    onClick={() => {
+                      dispatch({ type: "loadExample", text: EXAMPLE.text, wordList: EXAMPLE.wordList });
+                      pasted.current = true;
+                      editor.current?.focus();
+                    }}
+                  >
+                    {t("editor.example")}
+                  </button>
+                  <span className="help-sep" aria-hidden="true" />
+                </>
+              )}
+              <FilePicker
+                disabled={mode === "scrub" && state.model.status === "loading"}
+                onFile={(file) => openFiles([file], mode === "scrub" ? "text" : "answer")}
+              />
+            </div>
           </div>
           {mode === "restore" ? (
-            <DropZone
-              onText={(text) => {
-                setDropError(false);
-                dispatch({ type: "setAnswer", text });
-              }}
-              onUnsupported={() => setDropError(true)}
-            >
+            <DropZone onFiles={(files) => openFiles(files, "answer")}>
               <TextPane
                 ref={answerPane}
                 label={t("pane.restoreIn")}
@@ -312,14 +334,7 @@ export function App() {
           ) : state.model.status === "loading" ? (
             <Gate pct={state.model.pct} />
           ) : (
-            <DropZone
-              onText={(text) => {
-                setDropError(false);
-                pasted.current = true;
-                dispatch({ type: "setText", text });
-              }}
-              onUnsupported={() => setDropError(true)}
-            >
+            <DropZone onFiles={(files) => openFiles(files, "text")}>
               <Editor
                 ref={editor}
                 text={state.text}
@@ -340,11 +355,6 @@ export function App() {
               <p>{t("key.missing")}</p>
               <KeyUpload onUpload={uploadKey} />
             </div>
-          )}
-          {dropError && (
-            <p className="notice" role="alert">
-              {t("drop.unsupported")}
-            </p>
           )}
           <ModelStatus model={state.model} />
           {mode === "scrub" && pasteUndo?.cleaned === state.text && (
@@ -521,6 +531,7 @@ export function App() {
         onClear={clearAll}
       />
       <FaqDialog open={faqOpen} onClose={() => setFaqOpen(false)} />
+      <FileWindow job={fileJob} onUse={applyFileText} onClose={() => setFileJob(null)} />
       <HowtoDialog open={howtoOpen} onClose={() => setHowtoOpen(false)} />
       <Toast message={state.toast} onClose={closeToast} />
     </div>

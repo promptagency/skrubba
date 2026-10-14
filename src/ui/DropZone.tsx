@@ -1,14 +1,12 @@
 import { type ReactNode, useState } from "react";
-import { readDrop } from "./drop.ts";
 
 interface Props {
   children: ReactNode;
-  onText(text: string): void;
-  onUnsupported(): void;
+  onFiles(files: File[]): void;
 }
 
-/** A card that accepts a dropped text file. */
-export function DropZone({ children, onText, onUnsupported }: Props) {
+/** A card that accepts dropped files and hands them to the file window. */
+export function DropZone({ children, onFiles }: Props) {
   const [over, setOver] = useState(false);
   return (
     <div
@@ -19,13 +17,12 @@ export function DropZone({ children, onText, onUnsupported }: Props) {
         setOver(true);
       }}
       onDragLeave={() => setOver(false)}
-      onDrop={async (e) => {
+      onDrop={(e) => {
         if (!e.dataTransfer.types.includes("Files")) return;
         e.preventDefault();
         setOver(false);
-        const result = await readDrop(e.dataTransfer);
-        if (result.kind === "text") onText(result.text);
-        if (result.kind === "unsupported") onUnsupported();
+        const files = [...e.dataTransfer.files];
+        if (files.length) onFiles(files);
       }}
     >
       {children}

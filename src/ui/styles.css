@@ -546,7 +546,8 @@ a {
   margin-bottom: var(--space-8);
 }
 
-.help-links {
+.help-links,
+.pane-links {
   display: flex;
   align-items: center;
   gap: var(--space-1);
@@ -794,6 +795,44 @@ a {
 .modal-lead {
   margin: 0 0 var(--space-3);
   color: var(--muted);
+}
+
+/* Läs in dokument: reading, then a summary and the start of the text. */
+
+.file-window {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 44em;
+}
+
+.file-name {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.file-progress,
+.file-stats {
+  margin: 0;
+  color: var(--muted);
+}
+
+.file-preview {
+  margin: 0;
+  max-height: 14em;
+  overflow: auto;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--yta-sankt);
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }
 
 .faq {
