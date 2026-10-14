@@ -2,9 +2,11 @@
 // reader, then the checks every format shares. Runs in the reader worker
 // (readerWorker.ts) and, for tests, in Node.
 import { detect } from "./detect.ts";
+import { readDocx } from "./formats/docx.ts";
 import { readText } from "./formats/text.ts";
 import { LIMITS } from "./limits.ts";
 import { type Extracted, type Format, type Note, type Progress, ReadError, type ReadResult, type Stats } from "./types.ts";
+import { openZip, zipFormat } from "./zip.ts";
 
 const WORD = /[\p{L}\p{N}]+/gu;
 
@@ -20,6 +22,12 @@ export async function extract(bytes: Uint8Array, name: string, onProgress?: Prog
 async function dispatch(bytes: Uint8Array, name: string, _onProgress?: Progress): Promise<{ format: Format; extracted: Extracted }> {
   const found = detect(bytes, name);
   switch (found.family) {
+    case "zip": {
+      const zip = openZip(bytes);
+      const format = await zipFormat(zip);
+      if (format === "docx") return { format, extracted: await readDocx(zip) };
+      throw new ReadError("unsupported");
+    }
     case "text":
       if (found.format === "txt" || found.format === "md" || found.format === "csv") return { format: found.format, extracted: readText(bytes) };
       throw new ReadError("unsupported");

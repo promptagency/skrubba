@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { SAMPLE_TEXT } from "../fixtures/documents/build.ts";
+import { buildDocx, SAMPLE, SAMPLE_TEXT, wp } from "../fixtures/documents/build.ts";
 import { answerBox, dropFile, editor, fileWindow, openReady, rows } from "./helpers.ts";
 
 test("a dropped text file opens the window, and Använd texten puts it in Din text", async ({ page }) => {
@@ -72,6 +72,16 @@ test("dropping two files reads the first and says so", async ({ page }) => {
   const w = fileWindow(page);
   await expect(w).toContainText("avtal.txt");
   await expect(w).toContainText("Bara en fil i taget. Den första lästes.");
+});
+
+test("a Word file is read into Din text and its name gets masked", async ({ page }) => {
+  await openReady(page);
+  const docx = buildDocx({ body: [SAMPLE.title, ...SAMPLE.lines].map(wp).join("") });
+  await dropFile(page, editor(page), "avtal.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", docx);
+  const w = fileWindow(page);
+  await expect(w).toContainText("Word · 23 ord");
+  await w.getByRole("button", { name: "Använd texten" }).click();
+  await expect(rows(page).filter({ hasText: "Anna Berg" })).toContainText("Namn");
 });
 
 test.describe("while reading", () => {
