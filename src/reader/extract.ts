@@ -3,6 +3,7 @@
 // (readerWorker.ts) and, for tests, in Node.
 import { detect } from "./detect.ts";
 import { readDocx } from "./formats/docx.ts";
+import { readPdf } from "./formats/pdf.ts";
 import { readText } from "./formats/text.ts";
 import { LIMITS } from "./limits.ts";
 import { type Extracted, type Format, type Note, type Progress, ReadError, type ReadResult, type Stats } from "./types.ts";
@@ -19,7 +20,7 @@ export async function extract(bytes: Uint8Array, name: string, onProgress?: Prog
   }
 }
 
-async function dispatch(bytes: Uint8Array, name: string, _onProgress?: Progress): Promise<{ format: Format; extracted: Extracted }> {
+async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress): Promise<{ format: Format; extracted: Extracted }> {
   const found = detect(bytes, name);
   switch (found.family) {
     case "zip": {
@@ -28,6 +29,8 @@ async function dispatch(bytes: Uint8Array, name: string, _onProgress?: Progress)
       if (format === "docx") return { format, extracted: await readDocx(zip) };
       throw new ReadError("unsupported");
     }
+    case "pdf":
+      return { format: "pdf", extracted: await readPdf(bytes, onProgress) };
     case "text":
       if (found.format === "txt" || found.format === "md" || found.format === "csv") return { format: found.format, extracted: readText(bytes) };
       throw new ReadError("unsupported");

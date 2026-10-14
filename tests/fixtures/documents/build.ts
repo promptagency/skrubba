@@ -121,3 +121,89 @@ export function buildDocx(parts: { body: string; headers?: string[]; footers?: s
     ...files,
   });
 }
+
+/** A PDF string literal in WinAnsi (latin-1 range), with octal escapes for anything outside ASCII. */
+function pdfString(s: string): string {
+  let out = "(";
+  for (const ch of s) {
+    const c = ch.codePointAt(0) ?? 0;
+    if (c > 0xff) throw new Error(`not in WinAnsi: ${ch}`);
+    if (ch === "(" || ch === ")" || ch === "\\") out += `\\${ch}`;
+    else if (c < 0x20 || c > 0x7e) out += `\\${c.toString(8).padStart(3, "0")}`;
+    else out += ch;
+  }
+  return `${out})`;
+}
+
+const streamObj = (dict: string, data: string) => `<< ${dict} /Length ${data.length} >>\nstream\n${data}\nendstream`;
+
+/**
+ * A PDF with Helvetica text, one line per string, or an image-only page
+ * (`{ image: true }`, like a scan). `comment` adds a sticky note and `field`
+ * a filled-in text field on the first page. `encrypted` adds a standard
+ * security handler whose empty password does not open it.
+ */
+export function buildPdf(
+  pages: Array<string[] | { image: true }>,
+  opts: { encrypted?: boolean; comment?: string; field?: string } = {},
+): Uint8Array {
+  const objs: string[] = [];
+  const add = (body: string) => objs.push(body);
+  const catalog = add("");
+  const pagesObj = add("");
+  const font = add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
+  const kids: number[] = [];
+  const fields: number[] = [];
+  for (const page of pages) {
+    let resources = `/Font << /F1 ${font} 0 R >>`;
+    let content: string;
+    if ("image" in page) {
+      const img = add(streamObj("/Type /XObject /Subtype /Image /Width 8 /Height 8 /ColorSpace /DeviceGray /BitsPerComponent 8", "\x80".repeat(64)));
+      resources += ` /XObject << /Im1 ${img} 0 R >>`;
+      content = "q 200 0 0 200 72 500 cm /Im1 Do Q";
+    } else {
+      content = `BT /F1 12 Tf 14 TL 72 760 Td ${page.map((line) => `${pdfString(line)} Tj T*`).join(" ")} ET`;
+    }
+    const contents = add(streamObj("", content));
+    const pageId = add("");
+    const annots: number[] = [];
+    if (kids.length === 0 && opts.comment) annots.push(add(`<< /Type /Annot /Subtype /Text /Rect [400 700 420 720] /Contents ${pdfString(opts.comment)} >>`));
+    if (kids.length === 0 && opts.field) {
+      const f = add(`<< /Type /Annot /Subtype /Widget /FT /Tx /T (namn) /V ${pdfString(opts.field)} /Rect [72 600 300 620] /P ${pageId} 0 R >>`);
+      annots.push(f);
+      fields.push(f);
+    }
+    const annotList = annots.length ? ` /Annots [${annots.map((a) => `${a} 0 R`).join(" ")}]` : "";
+    objs[pageId - 1] = `<< /Type /Page /Parent ${pagesObj} 0 R /MediaBox [0 0 595 842] /Resources << ${resources} >> /Contents ${contents} 0 R${annotList} >>`;
+    kids.push(pageId);
+  }
+  const form = fields.length ? ` /AcroForm << /Fields [${fields.map((f) => `${f} 0 R`).join(" ")}] >>` : "";
+  objs[catalog - 1] = `<< /Type /Catalog /Pages ${pagesObj} 0 R${form} >>`;
+  objs[pagesObj - 1] = `<< /Type /Pages /Kids [${kids.map((k) => `${k} 0 R`).join(" ")}] /Count ${kids.length} >>`;
+  const encrypt = opts.encrypted ? add(`<< /Filter /Standard /V 1 /R 2 /Length 40 /P -3904 /O <${"ab".repeat(32)}> /U <${"cd".repeat(32)}> >>`) : 0;
+
+  let out = "%PDF-1.4\n%\xe2\xe3\xcf\xd3\n";
+  const offsets: number[] = [];
+  objs.forEach((body, i) => {
+    offsets.push(out.length);
+    out += `${i + 1} 0 obj\n${body}\nendobj\n`;
+  });
+  const xref = out.length;
+  out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n${offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("")}`;
+  const encryptRef = encrypt ? ` /Encrypt ${encrypt} 0 R /ID [<${"01".repeat(16)}> <${"01".repeat(16)}>]` : "";
+  out += `trailer\n<< /Size ${objs.length + 1} /Root ${catalog} 0 R${encryptRef} >>\nstartxref\n${xref}\n%%EOF\n`;
+  return Uint8Array.from(out, (c) => c.charCodeAt(0));
+}
+
+/** Two pages of long lines wrapped mid-sentence, with a word split by a hyphen across lines. */
+export const PDF_WRAPPED = [
+  [
+    "Anna Berg har arbetat på Norrström Media AB sedan 2019 och har under",
+    "våren varit sjukskriven på heltid. Hon deltar nu i ett program för rehabili-",
+    "tering som Försäkringskassan har godkänt efter ett möte i mars i år.",
+  ],
+  [
+    "Erik Holm på HR ansvarar för uppföljningen och ringer Anna varje vecka",
+    "under hösten för att stämma av hur arbetet med återgången går framåt.",
+  ],
+];
