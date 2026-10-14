@@ -150,8 +150,16 @@ function columnName(i: number): string {
   return s;
 }
 
-/** An .xlsx. Strings go to the shared string table; `null` leaves a cell out; `comment` adds a cell comment. */
-export function buildXlsx(sheets: Array<{ name: string; rows: XlsxCell[][]; state?: "hidden" | "veryHidden" }>, opts: { comment?: string } = {}): Uint8Array {
+/**
+ * An .xlsx. Strings go to the shared string table; `null` leaves a cell out;
+ * `comment` adds a cell comment. `order` lists the sheet numbers in the
+ * workbook (repeats allowed); `prefix` writes every element with that
+ * namespace prefix (as the .NET OpenXML SDK does with "x").
+ */
+export function buildXlsx(
+  sheets: Array<{ name: string; rows: XlsxCell[][]; state?: "hidden" | "veryHidden" }>,
+  opts: { comment?: string; order?: number[]; prefix?: string } = {},
+): Uint8Array {
   const strings: string[] = [];
   const sst = (s: string) => {
     const at = strings.indexOf(s);
@@ -176,12 +184,17 @@ export function buildXlsx(sheets: Array<{ name: string; rows: XlsxCell[][]; stat
   if (opts.comment) {
     files["xl/comments1.xml"] = `<comments xmlns="${SHEET_NS}"><commentList><comment ref="A1"><text><t>${esc(opts.comment)}</t></text></comment></commentList></comments>`;
   }
+  if (opts.order) entries.splice(0, entries.length, ...opts.order.map((n, i) => `<sheet name="Blad${i + 1}" sheetId="${i + 1}" r:id="rId${n}"/>`));
   const sharedStringsXml = `<?xml version="1.0" encoding="UTF-8"?><sst xmlns="${SHEET_NS}">${strings.map((s) => `<si><t xml:space="preserve">${esc(s)}</t></si>`).join("")}</sst>`;
+  const p = opts.prefix;
+  const sheetXml = (xml: string) =>
+    p ? xml.replace(/<(\/?)([a-zA-Z]+)(?=[\s>/])/g, `<$1${p}:$2`).replace(` xmlns="${SHEET_NS}"`, ` xmlns:${p}="${SHEET_NS}"`) : xml;
+  for (const name of Object.keys(files)) files[name] = sheetXml(files[name]);
   return buildZip({
     "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"/>',
-    "xl/workbook.xml": `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="${SHEET_NS}" xmlns:r="${REL}"><sheets>${entries.join("")}</sheets></workbook>`,
+    "xl/workbook.xml": sheetXml(`<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="${SHEET_NS}" xmlns:r="${REL}"><sheets>${entries.join("")}</sheets></workbook>`),
     "xl/_rels/workbook.xml.rels": `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="${RELS_NS}">${rels.join("")}</Relationships>`,
-    "xl/sharedStrings.xml": sharedStringsXml,
+    "xl/sharedStrings.xml": sheetXml(sharedStringsXml),
     ...files,
   });
 }
@@ -189,8 +202,15 @@ export function buildXlsx(sheets: Array<{ name: string; rows: XlsxCell[][]; stat
 const P_NS = `xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:r="${REL}"`;
 const aPara = (text: string) => `<a:p><a:r><a:t>${esc(text)}</a:t></a:r></a:p>`;
 
-/** A .pptx: one text box per string, an optional table, hidden slides and speaker notes. */
-export function buildPptx(slides: Array<{ texts: string[]; table?: string[][]; hidden?: boolean; notes?: string }>): Uint8Array {
+/**
+ * A .pptx: one text box per string, an optional table, hidden slides and
+ * speaker notes. `order` lists the slide numbers in the deck (repeats allowed,
+ * to test a deck that points at one slide many times).
+ */
+export function buildPptx(
+  slides: Array<{ texts: string[]; table?: string[][]; hidden?: boolean; notes?: string }>,
+  opts: { order?: number[] } = {},
+): Uint8Array {
   const files: Record<string, string> = {};
   const rels: string[] = [];
   const ids: string[] = [];
@@ -209,6 +229,7 @@ export function buildPptx(slides: Array<{ texts: string[]; table?: string[][]; h
     rels.push(`<Relationship Id="rId${n}" Type="${REL}/slide" Target="slides/slide${n}.xml"/>`);
     ids.push(`<p:sldId id="${255 + n}" r:id="rId${n}"/>`);
   });
+  if (opts.order) ids.splice(0, ids.length, ...opts.order.map((n, i) => `<p:sldId id="${256 + i}" r:id="rId${n}"/>`));
   return buildZip({
     "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"/>',
     "ppt/presentation.xml": `<?xml version="1.0" encoding="UTF-8"?><p:presentation ${P_NS}><p:sldIdLst>${ids.join("")}</p:sldIdLst></p:presentation>`,
