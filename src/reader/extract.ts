@@ -9,6 +9,7 @@ import { readOdt } from "./formats/odt.ts";
 import { readPdf } from "./formats/pdf.ts";
 import { readRtf } from "./formats/rtf.ts";
 import { readText } from "./formats/text.ts";
+import { readXlsx } from "./formats/xlsx.ts";
 import { LIMITS } from "./limits.ts";
 import { type Extracted, type Format, type Note, type Progress, ReadError, type ReadResult, type Stats } from "./types.ts";
 import { openZip, zipFormat } from "./zip.ts";
@@ -32,6 +33,7 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
       const format = await zipFormat(zip);
       if (format === "docx") return { format, extracted: await readDocx(zip) };
       if (format === "odt") return { format, extracted: await readOdt(zip) };
+      if (format === "xlsx") return { format, extracted: await readXlsx(zip) };
       throw new ReadError("unsupported");
     }
     case "pdf":
