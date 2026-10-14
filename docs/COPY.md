@@ -23,7 +23,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | mode.scrub | Skrubba |
 | mode.restore | Avskrubba |
 | mode.key | Kodnyckel |
-| editor.empty | Klistra in text här eller släpp en textfil. Den stannar i din webbläsare och inget laddas upp. |
+| editor.empty | Klistra in text här eller släpp ett dokument. Det stannar i din webbläsare och inget laddas upp. |
 | editor.example | Visa exempel |
 | gate.lead | Skrubba laddar ner en liten svensk språkmodell till din webbläsare. |
 | gate.body | Det sker bara första gången. Sedan körs allt på din dator och inget du skriver lämnar den. Efter det fungerar Skrubba utan internet. |
@@ -53,7 +53,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | status.ready | Modell laddad |
 | status.rulesOnly | Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv. |
 | status.trust | Allt sker på din dator |
-| restore.empty | Klistra in svaret från AI här eller släpp en skrubbad textfil. |
+| restore.empty | Klistra in svaret från AI här eller släpp ett dokument med svaret. |
 | restore.unmatched | Hittade {found} i svaret. Menade du {placeholder}, alltså {value}? |
 | restore.accept | Ja |
 | restore.reject | Nej |
@@ -72,7 +72,43 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | key.uploadError | Filen kunde inte läsas som en kodnyckel. Välj en fil som du har laddat ner från Skrubba. |
 | key.uploadConfirm | Text, uppgifter, egna ord och kodnyckel ersätts av innehållet i filen. Vill du fortsätta? |
 | unload.warning | Du har en kodnyckel som inte är nedladdad. Stänger du fliken går den förlorad. |
-| drop.unsupported | Bara textfiler (.txt och .md) går att släppa här. Kopiera texten ur andra filer och klistra in den. |
+| file.choose | Välj fil |
+| file.title | Läs in dokument |
+| file.reading | Läser dokumentet … |
+| file.readingPage | Läser sida {page} av {pages} … |
+| file.words | {n} ord |
+| file.pages | {n} sidor |
+| file.pages.one | 1 sida |
+| file.slides | {n} bilder |
+| file.slides.one | 1 bild |
+| file.sheets | {n} blad |
+| file.replaces | Texten som står i rutan nu ersätts. |
+| file.preview | Början av texten |
+| file.use | Använd texten |
+| file.cancel | Avbryt |
+| file.note.hidden | Kommentarer och dolda delar togs inte med. |
+| file.note.attachments | Bilagor togs inte med. |
+| file.note.firstOnly | Bara en fil i taget. Den första lästes. |
+| file.error.unsupported | Den här filtypen går inte att läsa. Spara dokumentet som PDF eller Word och försök igen, eller kopiera texten och klistra in den. |
+| file.error.encrypted | Dokumentet är lösenordsskyddat. Ta bort lösenordet och försök igen. |
+| file.error.noText | PDF:en innehåller bara bilder, ingen text. Kör textigenkänning (OCR) på den först, eller kopiera texten och klistra in den. |
+| file.error.empty | Dokumentet innehåller ingen text. |
+| file.error.tooLarge | Dokumentet är för stort. Dela upp det och läs in en del i taget. |
+| file.error.timeout | Det tog för lång tid att läsa dokumentet. Försök igen, eller kopiera texten och klistra in den. |
+| file.error.failed | Dokumentet gick inte att läsa. Det kan vara skadat. Öppna det och spara det på nytt, eller kopiera texten och klistra in den. |
+| file.format.pdf | PDF |
+| file.format.docx | Word |
+| file.format.doc | Word |
+| file.format.odt | OpenDocument |
+| file.format.rtf | RTF |
+| file.format.msg | Outlook-mejl |
+| file.format.eml | E-post |
+| file.format.html | Webbsida |
+| file.format.csv | CSV |
+| file.format.xlsx | Excel |
+| file.format.pptx | PowerPoint |
+| file.format.txt | Text |
+| file.format.md | Markdown |
 | key.close | Stäng |
 | footer.byline | {app} av {author} ({agency}). |
 | footer.author | Micke Quick |
@@ -114,8 +150,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 Ändrat eller nytt 2026-10-10 för layouten med två kort (Skrubba och Avskrubba).
 
 - `mode.restore` och `action.restore`: "Byt tillbaka" blev "Avskrubba", som i skissen.
-- `editor.empty` och `restore.empty`: nämner att man kan släppa en textfil.
-- `drop.unsupported`: när någon släpper en fil som inte är .txt eller .md.
+- `editor.empty` och `restore.empty` nämner att man kan släppa ett dokument.
+- `file.*` hör till fönstret Läs in dokument, som öppnas när någon släpper en fil eller väljer Välj fil. `file.format.*` är typen i raden under filnamnet, till exempel "Word · 1 240 ord". Utkast 2026-10-14, ska granskas av ägaren.
 - `key.close`: stänger nyckelkortet.
 - `footer.byline`: första raden i sidfoten. {app} är Skrubba i fetstil, {author} länkar till mickequick.se och {agency} till promptagency.se, båda i en ny flik så att texten i Skrubba finns kvar. Nytt 2026-10-12, ägarens formulering.
 - `footer.credits`: andra raden i sidfoten. {github} länkar till kodförrådet i en ny flik när det är publikt (`REPO_URL` i `src/config.ts`), annars är det vanlig text. Ändrad 2026-10-12, ägarens formulering, med ägarens stavning "Github".
