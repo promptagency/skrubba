@@ -2,7 +2,7 @@
 // endnotes. Deleted text, hidden text and comments are left out, and we say
 // so; field instructions and the fallback copy of drawings are left out
 // silently since nobody sees them.
-import { relationships } from "../ooxml.ts";
+import { diagramText, relationships } from "../ooxml.ts";
 import { TextBuilder } from "../textBuilder.ts";
 import { type Extracted, ReadError } from "../types.ts";
 import { xmlEvents } from "../xml.ts";
@@ -75,6 +75,11 @@ export async function readDocx(zip: Zip): Promise<Extracted> {
   for (const target of pageParts) {
     const xml = await zip.text(target);
     if (xml !== null) parts.push(wordPartText(xml));
+  }
+  // SmartArt text lives in diagram data parts the document links to.
+  for (const target of new Set(rels.filter((r) => r.type === "diagramData").map((r) => r.target))) {
+    const xml = await zip.text(target);
+    if (xml !== null) parts.push({ text: diagramText(xml), hidden: false });
   }
   for (const notes of ["word/footnotes.xml", "word/endnotes.xml"]) {
     const xml = await zip.text(notes);

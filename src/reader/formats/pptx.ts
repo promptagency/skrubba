@@ -2,7 +2,7 @@
 // place in the deck), text in shape order and tables by tab. Hidden slides,
 // speaker notes and comments are left out, and we say so.
 import { t } from "../../ui/copy.ts";
-import { relationships } from "../ooxml.ts";
+import { diagramText, relationships } from "../ooxml.ts";
 import { TextBuilder } from "../textBuilder.ts";
 import { type Extracted, ReadError } from "../types.ts";
 import { xmlEvents } from "../xml.ts";
@@ -63,7 +63,18 @@ export async function readPptx(zip: Zip): Promise<Extracted> {
       continue;
     }
     slides++;
-    if (slide.text) parts.push(`${t("read.slide", { n: position })}\n${slide.text}`);
+    // SmartArt text lives in a diagram data part the slide links to.
+    let text = slide.text;
+    const slideRels = await zip.text(target.replace(/([^/]+)$/, "_rels/$1.rels"));
+    const base = target.slice(0, target.lastIndexOf("/") + 1);
+    for (const rel of slideRels ? relationships(slideRels, base).filter((r) => r.type === "diagramData") : []) {
+      if (seen.has(rel.target)) continue;
+      seen.add(rel.target);
+      const data = await zip.text(rel.target);
+      const diagram = data ? diagramText(data) : "";
+      if (diagram) text = text ? `${text}\n${diagram}` : diagram;
+    }
+    if (text) parts.push(`${t("read.slide", { n: position })}\n${text}`);
   }
   for (const name of zip.names()) {
     if (hidden) break;
