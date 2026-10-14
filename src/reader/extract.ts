@@ -3,6 +3,7 @@
 // (readerWorker.ts) and, for tests, in Node.
 import { detect } from "./detect.ts";
 import { readDocx } from "./formats/docx.ts";
+import { readHtml } from "./formats/html.ts";
 import { readOdt } from "./formats/odt.ts";
 import { readPdf } from "./formats/pdf.ts";
 import { readRtf } from "./formats/rtf.ts";
@@ -37,8 +38,9 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
     case "rtf":
       return { format: "rtf", extracted: readRtf(bytes) };
     case "text":
-      if (found.format === "txt" || found.format === "md" || found.format === "csv") return { format: found.format, extracted: readText(bytes) };
-      throw new ReadError("unsupported");
+      if (found.format === "html") return { format: "html", extracted: readHtml(bytes) };
+      if (found.format === "eml") throw new ReadError("unsupported");
+      return { format: found.format, extracted: readText(bytes) };
     default:
       throw new ReadError("unsupported");
   }
