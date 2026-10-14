@@ -109,6 +109,13 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | file.format.pptx | PowerPoint |
 | file.format.txt | Text |
 | file.format.md | Markdown |
+| read.from | Från |
+| read.to | Till |
+| read.cc | Kopia |
+| read.subject | Ämne |
+| read.date | Datum |
+| read.sheet | Blad: {name} |
+| read.slide | Bild {n} |
 | key.close | Stäng |
 | footer.byline | {app} av {author} ({agency}). |
 | footer.author | Micke Quick |
@@ -152,6 +159,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 - `mode.restore` och `action.restore`: "Byt tillbaka" blev "Avskrubba", som i skissen.
 - `editor.empty` och `restore.empty` nämner att man kan släppa ett dokument.
 - `file.*` hör till fönstret Läs in dokument, som öppnas när någon släpper en fil eller väljer Välj fil. `file.format.*` är typen i raden under filnamnet, till exempel "Word · 1 240 ord". Utkast 2026-10-14, ska granskas av ägaren.
+- `read.*` står i texten som läses in från ett dokument, inte i gränssnittet. Ett mejl börjar med raderna Från, Till, Kopia, Ämne och Datum. Varje blad i ett Excel-dokument börjar med "Blad: namn" och varje bild i en presentation med "Bild 1". Kolonet efter Från och Blad är en etikett, inte löptext.
 - `key.close`: stänger nyckelkortet.
 - `footer.byline`: första raden i sidfoten. {app} är Skrubba i fetstil, {author} länkar till mickequick.se och {agency} till promptagency.se, båda i en ny flik så att texten i Skrubba finns kvar. Nytt 2026-10-12, ägarens formulering.
 - `footer.credits`: andra raden i sidfoten. {github} länkar till kodförrådet i en ny flik när det är publikt (`REPO_URL` i `src/config.ts`), annars är det vanlig text. Ändrad 2026-10-12, ägarens formulering, med ägarens stavning "Github".
