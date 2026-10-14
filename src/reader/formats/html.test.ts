@@ -15,6 +15,11 @@ describe("htmlToText", () => {
     });
   });
 
+  it("drops the doctype, XML declarations and Word's conditional markup", () => {
+    const html = '<?xml version="1.0"?><!DOCTYPE html><html><body><p><![if !supportLists]>1.<![endif]> Anna Berg</p></body></html>';
+    expect(htmlToText(html).text).toBe("1. Anna Berg");
+  });
+
   it("collapses source whitespace and decodes entities", () => {
     expect(htmlToText("<p>\n  R&auml;ksm&ouml;rg&aring;s&nbsp;&amp;&#229;&#xE5;\n</p>").text).toBe("Räksmörgås &åå");
   });
