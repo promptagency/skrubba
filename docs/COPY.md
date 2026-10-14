@@ -194,6 +194,7 @@ Nytt 2026-10-12, ägarens godkännande av utkasten.
 - Vanliga frågor har fem nya frågor (vilka uppgifter, hur man döljer något som missades, ändrade platshållare, vilka AI-tjänster, kostnad) och en ny ordning. "Byta tillbaka" heter "avskrubba" i svaren, och Github stavas som i sidfoten. Godkänt av ägaren.
 - Vanliga frågor: ny fråga "Räknar ni besökare?" om den anonyma besöksräkningen med Plausible. "Kostar Skrubba något?" säger inte längre "ingen statistik", och "Hur kan jag kontrollera att inget skickas?" nämner besöksräkningen. Godkänt av ägaren 2026-10-12.
 - `feedback.link`, `feedback.subject`, `feedback.body`: länken sist i varningen under Din text öppnar ett mejl till micke@promptagency.se (`FEEDBACK_EMAIL` i `src/config.ts`) med ämne och en kort guide ifyllda. Användarens text läggs aldrig in i mejlet. Godkänt av ägaren 2026-10-12.
+- Typen `REFERENSNUMMER` visas som "Referensnummer": ett nummer direkt efter ett ord som kundnummer, avtalsnummer, fakturanr, ref eller anläggnings-ID. "Vilka uppgifter hittar Skrubba?" nämner kund-, avtals-, faktura- och referensnummer. Godkänt av ägaren 2026-10-14.
 
 ## Typer
 
@@ -219,6 +220,7 @@ Nytt 2026-10-12, ägarens godkännande av utkasten.
 | IP_ADRESS | IP-adress |
 | URL | Webbadress |
 | JOURNALNUMMER | Journalnummer |
+| REFERENSNUMMER | Referensnummer |
 | REGNUMMER | Registreringsnummer |
 | ORD | Ord |
 
@@ -259,7 +261,7 @@ Texten går igenom regler och en liten svensk språkmodell som laddas ner till d
 
 ### Vilka uppgifter hittar Skrubba?
 
-Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer och registreringsnummer hittas med regler. Datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.
+Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer, registreringsnummer och kund-, avtals-, faktura- och referensnummer hittas med regler. Datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.
 
 ### Hur döljer jag något som Skrubba missade?
 

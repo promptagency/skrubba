@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { companyName, domainName, momsnummer, orgnrInContext } from "./contextRules.ts";
+import { companyName, domainName, labelledNumber, momsnummer, orgnrInContext } from "./contextRules.ts";
 
 const values = (text: string) => orgnrInContext.detect(text).map((d) => d.value);
 
@@ -122,5 +122,44 @@ describe("domainName", () => {
 
   it("is labelled URL", () => {
     expect(domainName.label).toBe("URL");
+  });
+});
+
+describe("labelledNumber", () => {
+  it.each([
+    ["Kundnummer: 48213377", "48213377"],
+    ["kundnr 48213377.", "48213377"],
+    ["Avtalsnummer AB-1234-567 gäller", "AB-1234-567"],
+    ["Fakturanr: 2026-00412", "2026-00412"],
+    ["Ordernummer #A77B21", "A77B21"],
+    ["Ert ärendenummer är 7731.", "7731"],
+    ["Referensnummer: KX9-221", "KX9-221"],
+    ["Ref: SE/2026/118", "SE/2026/118"],
+    ["Anläggnings-ID 735999100000123456", "735999100000123456"],
+    ["Mätpunkts-ID: 735999100000654321", "735999100000654321"],
+    ["Medlemsnummer 55102", "55102"],
+    ["Anställningsnummer 1042", "1042"],
+    ["Bokningsnummer XQ7T2P", "XQ7T2P"],
+    ["Försäkringsnummer 123-456-789", "123-456-789"],
+    ["OCR-nummer 4412 3390 1182", "4412 3390 1182"],
+  ])("masks the number after a label: %s", (text, value) => {
+    expect(found(labelledNumber, text)).toEqual([value]);
+  });
+
+  it("masks every labelled number in a text", () => {
+    expect(found(labelledNumber, "Kundnummer 1001, avtalsnummer 2002 och ordernr 3003.")).toEqual(["1001", "2002", "3003"]);
+  });
+
+  it.each([
+    ["no digit after the label", "Ange ditt kundnummer i fältet."],
+    ["a label inside a longer word", "Kundnummerfältet 123 är tomt."],
+    ["a number that is not right after the label", "Kundnumret skickas senare, ring 0701234567."],
+    ["ref inside another word", "Han refererade till 2025 års avtal."],
+  ])("leaves %s alone", (_, text) => {
+    expect(found(labelledNumber, text)).toEqual([]);
+  });
+
+  it("is labelled REFERENSNUMMER", () => {
+    expect(labelledNumber.label).toBe("REFERENSNUMMER");
   });
 });

@@ -28,6 +28,7 @@ export const ENTITY_TYPES = [
   "IP_ADRESS",
   "URL",
   "JOURNALNUMMER",
+  "REFERENSNUMMER",
   "REGNUMMER",
   "ORD",
 ] as const;

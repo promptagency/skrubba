@@ -1,12 +1,12 @@
 import { regnummer } from "@maskera/core";
 import { hybridDefaultDetectors } from "maskera";
 import { describe, expect, it } from "vitest";
-import { companyName, domainName, momsnummer, orgnrInContext } from "./contextRules.ts";
+import { companyName, domainName, labelledNumber, momsnummer, orgnrInContext } from "./contextRules.ts";
 import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
   it("is maskera's hybrid default set plus regnummer and our own rules", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, domainName]);
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, domainName, labelledNumber]);
   });
 });
 
@@ -45,6 +45,15 @@ describe("ruleSpans", () => {
     expect(ruleSpans(text).map((s) => [text.slice(s.start, s.end), s.type])).toEqual([
       ["anna@norrstrommedia.se", "EPOST"],
       ["https://norrstrommedia.se/om", "URL"],
+    ]);
+  });
+
+  it("finds labelled numbers, and leaves an org.nr to its own rule", () => {
+    const text = "Kundnummer 48213377, avtalsnummer AB-1234-567, org.nr 556147-9036.";
+    expect(ruleSpans(text).map((s) => [text.slice(s.start, s.end), s.type])).toEqual([
+      ["48213377", "REFERENSNUMMER"],
+      ["AB-1234-567", "REFERENSNUMMER"],
+      ["556147-9036", "ORGANISATIONSNUMMER"],
     ]);
   });
 });

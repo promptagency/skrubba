@@ -30,6 +30,7 @@ const ALIASES: Record<string, EntityType> = {
   PHONE: "TELEFON",
   SSN: "PERSONNUMMER",
   ORGNR: "ORGANISATIONSNUMMER",
+  REFERENCE: "REFERENSNUMMER",
   WORD: "ORD",
 };
 

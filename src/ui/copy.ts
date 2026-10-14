@@ -141,6 +141,7 @@ export const TYPE_LABEL: Record<EntityType, string> = {
   IP_ADRESS: "IP-adress",
   URL: "Webbadress",
   JOURNALNUMMER: "Journalnummer",
+  REFERENSNUMMER: "Referensnummer",
   REGNUMMER: "Registreringsnummer",
   ORD: "Ord",
 };
@@ -179,7 +180,7 @@ export const FAQ = {
     },
     {
       q: "Vilka uppgifter hittar Skrubba?",
-      a: "Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer och registreringsnummer hittas med regler. Datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.",
+      a: "Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer, registreringsnummer och kund-, avtals-, faktura- och referensnummer hittas med regler. Datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.",
     },
     {
       q: "Hur döljer jag något som Skrubba missade?",

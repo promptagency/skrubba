@@ -53,7 +53,7 @@ export type EntityType =   // maskera's labels verbatim, so placeholders match i
   | "PERSONNUMMER" | "SAMORDNINGSNUMMER" | "ORGANISATIONSNUMMER"
   | "TELEFON" | "EPOST" | "POSTNUMMER" | "LAGENHETSNUMMER"
   | "BANKGIRO" | "PLUSGIRO" | "IBAN" | "KORTNUMMER" | "KONTONUMMER"
-  | "IP_ADRESS" | "URL" | "JOURNALNUMMER" | "REGNUMMER"
+  | "IP_ADRESS" | "URL" | "JOURNALNUMMER" | "REFERENSNUMMER" | "REGNUMMER"
   | "ORD"        // manual selection or word list
   | "FÖRNAMN";   // a linked first name alone: [FÖRNAMN_n] belongs to [NAMN_n]
 
@@ -107,6 +107,7 @@ Three more rules of our own (`contextRules.ts`) cover what the owner's real text
 
 - **Company names.** Up to five capitalised words before a company form (AB, HB, KB, Aktiebolag, Ltd, GmbH, AS, Oy and others, optionally "(publ)") are an ORGANISATION. Only the name is masked, so the text reads "[ORGANISATION_1] AB" and the name alone elsewhere gets the same placeholder: every occurrence of the name is marked, genitive included. Common sentence openers in front ("Enligt", "Kontakta", "Bolaget") are left out of the name, and when one found name ends with another ("Tillsammans Norrström Media" and "Norrström Media"), the shorter is used. When a rule claims the name inside a model span, a leftover that is only a company form is dropped instead of getting its own placeholder.
 - **Bare web addresses.** A domain without https:// or www. ("foretaget.se", with an optional path) is a URL when its top-level domain is on a short lowercase list, so "t.ex." and "rapport.pdf" stay out. The domain of any email address in the text is also masked where it stands alone, whatever its top-level domain.
+- **Labelled numbers.** A number right after a label (kundnummer, avtalsnummer, ordernr, fakturanr, ärendenummer, referens, ref, medlemsnummer, anställningsnummer, bokningsnummer, försäkringsnummer, OCR-nummer, anläggnings-ID, mätpunkts-ID and similar, with an optional ":" or "#") is a REFERENSNUMMER: letters, digits, "-", "/" and "." in one token, or digit groups split by single spaces. Without a label such numbers look like amounts and dates, so unlabelled ones are left alone. The type is not called NUMMER, since "nummer 1" in an AI answer would then look like a placeholder.
 - **VAT numbers.** SE + ten digits + 01, spaces and a dash allowed, as ORGANISATIONSNUMMER (it contains one, or a sole trader's personnummer).
 
 Reference codes like "AB-1234-567" and bare eight-digit numbers have no fixed format and are not masked: a rule for them would also hit amounts and dates. Dates, prices and contract terms are left to *Egna ord* and selection.

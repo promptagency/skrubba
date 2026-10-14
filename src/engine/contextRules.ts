@@ -84,6 +84,29 @@ export const companyName: Detector = {
   },
 };
 
+// A number right after a word that says what it is ("kundnummer 48213377",
+// "avtalsnummer AB-1234-567", "Anläggnings-ID 7359…") identifies a customer,
+// a contract or a case. Without the label such numbers look like amounts or
+// dates, so only labelled ones are masked.
+const NUMBER_LABEL = String.raw`(?:(?:kund|avtals?|order|faktura|referens|ärende|medlems?|anställnings|personal|kontrakts?|boknings|försäkrings|abonnemangs|objekt|anläggnings|mätpunkts|ocr)-?(?:nummer|nr\.?|id)|referens|ref(?:\.?\s?nr)?\.?)`;
+const NUMBER_FILLER = String.raw`(?:\s*[:#]\s*|\s+(?:är\s+)?#?)`;
+const NUMBER_VALUE = String.raw`[\p{L}\p{N}](?:[\p{L}\p{N}/.\-]*[\p{L}\p{N}])?(?: \d{2,}(?![\p{L}\p{N}]))*`;
+const LABELLED = new RegExp(String.raw`(?<![\p{L}\p{N}])${NUMBER_LABEL}(?![\p{L}])${NUMBER_FILLER}(${NUMBER_VALUE})`, "giu");
+
+export const labelledNumber: Detector = {
+  label: "REFERENSNUMMER",
+  detect(input) {
+    const out: Found[] = [];
+    for (const m of input.matchAll(LABELLED)) {
+      const value = m[1];
+      if (!/\d/.test(value)) continue;
+      const start = m.index + m[0].length - value.length;
+      out.push({ start, end: start + value.length, value });
+    }
+    return out;
+  },
+};
+
 // A web address without https:// or www. ("foretaget.se", "shop.foretaget.se/om").
 // Top-level domains are listed, and lowercase, so "t.ex." and "rapport.pdf"
 // stay out.
