@@ -45,7 +45,8 @@ const NAMED: Record<string, string> = {
   copy: "©",
   reg: "®",
 };
-const TOKEN = /<!--[\s\S]*?(?:-->|$)|<(\/?)([a-zA-Z][\w:-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>|[^<]+|</g;
+// Comments, then declarations and Word's conditional markup (<!DOCTYPE>, <![if …]>), then <?…?>, then tags, text, a stray "<".
+const TOKEN = /<!--[\s\S]*?(?:-->|$)|<![^>]*>|<\?[\s\S]*?(?:\?>|$)|<(\/?)([a-zA-Z][\w:-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>|[^<]+|</g;
 const HIDDEN_ATTR = /(^|\s)hidden(\s|=|$)/i;
 
 export function htmlEntities(s: string): string {
@@ -77,7 +78,7 @@ export function htmlToText(html: string): { text: string; hidden: boolean } {
   };
   for (const m of html.matchAll(TOKEN)) {
     const [token, slash, rawName, attrs = ""] = m;
-    if (token.startsWith("<!--")) continue;
+    if (token.startsWith("<!") || token.startsWith("<?")) continue;
     if (rawName === undefined) {
       const text = htmlEntities(token);
       if (skipName) {
