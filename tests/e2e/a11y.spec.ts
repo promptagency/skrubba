@@ -2,7 +2,8 @@
 // accessibility score) on every view, in light and dark.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { answerBox, MOD, openItems, openKey, openReady, rows, scrub } from "./helpers.ts";
+import { SAMPLE_TEXT } from "../fixtures/documents/build.ts";
+import { answerBox, dropFile, editor, fileWindow, MOD, openItems, openKey, openReady, rows, scrub } from "./helpers.ts";
 
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
@@ -78,6 +79,21 @@ test.describe("accessibility", () => {
         await openReady(page);
         await page.getByRole("button", { name: "Vanliga frågor" }).click();
         await expect(page.getByRole("dialog", { name: "Vanliga frågor" })).toBeVisible();
+        expect(await violations(page)).toEqual([]);
+      });
+
+      test("Läs in dokument, with the text read", async ({ page }) => {
+        await openReady(page);
+        await editor(page).fill("Min egen text.");
+        await dropFile(page, editor(page), "avtal.txt", "text/plain", SAMPLE_TEXT);
+        await expect(fileWindow(page).getByRole("button", { name: "Använd texten" })).toBeVisible();
+        expect(await violations(page)).toEqual([]);
+      });
+
+      test("Läs in dokument, with an error", async ({ page }) => {
+        await openReady(page);
+        await dropFile(page, editor(page), "bild.png", "image/png", new Uint8Array([0x89, 0x50, 0x4e, 0x47]));
+        await expect(fileWindow(page).getByRole("alert")).toBeVisible();
         expect(await violations(page)).toEqual([]);
       });
     });

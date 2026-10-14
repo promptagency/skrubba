@@ -1,6 +1,20 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import { buildDocx, buildPdf, PDF_WRAPPED, SAMPLE, SAMPLE_TEXT, wp } from "../fixtures/documents/build.ts";
+import {
+  buildDoc,
+  buildDocx,
+  buildMsg,
+  buildOdt,
+  buildPdf,
+  buildPptx,
+  buildXlsx,
+  latin1,
+  PDF_WRAPPED,
+  SAMPLE,
+  SAMPLE_TEXT,
+  tp,
+  wp,
+} from "../fixtures/documents/build.ts";
 import { answerBox, dropFile, editor, fileWindow, openReady, rows, scrub, scrubbedBox } from "./helpers.ts";
 
 const NEW_KEY_CONFIRM =
@@ -201,4 +215,47 @@ test.describe("while reading", () => {
     await expect(w).toBeHidden();
     await expect(editor(page)).toHaveValue("Min egen text.");
   });
+});
+
+test.describe("every format", () => {
+  test.skip(({ browserName }) => browserName !== "chromium", "the readers are the same code in every engine; docx and pdf run in all three above");
+
+  const rtf = (s: string) => `{\\rtf1\\ansi\\ansicpg1252 ${s.replace(/[^\x20-\x7e\n]/g, (c) => `\\'${c.charCodeAt(0).toString(16)}`).replace(/\n/g, "\\par ")}}`;
+  const html = `<!doctype html><meta charset="utf-8"><h1>${SAMPLE.title}</h1>${SAMPLE.lines.map((l) => `<p>${l}</p>`).join("")}`;
+  const eml = `Subject: ${SAMPLE.title}\r\nContent-Type: text/plain; charset=iso-8859-1\r\n\r\n${SAMPLE.lines.join("\r\n")}`;
+  const cases: Array<[string, string, Uint8Array, string]> = [
+    ["avtal.odt", "application/vnd.oasis.opendocument.text", buildOdt([SAMPLE.title, ...SAMPLE.lines].map(tp).join("")), "OpenDocument"],
+    ["avtal.rtf", "application/rtf", latin1(rtf(SAMPLE_TEXT)), "RTF"],
+    ["avtal.html", "text/html", new TextEncoder().encode(html), "Webbsida"],
+    ["avtal.csv", "text/csv", latin1(SAMPLE_TEXT.replace(/\n/g, "\r\n")), "CSV"],
+    ["avtal.eml", "message/rfc822", latin1(eml), "E-post"],
+    ["avtal.msg", "application/vnd.ms-outlook", buildMsg({ subject: SAMPLE.title, body: SAMPLE.lines.join("\n") }), "Outlook-mejl"],
+    ["avtal.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buildXlsx([{ name: "Avtal", rows: [[SAMPLE.title], ...SAMPLE.lines.map((l) => [l])] }]), "Excel"],
+    ["avtal.pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation", buildPptx([{ texts: [SAMPLE.title, ...SAMPLE.lines] }]), "PowerPoint"],
+    ["avtal.doc", "application/msword", buildDoc({ main: `${SAMPLE_TEXT.replace(/\n/g, "\r")}\r` }), "Word"],
+  ];
+
+  for (const [name, type, bytes, label] of cases) {
+    test(`${name} is read and the name in it gets masked`, async ({ page }) => {
+      await openReady(page);
+      await dropFile(page, editor(page), name, type, bytes);
+      const w = fileWindow(page);
+      await expect(w).toContainText(`${label} · `);
+      await w.getByRole("button", { name: "Använd texten" }).click();
+      await expect(rows(page).filter({ hasText: "Anna Berg" })).toContainText("Namn");
+    });
+  }
+});
+
+test("the keyboard path: Välj fil, Använd texten, and focus back in Din text", async ({ page }) => {
+  await openReady(page);
+  const chooser = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Välj fil" }).focus();
+  await page.keyboard.press("Enter");
+  await (await chooser).setFiles({ name: "avtal.txt", mimeType: "text/plain", buffer: Buffer.from(SAMPLE_TEXT) });
+  const use = fileWindow(page).getByRole("button", { name: "Använd texten" });
+  await expect(use).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(fileWindow(page)).toBeHidden();
+  await expect(editor(page)).toBeFocused();
 });
