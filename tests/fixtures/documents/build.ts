@@ -439,7 +439,7 @@ const streamObj = (dict: string, data: string) => `<< ${dict} /Length ${data.len
  */
 export function buildPdf(
   pages: Array<string[] | { image: true }>,
-  opts: { encrypted?: boolean; comment?: string; field?: string } = {},
+  opts: { encrypted?: boolean; comment?: string; field?: string; typed?: string; choice?: string } = {},
 ): Uint8Array {
   const objs: string[] = [];
   const add = (body: string) => objs.push(body);
@@ -464,6 +464,17 @@ export function buildPdf(
     if (kids.length === 0 && opts.comment) annots.push(add(`<< /Type /Annot /Subtype /Text /Rect [400 700 420 720] /Contents ${pdfString(opts.comment)} >>`));
     if (kids.length === 0 && opts.field) {
       const f = add(`<< /Type /Annot /Subtype /Widget /FT /Tx /T (namn) /V ${pdfString(opts.field)} /Rect [72 600 300 620] /P ${pageId} 0 R >>`);
+      annots.push(f);
+      fields.push(f);
+    }
+    if (kids.length === 0 && opts.typed) {
+      // Text typed onto the page with Preview's or Acrobat's text tool.
+      annots.push(add(`<< /Type /Annot /Subtype /FreeText /Rect [72 500 300 520] /DA (/Helv 12 Tf 0 g) /Contents ${pdfString(opts.typed)} >>`));
+    }
+    if (kids.length === 0 && opts.choice) {
+      const f = add(
+        `<< /Type /Annot /Subtype /Widget /FT /Ch /Ff 131072 /T (ort) /Opt [${pdfString(opts.choice)} (Annan)] /V ${pdfString(opts.choice)} /Rect [72 560 300 580] /P ${pageId} 0 R >>`,
+      );
       annots.push(f);
       fields.push(f);
     }
