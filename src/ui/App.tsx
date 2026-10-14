@@ -41,6 +41,20 @@ export function App() {
   const [itemsOpen, setItemsOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("scrub");
   const [fileJob, setFileJob] = useState<FileJob | null>(null);
+
+  // A file dropped anywhere outside the panes would make the browser open it
+  // and lose the session (text and kodnyckel live only in memory). Hold it.
+  useEffect(() => {
+    const hold = (e: DragEvent) => {
+      if (e.dataTransfer?.types.includes("Files")) e.preventDefault();
+    };
+    window.addEventListener("dragover", hold);
+    window.addEventListener("drop", hold);
+    return () => {
+      window.removeEventListener("dragover", hold);
+      window.removeEventListener("drop", hold);
+    };
+  }, []);
   // Set after a paste whose broken lines were joined, for Ångra.
   const [pasteUndo, setPasteUndo] = useState<PasteUndo | null>(null);
   const editor = useRef<EditorHandle>(null);
