@@ -3,6 +3,7 @@
 // (readerWorker.ts) and, for tests, in Node.
 import { oleFormat, openCfb } from "./cfb.ts";
 import { detect } from "./detect.ts";
+import { readDoc } from "./formats/doc.ts";
 import { readDocx } from "./formats/docx.ts";
 import { readEml } from "./formats/eml.ts";
 import { readHtml } from "./formats/html.ts";
@@ -41,7 +42,8 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
     }
     case "ole": {
       const cfb = openCfb(bytes);
-      oleFormat(cfb);
+      const format = oleFormat(cfb);
+      if (format === "doc") return { format, extracted: readDoc(cfb) };
       throw new ReadError("unsupported");
     }
     case "pdf":

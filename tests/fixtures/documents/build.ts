@@ -317,6 +317,41 @@ export function buildCfb(streams: Record<string, Uint8Array>): Uint8Array {
   return out;
 }
 
+/**
+ * A minimal Word 97 file: a FIB with the story lengths, the text after it,
+ * and a table stream whose piece table has one piece covering all text, as
+ * UTF-16 or (with `compressed`) as 8-bit windows-1252.
+ */
+export function buildDoc(o: { main: string; footnotes?: string; comments?: string; encrypted?: boolean; nFib?: number; compressed?: boolean }): Uint8Array {
+  const footnotes = o.footnotes ?? "";
+  const comments = o.comments ?? "";
+  const text = o.main + footnotes + comments;
+  const textAt = 0x800;
+  const word = new Uint8Array(textAt + text.length * 2);
+  const dv = new DataView(word.buffer);
+  dv.setUint16(0, 0xa5ec, true); // wIdent
+  dv.setUint16(2, o.nFib ?? 0x00c1, true);
+  dv.setUint16(0x0a, 0x0200 | (o.encrypted ? 0x0100 : 0), true); // fWhichTblStm (1Table), fEncrypted
+  dv.setUint16(32, 14, true); // csw
+  dv.setUint16(62, 22, true); // cslw
+  dv.setUint32(76, o.main.length, true); // ccpText
+  dv.setUint32(80, footnotes.length, true); // ccpFtn
+  dv.setUint32(92, comments.length, true); // ccpAtn
+  dv.setUint16(152, 0x5d, true); // cbRgFcLcb
+  if (o.compressed) word.set(latin1(text), textAt);
+  else for (let i = 0; i < text.length; i++) dv.setUint16(textAt + i * 2, text.charCodeAt(i), true);
+  const table = new Uint8Array(21);
+  const tv = new DataView(table.buffer);
+  table[0] = 0x02; // Pcdt
+  tv.setUint32(1, 16, true); // lcb of the PlcPcd: two CPs and one PCD
+  tv.setUint32(5, 0, true);
+  tv.setUint32(9, text.length, true);
+  tv.setUint32(15, o.compressed ? (textAt * 2) | 0x40000000 : textAt, true);
+  dv.setUint32(418, 0, true); // fcClx
+  dv.setUint32(422, table.length, true); // lcbClx
+  return buildCfb({ WordDocument: word, "1Table": table });
+}
+
 /** A PDF string literal in WinAnsi (latin-1 range), with octal escapes for anything outside ASCII. */
 function pdfString(s: string): string {
   let out = "(";
