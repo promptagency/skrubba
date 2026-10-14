@@ -19,6 +19,7 @@ describe("inOfflineCache", () => {
   it("leaves the demo video out, so only people who open it download it", () => {
     expect(inOfflineCache("/video/skrubba-demo.mp4")).toBe(false);
     expect(inOfflineCache("/video/skrubba-demo.jpg")).toBe(false);
+    expect(inOfflineCache("/og-image.png")).toBe(false); // only link previews fetch it
     expect(inOfflineCache("/index.html")).toBe(true);
     expect(inOfflineCache("/models/m/onnx/model.onnx.gzpart0")).toBe(true);
   });

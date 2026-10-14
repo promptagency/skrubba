@@ -8,8 +8,9 @@ export const cacheKey = (path: string, rev: string) => `${path}?__rev=${rev}`;
 /**
  * Files the offline cache leaves alone. The demo video is watched by few and
  * would add to every first visit; it is fetched from the network when played.
+ * The share image is only fetched by link previews, never by the app.
  */
-export const inOfflineCache = (path: string) => !path.startsWith("/video/");
+export const inOfflineCache = (path: string) => !path.startsWith("/video/") && path !== "/og-image.png";
 
 /** Message the page sends a new build that is still waiting, to make it take over. */
 export const SKIP_WAITING = "skip-waiting";

@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **Link previews.** Sharing the link on LinkedIn, Slack, Teams, Messenger or X shows the title, the description and a share image with the logo.
+
 ## [1.1.0] - 2026-10-14
 
 Ready for the public announcement.

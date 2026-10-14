@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { build, defineConfig, type Plugin } from "vite";
 import { buildSwManifest } from "./scripts/swManifest.ts";
+import { APP_NAME, APP_URL } from "./src/config.ts";
+import { COPY } from "./src/ui/copy.ts";
 
 // Privacy: the page may only talk to its own origin. 'wasm-unsafe-eval' lets
 // onnxruntime compile its WASM; it does not allow eval() of JavaScript.
@@ -30,6 +32,32 @@ function cspMeta(): Plugin {
     transformIndexHtml: () => [
       { tag: "meta", attrs: { "http-equiv": "Content-Security-Policy", content: CSP }, injectTo: "head-prepend" },
       { tag: "meta", attrs: { name: "skrubba-build", content: BUILD_ID }, injectTo: "head" },
+    ],
+  };
+}
+
+// Link previews (Open Graph, X): title and description are the approved
+// app.title and app.tagline, the image is public/og-image.png
+// (scripts/make-og-image.ts), and the address comes from config.ts.
+function shareMeta(): Plugin {
+  const url = `${APP_URL}/`;
+  const prop = (property: string, content: string) => ({ tag: "meta", attrs: { property, content }, injectTo: "head" as const });
+  const name = (name: string, content: string) => ({ tag: "meta", attrs: { name, content }, injectTo: "head" as const });
+  return {
+    name: "share-meta",
+    transformIndexHtml: () => [
+      { tag: "link", attrs: { rel: "canonical", href: url }, injectTo: "head" },
+      prop("og:type", "website"),
+      prop("og:site_name", APP_NAME),
+      prop("og:locale", "sv_SE"),
+      prop("og:url", url),
+      prop("og:title", COPY["app.title"]),
+      prop("og:description", COPY["app.tagline"]),
+      prop("og:image", `${APP_URL}/og-image.png`),
+      prop("og:image:width", "1200"),
+      prop("og:image:height", "630"),
+      prop("og:image:alt", COPY["app.title"]),
+      name("twitter:card", "summary_large_image"),
     ],
   };
 }
@@ -118,7 +146,7 @@ const ISOLATION_HEADERS = {
 const APP_VERSION = (JSON.parse(readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8")) as { version: string }).version;
 
 export default defineConfig({
-  plugins: [react(), cspMeta(), serveRuntimeInDev(), serviceWorker()],
+  plugins: [react(), cspMeta(), shareMeta(), serveRuntimeInDev(), serviceWorker()],
   define: { __SW_KILL__: JSON.stringify(SW_KILL), __APP_VERSION__: JSON.stringify(APP_VERSION) },
   server: { headers: ISOLATION_HEADERS },
   preview: { headers: ISOLATION_HEADERS },

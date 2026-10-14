@@ -1,6 +1,6 @@
 // Every Swedish string in the UI, verbatim from docs/COPY.md. Change copy
 // there first, then here.
-import type { EntityType } from "../engine/index.ts";
+import type { EntityType } from "../engine/Masker.ts";
 
 export const COPY = {
   "app.name": "Skrubba",

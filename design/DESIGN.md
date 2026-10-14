@@ -137,7 +137,7 @@ Rules:
 - `skrubba-logotyp-svart.svg` and `skrubba-logotyp-vit.svg` only where colour is not available.
 - The files have no built-in margin. Leave free space of half the logotype's height on all sides.
 - Never show the logotype narrower than 120 px. Below that the streaks run together, so use the symbol instead. The aspect ratio is 4.88:1.
-- `skrubba-symbol-positiv.svg` and `skrubba-symbol-negativ.svg` are for favicon, app icon and profile picture. The symbol replaces the logotype on small surfaces and never stands next to it. Safari ignores the dark-mode favicon and shows the positive symbol in both themes. Accepted 2026-10-12, since the logo files are not edited.
+- `skrubba-symbol-positiv.svg` and `skrubba-symbol-negativ.svg` are for favicon, app icon and profile picture. The symbol replaces the logotype on small surfaces and never stands next to it. The share image for link previews (`public/og-image.png`, 1200 × 630, made by `scripts/make-og-image.ts`) is the negativ logotype on `sapa`, with "Gör texten säkrare att klistra in i AI." below in Figtree semibold in `pa-sapa`. Owner's choice, 2026-10-14. Safari ignores the dark-mode favicon and shows the positive symbol in both themes. Accepted 2026-10-12, since the logo files are not edited.
 - Do not tilt, stretch or recolour the logo. No shadow, outline or effect.
 
 ## Tone
