@@ -55,4 +55,19 @@ Versions follow [Semantic Versioning](https://semver.org/): a bug fix bumps the 
 
 Pushing the tag also runs the full browser suite on GitHub (`.github/workflows/test.yml`); ordinary pushes to `main` only run the type check and unit tests. That split was made to save Actions minutes while the repo was private; since it went public (2026-10-12) minutes are free, but the split keeps pushes quick. Run `npm run e2e` locally before tagging.
 
+Once the tag's tests have passed, the workflow creates the GitHub release page for it, titled "Skrubba X.Y.Z", with that version's section from `CHANGELOG.md` as the notes (`scripts/release-notes.ts`). A version with failing tests gets no page; fix it, then release the next patch version. The page is only a label: the site was already deployed when `main` was pushed.
+
 The footer shows the version from `package.json`, set when the app is built. A unit test (`scripts/changelog.test.ts`) fails if `CHANGELOG.md` has no entry for that version.
+
+## Updating dependencies
+
+Dependabot (`.github/dependabot.yml`) opens pull requests once a month: one per runtime package (maskera, transformers.js, React…), one for all build and test tools, and one for the GitHub Actions in the workflow. Dependabot security updates open a pull request at once when a dependency has a known vulnerability. Each pull request runs the checks and gets a Cloudflare preview address.
+
+Merging into `main` deploys to production, so never merge one unread or untested:
+
+1. Check out the branch, run `npm ci`, `npm test` and `npm run e2e`.
+2. **maskera or @maskera/core:** run `npm run spike` and compare leaks and over-masking with the previous run (counts only). A new maskera can find more, or less.
+3. **onnxruntime-node:** bump its entry in `allowScripts` in `package.json` to the new version, or npm skips its install script and the model tests silently test nothing. `scripts/allowScripts.test.ts` fails until you do.
+4. **@huggingface/transformers or onnxruntime-web:** these change the runtime files under `/runtime/`; the build checks them, but run the full `npm run e2e` and, after merging, `npm run smoke`.
+5. Merge, then check that the deploy went live and `npm run smoke` passes.
+

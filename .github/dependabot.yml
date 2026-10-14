@@ -1,0 +1,23 @@
+# Dependabot: a monthly pull request for new versions, which runs the checks
+# and gets a Cloudflare preview. Never merge on autopilot: a merge to main
+# deploys straight to production. Before merging, see "Updating dependencies"
+# in docs/DEPLOY.md (maskera changes detection; onnxruntime-node needs its
+# allowScripts entry bumped; the runtime packages change the served files).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      # Build and test tools in one pull request.
+      dev-tools:
+        dependency-type: development
+    labels: [dependencies]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies]
