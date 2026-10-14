@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { latin1 } from "../../tests/fixtures/documents/build.ts";
+import { buildDocx, buildZip, latin1, SAMPLE, wp } from "../../tests/fixtures/documents/build.ts";
 import { extract } from "./extract.ts";
 
 const utf8 = (s: string) => new TextEncoder().encode(s);
@@ -39,5 +39,19 @@ describe("extract", () => {
 
   it("refuses a text file named like a Word file", async () => {
     expect(await extract(utf8("hej"), "avtal.docx")).toEqual({ kind: "error", reason: "unsupported" });
+  });
+
+  it("reads a Word file, even one named .pdf", async () => {
+    const docx = buildDocx({ body: [SAMPLE.title, ...SAMPLE.lines].map(wp).join("") });
+    expect(await extract(docx, "avtal.docx")).toMatchObject({ kind: "text", format: "docx", notes: [] });
+    expect(await extract(docx, "avtal.pdf")).toMatchObject({ kind: "text", format: "docx" });
+  });
+
+  it("refuses a zip that is no office file", async () => {
+    expect(await extract(buildZip({ "bild.png": "x" }), "arkiv.zip")).toEqual({ kind: "error", reason: "unsupported" });
+  });
+
+  it("says a Word file with no text is empty", async () => {
+    expect(await extract(buildDocx({ body: "<w:p/>" }), "tom.docx")).toEqual({ kind: "error", reason: "empty" });
   });
 });
