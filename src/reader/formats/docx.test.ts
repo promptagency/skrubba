@@ -61,6 +61,11 @@ describe("readDocx", () => {
     expect(text.match(/Lisa Ek/g)).toHaveLength(1);
   });
 
+  it("reads the text in a SmartArt diagram", async () => {
+    const docx = buildDocx({ body: wp("Organisation"), diagram: ["Anna Berg", "Erik Holm"] });
+    expect((await read(docx)).text).toBe("Organisation\n\nAnna Berg\nErik Holm");
+  });
+
   it("reads Word's own file, header and footer included", async () => {
     const { text } = await read(new Uint8Array(readFileSync("tests/fixtures/documents/tika/testWORD.docx")));
     expect(text).toContain("This is a sample Microsoft Word Document.");

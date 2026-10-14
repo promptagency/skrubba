@@ -26,6 +26,11 @@ describe("readPptx", () => {
     expect(await read(pptx)).toEqual({ text: "Bild 1\nAnna Berg", hidden: false, slides: 1 });
   });
 
+  it("reads the text in a SmartArt diagram on a slide", async () => {
+    const pptx = buildPptx([{ texts: ["Organisation"], diagram: ["Anna Berg", "Erik Holm"] }]);
+    expect((await read(pptx)).text).toBe("Bild 1\nOrganisation\nAnna Berg\nErik Holm");
+  });
+
   it("flags nothing in a plain deck", async () => {
     expect((await read(buildPptx([{ texts: ["Anna Berg"] }]))).hidden).toBe(false);
   });

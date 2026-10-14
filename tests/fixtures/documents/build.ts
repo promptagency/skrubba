@@ -99,10 +99,20 @@ export const RELS_NS = "http://schemas.openxmlformats.org/package/2006/relations
 /** A Word paragraph with one run. */
 export const wp = (text: string) => `<w:p><w:r><w:t xml:space="preserve">${esc(text)}</w:t></w:r></w:p>`;
 
-/** A .docx with the given body XML and optional headers, footers, footnotes and comments (inner XML of each part). */
-export function buildDocx(parts: { body: string; headers?: string[]; footers?: string[]; footnotes?: string; comments?: string }): Uint8Array {
+/** A SmartArt data part with one point per string, as Word and PowerPoint write it. */
+export const diagramData = (texts: string[]) =>
+  `<?xml version="1.0" encoding="UTF-8"?><dgm:dataModel xmlns:dgm="http://schemas.openxmlformats.org/drawingml/2006/diagram" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><dgm:ptLst>${texts
+    .map((t, i) => `<dgm:pt modelId="${i + 1}"><dgm:t><a:bodyPr/><a:p><a:r><a:t>${esc(t)}</a:t></a:r></a:p></dgm:t></dgm:pt>`)
+    .join("")}</dgm:ptLst></dgm:dataModel>`;
+
+/** A .docx with the given body XML and optional headers, footers, footnotes, comments (inner XML of each part) and a SmartArt diagram. */
+export function buildDocx(parts: { body: string; headers?: string[]; footers?: string[]; footnotes?: string; comments?: string; diagram?: string[] }): Uint8Array {
   const files: Record<string, string> = {};
   const rels: string[] = [];
+  if (parts.diagram) {
+    files["word/diagrams/data1.xml"] = diagramData(parts.diagram);
+    rels.push(`<Relationship Id="rIdD1" Type="${REL}/diagramData" Target="diagrams/data1.xml"/>`);
+  }
   parts.headers?.forEach((xml, i) => {
     files[`word/header${i + 1}.xml`] = `<w:hdr ${W_NS}>${xml}</w:hdr>`;
     rels.push(`<Relationship Id="rIdH${i + 1}" Type="${REL}/header" Target="header${i + 1}.xml"/>`);
@@ -208,7 +218,7 @@ const aPara = (text: string) => `<a:p><a:r><a:t>${esc(text)}</a:t></a:r></a:p>`;
  * to test a deck that points at one slide many times).
  */
 export function buildPptx(
-  slides: Array<{ texts: string[]; table?: string[][]; hidden?: boolean; notes?: string }>,
+  slides: Array<{ texts: string[]; table?: string[][]; hidden?: boolean; notes?: string; diagram?: string[] }>,
   opts: { order?: number[] } = {},
 ): Uint8Array {
   const files: Record<string, string> = {};
@@ -223,6 +233,11 @@ export function buildPptx(
           .join("")}</a:tbl></a:graphicData></a:graphic></p:graphicFrame>`
       : "";
     files[`ppt/slides/slide${n}.xml`] = `<?xml version="1.0" encoding="UTF-8"?><p:sld ${P_NS}${slide.hidden ? ' show="0"' : ""}><p:cSld><p:spTree>${shapes}${table}</p:spTree></p:cSld></p:sld>`;
+    if (slide.diagram) {
+      files[`ppt/diagrams/data${n}.xml`] = diagramData(slide.diagram);
+      files[`ppt/slides/_rels/slide${n}.xml.rels`] =
+        `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="${RELS_NS}"><Relationship Id="rIdD1" Type="${REL}/diagramData" Target="../diagrams/data${n}.xml"/></Relationships>`;
+    }
     if (slide.notes) {
       files[`ppt/notesSlides/notesSlide${n}.xml`] = `<?xml version="1.0" encoding="UTF-8"?><p:notes ${P_NS}><p:cSld><p:spTree><p:sp><p:txBody>${aPara(slide.notes)}</p:txBody></p:sp></p:spTree></p:cSld></p:notes>`;
     }

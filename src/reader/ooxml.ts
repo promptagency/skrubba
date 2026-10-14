@@ -14,6 +14,23 @@ export function relationships(xml: string, base: string): Array<{ id: string; ty
   return out;
 }
 
+/** The text of a SmartArt data part (diagrams/data*.xml): one line per paragraph. */
+export function diagramText(xml: string): string {
+  const lines: string[] = [];
+  let line = "";
+  let inText = false;
+  for (const ev of xmlEvents(xml)) {
+    if (ev.type === "text") {
+      if (inText) line += ev.text;
+    } else if (ev.name === "a:t") inText = ev.type === "open";
+    else if (ev.type === "close" && ev.name === "a:p") {
+      if (line.trim()) lines.push(line.trim());
+      line = "";
+    }
+  }
+  return lines.join("\n");
+}
+
 function resolve(base: string, target: string): string {
   if (target.startsWith("/")) return target.slice(1);
   const parts = base.split("/").filter(Boolean);
