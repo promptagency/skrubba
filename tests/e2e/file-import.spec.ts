@@ -209,6 +209,23 @@ test.describe("PDF", () => {
   });
 });
 
+test("a file dropped outside the drop areas is held by the page, so the browser does not open it", async ({ page }) => {
+  await openReady(page);
+  for (const selector of [".masthead", "textarea[aria-label='Skrubbad text'], [aria-label='Skrubbad text']"]) {
+    const prevented = await page.locator(selector).first().evaluate((el) => {
+      const dt = new DataTransfer();
+      dt.items.add(new File(["x"], "avtal.pdf", { type: "application/pdf" }));
+      const over = new DragEvent("dragover", { bubbles: true, cancelable: true, dataTransfer: dt });
+      const drop = new DragEvent("drop", { bubbles: true, cancelable: true, dataTransfer: dt });
+      el.dispatchEvent(over);
+      el.dispatchEvent(drop);
+      return over.defaultPrevented && drop.defaultPrevented;
+    });
+    expect(prevented, selector).toBe(true);
+  }
+  await expect(fileWindow(page)).toHaveCount(0);
+});
+
 test.describe("while reading", () => {
   // Without the offline cache, page.route sees the reader worker's request and can hold it.
   test.use({ serviceWorkers: "block" });
