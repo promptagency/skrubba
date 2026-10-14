@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { clipboard, editor, MOD, openReady } from "./helpers.ts";
+import { buildDocx, buildPdf, SAMPLE, wp } from "../fixtures/documents/build.ts";
+import { clipboard, dropFile, editor, fileWindow, MOD, openReady } from "./helpers.ts";
 
 // Privacy: a full session may only touch the app's own origin.
 test("masking and copying with the model makes no request outside our origin", async ({ page, context, baseURL, browserName }) => {
@@ -25,5 +26,30 @@ test("masking and copying with the model makes no request outside our origin", a
   const outside = requests.filter((url) => !url.startsWith("data:") && new URL(url).origin !== origin);
   expect(outside).toEqual([]);
   expect(requests.some((url) => url.includes("/models/"))).toBe(true);
+  expect(cspViolations).toEqual([]);
+});
+
+test("reading a PDF and a Word file makes no request outside our origin", async ({ page, context, baseURL }) => {
+  const origin = new URL(baseURL!).origin;
+  const requests: string[] = [];
+  context.on("request", (r) => requests.push(r.url()));
+  const cspViolations: string[] = [];
+  page.on("console", (m) => {
+    if (/Content Security Policy|Refused to/i.test(m.text())) cspViolations.push(m.text());
+  });
+
+  await openReady(page);
+  const files = [
+    ["avtal.pdf", "application/pdf", buildPdf([[SAMPLE.title, ...SAMPLE.lines]])],
+    ["avtal.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", buildDocx({ body: SAMPLE.lines.map(wp).join("") })],
+  ] as const;
+  for (const [name, type, bytes] of files) {
+    await dropFile(page, editor(page), name, type, bytes);
+    await fileWindow(page).getByRole("button", { name: "Använd texten" }).click();
+    await expect(editor(page)).toHaveValue(/Anna Berg/);
+  }
+
+  const outside = requests.filter((url) => !url.startsWith("data:") && !url.startsWith("blob:") && new URL(url).origin !== origin);
+  expect(outside).toEqual([]);
   expect(cspViolations).toEqual([]);
 });

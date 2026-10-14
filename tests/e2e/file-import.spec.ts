@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import { buildDocx, SAMPLE, SAMPLE_TEXT, wp } from "../fixtures/documents/build.ts";
+import { buildDocx, buildPdf, PDF_WRAPPED, SAMPLE, SAMPLE_TEXT, wp } from "../fixtures/documents/build.ts";
 import { answerBox, dropFile, editor, fileWindow, openReady, rows } from "./helpers.ts";
 
 test("a dropped text file opens the window, and Använd texten puts it in Din text", async ({ page }) => {
@@ -82,6 +83,49 @@ test("a Word file is read into Din text and its name gets masked", async ({ page
   await expect(w).toContainText("Word · 23 ord");
   await w.getByRole("button", { name: "Använd texten" }).click();
   await expect(rows(page).filter({ hasText: "Anna Berg" })).toContainText("Namn");
+});
+
+test.describe("PDF", () => {
+  const PDF = "application/pdf";
+
+  test("a PDF is read page by page into Din text, lines rejoined", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "rehab.pdf", PDF, buildPdf(PDF_WRAPPED));
+    const w = fileWindow(page);
+    await expect(w).toContainText("PDF · 2 sidor");
+    await w.getByRole("button", { name: "Använd texten" }).click();
+    await expect(editor(page)).toHaveValue(/har under våren/);
+    await expect(editor(page)).toHaveValue(/rehabilitering/);
+    await expect(editor(page)).toHaveValue(/Erik Holm/);
+  });
+
+  test("a PDF from another program is read", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "testPDF.pdf", PDF, new Uint8Array(readFileSync("tests/fixtures/documents/tika/testPDF.pdf")));
+    await fileWindow(page).getByRole("button", { name: "Använd texten" }).click();
+    await expect(editor(page)).toHaveValue(/Tika/);
+  });
+
+  test("a scanned PDF says it has no text", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "skannad.pdf", PDF, buildPdf([{ image: true }]));
+    await expect(fileWindow(page).getByRole("alert")).toHaveText(/^PDF:en innehåller bara bilder, ingen text\./);
+  });
+
+  test("a password-protected PDF says so", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "last.pdf", PDF, buildPdf([[SAMPLE.title]], { encrypted: true }));
+    await expect(fileWindow(page).getByRole("alert")).toHaveText(/^Dokumentet är lösenordsskyddat\./);
+  });
+
+  test("a form's filled-in values come along, its comments do not", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "blankett.pdf", PDF, buildPdf([["Namn"]], { field: "Anna Berg", comment: "Ring Lisa Ek" }));
+    const w = fileWindow(page);
+    await expect(w.getByLabel("Början av texten")).toContainText("Anna Berg");
+    await expect(w.getByLabel("Början av texten")).not.toContainText("Lisa Ek");
+    await expect(w).toContainText("Kommentarer och dolda delar togs inte med.");
+  });
 });
 
 test.describe("while reading", () => {

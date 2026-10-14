@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { editor, openReady, rows } from "./helpers.ts";
+import { buildPdf, SAMPLE } from "../fixtures/documents/build.ts";
+import { dropFile, editor, fileWindow, openReady, rows } from "./helpers.ts";
 
 test("after one visit the app works offline, model included", async ({ page, context }) => {
   await openReady(page);
@@ -39,4 +40,15 @@ test("a first visit downloads each model and runtime part once", async ({ page, 
   await openReady(page);
   expect(fromNetwork.length).toBeGreaterThan(0);
   expect(fromNetwork.length).toBe(new Set(fromNetwork).size);
+});
+
+test("after one visit a PDF can be read offline", async ({ page, context }) => {
+  await openReady(page);
+  await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
+
+  await context.setOffline(true);
+  await page.reload();
+  await expect(page.locator(".model-status")).toHaveAttribute("data-state", "ready", { timeout: 60_000 });
+  await dropFile(page, editor(page), "avtal.pdf", "application/pdf", buildPdf([[SAMPLE.title, ...SAMPLE.lines]]));
+  await expect(fileWindow(page)).toContainText("PDF · 1 sida");
 });
