@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-14
+
 ### Added
 
 - **Link previews.** Sharing the link on LinkedIn, Slack, Teams, Messenger or X shows the title, the description and a share image with the logo.
@@ -65,7 +67,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/promptagency/skrubba/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/promptagency/skrubba/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/promptagency/skrubba/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/promptagency/skrubba/releases/tag/v0.9.0
