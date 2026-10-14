@@ -3,6 +3,7 @@
 // (readerWorker.ts) and, for tests, in Node.
 import { detect } from "./detect.ts";
 import { readDocx } from "./formats/docx.ts";
+import { readOdt } from "./formats/odt.ts";
 import { readPdf } from "./formats/pdf.ts";
 import { readText } from "./formats/text.ts";
 import { LIMITS } from "./limits.ts";
@@ -27,6 +28,7 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
       const zip = openZip(bytes);
       const format = await zipFormat(zip);
       if (format === "docx") return { format, extracted: await readDocx(zip) };
+      if (format === "odt") return { format, extracted: await readOdt(zip) };
       throw new ReadError("unsupported");
     }
     case "pdf":
