@@ -5,6 +5,7 @@ import { detect } from "./detect.ts";
 import { readDocx } from "./formats/docx.ts";
 import { readOdt } from "./formats/odt.ts";
 import { readPdf } from "./formats/pdf.ts";
+import { readRtf } from "./formats/rtf.ts";
 import { readText } from "./formats/text.ts";
 import { LIMITS } from "./limits.ts";
 import { type Extracted, type Format, type Note, type Progress, ReadError, type ReadResult, type Stats } from "./types.ts";
@@ -33,6 +34,8 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
     }
     case "pdf":
       return { format: "pdf", extracted: await readPdf(bytes, onProgress) };
+    case "rtf":
+      return { format: "rtf", extracted: readRtf(bytes) };
     case "text":
       if (found.format === "txt" || found.format === "md" || found.format === "csv") return { format: found.format, extracted: readText(bytes) };
       throw new ReadError("unsupported");
