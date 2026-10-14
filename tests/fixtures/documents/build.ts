@@ -186,6 +186,37 @@ export function buildXlsx(sheets: Array<{ name: string; rows: XlsxCell[][]; stat
   });
 }
 
+const P_NS = `xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:r="${REL}"`;
+const aPara = (text: string) => `<a:p><a:r><a:t>${esc(text)}</a:t></a:r></a:p>`;
+
+/** A .pptx: one text box per string, an optional table, hidden slides and speaker notes. */
+export function buildPptx(slides: Array<{ texts: string[]; table?: string[][]; hidden?: boolean; notes?: string }>): Uint8Array {
+  const files: Record<string, string> = {};
+  const rels: string[] = [];
+  const ids: string[] = [];
+  slides.forEach((slide, i) => {
+    const n = i + 1;
+    const shapes = slide.texts.map((text) => `<p:sp><p:txBody>${aPara(text)}</p:txBody></p:sp>`).join("");
+    const table = slide.table
+      ? `<p:graphicFrame><a:graphic><a:graphicData><a:tbl>${slide.table
+          .map((row) => `<a:tr>${row.map((c) => `<a:tc><a:txBody>${aPara(c)}</a:txBody></a:tc>`).join("")}</a:tr>`)
+          .join("")}</a:tbl></a:graphicData></a:graphic></p:graphicFrame>`
+      : "";
+    files[`ppt/slides/slide${n}.xml`] = `<?xml version="1.0" encoding="UTF-8"?><p:sld ${P_NS}${slide.hidden ? ' show="0"' : ""}><p:cSld><p:spTree>${shapes}${table}</p:spTree></p:cSld></p:sld>`;
+    if (slide.notes) {
+      files[`ppt/notesSlides/notesSlide${n}.xml`] = `<?xml version="1.0" encoding="UTF-8"?><p:notes ${P_NS}><p:cSld><p:spTree><p:sp><p:txBody>${aPara(slide.notes)}</p:txBody></p:sp></p:spTree></p:cSld></p:notes>`;
+    }
+    rels.push(`<Relationship Id="rId${n}" Type="${REL}/slide" Target="slides/slide${n}.xml"/>`);
+    ids.push(`<p:sldId id="${255 + n}" r:id="rId${n}"/>`);
+  });
+  return buildZip({
+    "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"/>',
+    "ppt/presentation.xml": `<?xml version="1.0" encoding="UTF-8"?><p:presentation ${P_NS}><p:sldIdLst>${ids.join("")}</p:sldIdLst></p:presentation>`,
+    "ppt/_rels/presentation.xml.rels": `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="${RELS_NS}">${rels.join("")}</Relationships>`,
+    ...files,
+  });
+}
+
 /** A PDF string literal in WinAnsi (latin-1 range), with octal escapes for anything outside ASCII. */
 function pdfString(s: string): string {
   let out = "(";
