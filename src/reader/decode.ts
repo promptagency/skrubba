@@ -38,3 +38,10 @@ export function decodeText(bytes: Uint8Array, declared?: string): string {
     return new TextDecoder("windows-1252").decode(bytes);
   }
 }
+
+/** One character per byte (U+0000 to U+00FF), for parsers that work on bytes. */
+export function binaryString(bytes: Uint8Array): string {
+  let s = "";
+  for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode(...bytes.subarray(i, i + 8192));
+  return s;
+}

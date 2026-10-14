@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { latin1 } from "../../tests/fixtures/documents/build.ts";
-import { decodeText, labelForCodepage } from "./decode.ts";
+import { binaryString, decodeText, labelForCodepage } from "./decode.ts";
 
 const utf8 = (s: string) => new TextEncoder().encode(s);
 
@@ -44,5 +44,15 @@ describe("labelForCodepage", () => {
     [4711, "windows-1252"],
   ])("maps %i to %s", (cp, label) => {
     expect(labelForCodepage(cp)).toBe(label);
+  });
+});
+
+describe("binaryString", () => {
+  it("maps each byte to one character", () => {
+    expect(binaryString(new Uint8Array([0x41, 0xe5, 0x00, 0xff]))).toBe("Aå\u0000ÿ");
+  });
+
+  it("handles more bytes than one call can spread", () => {
+    expect(binaryString(new Uint8Array(200_000).fill(0x61))).toHaveLength(200_000);
   });
 });
