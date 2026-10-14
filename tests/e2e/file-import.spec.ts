@@ -190,6 +190,15 @@ test.describe("PDF", () => {
     await expect(fileWindow(page).getByRole("alert")).toHaveText(/^Dokumentet är lösenordsskyddat\./);
   });
 
+  test("text typed onto the page and a chosen value come along, without a note", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "ifylld.pdf", PDF, buildPdf([["Namn"]], { typed: "Anna Berg", choice: "Umeå" }));
+    const w = fileWindow(page);
+    await expect(w.getByLabel("Början av texten")).toContainText("Anna Berg");
+    await expect(w.getByLabel("Början av texten")).toContainText("Umeå");
+    await expect(w).not.toContainText("Kommentarer och dolda delar togs inte med.");
+  });
+
   test("a form's filled-in values come along, its comments do not", async ({ page }) => {
     await openReady(page);
     await dropFile(page, editor(page), "blankett.pdf", PDF, buildPdf([["Namn"]], { field: "Anna Berg", comment: "Ring Lisa Ek" }));

@@ -55,10 +55,16 @@ export async function readPdf(bytes: Uint8Array, onProgress?: Progress): Promise
         items.push({ str: it.str, x, y, width: it.width, height: it.height || Math.hypot(c, d) });
       }
       const lines = [pageText(items)];
+      // What is visible on the page comes along: filled-in text and choice
+      // fields, and text typed onto the page (FreeText). Comments do not.
       for (const a of await page.getAnnotations({ intent: "display" })) {
+        const contents = String(a.contentsObj?.str ?? "").trim();
         if (a.subtype === "Widget") {
-          if (a.fieldType === "Tx" && typeof a.fieldValue === "string" && a.fieldValue.trim()) lines.push(a.fieldValue.trim());
-        } else if (a.subtype !== "Link" && String(a.contentsObj?.str ?? "").trim()) hidden = true;
+          const value = Array.isArray(a.fieldValue) ? a.fieldValue.join(", ") : a.fieldValue;
+          if ((a.fieldType === "Tx" || a.fieldType === "Ch") && typeof value === "string" && value.trim()) lines.push(value.trim());
+        } else if (a.subtype === "FreeText") {
+          if (contents) lines.push(contents);
+        } else if (a.subtype !== "Link" && contents) hidden = true;
       }
       pages.push(lines.filter(Boolean).join("\n"));
       page.cleanup();
