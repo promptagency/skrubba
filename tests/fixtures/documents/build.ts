@@ -140,6 +140,52 @@ export function buildOdt(body: string, opts: { header?: string; footer?: string 
   });
 }
 
+type XlsxCell = string | number | null | { f: string; v: number } | { inline: string };
+const SHEET_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+
+/** Column letters for a 0-based index: 0 → A, 26 → AA. */
+function columnName(i: number): string {
+  let s = "";
+  for (let n = i + 1; n > 0; n = Math.floor((n - 1) / 26)) s = String.fromCharCode(65 + ((n - 1) % 26)) + s;
+  return s;
+}
+
+/** An .xlsx. Strings go to the shared string table; `null` leaves a cell out; `comment` adds a cell comment. */
+export function buildXlsx(sheets: Array<{ name: string; rows: XlsxCell[][]; state?: "hidden" | "veryHidden" }>, opts: { comment?: string } = {}): Uint8Array {
+  const strings: string[] = [];
+  const sst = (s: string) => {
+    const at = strings.indexOf(s);
+    return at >= 0 ? at : strings.push(s) - 1;
+  };
+  const cellXml = (c: XlsxCell, ref: string) => {
+    if (c === null) return "";
+    if (typeof c === "string") return `<c r="${ref}" t="s"><v>${sst(c)}</v></c>`;
+    if (typeof c === "number") return `<c r="${ref}"><v>${c}</v></c>`;
+    if ("f" in c) return `<c r="${ref}"><f>${esc(c.f)}</f><v>${c.v}</v></c>`;
+    return `<c r="${ref}" t="inlineStr"><is><t>${esc(c.inline)}</t></is></c>`;
+  };
+  const files: Record<string, string> = {};
+  const rels: string[] = [];
+  const entries: string[] = [];
+  sheets.forEach((sheet, si) => {
+    const rows = sheet.rows.map((cells, ri) => `<row r="${ri + 1}">${cells.map((c, ci) => cellXml(c, `${columnName(ci)}${ri + 1}`)).join("")}</row>`).join("");
+    files[`xl/worksheets/sheet${si + 1}.xml`] = `<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="${SHEET_NS}"><sheetData>${rows}</sheetData></worksheet>`;
+    rels.push(`<Relationship Id="rId${si + 1}" Type="${REL}/worksheet" Target="worksheets/sheet${si + 1}.xml"/>`);
+    entries.push(`<sheet name="${esc(sheet.name)}" sheetId="${si + 1}"${sheet.state ? ` state="${sheet.state}"` : ""} r:id="rId${si + 1}"/>`);
+  });
+  if (opts.comment) {
+    files["xl/comments1.xml"] = `<comments xmlns="${SHEET_NS}"><commentList><comment ref="A1"><text><t>${esc(opts.comment)}</t></text></comment></commentList></comments>`;
+  }
+  const sharedStringsXml = `<?xml version="1.0" encoding="UTF-8"?><sst xmlns="${SHEET_NS}">${strings.map((s) => `<si><t xml:space="preserve">${esc(s)}</t></si>`).join("")}</sst>`;
+  return buildZip({
+    "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"/>',
+    "xl/workbook.xml": `<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="${SHEET_NS}" xmlns:r="${REL}"><sheets>${entries.join("")}</sheets></workbook>`,
+    "xl/_rels/workbook.xml.rels": `<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="${RELS_NS}">${rels.join("")}</Relationships>`,
+    "xl/sharedStrings.xml": sharedStringsXml,
+    ...files,
+  });
+}
+
 /** A PDF string literal in WinAnsi (latin-1 range), with octal escapes for anything outside ASCII. */
 function pdfString(s: string): string {
   let out = "(";
