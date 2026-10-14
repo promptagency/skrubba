@@ -7,6 +7,7 @@ import { readEml } from "./formats/eml.ts";
 import { readHtml } from "./formats/html.ts";
 import { readOdt } from "./formats/odt.ts";
 import { readPdf } from "./formats/pdf.ts";
+import { readPptx } from "./formats/pptx.ts";
 import { readRtf } from "./formats/rtf.ts";
 import { readText } from "./formats/text.ts";
 import { readXlsx } from "./formats/xlsx.ts";
@@ -34,6 +35,7 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
       if (format === "docx") return { format, extracted: await readDocx(zip) };
       if (format === "odt") return { format, extracted: await readOdt(zip) };
       if (format === "xlsx") return { format, extracted: await readXlsx(zip) };
+      if (format === "pptx") return { format, extracted: await readPptx(zip) };
       throw new ReadError("unsupported");
     }
     case "pdf":
