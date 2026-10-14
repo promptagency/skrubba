@@ -1,7 +1,65 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import { buildDocx, buildPdf, PDF_WRAPPED, SAMPLE, SAMPLE_TEXT, wp } from "../fixtures/documents/build.ts";
-import { answerBox, dropFile, editor, fileWindow, openReady, rows } from "./helpers.ts";
+import { answerBox, dropFile, editor, fileWindow, openReady, rows, scrub, scrubbedBox } from "./helpers.ts";
+
+const NEW_KEY_CONFIRM =
+  "Den nya texten får en ny kodnyckel. Svar på den förra texten går då inte att avskrubba, om du inte har laddat ner kodnyckeln. Vill du fortsätta?";
+
+// Owner's decision, 2026-10-14: a document read into Din text is a new case, like Ny text.
+test.describe("a new kodnyckel for a new document", () => {
+  test("with a kodnyckel, Använd texten asks first, then starts a new one and keeps Egna ord", async ({ page }) => {
+    await openReady(page);
+    await page.getByRole("button", { name: "Visa exempel" }).click();
+    const words = await page.locator(".words summary").textContent();
+    await scrub(page);
+    const asked: string[] = [];
+    page.on("dialog", (d) => {
+      asked.push(d.message());
+      void d.accept();
+    });
+    await dropFile(page, editor(page), "avtal.txt", "text/plain", SAMPLE_TEXT);
+    await fileWindow(page).getByRole("button", { name: "Använd texten" }).click();
+    expect(asked).toEqual([NEW_KEY_CONFIRM]);
+    await expect(fileWindow(page)).toBeHidden();
+    await expect(editor(page)).toHaveValue(SAMPLE_TEXT);
+    await expect(scrubbedBox(page)).toHaveValue("");
+    await expect(page.locator(".words summary")).toHaveText(words!);
+    await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveCount(0);
+    await scrub(page);
+    await expect(scrubbedBox(page)).toHaveValue(/och \[NAMN_1\]/);
+  });
+
+  test("saying no leaves the window open and the text as it was", async ({ page }) => {
+    await openReady(page);
+    await page.getByRole("button", { name: "Visa exempel" }).click();
+    await scrub(page);
+    const before = await editor(page).inputValue();
+    page.on("dialog", (d) => void d.dismiss());
+    await dropFile(page, editor(page), "avtal.txt", "text/plain", SAMPLE_TEXT);
+    await fileWindow(page).getByRole("button", { name: "Använd texten" }).click();
+    await expect(fileWindow(page)).toBeVisible();
+    await expect(editor(page)).toHaveValue(before);
+    await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveCount(1);
+  });
+
+  test("in Avskrubba the kodnyckel stays, without asking", async ({ page }) => {
+    await openReady(page);
+    await page.getByRole("button", { name: "Visa exempel" }).click();
+    await scrub(page);
+    let asked = false;
+    page.on("dialog", (d) => {
+      asked = true;
+      void d.dismiss();
+    });
+    const box = await answerBox(page);
+    await dropFile(page, box, "svar.txt", "text/plain", "Hej [NAMN_1].");
+    await fileWindow(page).getByRole("button", { name: "Använd texten" }).click();
+    await expect(box).toHaveValue("Hej [NAMN_1].");
+    expect(asked).toBe(false);
+    await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveCount(1);
+  });
+});
 
 test("a dropped text file opens the window, and Använd texten puts it in Din text", async ({ page }) => {
   await openReady(page);
