@@ -105,7 +105,7 @@ BOM first (UTF-8, UTF-16 LE/BE). Then `TextDecoder("utf-8", { fatal: true })`; o
 - pdf.js runs without its own nested worker inside our reader worker (its main-thread "fake worker" mode, with the worker module imported from our origin). The exact wiring is decided in the plan.
 - Text per page from `getTextContent()`. Items are grouped into lines by baseline (y within half the font height), sorted by x, with a space where the gap between items is wider than about a quarter of the font size. Pages are joined with a blank line.
 - The result goes through the existing PDF tidy-up (`normalise` and line joining in `src/ui/pasteCleanup.ts`), moved or exported so the reader can use it. All pages with no text items: `noText`. Password-protected: `encrypted`.
-- Annotations and form field values: decided while building step 3, using the fixtures. Default if unclear: include form field values (they are visible on the page), leave out annotations (comments) with `hiddenLeftOut`.
+- Annotations and form field values: decided while building step 3, using the fixtures. Default if unclear: include form field values (they are visible on the page), leave out annotations (comments) with `hiddenLeftOut`. Settled after the final review: text and choice field values and FreeText (text typed onto the page) come along; other annotations with contents are comments.
 
 ### What each reader extracts
 
