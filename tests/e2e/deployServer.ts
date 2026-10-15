@@ -44,6 +44,12 @@ export async function startDeployServer(root: string): Promise<DeployServer> {
     deploy: (next) => {
       current = next;
     },
-    close: () => new Promise((resolve) => server.close(() => resolve())),
+    // The browser is still open when a test closes the server; drop its
+    // connections, or close() waits for any that are mid-request.
+    close: () =>
+      new Promise((resolve) => {
+        server.close(() => resolve());
+        server.closeAllConnections();
+      }),
   };
 }
