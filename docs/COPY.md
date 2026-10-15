@@ -157,9 +157,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 Ändrat eller nytt 2026-10-10 för layouten med två kort (Skrubba och Avskrubba).
 
 - `mode.restore` och `action.restore`: "Byt tillbaka" blev "Avskrubba", som i skissen.
-- `editor.empty` och `restore.empty` nämner att man kan släppa ett dokument.
-- `file.*` hör till fönstret Läs in dokument, som öppnas när någon släpper en fil eller väljer Välj fil. `file.format.*` är typen i raden under filnamnet, till exempel "Word · 1 240 ord". Utkast 2026-10-14, ska granskas av ägaren.
-- `read.*` står i texten som läses in från ett dokument, inte i gränssnittet. Ett mejl börjar med raderna Från, Till, Kopia, Ämne och Datum. Varje blad i ett Excel-dokument börjar med "Blad: namn" och varje bild i en presentation med "Bild 1". Kolonet efter Från och Blad är en etikett, inte löptext.
+- `editor.empty` och `restore.empty`: nämner att man kan släppa en textfil.
+- `drop.unsupported`: när någon släpper en fil som inte är .txt eller .md.
 - `key.close`: stänger nyckelkortet.
 - `footer.byline`: första raden i sidfoten. {app} är Skrubba i fetstil, {author} länkar till mickequick.se och {agency} till promptagency.se, båda i en ny flik så att texten i Skrubba finns kvar. Nytt 2026-10-12, ägarens formulering.
 - `footer.credits`: andra raden i sidfoten. {github} länkar till kodförrådet i en ny flik när det är publikt (`REPO_URL` i `src/config.ts`), annars är det vanlig text. Ändrad 2026-10-12, ägarens formulering, med ägarens stavning "Github".
@@ -238,6 +237,24 @@ Nytt 2026-10-12, ägarens godkännande av utkasten.
 - Vanliga frågor har fem nya frågor (vilka uppgifter, hur man döljer något som missades, ändrade platshållare, vilka AI-tjänster, kostnad) och en ny ordning. "Byta tillbaka" heter "avskrubba" i svaren, och Github stavas som i sidfoten. Godkänt av ägaren.
 - Vanliga frågor: ny fråga "Räknar ni besökare?" om den anonyma besöksräkningen med Plausible. "Kostar Skrubba något?" säger inte längre "ingen statistik", och "Hur kan jag kontrollera att inget skickas?" nämner besöksräkningen. Godkänt av ägaren 2026-10-12.
 - `feedback.link`, `feedback.subject`, `feedback.body`: länken sist i varningen under Din text öppnar ett mejl till micke@promptagency.se (`FEEDBACK_EMAIL` i `src/config.ts`) med ämne och en kort guide ifyllda. Användarens text läggs aldrig in i mejlet. Godkänt av ägaren 2026-10-12.
+
+**Utkast 2026-10-14, inte granskade av ägaren än.** Dokument kan släppas in eller väljas med Välj fil, och läses i fönstret Läs in dokument. Allt nedan är nytt eller ändrat i den omgången och ska granskas innan det släpps.
+
+- `editor.empty`: ändrad. Förut "Klistra in text här eller släpp en textfil. Den stannar i din webbläsare och inget laddas upp." Nu "släpp ett dokument" och "Det stannar".
+- `restore.empty`: ändrad. Förut "Klistra in svaret från AI här eller släpp en skrubbad textfil." Nu "släpp ett dokument med svaret".
+- `drop.unsupported`: borttagen. Ersatt av `file.error.unsupported`, som visas i fönstret.
+- `file.choose`: knappen Välj fil bredvid Visa exempel.
+- `file.title`: rubriken på fönstret Läs in dokument.
+- `file.reading`, `file.readingPage`: raden medan filen läses. Sidnumren visas bara för PDF.
+- `file.words`, `file.pages`, `file.pages.one`, `file.slides`, `file.slides.one`, `file.sheets` och `file.format.*`: raden under filnamnet, till exempel "Word · 1 240 ord" eller "PDF · 12 sidor · 4 300 ord".
+- `file.replaces`: när rutan redan har text.
+- `file.preview`: osynlig etikett för rutan med början av texten, läses upp av skärmläsare.
+- `file.use`, `file.cancel`: knapparna. Fönstrets egen Stäng finns kvar uppe till höger.
+- `file.note.hidden`, `file.note.attachments`, `file.note.firstOnly`: rader i fönstret när något inte togs med.
+- `file.error.*`: ett felmeddelande per orsak (filtypen, lösenord, bara bilder, ingen text, för stort, för lång tid, skadad fil).
+- `read.*`: står i texten som läses in, inte i gränssnittet. Ett mejl börjar med raderna Från, Till, Kopia, Ämne och Datum. Varje blad i ett Excel-dokument börjar med "Blad: namn" och varje bild i en presentation med "Bild 1". Kolonet efter Från och Blad är en etikett, inte löptext.
+- Vanliga frågor: ny fråga sist, "Kan jag släppa in PDF och Word?".
+- Ingen ny sträng för kodnyckeln. När ett dokument läses in i Skrubba och det redan finns en kodnyckel visas samma fråga som för Ny text (`action.newTextConfirm`).
 - Typen `REFERENSNUMMER` visas som "Referensnummer": ett nummer direkt efter ett ord som kundnummer, avtalsnummer, fakturanr, ref eller anläggnings-ID. "Vilka uppgifter hittar Skrubba?" nämner kund-, avtals-, faktura- och referensnummer. Godkänt av ägaren 2026-10-14.
 
 ## Typer
