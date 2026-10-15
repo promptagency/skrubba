@@ -238,7 +238,7 @@ Nytt 2026-10-12, ägarens godkännande av utkasten.
 - Vanliga frågor: ny fråga "Räknar ni besökare?" om den anonyma besöksräkningen med Plausible. "Kostar Skrubba något?" säger inte längre "ingen statistik", och "Hur kan jag kontrollera att inget skickas?" nämner besöksräkningen. Godkänt av ägaren 2026-10-12.
 - `feedback.link`, `feedback.subject`, `feedback.body`: länken sist i varningen under Din text öppnar ett mejl till micke@promptagency.se (`FEEDBACK_EMAIL` i `src/config.ts`) med ämne och en kort guide ifyllda. Användarens text läggs aldrig in i mejlet. Godkänt av ägaren 2026-10-12.
 
-**Utkast 2026-10-14, inte granskade av ägaren än.** Dokument kan släppas in eller väljas med Välj fil, och läses i fönstret Läs in dokument. Allt nedan är nytt eller ändrat i den omgången och ska granskas innan det släpps.
+Nytt 2026-10-14, godkänt av ägaren 2026-10-15. Dokument kan släppas in eller väljas med Välj fil, och läses i fönstret Läs in dokument. Allt nedan är nytt eller ändrat i den omgången.
 
 - `editor.empty`: ändrad. Förut "Klistra in text här eller släpp en textfil. Den stannar i din webbläsare och inget laddas upp." Nu "släpp ett dokument" och "Det stannar".
 - `restore.empty`: ändrad. Förut "Klistra in svaret från AI här eller släpp en skrubbad textfil." Nu "släpp ett dokument med svaret".

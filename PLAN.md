@@ -139,7 +139,7 @@ Owner's decision, 2026-10-14: read PDF, Word and other documents into text in th
 - [x] Hidden content (comments, deletions, hidden text, notes, hidden slides and sheets) and attachments left out, and the window says so
 - [x] In Skrubba a document starts a new kodnyckel, asking first like Ny text (owner's decision, 2026-10-14); Avskrubba keeps the key
 - [x] No request outside our origin and reading offline, proven in `no-egress.spec.ts` and `offline.spec.ts`
-- [ ] Owner review of the Swedish copy (`file.*`, `read.*`, the new FAQ answer)
+- [x] Owner review of the Swedish copy (`file.*`, `read.*`, the new FAQ answer). Approved 2026-10-15.
 
 ## Later (not v1)
 
