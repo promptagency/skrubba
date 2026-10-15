@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-15
+
 ### Added
 
 - **Documents.** Drop a PDF, Word, OpenDocument, RTF, Excel, PowerPoint, email (.eml, .msg) or web page file on the text, or choose one with *Välj fil*. A window, *Läs in dokument*, shows that the file is being read, then what was read and the start of the text, and nothing changes until *Använd texten*. The file is read in the browser and never uploaded. Comments, hidden parts and attachments are left out, and the window says so. In Skrubba a document starts a new kodnyckel, asking first like *Ny text*.
@@ -75,7 +77,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/promptagency/skrubba/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/promptagency/skrubba/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/promptagency/skrubba/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/promptagency/skrubba/compare/v0.9.0...v1.0.0
