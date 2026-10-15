@@ -53,7 +53,7 @@ Versions follow [Semantic Versioning](https://semver.org/): a bug fix bumps the 
    git push --follow-tags
    ```
 
-Pushing the tag also runs the full browser suite on GitHub (`.github/workflows/test.yml`); ordinary pushes to `main` only run the type check and unit tests. That split was made to save Actions minutes while the repo was private; since it went public (2026-10-12) minutes are free, but the split keeps pushes quick. Run `npm run e2e` locally before tagging.
+Pushing the tag also runs the full browser suite on GitHub (`.github/workflows/test.yml`); ordinary pushes to `main` only run the type check and unit tests. That split was made to save Actions minutes while the repo was private; since it went public (2026-10-12) minutes are free, but the split keeps pushes quick. There is no need to run `npm run e2e` locally before tagging: the tag run does the same, in all three browsers (owner's decision, 2026-10-15). A real failure then shows up after the tag instead of before; fix it and release the next patch version, as below. On CI a failing test is run once more (`retries` in `playwright.config.ts`), so a one-off flake passes and is reported as flaky, while a real bug fails both tries and still blocks the release page.
 
 Once the tag's tests have passed, the workflow creates the GitHub release page for it, titled "Skrubba X.Y.Z", with that version's section from `CHANGELOG.md` as the notes (`scripts/release-notes.ts`). A version with failing tests gets no page; fix it, then release the next patch version. The page is only a label: the site was already deployed when `main` was pushed.
 

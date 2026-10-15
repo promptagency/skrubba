@@ -4,6 +4,10 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: 120_000,
+  // On CI a test that fails is run once more: a one-off timing flake then
+  // passes and is reported as flaky, while a real bug fails both tries and
+  // still blocks the release. Locally a failure is a failure.
+  retries: process.env.CI ? 1 : 0,
   use: { baseURL: "http://localhost:4174" },
   projects: [
     // Only Chromium lets a test read the clipboard.
