@@ -45,8 +45,9 @@ test("changing the text or what is scrubbed clears the result", async ({ page })
   await run(page).click();
   await expect(copy(page)).toBeVisible();
   await openItems(page);
-  await rows(page).first().focus();
-  await page.keyboard.press("Space");
+  // press() focuses the row and presses in one step: a separate focus() then
+  // keyboard.press() let Space land on another button once on CI (Firefox).
+  await rows(page).first().press("Space");
   await page.keyboard.press("Escape");
   await expect(result(page, "Skrubbad text")).toHaveValue("");
 });
