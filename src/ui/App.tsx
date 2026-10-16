@@ -1,7 +1,7 @@
 import { Fragment, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import logoDark from "../../design/logo/skrubba-logotyp-negativ.svg";
 import logoLight from "../../design/logo/skrubba-logotyp-positiv.svg";
-import { type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, type RestoreResult } from "../engine/index.ts";
+import { type Entity, type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, type RestoreResult } from "../engine/index.ts";
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
@@ -23,6 +23,7 @@ import { RestoreNotes } from "./RestoreNotes.tsx";
 import { firstPlaceholder, type Mark, placeholderMarks } from "./segments.ts";
 import { controlledByServiceWorker } from "./serviceWorker.ts";
 import { TextPane, type TextPaneHandle } from "./TextPane.tsx";
+import { useShownAfter } from "./useShownAfter.ts";
 import { Summary } from "./Summary.tsx";
 import { Toast } from "./Toast.tsx";
 import { WordList } from "./WordList.tsx";
@@ -30,6 +31,7 @@ import { WordList } from "./WordList.tsx";
 type Mode = "scrub" | "restore";
 
 const DEBOUNCE_MS = 300;
+const SHOW_AFTER_MS = 400;
 const FLASH_MS = 1200;
 
 export function App() {
@@ -41,6 +43,25 @@ export function App() {
   const [itemsOpen, setItemsOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("scrub");
   const [fileJob, setFileJob] = useState<FileJob | null>(null);
+
+  // How far the model has read the current text, and whether Skrubba is waiting for it.
+  const [scan, setScan] = useState<{ text: string; pct: number } | null>(null);
+  const [scrubbing, setScrubbing] = useState(false);
+  const showScan = useShownAfter(scan !== null && scan.text === state.text, SHOW_AFTER_MS);
+  const [announcedScan, setAnnouncedScan] = useState(false);
+  useEffect(() => {
+    if (showScan) setAnnouncedScan(true);
+  }, [showScan]);
+
+  /** Progress for a model run on `text`: starts the line at 0 % and only ever moves it forward. */
+  const trackScan = useCallback((text: string) => {
+    setScan((s) => (s?.text === text ? s : { text, pct: 0 }));
+    return (done: number, total: number) => {
+      const pct = total ? Math.floor((done / total) * 100) : 100;
+      setScan((s) => (s?.text === text ? { text, pct: Math.max(s.pct, pct) } : s));
+    };
+  }, []);
+  const endScan = useCallback((text: string) => setScan((s) => (s?.text === text ? null : s)), []);
 
   // A file dropped anywhere outside the panes would make the browser open it
   // and lose the session (text and kodnyckel live only in memory). Hold it.
@@ -94,14 +115,17 @@ export function App() {
     const timer = setTimeout(() => {
       dispatch({ type: "setEntities", text, entities: masker.maskRules(text, input) });
       if (modelStatus === "ready" && text) {
-        masker.mask(text, input).then(
-          (entities) => dispatch({ type: "setEntities", text, entities }),
-          () => {}, // a failed NER run keeps the rule entities on screen
-        );
+        masker
+          .mask(text, input, { onProgress: trackScan(text) })
+          .then(
+            (entities) => dispatch({ type: "setEntities", text, entities }),
+            () => {}, // a failed or outgrown NER run keeps the rule entities on screen
+          )
+          .finally(() => endScan(text));
       }
     }, delay);
     return () => clearTimeout(timer);
-  }, [masker, dispatch, state.text, state.wordListRaw, state.manual, modelStatus]);
+  }, [masker, dispatch, state.text, state.wordListRaw, state.manual, modelStatus, trackScan, endScan]);
 
   // Warn before the tab closes with a key that only exists here.
   useEffect(() => {
@@ -120,7 +144,18 @@ export function App() {
     const s = latest.current;
     if (s.model.status === "loading" || !s.text) return null;
     const input: MaskInput = { wordList: parseWordList(s.wordListRaw), manual: s.manual };
-    const entities = s.model.status === "ready" ? await masker.mask(s.text, input) : masker.maskRules(s.text, input);
+    let entities: Entity[];
+    if (s.model.status === "ready") {
+      setScrubbing(true);
+      try {
+        entities = await masker.mask(s.text, input, { onProgress: trackScan(s.text) });
+      } catch {
+        return null; // the text changed and its run was stopped, or the model failed
+      } finally {
+        setScrubbing(false);
+        endScan(s.text);
+      }
+    } else entities = masker.maskRules(s.text, input);
     if (latest.current.text !== s.text) return null; // edited while the model ran
     dispatch({ type: "setEntities", text: s.text, entities });
     const withKept = entities.map((e) => ({ ...e, active: !latest.current.kept.has(e.placeholder) }));
@@ -128,7 +163,7 @@ export function App() {
     // The key is recorded now, not on copy: the result can be copied by hand too.
     dispatch({ type: "scrubbed", masked, entries: key.entries, at: key.createdAt });
     return masked;
-  }, [masker, dispatch]);
+  }, [masker, dispatch, trackScan, endScan]);
 
   // Avskrubba always starts from the answer as pasted, with the suggestions
   // accepted so far.
@@ -152,8 +187,10 @@ export function App() {
 
   /** The button between the panes. Focus moves on to Kopiera once there is a result. */
   const run = useCallback(async () => {
+    // Set before running: a reused model run can render the result before scrub() returns.
+    focusCopy.current = true;
     const done = mode === "scrub" ? await scrub() : restore();
-    if (done) focusCopy.current = true;
+    if (!done) focusCopy.current = false;
   }, [mode, scrub, restore]);
 
   // The result is already in the right pane when copying fails, so the toast
@@ -379,6 +416,14 @@ export function App() {
             </div>
           )}
           <ModelStatus model={state.model} />
+          {mode === "scrub" && showScan && (
+            <p className="notice scan-progress" aria-hidden="true">
+              {t("status.scanning", { pct: scan?.pct ?? 0 })}
+            </p>
+          )}
+          <p className="sr-only" role="status">
+            {showScan ? t("status.scanningStart") : announcedScan ? countLabel(entities.length) : ""}
+          </p>
           {mode === "scrub" && pasteUndo?.cleaned === state.text && (
             <p className="notice paste-joined" role="status">
               <span>{t("paste.joined")}</span>{" "}
@@ -434,10 +479,10 @@ export function App() {
           <button
             type="button"
             className="primary run"
-            disabled={mode === "scrub" ? state.model.status === "loading" || !state.text : !state.answer}
+            disabled={mode === "scrub" ? state.model.status === "loading" || !state.text || scrubbing : !state.answer}
             onClick={() => void run()}
           >
-            {mode === "scrub" ? t("action.scrub") : t("action.restore")}
+            {mode === "scrub" ? (scrubbing && showScan ? t("action.scrubbing", { pct: scan?.pct ?? 0 }) : t("action.scrub")) : t("action.restore")}
             <span className="run-arrow" aria-hidden="true" />
           </button>
           {(mode === "scrub" ? state.text : state.answer) && (

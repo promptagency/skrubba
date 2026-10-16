@@ -90,6 +90,13 @@ test.describe("accessibility", () => {
         expect(await violations(page)).toEqual([]);
       });
 
+      test("while the model reads a long text", async ({ page }) => {
+        await openReady(page);
+        await editor(page).fill("och sen sa Anna Berg att vi skulle ta det på mötet ".repeat(800));
+        await expect(page.locator(".scan-progress")).toBeVisible({ timeout: 10_000 });
+        expect(await violations(page)).toEqual([]);
+      });
+
       test("Läs in dokument, with an error", async ({ page }) => {
         await openReady(page);
         await dropFile(page, editor(page), "bild.png", "image/png", new Uint8Array([0x89, 0x50, 0x4e, 0x47]));
