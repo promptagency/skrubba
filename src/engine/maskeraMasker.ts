@@ -17,6 +17,8 @@ interface ModelRun {
   spans: Promise<Span[]>;
 }
 
+const superseded = () => new DOMException("A newer text replaced this one", "AbortError");
+
 /** Spans from overlapping parts: each once, and none inside another. */
 function mergeModelSpans(spans: Span[]): Span[] {
   const sorted = [...spans].sort((a, b) => a.start - b.start || b.end - a.end);
@@ -54,7 +56,11 @@ export class MaskeraMasker implements Masker {
       run.listeners.add(onProgress);
     }
     try {
-      return this.entities(text, input, await run.spans);
+      const spans = await run.spans;
+      // Dropped while its last part was read (reset, a key, a new text): its
+      // values must not reach the registry that replaced it.
+      if (run.stale) throw superseded();
+      return this.entities(text, input, spans);
     } finally {
       if (onProgress) run.listeners.delete(onProgress);
     }
@@ -76,10 +82,10 @@ export class MaskeraMasker implements Masker {
   private async readInParts(run: ModelRun): Promise<Span[]> {
     const spans: Span[] = [];
     for (const part of splitForModel(run.text)) {
-      if (run.stale) throw new DOMException("A newer text replaced this one", "AbortError");
-      for (const s of await this.ner.detect(run.text.slice(part.start, part.end))) {
-        spans.push({ ...s, start: s.start + part.start, end: s.end + part.start });
-      }
+      if (run.stale) throw superseded();
+      const found = await this.ner.detect(run.text.slice(part.start, part.end));
+      if (run.stale) throw superseded();
+      for (const s of found) spans.push({ ...s, start: s.start + part.start, end: s.end + part.start });
       run.done = Math.max(run.done, part.end);
       for (const listener of run.listeners) listener(run.done, run.text.length);
     }
