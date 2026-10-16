@@ -40,6 +40,9 @@ export const COPY = {
   "status.rulesOnly":
     "Modellen kunde inte laddas. Personnummer och liknande hittas ändå, men namn och platser får du markera själv.",
   "status.trust": "Allt sker på din dator",
+  "status.scanning": "Letar efter namn och platser … {pct} %",
+  "status.scanningStart": "Letar efter namn och platser",
+  "action.scrubbing": "Skrubbar … {pct} %",
   "restore.empty": "Klistra in svaret från AI här eller släpp ett dokument med svaret.",
   "restore.unmatched": "Hittade {found} i svaret. Menade du {placeholder}, alltså {value}?",
   "restore.accept": "Ja",
