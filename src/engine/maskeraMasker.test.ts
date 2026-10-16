@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { EntityType, MaskInput, Span } from "./Masker.ts";
 import { MaskeraMasker } from "./maskeraMasker.ts";
 import type { NerBackend } from "./ner.ts";
+import { splitForModel } from "./parts.ts";
 
 // Stands in for the model: marks the given words wherever they occur.
 function fakeNer(marks: Array<[string, EntityType]>): NerBackend {
@@ -19,6 +20,7 @@ function fakeNer(marks: Array<[string, EntityType]>): NerBackend {
 }
 
 const none: MaskInput = { wordList: [], manual: [] };
+const splitCount = (text: string) => splitForModel(text).length;
 const summary = (entities: Awaited<ReturnType<MaskeraMasker["mask"]>>) =>
   entities.map((e) => `${e.placeholder}=${e.value}:${e.source}`);
 
@@ -128,5 +130,100 @@ describe("MaskeraMasker key handling", () => {
     await masker.mask("Anna", none);
     masker.reset();
     expect(summary(await masker.mask("Erik", none))).toEqual(["[NAMN_1]=Erik:model"]);
+  });
+});
+
+// Stands in for the model and records every call, so a test can count runs.
+function countingNer(marks: Array<[string, EntityType]>) {
+  const calls: string[] = [];
+  let failNext = false;
+  const backend: NerBackend = {
+    init: async () => {},
+    detect: async (text) => {
+      calls.push(text);
+      await new Promise((r) => setTimeout(r, 1));
+      if (failNext) {
+        failNext = false;
+        throw new Error("worker died");
+      }
+      return fakeNer(marks).detect(text);
+    },
+  };
+  return {
+    backend,
+    calls,
+    failOnce: () => {
+      failNext = true;
+    },
+  };
+}
+
+const longText = (n: number) => "Anna Berg ringde om avtalet. ".repeat(n);
+
+describe("MaskeraMasker.mask on a long text", () => {
+  it("sends the text in parts and reports progress up to the whole text", async () => {
+    const { backend, calls } = countingNer([["Anna Berg", "NAMN"]]);
+    const masker = new MaskeraMasker(backend);
+    const text = longText(150);
+    const seen: number[] = [];
+    const entities = await masker.mask(text, none, { onProgress: (done, total) => seen.push(done / total) });
+    expect(calls.length).toBeGreaterThan(2);
+    expect(seen.at(-1)).toBe(1);
+    expect(seen).toEqual([...seen].sort((a, b) => a - b));
+    expect(entities.find((e) => e.value === "Anna Berg")?.occurrences).toHaveLength(150);
+  });
+
+  it("finds a name that a cut between words splits, once", async () => {
+    const { backend } = countingNer([["Anna Berg", "NAMN"]]);
+    const masker = new MaskeraMasker(backend);
+    const text = `${"ord ".repeat(298)}Anna Berg ${"ord ".repeat(400)}`;
+    const entities = await masker.mask(text, none);
+    expect(entities.map((e) => e.value)).toEqual(["Anna Berg"]);
+    expect(entities[0].occurrences).toHaveLength(1);
+  });
+
+  it("runs the model once for the same text, during and after the run", async () => {
+    const { backend, calls } = countingNer([["Anna Berg", "NAMN"]]);
+    const masker = new MaskeraMasker(backend);
+    const text = longText(150);
+    const first = masker.mask(text, none);
+    const joined: number[] = [];
+    const second = masker.mask(text, none, { onProgress: (done) => joined.push(done) });
+    await Promise.all([first, second]);
+    const after = calls.length;
+    await masker.mask(text, { wordList: ["avtalet"], manual: [] });
+    expect(calls.length).toBe(after);
+    expect(joined.length).toBeGreaterThan(1);
+    expect(joined[0]).toBe(0);
+  });
+
+  it("stops a run when a different text comes, and rejects it", async () => {
+    const { backend, calls } = countingNer([["Anna Berg", "NAMN"]]);
+    const masker = new MaskeraMasker(backend);
+    const old = masker.mask(longText(150), none);
+    await new Promise((r) => setTimeout(r, 2));
+    const fresh = masker.mask("Erik Holm ringde.", none);
+    await expect(old).rejects.toMatchObject({ name: "AbortError" });
+    await fresh;
+    expect(calls.filter((c) => c.startsWith("Anna")).length).toBeLessThan(splitCount(longText(150)));
+  });
+
+  it("does not keep a run that failed, so the next call tries again", async () => {
+    const { backend, calls, failOnce } = countingNer([["Anna Berg", "NAMN"]]);
+    const masker = new MaskeraMasker(backend);
+    failOnce();
+    await expect(masker.mask("Anna Berg ringde.", none)).rejects.toThrow("worker died");
+    const entities = await masker.mask("Anna Berg ringde.", none);
+    expect(entities.map((e) => e.value)).toEqual(["Anna Berg"]);
+    expect(calls).toHaveLength(2);
+  });
+
+  it("drops the run on reset, so the next call runs the model again", async () => {
+    const { backend, calls } = countingNer([["Anna Berg", "NAMN"]]);
+    const masker = new MaskeraMasker(backend);
+    await masker.mask("Anna Berg ringde.", none);
+    masker.reset();
+    await masker.mask("Anna Berg ringde.", none);
+    expect(calls).toHaveLength(2);
   });
 });
