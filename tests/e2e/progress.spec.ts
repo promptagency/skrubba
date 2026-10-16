@@ -1,5 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
-import { editor, openReady, rows, runButton, scrubbedBox } from "./helpers.ts";
+import { clipboard, editor, MOD, openReady, rows, runButton, scrubbedBox } from "./helpers.ts";
 
 const FIRST = ["Anna", "Erik", "Sara", "Johan", "Maria", "Lars", "Karin", "Nils"];
 const LAST = ["Berg", "Lindqvist", "Holm", "Ekström", "Sundberg", "Nyberg", "Wallin", "Strand"];
@@ -62,6 +62,22 @@ test("Skrubba keeps keyboard focus while it waits", async ({ page }) => {
   await expect(runButton(page)).toHaveAttribute("aria-disabled", "true");
   await page.keyboard.press("Enter"); // a second press while waiting does nothing
   await expect(scrubbedBox(page)).not.toHaveValue("", { timeout: 120_000 });
+});
+
+// The browser lets a page write the clipboard only shortly after a key press.
+// After a long wait the copy would fail, so Skrubba asks for one more press.
+test("the copy shortcut during a long reading asks for Kopiera once the text is scrubbed", async ({ page, browserName }) => {
+  test.skip(browserName !== "chromium", "reads the clipboard");
+  await openReady(page);
+  await editor(page).fill(longText(80_000));
+  await expect(scanLine(page)).toBeVisible({ timeout: 10_000 });
+  await page.keyboard.press(`${MOD}+Shift+KeyC`);
+  await expect(page.locator(".toast")).toHaveText(/Texten är skrubbad\. Tryck Kopiera/, { timeout: 120_000 });
+  const copyButton = page.getByRole("button", { name: "Kopiera", exact: true });
+  await expect(copyButton).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".toast")).toHaveText(/^Kopierat\./);
+  expect(await clipboard(page)).toBe(await scrubbedBox(page).inputValue());
 });
 
 test("a short text shows neither", async ({ page }) => {

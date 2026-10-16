@@ -32,6 +32,8 @@ type Mode = "scrub" | "restore";
 
 const DEBOUNCE_MS = 300;
 const SHOW_AFTER_MS = 400;
+/** After this long a clipboard write is no longer tied to the key press that asked for it. */
+const COPY_WAIT_MS = 3000;
 const FLASH_MS = 1200;
 
 export function App() {
@@ -225,8 +227,17 @@ export function App() {
       dispatch({ type: "toast", message: ok ? done : t("toast.copyFailed") });
     };
     if (mode === "scrub") {
+      const started = Date.now();
       const masked = s.scrubbed ?? (await scrub());
       if (masked === null) return;
+      // The browser lets a page write the clipboard only shortly after a key
+      // press. After a long wait for the model the copy would fail, so hand
+      // over to Kopiera: one more press copies.
+      if (Date.now() - started > COPY_WAIT_MS) {
+        setTimeout(() => copyButton.current?.focus());
+        dispatch({ type: "toast", message: t("toast.pressCopy") });
+        return;
+      }
       const n = new Set(placeholderMarks(masked).map((m) => masked.slice(m.start, m.end))).size;
       await copy(masked, t("toast.copied", { n }));
     } else {

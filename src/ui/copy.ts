@@ -43,6 +43,7 @@ export const COPY = {
   "status.scanning": "Letar efter namn och platser … {pct} %",
   "status.scanningStart": "Letar efter namn och platser",
   "action.scrubbing": "Skrubbar … {pct} %",
+  "toast.pressCopy": "Texten är skrubbad. Tryck Kopiera för att kopiera den.",
   "restore.empty": "Klistra in svaret från AI här eller släpp ett dokument med svaret.",
   "restore.unmatched": "Hittade {found} i svaret. Menade du {placeholder}, alltså {value}?",
   "restore.accept": "Ja",
