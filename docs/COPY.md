@@ -56,6 +56,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | status.scanning | Letar efter namn och platser … {pct} % |
 | status.scanningStart | Letar efter namn och platser |
 | action.scrubbing | Skrubbar … {pct} % |
+| toast.pressCopy | Texten är skrubbad. Tryck Kopiera för att kopiera den. |
 | restore.empty | Klistra in svaret från AI här eller släpp ett dokument med svaret. |
 | restore.unmatched | Hittade {found} i svaret. Menade du {placeholder}, alltså {value}? |
 | restore.accept | Ja |
@@ -263,6 +264,7 @@ Nytt 2026-10-14, godkänt av ägaren 2026-10-15. Dokument kan släppas in eller 
 - `status.scanning`: raden under Din text medan modellen läser, till exempel "Letar efter namn och platser … 40 %". Visas bara om det tar mer än en halv sekund.
 - `status.scanningStart`: det skärmläsare hör när en sådan läsning börjar. När den är klar hör de antalet uppgifter (`panel.count`).
 - `action.scrubbing`: knappen Skrubba medan den väntar på modellen, till exempel "Skrubbar … 40 %".
+- `toast.pressCopy`: när någon trycker kortkommandot för Kopiera innan texten är skrubbad och modellen hinner läsa längre än webbläsaren tillåter en kopiering efter tangenttrycket. Texten skrubbas, Kopiera får fokus och den här raden visas, så att ett tryck till kopierar.
 - Ingen ny sträng för kodnyckeln. När ett dokument läses in i Skrubba och det redan finns en kodnyckel visas samma fråga som för Ny text (`action.newTextConfirm`).
 - Typen `REFERENSNUMMER` visas som "Referensnummer": ett nummer direkt efter ett ord som kundnummer, avtalsnummer, fakturanr, ref eller anläggnings-ID. "Vilka uppgifter hittar Skrubba?" nämner kund-, avtals-, faktura- och referensnummer. Godkänt av ägaren 2026-10-14.
 
