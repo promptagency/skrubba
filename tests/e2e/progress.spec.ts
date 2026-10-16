@@ -30,10 +30,38 @@ test("Skrubba during the run shows its progress and then the result", async ({ p
   await expect(scanLine(page)).toBeVisible({ timeout: 10_000 });
   await runButton(page).click();
   await expect(runButton(page)).toHaveText(/^Skrubbar … \d+ %/);
-  await expect(runButton(page)).toBeDisabled();
+  await expect(runButton(page)).toHaveAttribute("aria-disabled", "true");
   await expect(scrubbedBox(page)).not.toHaveValue("", { timeout: 120_000 });
   await expect(runButton(page)).toHaveText(/^Skrubba/);
   await expect(scrubbedBox(page)).not.toHaveValue(/Anna Berg/);
+});
+
+// The live region next to the line: what screen readers hear about the reading.
+const announcement = (page: Page) => page.locator("p.sr-only[role=status]:not(.model-status)");
+
+test("screen readers hear the start and the count once, not on every later edit", async ({ page }) => {
+  await openReady(page);
+  await editor(page).fill(longText());
+  await expect(announcement(page)).toHaveText("Letar efter namn och platser", { timeout: 10_000 });
+  await expect(announcement(page)).toHaveText(/^\d+ uppgift(er)?$/, { timeout: 120_000 });
+  // A change that reuses the reading (Egna ord) must not announce the count again.
+  await page.locator(".words summary").click();
+  await page.locator(".words textarea").fill("mötet");
+  await expect(rows(page).filter({ hasText: "mötet" })).toHaveCount(1);
+  await expect(announcement(page)).toHaveText("");
+});
+
+test("Skrubba keeps keyboard focus while it waits", async ({ page }) => {
+  await openReady(page);
+  await editor(page).fill(longText());
+  await expect(scanLine(page)).toBeVisible({ timeout: 10_000 });
+  await runButton(page).focus();
+  await page.keyboard.press("Enter");
+  await expect(runButton(page)).toHaveText(/^Skrubbar … \d+ %/);
+  await expect(runButton(page)).toBeFocused();
+  await expect(runButton(page)).toHaveAttribute("aria-disabled", "true");
+  await page.keyboard.press("Enter"); // a second press while waiting does nothing
+  await expect(scrubbedBox(page)).not.toHaveValue("", { timeout: 120_000 });
 });
 
 test("a short text shows neither", async ({ page }) => {
