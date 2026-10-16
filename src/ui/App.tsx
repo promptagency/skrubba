@@ -47,11 +47,27 @@ export function App() {
   // How far the model has read the current text, and whether Skrubba is waiting for it.
   const [scan, setScan] = useState<{ text: string; pct: number } | null>(null);
   const [scrubbing, setScrubbing] = useState(false);
+  const scrubbingNow = useRef(false);
   const showScan = useShownAfter(scan !== null && scan.text === state.text, SHOW_AFTER_MS);
-  const [announcedScan, setAnnouncedScan] = useState(false);
+
+  // What screen readers hear about a shown reading: its start, then the item
+  // count once when it ends. Any later change clears it, so the count is not
+  // said again on every edit.
+  const [announce, setAnnounce] = useState("");
+  const announcing = useRef(false);
   useEffect(() => {
-    if (showScan) setAnnouncedScan(true);
+    if (showScan) {
+      announcing.current = true;
+      setAnnounce(t("status.scanningStart"));
+    } else if (announcing.current) {
+      announcing.current = false;
+      // Ended, or the text moved on: only a finished reading has a count to say.
+      setAnnounce(scan === null ? countLabel(panelEntities(latest.current).length) : "");
+    }
   }, [showScan]);
+  useEffect(() => {
+    if (!announcing.current) setAnnounce("");
+  }, [state.text, state.wordListRaw, state.manual, mode]);
 
   /** Progress for a model run on `text`: starts the line at 0 % and only ever moves it forward. */
   const trackScan = useCallback((text: string) => {
@@ -147,12 +163,14 @@ export function App() {
     let entities: Entity[];
     if (s.model.status === "ready") {
       setScrubbing(true);
+      scrubbingNow.current = true;
       try {
         entities = await masker.mask(s.text, input, { onProgress: trackScan(s.text) });
       } catch {
         return null; // the text changed and its run was stopped, or the model failed
       } finally {
         setScrubbing(false);
+        scrubbingNow.current = false;
         endScan(s.text);
       }
     } else entities = masker.maskRules(s.text, input);
@@ -187,6 +205,8 @@ export function App() {
 
   /** The button between the panes. Focus moves on to Kopiera once there is a result. */
   const run = useCallback(async () => {
+    // A second press while Skrubba waits for the model does nothing.
+    if (mode === "scrub" && scrubbingNow.current) return;
     // Set before running: a reused model run can render the result before scrub() returns.
     focusCopy.current = true;
     const done = mode === "scrub" ? await scrub() : restore();
@@ -422,7 +442,7 @@ export function App() {
             </p>
           )}
           <p className="sr-only" role="status">
-            {showScan ? t("status.scanningStart") : announcedScan ? countLabel(entities.length) : ""}
+            {mode === "scrub" ? announce : ""}
           </p>
           {mode === "scrub" && pasteUndo?.cleaned === state.text && (
             <p className="notice paste-joined" role="status">
@@ -479,7 +499,9 @@ export function App() {
           <button
             type="button"
             className="primary run"
-            disabled={mode === "scrub" ? state.model.status === "loading" || !state.text || scrubbing : !state.answer}
+            disabled={mode === "scrub" ? state.model.status === "loading" || !state.text : !state.answer}
+            // Not disabled while it waits: a disabled button would drop keyboard focus.
+            aria-disabled={mode === "scrub" && scrubbing ? true : undefined}
             onClick={() => void run()}
           >
             {mode === "scrub" ? (scrubbing && showScan ? t("action.scrubbing", { pct: scan?.pct ?? 0 }) : t("action.scrub")) : t("action.restore")}
