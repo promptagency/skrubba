@@ -131,7 +131,9 @@ A linked first name is masked as `[FÖRNAMN_n]`, numbered like the full name's `
 
 ## Long texts
 
-KB-BERT max 512 tokens. maskera's recognizer already splits text over 480 tokens at a boundary it picks (`splitPoint`) and runs each part, so there is no `chunk.ts` for now. Phase 4 measures 10 000 chars and revisits this if boundaries cut entities.
+KB-BERT takes at most 512 tokens. The masker sends the model the text in parts (`src/engine/parts.ts`): at most 1 200 characters each, below the 480 tokens at which maskera would split on its own. A part ends at a paragraph break, else a sentence end, else between words; after a cut between words the next part starts up to 200 characters earlier, so a name across the cut is read whole, and model spans inside another are dropped when the parts are merged. A name the model finds as "Anna" at the end of one part and "Berg" at the start of the next is also rejoined by the existing span joining. Name spreading then runs over the whole text as before. `longtext.model.test.ts` checks that, with the parts, no name is missed that the whole text at once gives. Owner's decision, 2026-10-16 (spec: `docs/superpowers/specs/2026-10-16-masking-progress-design.md`).
+
+The masker keeps one model run, for the latest text, in memory: a call for the same text joins it (Skrubba and Kopiera reuse the background run), a call for another text stops the old run at its next part (its promise rejects with an `AbortError`), a failed run is not kept, and `reset()` and `loadKey()` drop it. Progress is reported in characters after each part (`MaskOptions.onProgress`); the UI shows it after 400 ms as `status.scanning` under Din text and `action.scrubbing` on the button.
 
 ## Tolerant restore
 

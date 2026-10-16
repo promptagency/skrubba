@@ -4,6 +4,14 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **Progress on long texts.** While the language model reads a long text, *Letar efter namn och platser … 40 %* shows under the text, and *Skrubba* shows *Skrubbar … 40 %* while it waits, so it is clear the work goes on.
+
+### Changed
+
+- **Skrubba is faster on long texts.** It reuses the reading the model already did after the paste instead of starting over, and editing the text stops a reading that is no longer needed.
+
 ## [1.2.1] - 2026-10-15
 
 The app is the same as 1.2.0. This release exists because the release checks for 1.2.0 failed on two flaky tests, so 1.2.0 got no release page.
