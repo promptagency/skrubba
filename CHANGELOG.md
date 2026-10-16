@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-16
+
 ### Added
 
 - **Progress on long texts.** While the language model reads a long text, *Letar efter namn och platser … 40 %* shows under the text, and *Skrubba* shows *Skrubbar … 40 %* while it waits, so it is clear the work goes on.
@@ -11,6 +13,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 ### Changed
 
 - **Skrubba is faster on long texts.** It reuses the reading the model already did after the paste instead of starting over, and editing the text stops a reading that is no longer needed.
+- **The copy shortcut on long texts.** Pressed before the text is scrubbed, when the reading then takes more than 3 seconds, it no longer fails with *Texten kunde inte kopieras*: the text is scrubbed, *Kopiera* gets focus and one more press copies.
+- **Release checks.** The privacy tests (no request leaves the site, nothing is stored in the browser) never retry, so a leak that happens only sometimes blocks a release, and every other test that passed only on a retry is listed for checking.
 
 ## [1.2.1] - 2026-10-15
 
@@ -93,7 +97,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/promptagency/skrubba/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/promptagency/skrubba/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/promptagency/skrubba/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/promptagency/skrubba/compare/v1.1.0...v1.1.1
