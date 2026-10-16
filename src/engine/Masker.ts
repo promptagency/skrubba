@@ -123,13 +123,26 @@ export interface InitOptions {
   browserCache: boolean;
 }
 
+export interface MaskOptions {
+  /**
+   * How far the model has read, in characters. Called at once with the run's
+   * current progress, then after each part. A caller that joins a run already
+   * under way gets its progress from there on.
+   */
+  onProgress?(done: number, total: number): void;
+}
+
 export interface Masker {
   /** Loads the NER model. Rejects if it cannot; rules keep working. */
   init(onProgress: (p: Progress) => void, options?: InitOptions): Promise<void>;
   /** Rules, context rules, word list and manual terms. Sync, instant. */
   maskRules(text: string, input: MaskInput): Entity[];
-  /** maskRules plus NER, merged. */
-  mask(text: string, input: MaskInput): Promise<Entity[]>;
+  /**
+   * maskRules plus NER, merged. The model runs once per text: a call for the
+   * same text joins the run, and a call for a new text stops the old run,
+   * whose promise then rejects with an AbortError.
+   */
+  mask(text: string, input: MaskInput, opts?: MaskOptions): Promise<Entity[]>;
   applyMask(text: string, entities: Entity[], wordList: string[]): { masked: string; key: Key };
   /** Start over from an uploaded key: its placeholders are reused, new ones numbered after them. */
   loadKey(key: Key): void;
