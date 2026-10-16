@@ -258,15 +258,15 @@ Nytt 2026-10-14, godkänt av ägaren 2026-10-15. Dokument kan släppas in eller 
 - `file.error.*`: ett felmeddelande per orsak (filtypen, lösenord, bara bilder, ingen text, för stort, för lång tid, skadad fil).
 - `read.*`: står i texten som läses in, inte i gränssnittet. Ett mejl börjar med raderna Från, Till, Kopia, Ämne och Datum. Varje blad i ett Excel-dokument börjar med "Blad: namn" och varje bild i en presentation med "Bild 1". Kolonet efter Från och Blad är en etikett, inte löptext.
 - Vanliga frågor: ny fråga sist, "Kan jag släppa in PDF och Word?".
+- Ingen ny sträng för kodnyckeln. När ett dokument läses in i Skrubba och det redan finns en kodnyckel visas samma fråga som för Ny text (`action.newTextConfirm`).
+- Typen `REFERENSNUMMER` visas som "Referensnummer": ett nummer direkt efter ett ord som kundnummer, avtalsnummer, fakturanr, ref eller anläggnings-ID. "Vilka uppgifter hittar Skrubba?" nämner kund-, avtals-, faktura- och referensnummer. Godkänt av ägaren 2026-10-14.
 
-**Utkast 2026-10-16, inte granskade av ägaren än.** Medan språkmodellen läser en lång text visas hur långt den har kommit.
+Nytt 2026-10-16, godkänt av ägaren 2026-10-16. Medan språkmodellen läser en lång text visas hur långt den har kommit.
 
-- `status.scanning`: raden under Din text medan modellen läser, till exempel "Letar efter namn och platser … 40 %". Visas bara om det tar mer än en halv sekund.
+- `status.scanning`: raden under Din text medan modellen läser, till exempel "Letar efter namn och platser … 40 %". Visas bara om det tar mer än 0,4 sekunder.
 - `status.scanningStart`: det skärmläsare hör när en sådan läsning börjar. När den är klar hör de antalet uppgifter (`panel.count`).
 - `action.scrubbing`: knappen Skrubba medan den väntar på modellen, till exempel "Skrubbar … 40 %".
 - `toast.pressCopy`: när någon trycker kortkommandot för Kopiera innan texten är skrubbad och modellen hinner läsa längre än webbläsaren tillåter en kopiering efter tangenttrycket. Texten skrubbas, Kopiera får fokus och den här raden visas, så att ett tryck till kopierar.
-- Ingen ny sträng för kodnyckeln. När ett dokument läses in i Skrubba och det redan finns en kodnyckel visas samma fråga som för Ny text (`action.newTextConfirm`).
-- Typen `REFERENSNUMMER` visas som "Referensnummer": ett nummer direkt efter ett ord som kundnummer, avtalsnummer, fakturanr, ref eller anläggnings-ID. "Vilka uppgifter hittar Skrubba?" nämner kund-, avtals-, faktura- och referensnummer. Godkänt av ägaren 2026-10-14.
 
 ## Typer
 
