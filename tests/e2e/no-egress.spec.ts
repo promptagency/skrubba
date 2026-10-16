@@ -2,6 +2,10 @@ import { expect, test } from "@playwright/test";
 import { buildDocx, buildPdf, SAMPLE, wp } from "../fixtures/documents/build.ts";
 import { clipboard, dropFile, editor, fileWindow, MOD, openReady } from "./helpers.ts";
 
+// Privacy checks never retry on CI: a request that leaks only sometimes must
+// block the release, not pass on a second try as "flaky".
+test.describe.configure({ retries: 0 });
+
 // Privacy: a full session may only touch the app's own origin.
 test("masking and copying with the model makes no request outside our origin", async ({ page, context, baseURL, browserName }) => {
   const origin = new URL(baseURL!).origin;

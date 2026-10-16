@@ -115,65 +115,70 @@ test("closing the tab warns while the key is not downloaded", async ({ page }) =
   await (await dialog).dismiss();
 });
 
-test("a whole session never touches web storage or cookies", async ({ page, context }) => {
-  // Spy on every storage entry point before the app loads. The real getters
-  // are kept so the test itself can look afterwards without being counted.
-  await page.addInitScript(() => {
-    const touched: string[] = [];
-    const real: Record<string, () => unknown> = {};
-    const find = (obj: object | null, name: string): PropertyDescriptor | undefined => {
-      for (let o = obj; o; o = Object.getPrototypeOf(o)) {
-        const d = Object.getOwnPropertyDescriptor(o, name);
-        if (d) return d;
+test.describe("privacy", () => {
+  // Never retried on CI: storage touched only sometimes must block the release.
+  test.describe.configure({ retries: 0 });
+
+  test("a whole session never touches web storage or cookies", async ({ page, context }) => {
+    // Spy on every storage entry point before the app loads. The real getters
+    // are kept so the test itself can look afterwards without being counted.
+    await page.addInitScript(() => {
+      const touched: string[] = [];
+      const real: Record<string, () => unknown> = {};
+      const find = (obj: object | null, name: string): PropertyDescriptor | undefined => {
+        for (let o = obj; o; o = Object.getPrototypeOf(o)) {
+          const d = Object.getOwnPropertyDescriptor(o, name);
+          if (d) return d;
+        }
+      };
+      for (const name of ["localStorage", "sessionStorage", "indexedDB"]) {
+        const getter = find(window, name)?.get;
+        if (!getter) continue;
+        real[name] = () => getter.call(window);
+        Object.defineProperty(window, name, {
+          configurable: true,
+          get() {
+            touched.push(name);
+            return getter.call(window);
+          },
+        });
       }
-    };
-    for (const name of ["localStorage", "sessionStorage", "indexedDB"]) {
-      const getter = find(window, name)?.get;
-      if (!getter) continue;
-      real[name] = () => getter.call(window);
-      Object.defineProperty(window, name, {
+      const cookie = find(document, "cookie")!;
+      Object.defineProperty(document, "cookie", {
         configurable: true,
         get() {
-          touched.push(name);
-          return getter.call(window);
+          touched.push("cookie");
+          return cookie.get!.call(document);
+        },
+        set(v) {
+          touched.push("cookie");
+          cookie.set!.call(document, v);
         },
       });
-    }
-    const cookie = find(document, "cookie")!;
-    Object.defineProperty(document, "cookie", {
-      configurable: true,
-      get() {
-        touched.push("cookie");
-        return cookie.get!.call(document);
-      },
-      set(v) {
-        touched.push("cookie");
-        cookie.set!.call(document, v);
-      },
+      Object.assign(window, { __touched: touched, __real: real });
     });
-    Object.assign(window, { __touched: touched, __real: real });
+
+    await openReady(page);
+    await scrubText(page);
+    await (await answerBox(page)).fill("Hej [NAMN_1].");
+    await page.keyboard.press(`${MOD}+Enter`);
+    const dialog = await openKey(page);
+    await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner kodnyckel" }).click()]);
+
+    type Spy = { __touched: string[]; __real: Record<string, () => unknown> };
+    expect(await page.evaluate(() => (window as unknown as Spy).__touched)).toEqual([]);
+
+    // Nothing persisted from any context, workers included.
+    expect(await context.cookies()).toEqual([]);
+    const persisted = await page.evaluate(async () => {
+      const real = (window as unknown as Spy).__real;
+      const local = real.localStorage() as Storage;
+      const session = real.sessionStorage() as Storage;
+      const idb = real.indexedDB() as IDBFactory;
+      return { local: local.length, session: session.length, dbs: (await idb.databases()).length };
+    });
+    expect(persisted).toEqual({ local: 0, session: 0, dbs: 0 });
   });
-
-  await openReady(page);
-  await scrubText(page);
-  await (await answerBox(page)).fill("Hej [NAMN_1].");
-  await page.keyboard.press(`${MOD}+Enter`);
-  const dialog = await openKey(page);
-  await Promise.all([page.waitForEvent("download"), dialog.getByRole("button", { name: "Ladda ner kodnyckel" }).click()]);
-
-  type Spy = { __touched: string[]; __real: Record<string, () => unknown> };
-  expect(await page.evaluate(() => (window as unknown as Spy).__touched)).toEqual([]);
-
-  // Nothing persisted from any context, workers included.
-  expect(await context.cookies()).toEqual([]);
-  const persisted = await page.evaluate(async () => {
-    const real = (window as unknown as Spy).__real;
-    const local = real.localStorage() as Storage;
-    const session = real.sessionStorage() as Storage;
-    const idb = real.indexedDB() as IDBFactory;
-    return { local: local.length, session: session.length, dbs: (await idb.databases()).length };
-  });
-  expect(persisted).toEqual({ local: 0, session: 0, dbs: 0 });
 });
 
 test("a restore made before the key had the value updates once it does", async ({ page }) => {

@@ -95,6 +95,12 @@ jobs:
       - name: Browser tests (Chromium, Firefox, WebKit)
         run: npm run e2e
 
+      # A test that passed only on the retry may hide a bug that shows up
+      # sometimes: list them in the run's summary for someone to check.
+      - name: Flaky tests
+        if: always()
+        run: node scripts/flaky.ts test-results/report.json >> "$GITHUB_STEP_SUMMARY"
+
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
