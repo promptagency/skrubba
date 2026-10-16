@@ -227,3 +227,42 @@ describe("MaskeraMasker.mask on a long text", () => {
     expect(calls).toHaveLength(2);
   });
 });
+
+// Stands in for a model whose answers the test releases by hand, so something
+// can happen while a part is being read.
+function heldNer(marks: Array<[string, EntityType]>) {
+  const waiting: Array<() => void> = [];
+  const backend: NerBackend = {
+    init: async () => {},
+    detect: (text) => new Promise((resolve) => waiting.push(() => void fakeNer(marks).detect(text).then(resolve))),
+  };
+  return { backend, release: () => waiting.splice(0).forEach((go) => go()) };
+}
+
+describe("MaskeraMasker.mask while its only part is being read", () => {
+  it("drops the run on reset: the old call rejects and its names never reach the new numbering", async () => {
+    const { backend, release } = heldNer([
+      ["Anna Svensson", "NAMN"],
+      ["Bertil Berg", "NAMN"],
+    ]);
+    const masker = new MaskeraMasker(backend);
+    const old = masker.mask("Hej Anna Svensson.", none);
+    masker.reset();
+    release();
+    await expect(old).rejects.toMatchObject({ name: "AbortError" });
+    const next = masker.mask("Bertil Berg ringde.", none);
+    release();
+    expect(summary(await next)).toEqual(["[NAMN_1]=Bertil Berg:model"]);
+  });
+
+  it("rejects the old call when a new text comes during its last part", async () => {
+    const { backend, release } = heldNer([["Anna Svensson", "NAMN"]]);
+    const masker = new MaskeraMasker(backend);
+    const old = masker.mask("Hej Anna Svensson.", none);
+    const fresh = masker.mask("Hej igen.", none);
+    release();
+    await expect(old).rejects.toMatchObject({ name: "AbortError" });
+    release();
+    await fresh;
+  });
+});
