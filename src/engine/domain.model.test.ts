@@ -35,6 +35,13 @@ const KNOWN_LEAKS: string[] = [
   "telefon-transkript-14: gun punkt britt snabel-a bredband punkt net",
 ];
 
+/**
+ * Values the model masks on some processors and not on others: native ONNX
+ * Runtime's results differ slightly between them. "Malin" leaked on GitHub's
+ * x86 runner and not on an Arm Mac (2026-10-19). They may leak, or not.
+ */
+const LEAKS_ON_SOME_CPUS = new Set(["blandat-webb-02: Malin"]);
+
 /** Texts that do not restore to themselves. */
 const KNOWN_RESTORE_FAILURES: string[] = [
   "juridik-10", // "kjell-olov" comes back as the key has it, "Kjell-Olov"
@@ -75,7 +82,7 @@ describe.skipIf(!run)("maskera's domain corpus through Skrubba", () => {
     }
     const total = CORPUS.reduce((n, t) => n + t.forvantad.length, 0);
     console.log(`Domain corpus: ${total - leaks.length}/${total} values masked, ${leaks.length} leaked`);
-    expect(leaks).toEqual(KNOWN_LEAKS);
+    expect(leaks.filter((l) => !LEAKS_ON_SOME_CPUS.has(l))).toEqual(KNOWN_LEAKS);
     expect(restoreFailures).toEqual(KNOWN_RESTORE_FAILURES);
   }, 300_000);
 });
