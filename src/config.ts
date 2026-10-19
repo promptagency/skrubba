@@ -3,9 +3,9 @@ export const APP_SLUG = "skrubba";
 export const APP_URL = "https://skrubba.promptagency.se";
 /** Public repository, linked from "Github" in the footer credits. Leave empty to show the word without a link. */
 export const REPO_URL = "https://github.com/promptagency/skrubba";
-/** Linked from the footer byline. */
 /** Where "Missade Skrubba något? Berätta." sends its email. */
 export const FEEDBACK_EMAIL = "micke@promptagency.se";
+/** Linked from the footer byline. */
 export const AUTHOR_URL = "https://mickequick.se";
 export const AGENCY_URL = "https://promptagency.se";
 /** Linked from the footer credits. KB-BERT is KBLab's page on Hugging Face; it has no GitHub repo of its own. */

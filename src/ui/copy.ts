@@ -1,9 +1,10 @@
 // Every Swedish string in the UI, verbatim from docs/COPY.md. Change copy
 // there first, then here.
+import { APP_NAME } from "../config.ts";
 import type { EntityType } from "../engine/Masker.ts";
 
 export const COPY = {
-  "app.name": "Skrubba",
+  "app.name": APP_NAME,
   "app.title": "Skrubba. Gör texten säkrare att klistra in i AI.",
   "app.tagline": "Namn, personnummer och känsliga uppgifter byts ut mot platshållare. Allt sker i din webbläsare.",
   "mode.scrub": "Skrubba",
