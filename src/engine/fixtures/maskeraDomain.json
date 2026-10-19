@@ -1,0 +1,2760 @@
+[
+ {
+  "id": "bank-forsakring-01",
+  "kategori": "bank-forsakring",
+  "text": "hej, mitt kort spärrades igår kväll när jag försökte betala på ica. heter Lisa Andersson, personnummer 640823-3234. kan ni öppna det igen? mitt telnr är 070-1740627",
+  "forvantad": [
+   "Lisa Andersson",
+   "640823-3234",
+   "070-1740627"
+  ]
+ },
+ {
+  "id": "bank-forsakring-02",
+  "kategori": "bank-forsakring",
+  "text": "Ärende gäller skadeanmälan efter vattenskada i badrummet. Kund Karl-Erik Nilsson, 781101-2397, bor på Maskeravägen 14 i Örnsköldsvik. Läckaget upptäcktes i söndags och golvet har börjat svikta. Han nås på 031-390 06 28 eller person20@example.com.",
+  "forvantad": [
+   "Karl-Erik Nilsson",
+   "781101-2397",
+   "Maskeravägen 14",
+   "031-390 06 28",
+   "person20@example.com"
+  ]
+ },
+ {
+  "id": "bank-forsakring-03",
+  "kategori": "bank-forsakring",
+  "text": "Jag, Anna-Karin Sjöberg, vill anmäla en bilolycka som inträffade på E4 utanför Umeå. Motparten hette Tommy Lundin och hans telefonnummer är 0701740629. Mitt eget är 070 174 06 30. Skadeanmälan ska kopplas till mitt försäkringsbolag och mitt personnummer är 850601-2387.",
+  "forvantad": [
+   "Anna-Karin Sjöberg",
+   "Tommy Lundin",
+   "0701740629",
+   "070 174 06 30",
+   "850601-2387"
+  ]
+ },
+ {
+  "id": "bank-forsakring-04",
+  "kategori": "bank-forsakring",
+  "text": "Fråga om bolån. Vi heter Mikaela Forsberg och Johan Forsberg och funderar på att flytta lånet från annan bank. Mitt pnr 850623-2381, Johans 900101-2385. Hör gärna av er till mig på person21@example.com eller 070-1740631.",
+  "forvantad": [
+   "Mikaela Forsberg",
+   "Johan Forsberg",
+   "850623-2381",
+   "900101-2385",
+   "person21@example.com",
+   "070-1740631"
+  ]
+ },
+ {
+  "id": "bank-forsakring-05",
+  "kategori": "bank-forsakring",
+  "text": "god kväll! kortet spärrat trots att det är jag som handlat, jätteirriterande. jag heter stig boman och bor på testkorpusgatan 8 i kiruna. ring mig på 070-174 06 32 så snart ni kan, pnr 991201-2391",
+  "forvantad": [
+   "stig boman",
+   "testkorpusgatan 8",
+   "070-174 06 32",
+   "991201-2391"
+  ]
+ },
+ {
+  "id": "bank-forsakring-06",
+  "kategori": "bank-forsakring",
+  "text": "Handläggare Gunilla Ekström bad mig maila in handlingarna direkt till henne. Mitt personnummer är 900101-2385 och jag heter Per-Olov Hedman. Adressen dit faktureringen ska gå är Påhittsgatan 22, 3 tr. Ni når mig på person22@example.com.",
+  "forvantad": [
+   "Gunilla Ekström",
+   "900101-2385",
+   "Per-Olov Hedman",
+   "Påhittsgatan 22",
+   "person22@example.com"
+  ]
+ },
+ {
+  "id": "bank-forsakring-07",
+  "kategori": "bank-forsakring",
+  "text": "Vill utöka mitt bolån med 400 000 för tillbyggnad. Personnummer 000101-9801, namn Bosse Lindqvist. Kontot lönen går in på är clearing 3300, konto 3300-0032 3232 3232. Bäst att nå mig på 08-465 00 434 på dagtid.",
+  "forvantad": [
+   "000101-9801",
+   "Bosse Lindqvist",
+   "08-465 00 434",
+   "3300-0032 3232 3232"
+  ]
+ },
+ {
+  "id": "bank-forsakring-08",
+  "kategori": "bank-forsakring",
+  "text": "hej hej!! det är samira al-khatib igen, ni lovade återkoppling om skadan i köket (vattenskadan alltså) men har inte hört nåt. mitt nummer 070-1740635 och mejlen person23@example.com. pnr 781101-2397 om det behövs",
+  "forvantad": [
+   "samira al-khatib",
+   "070-1740635",
+   "person23@example.com",
+   "781101-2397"
+  ]
+ },
+ {
+  "id": "bank-forsakring-09",
+  "kategori": "bank-forsakring",
+  "text": "Denna skriftliga fullmakt avser min mor Elsa Bergström, född med personnummer 850601-2387, boende på Provdatagatan 3 i Lund. Jag, hennes dotter Birgitta Holm, 850623-2381, begär att få ta del av hennes skadeärende. Min telefon: 031-390 06 36.",
+  "forvantad": [
+   "Elsa Bergström",
+   "850601-2387",
+   "Provdatagatan 3",
+   "Birgitta Holm",
+   "850623-2381",
+   "031-390 06 36"
+  ]
+ },
+ {
+  "id": "bank-forsakring-10",
+  "kategori": "bank-forsakring",
+  "text": "Spärrat kort vid utlandsresa. Kunden uppger sig heta Fredrik Östman, pnr 900101-2385, och vara fast i Bangkok utan fungerande kort. Han kan endast nås via mail person24@example.com. Verifierat i samtal med handläggare Nermin Hadzic.",
+  "forvantad": [
+   "Fredrik Östman",
+   "900101-2385",
+   "person24@example.com",
+   "Nermin Hadzic"
+  ]
+ },
+ {
+  "id": "bank-forsakring-11",
+  "kategori": "bank-forsakring",
+  "text": "Ang bolånefrågan: jag och min sambo Elin Sandström vill lösa bundet lån i förtid. Hennes pnr 991201-2391, mitt 850601-2387, jag heter Roland Wik. Vi bor på Maskeravägen 155. Skicka gärna kostnadsberäkning till person25@example.com eller ring 070 174 06 38.",
+  "forvantad": [
+   "Elin Sandström",
+   "991201-2391",
+   "850601-2387",
+   "Roland Wik",
+   "Maskeravägen 155",
+   "person25@example.com",
+   "070 174 06 38"
+  ]
+ },
+ {
+  "id": "bank-forsakring-12",
+  "kategori": "bank-forsakring",
+  "text": "Skadeanmälan bil. Krockade med ett vildsvin på riksväg 26 utanför Ljungby igår natt. Bilen är inte körbar. Märtha Kjellsson, pnr 000101-9801, tel 070-1740639. Vill ha ersättningsbil under reparationen.",
+  "forvantad": [
+   "Märtha Kjellsson",
+   "000101-9801",
+   "070-1740639"
+  ]
+ },
+ {
+  "id": "bank-forsakring-13",
+  "kategori": "bank-forsakring",
+  "text": "det här är andra gången ni drar dubbel premie!!! mitt namn är kevin ahmadi, kolla pnr 640823-3234. drar pengarna tillbaka annars byter jag bolag. nås på person26@example.com",
+  "forvantad": [
+   "kevin ahmadi",
+   "640823-3234",
+   "person26@example.com"
+  ]
+ },
+ {
+  "id": "bank-forsakring-14",
+  "kategori": "bank-forsakring",
+  "text": "Jag ringde nyss och pratade med en handläggare vid namn Siv Hansson om mitt spärrade bankkort, men samtalet bröts. Jag heter Greta Wennberg och mitt personnummer är 781101-2397. Försök gärna nå mig igen på 031-390 06 40 eller person27@example.com. Bor på Testkorpustorget 5.",
+  "forvantad": [
+   "Siv Hansson",
+   "Greta Wennberg",
+   "781101-2397",
+   "031-390 06 40",
+   "person27@example.com",
+   "Testkorpustorget 5"
+  ]
+ },
+ {
+  "id": "bank-forsakring-15",
+  "kategori": "bank-forsakring",
+  "text": "Bolånelöfte för bostadsrätt i Västerås. Sökande: Nils-Göran Åkerman, 850601-2387, Påhittsgatan 9. Telefon 031-390 06 41. Medsökande är makan Ulla Åkerman på samma adress.",
+  "forvantad": [
+   "Nils-Göran Åkerman",
+   "850601-2387",
+   "Påhittsgatan 9",
+   "031-390 06 41",
+   "Ulla Åkerman"
+  ]
+ },
+ {
+  "id": "bank-forsakring-16",
+  "kategori": "bank-forsakring",
+  "text": "Vill byta utbetalningskonto för min utbetalda bilskadeersättning. Nytt konto hos annan bank, clearing 9021 konto 3300-0032 3232 3232. Mvh Ylva Frisk, 850623-2381, person28@example.com, 070 174 06 42",
+  "forvantad": [
+   "Ylva Frisk",
+   "850623-2381",
+   "person28@example.com",
+   "070 174 06 42",
+   "3300-0032 3232 3232"
+  ]
+ },
+ {
+  "id": "bank-forsakring-17",
+  "kategori": "bank-forsakring",
+  "text": "hej! jag har fått ett sms om att mitt kort är spärrat men jag har inte beställt något sånt?? heter douglas berntsson och bor på provdatagatan 17, pnr 900101-2385. kan ni ringa +46 70 174 06 43 snarast",
+  "forvantad": [
+   "douglas berntsson",
+   "provdatagatan 17",
+   "900101-2385",
+   "+46 70 174 06 43"
+  ]
+ },
+ {
+  "id": "bank-forsakring-18",
+  "kategori": "bank-forsakring",
+  "text": "Till handläggare Örjan Malmgren på skadeavdelningen: här kommer kompletterande uppgifter för vattenskadan. Fastighetsägare Inga-Lill Söderström, personnummer 991201-2391, adress Maskeragatan 6. Hon föredrar kontakt via sin son Erik Söderström på person29@example.com.",
+  "forvantad": [
+   "Örjan Malmgren",
+   "Inga-Lill Söderström",
+   "991201-2391",
+   "Maskeragatan 6",
+   "Erik Söderström",
+   "person29@example.com"
+  ]
+ },
+ {
+  "id": "support-01",
+  "kategori": "support",
+  "text": "hallå!!! det här är tredje gången jag skriver nu. mitt bredband har legat nere i en vecka och ingen hör av sig. heter Malin Sjöberg och mitt kundnummer är 448192. ni kan nå mig på 0701740605 eller person1@example.com. jag vill ha prisavdrag annars byter jag leverantör!!!",
+  "forvantad": [
+   "Malin Sjöberg",
+   "0701740605",
+   "person1@example.com"
+  ]
+ },
+ {
+  "id": "support-02",
+  "kategori": "support",
+  "text": "Hej! Jag beställde en fåtölj (orderTEST-88301) för tre veckor sen men den har inte kommit. Jag heter Patrik Lindqvist och bor på Testkorpusgatan 14, 123 45 Göteborg. Kan ni kolla vart paketet tagit vägen? Mitt telefonnummer är 070 174 06 06 om ni hellre ringer.",
+  "forvantad": [
+   "Patrik Lindqvist",
+   "Testkorpusgatan 14",
+   "070 174 06 06"
+  ]
+ },
+ {
+  "id": "support-03",
+  "kategori": "support",
+  "text": "varför dras det dubbelt från mitt kort den här månaden?? jag heter sara ek och mejlen på kontot är person2@example.com. jag har betalat 199 kr den 3:e och samma belopp den 5:e. fixa det här nu, annars kontaktar jag konsumentverket.",
+  "forvantad": [
+   "sara ek",
+   "person2@example.com"
+  ]
+ },
+ {
+  "id": "support-04",
+  "kategori": "support",
+  "text": "Hej, vi fick en defekt diskmaskin levererad i tisdags. Installatören sa att vi skulle höra av oss hit direkt. Det är Anders och Katarina Björklund som gäller, adressen är Påhittsvägen 7 i Sollentuna. Anders nås enklast på 070-1740607. Ärendenummer RA-2024-5591.",
+  "forvantad": [
+   "Anders och Katarina Björklund",
+   "Påhittsvägen 7",
+   "070-1740607"
+  ]
+ },
+ {
+  "id": "vard-01",
+  "kategori": "sjukhus",
+  "text": "Patient Ingrid Carlsson, 19000101-9801, inkommer via ambulans efter fall i hemmet. Vfu huvudtrauma, GCS 14, vakna ref. Boende på Provdatagatan 3B, Lund. Anhörig, sonen Mikael Carlsson 070-174 06 08, underrättad. Rt skalle utan patologiskt. Obs pga uttalad yrsel.",
+  "forvantad": [
+   "Ingrid Carlsson",
+   "19000101-9801",
+   "Provdatagatan 3B",
+   "Mikael Carlsson",
+   "070-174 06 08"
+  ]
+ },
+ {
+  "id": "vard-02",
+  "kategori": "sjukhus",
+  "text": "Återbesök diabetes typ 2. Gunvor Ekström, 640823-3234, har svårt att hålla blodsockret trots metformin 500x2. Pågående stressrelaterade besvär, nyligen skild. Bor ensam på Maskeratorget 5, Halmstad. Överläggning med dietist bokad. Pat uppmanad kontakta vårdcentralen på 031-390 06 09 vid försämring.",
+  "forvantad": [
+   "Gunvor Ekström",
+   "640823-3234",
+   "Maskeratorget 5"
+  ]
+ },
+ {
+  "id": "vard-03",
+  "kategori": "sjukhus",
+  "text": "Remiss från VC angående Fatima Al-Rashid, 781101-2397, misstänkt utmattningssyndrom. Sjukskriven sedan mars, sömnstörningar, koncentrationssvårigheter. Bedomning av psykolog Beatrice Hultgren på Mottagning 2 rekommenderas. Patienten talar god svenska, tolk behövs ej. Hemadress: Testkorpusgatan 12, 123 45 Malmö.",
+  "forvantad": [
+   "Fatima Al-Rashid",
+   "781101-2397",
+   "Beatrice Hultgren",
+   "Testkorpusgatan 12"
+  ]
+ },
+ {
+  "id": "vard-04",
+  "kategori": "sjukhus",
+  "text": "Telefonsamtal med maka till patient Olle Vestman, 850601-2387, vårdas avd 6 Kiruna lasarett. Makan Britt Vestman oroad pga försämrat allmäntillstånd, ber om återkoppling. Nås på 0980-319 210. Överlämning skett till ansvarig läkare.",
+  "forvantad": [
+   "Olle Vestman",
+   "850601-2387",
+   "Britt Vestman",
+   "0980-319 210"
+  ]
+ },
+ {
+  "id": "epost-01",
+  "kategori": "epost",
+  "text": "Hej! Tack för mötet igår. Som utlovat bifogar jag offerten för q3. Hör gärna av dig om något är oklart så bokar vi ett uppföljningssamtal. Med vänliga hälsningar, Cecilia Norström, Key Account Manager, Tel: 070-1740611, person3@example.com, Nordcap Solutions AB, Påhittsgatan 22, 123 45 Stockholm.",
+  "forvantad": [
+   "Cecilia Norström",
+   "070-1740611",
+   "person3@example.com",
+   "Påhittsgatan 22"
+  ]
+ },
+ {
+  "id": "epost-02",
+  "kategori": "epost",
+  "text": "Bästa fru Andersson, enligt vårt telefonsamtal bekräftar jag härmed att ditt ärende om renoveringsbidrag mottagits. Saknad bygglovsansökan ska vara oss tillhanda senast den 15 augusti. Vänligen kontakta handläggare Tomas Birgersson, person4@example.com eller 031-390 06 12. Med vänlig hälsning, Gävle kommun.",
+  "forvantad": [
+   "Tomas Birgersson",
+   "person4@example.com",
+   "031-390 06 12"
+  ]
+ },
+ {
+  "id": "epost-03",
+  "kategori": "epost",
+  "text": "Hej Helena! Förlåt för sent svar, semestern kom emellan. Ja, jag kan leda workshopen den 12 september. Skicka agendan så förbereder jag mig. Mvh Stefan Ahlström, VD, Sörmlands Tryckeri AB, Mobil: 0701740613, E-post: person5@example.com, Besöksadress: Provdatagatan 9, Eskilstuna",
+  "forvantad": [
+   "Stefan Ahlström",
+   "0701740613",
+   "person5@example.com",
+   "Provdatagatan 9"
+  ]
+ },
+ {
+  "id": "epost-04",
+  "kategori": "epost",
+  "text": "Ämne: Kallelse till årsstämma. Föreningens medlemmar kallas till årsstämma torsdagen den 20 mars kl 18.30 i föreningslokalen. Frågor besvaras av ordförande Agneta Sandell på person6@example.com eller 08-465 00 414. Anmälan till vaktmästaren om ni behöver nycklar. BRF Vildrosen, Maskeravägen 188, 123 45 Hägersten.",
+  "forvantad": [
+   "Agneta Sandell",
+   "person6@example.com",
+   "08-465 00 414",
+   "Maskeravägen 188"
+  ]
+ },
+ {
+  "id": "chatt-01",
+  "kategori": "chatt",
+  "text": "pratade med lisa andersson igår, hon fick jobbet på apoteket!! hon bor ju numera på testkorpusgatan 8 så det är nära för henne. skicka gratulationskort till henne va, hennes nya nummer är 070-1740615",
+  "forvantad": [
+   "lisa andersson",
+   "testkorpusgatan 8",
+   "070-1740615"
+  ]
+ },
+ {
+  "id": "chatt-02",
+  "kategori": "chatt",
+  "text": "du glöm inte att hämta fredrik på torsdag, han landar 14:20. hör av dig till fredrik englund direkt om planet är sent, han svarar inte alltid på sms men mejlar på person7@example.com",
+  "forvantad": [
+   "fredrik englund",
+   "person7@example.com"
+  ]
+ },
+ {
+  "id": "chatt-03",
+  "kategori": "chatt",
+  "text": "va sa hon?? johan sa att dom flyttar till borås i augusti?? skicka person8@example.com till mig så frågar jag själv. eller ring 070-174 06 16, det är hans mobila",
+  "forvantad": [
+   "person8@example.com",
+   "070-174 06 16"
+  ]
+ },
+ {
+  "id": "chatt-04",
+  "kategori": "chatt",
+  "text": "haha ok men be careful med vad du säger åt camilla stenberg om festen, hon berättar allt för sin kille. hon bor i lägenheten bredvid mig på påhittsgatan 15 så hon hör ju allt ändå lol",
+  "forvantad": [
+   "camilla stenberg",
+   "påhittsgatan 15"
+  ]
+ },
+ {
+  "id": "hr-01",
+  "kategori": "hr",
+  "text": "Arbetsansökan – kundtjänstmedarbetare. Mitt namn är Yusuf Hassan och jag har arbetat inom kundtjänst i över sex år, senast på Tele2s avdelning i Västerås. Jag bor på Provdatagatan 21, 123 45 Stockholm, nås på 0701740617 eller person9@example.com. Referenser: min tidigare chef Maria Krona, 070 174 06 18.",
+  "forvantad": [
+   "Yusuf Hassan",
+   "Provdatagatan 21",
+   "0701740617",
+   "person9@example.com",
+   "Maria Krona",
+   "070 174 06 18"
+  ]
+ },
+ {
+  "id": "hr-02",
+  "kategori": "hr",
+  "text": "Referenstagning för kandidat Elin Bergsten, personnummer 850623-2381, som sökt tjänsten som projektledare. Tidigare anställningar: Karlstad Energi AB 2018–2023, därefter konsult på Sigma. Utbildad civilingenjör KTH. Nuvarande bostadsadress enligt folkbokföringen: Maskeravägen 4, Sundsvall.",
+  "forvantad": [
+   "Elin Bergsten",
+   "850623-2381",
+   "Maskeravägen 4"
+  ]
+ },
+ {
+  "id": "hr-03",
+  "kategori": "hr",
+  "text": "CV-utdrag: Pia Holmberg, född 1979, har arbetat som ekonomiassistent i 15 år. Kontaktuppgifter: person10@example.com, 070-1740619. Fastighetsadress: Testkorpusgatan 33, 123 45 Norrköping. Lönanspråk 38 000 kr. Tillgänglig från den 1 november.",
+  "forvantad": [
+   "Pia Holmberg",
+   "person10@example.com",
+   "070-1740619",
+   "Testkorpusgatan 33"
+  ]
+ },
+ {
+  "id": "hr-04",
+  "kategori": "hr",
+  "text": "Kontaktuppgifter för onboarding: Medarbetaren heter Daniel Mårtensson, pnr 900101-2385, och ska få tillgång till systemet från måndag. Skicka utrustningen till hans adress, Påhittsvägen 10, Täby. Handledare blir Jessica Lund, person11@example.com.",
+  "forvantad": [
+   "Daniel Mårtensson",
+   "900101-2385",
+   "Påhittsvägen 10",
+   "Jessica Lund",
+   "person11@example.com"
+  ]
+ },
+ {
+  "id": "ekonomi-01",
+  "kategori": "ekonomi",
+  "text": "Vi har mottagit er faktura nrTEST-55213 med OCRTEST-8842 9931 44 på 4 560 kr men kan inte styrka att tjänsten utförts. Vi begär korrigering. Mottagaren av fakturan är vår revisor Gun-Britt Åslund, Provdatagatan 2, 123 45 Uppsala. Återkom till henne på person12@example.com.",
+  "forvantad": [
+   "Gun-Britt Åslund",
+   "Provdatagatan 2",
+   "person12@example.com"
+  ]
+ },
+ {
+  "id": "ekonomi-02",
+  "kategori": "ekonomi",
+  "text": "Påminnelse trots betalning! Jag, Rolf Eklund, betalade fakturan den 2 juni via bankgiro 991-2346 med referens KundTEST-11023, 2 890 kr. Nu kommer en ny räkning på samma belopp. Min adress är Maskeravägen 45, Söderhamn, och mitt telefonnummer 070-174 06 20. Jag vill ha skriftlig bekräftelse att skulden är kvittad.",
+  "forvantad": [
+   "Rolf Eklund",
+   "Maskeravägen 45",
+   "070-174 06 20"
+  ]
+ },
+ {
+  "id": "ekonomi-03",
+  "kategori": "ekonomi",
+  "text": "Uppgifter för utbetalning av reseersättning: Anställd Mona Lindgren, pnr 991201-2391, bank Nordea, clearing 3300, konto 3300-0032 3232 3232. Resan avsåg kundmöte i Örebro, kostnad 3 120 kr inkl moms. Kontaktperson på respektive kund: Annika Forsberg, person13@example.com.",
+  "forvantad": [
+   "Mona Lindgren",
+   "991201-2391",
+   "Annika Forsberg",
+   "person13@example.com",
+   "3300-0032 3232 3232"
+  ]
+ },
+ {
+  "id": "ekonomi-04",
+  "kategori": "ekonomi",
+  "text": "Klagomål på inkassokrav från Sven-Olof Nyström, Testkorpusgatan 66, 123 45 Borås. Kravet avser ett gymabonnemang som sägs upp den 1 maj, och beloppet 899 kr bestrids. Kunden påpekar att inga påminnelser mottagits. E-post till kundtjänst: person14@example.com, telefon 031-390 06 21.",
+  "forvantad": [
+   "Sven-Olof Nyström",
+   "Testkorpusgatan 66",
+   "person14@example.com",
+   "031-390 06 21"
+  ]
+ },
+ {
+  "id": "forum-01",
+  "kategori": "forum",
+  "text": "Någon annan som haft problem med den här mäklaren? Min granne Henrik Sjöström sålde sin villa via dom i vintras och fick vänta tre månader på tillträdet. Han bor på Påhittsvägen 19 i Nacka och säger att han aldrig mer anlitar samma byrå. Själv gick jag med min försäljning via en annan mäklare i Skärholmen.",
+  "forvantad": [
+   "Henrik Sjöström",
+   "Påhittsvägen 19"
+  ]
+ },
+ {
+  "id": "forum-02",
+  "kategori": "forum",
+  "text": "Update efter min operation: allt gick bra och jag är hemma nu igen! Tack alla för pepp. Ska tipsa om doktorn, Susanna Rydberg på Sophiahemmet, hon var fantastisk. Kontorsnumret dit är 08-465 00 422 om någon undrar. Nu vila i fyra veckor enligt läkarens order.",
+  "forvantad": [
+   "Susanna Rydberg",
+   "08-465 00 422"
+  ]
+ },
+ {
+  "id": "forum-03",
+  "kategori": "forum",
+  "text": "Har någon testat den nya cykelstigen utefter sjön? Cyklade där med min dotter Alva i lördags och hon älskade det. Hon är 9 år och växer ur sin cykel, så jag funderar på att köpa en begagnad. Såg att en Pelle Östberg annonserat ut en 24-tummare på blocket för 800 kr i Växjö.",
+  "forvantad": [
+   "Pelle Östberg"
+  ]
+ },
+ {
+  "id": "forum-04",
+  "kategori": "forum",
+  "text": "Ber om ursäkt om jag missförstått tidigare post, men jag såg att Louise Hammar skrev att återbetalningen kommit fram. Är det någon här som fått kontakt med henne direkt? Hennes mejl person15@example.com verkar inte funka längre, jag får studs på alla mejl.",
+  "forvantad": [
+   "Louise Hammar",
+   "person15@example.com"
+  ]
+ },
+ {
+  "id": "edge-01",
+  "kategori": "edge",
+  "text": "ring kalle om rörämnena, han vet var vi lagt dom. annars fråga gunnel i köket.",
+  "forvantad": [
+   "kalle",
+   "gunnel"
+  ]
+ },
+ {
+  "id": "edge-02",
+  "kategori": "edge",
+  "text": "Vår nya medarbetare Anne-Lise Gustafsson Dahl börjar på måndag. Hon har tidigare arbetat hos Ernst & Young och bor på Provdatagatan 2 i Hjo. Hennes mejl blir person16@example.com.",
+  "forvantad": [
+   "Anne-Lise Gustafsson Dahl",
+   "Provdatagatan 2",
+   "person16@example.com"
+  ]
+ },
+ {
+  "id": "edge-03",
+  "kategori": "edge",
+  "text": "Journalanteckning: Kalle Svensson, pnr 850623-2381, kommer till återbesok tisdag. Bor på Oxtorget i Västerås, exakt nummer oklart men postnummer 123 45. Hustrun Lotta Svensson medföljer.",
+  "forvantad": [
+   "Kalle Svensson",
+   "850623-2381",
+   "Lotta Svensson"
+  ]
+ },
+ {
+  "id": "edge-04",
+  "kategori": "edge",
+  "text": "Mötet flyttas till onsdag kl 13. Medverkande: Jean-François Dubois från vårt pariskontor, nås på person17@example.com eller +46 70 174 06 24. Hans svenska assistent Emma Söderlind bokar rummet.",
+  "forvantad": [
+   "Jean-François Dubois",
+   "person17@example.com",
+   "+46 70 174 06 24",
+   "Emma Söderlind"
+  ]
+ },
+ {
+  "id": "edge-05",
+  "kategori": "edge",
+  "text": "Hej, jag tror jag skrivit fel mejladress när jag registrerade kontot. Den står som person18@example.com (med två n i efternamnet) men min riktiga adress är person19@example.com. Jag heter Jenny Karlsson och mitt medlemsnummer är 77123. Kan ni ändra?",
+  "forvantad": [
+   "person18@example.com",
+   "person19@example.com",
+   "Jenny Karlsson"
+  ]
+ },
+ {
+  "id": "edge-06",
+  "kategori": "edge",
+  "text": "Beställning mottagen från Åsa Öberg, Leveransadress: E4 motellvägen (utan gatunummer, invid avfart 112), Tierp. Telefon 0701740625. Kunden önskar leverans på fredag eftermiddag.",
+  "forvantad": [
+   "Åsa Öberg",
+   "0701740625"
+  ]
+ },
+ {
+  "id": "edge-07",
+  "kategori": "edge",
+  "text": "Patienten uppger sitt personnummer som 19000101-9801 men journalystemet godkänner det inte. Hon heter Birgitta Tolvmanson och är född på Västmanlands sjukhus. Ring henne på 070 174 06 26 för att bekräfta uppgifterna.",
+  "forvantad": [
+   "19000101-9801",
+   "Birgitta Tolvmanson",
+   "070 174 06 26"
+  ]
+ },
+ {
+  "id": "blandat-webb-01",
+  "kategori": "blandat-webb",
+  "text": "Säljes: Husqvarna automower 310, köpt 2022, funkar utmärkt men vi flyttar till lägenhet. Pris 5500 kr, bud kommenteras inte. Hör av dig till Jörgen Ekström på 070-174 06 44, kan visa på Testkorpusvägen 14 i Östersund kvällstid.",
+  "forvantad": [
+   "Jörgen Ekström",
+   "070-174 06 44",
+   "Testkorpusvägen 14"
+  ]
+ },
+ {
+  "id": "blandat-webb-02",
+  "kategori": "blandat-webb",
+  "text": "Köpte den här stavmixern i fredags och den höll exakt tre dagar innan den började ryka. Ringde kundtjänst och pratade med en Malin som lovade återköp men nu svarar ingen. Reklamerar den här, mitt ärendenummer är 4471-8820. /Veronica Salomonsson, person30@example.com",
+  "forvantad": [
+   "Veronica Salomonsson",
+   "person30@example.com",
+   "Malin"
+  ]
+ },
+ {
+  "id": "blandat-webb-03",
+  "kategori": "blandat-webb",
+  "text": "hej! kul blogg som alltid. vi bor också i ett gammalt hus från 1912 och har exakt samma problem med drag i köket. hör gärna av dig om du hittar en bra hantverkare, jag nås på person31@example.com eller 0701740645. /kalle från arvika",
+  "forvantad": [
+   "kalle",
+   "person31@example.com",
+   "0701740645"
+  ]
+ },
+ {
+  "id": "blandat-webb-04",
+  "kategori": "blandat-webb",
+  "text": "BOSTAD SÖKES: Ungdomspedagog, 34 år, söker 2:a eller 3:a i Gävle med omnejd, helst lugn trappuppgång. Fast anställning sedan 2019, inga husdjur, rökfri. Kan flytta in från 1 november. Kontakt: Ahmed Al-Rashid, 070 174 06 46, person32@example.com. Referenser lämnas av nuvarande hyresvärd Stig Brundin.",
+  "forvantad": [
+   "Ahmed Al-Rashid",
+   "070 174 06 46",
+   "person32@example.com",
+   "Stig Brundin"
+  ]
+ },
+ {
+  "id": "blandat-webb-05",
+  "kategori": "blandat-webb",
+  "text": "Insändare: Det är anmärkningsvärt att kommunen än en gång höjer parkeringsavgifterna i centrum samtidigt som busslinje 4 dras in. Vi som bor på Påhittsgatan 22 och inte har bil straffas dubbelt. Skrivet av Maj-Britt Hedlund, 070-1740647, i protest.",
+  "forvantad": [
+   "Påhittsgatan 22",
+   "Maj-Britt Hedlund",
+   "070-1740647"
+  ]
+ },
+ {
+  "id": "blandat-webb-06",
+  "kategori": "blandat-webb",
+  "text": "säljer en trekko från lundberg, 6 mån gammal, nypris 3800 säljer för 2000 pga tidsbrist. hämtas i umeå, skriv här eller messa till sebastian 070-174 06 48",
+  "forvantad": [
+   "sebastian",
+   "070-174 06 48"
+  ]
+ },
+ {
+  "id": "blandat-webb-07",
+  "kategori": "blandat-webb",
+  "text": "★★☆☆☆ Beställde i måndags, skulle levereras onsdag, kom lördag — och då var kartongen öppnad. Kundtjänst hänvisade mellan varandra i fyra dagar. Till slut fick jag tag på Therese Sandberg som faktiskt löste det på tio minuter, henne ska all cred gå. Men jag handlar inte här igen. – Daniel Östlund, person33@example.com, 0701740649",
+  "forvantad": [
+   "Therese Sandberg",
+   "Daniel Östlund",
+   "person33@example.com",
+   "0701740649"
+  ]
+ },
+ {
+  "id": "blandat-webb-08",
+  "kategori": "blandat-webb",
+  "text": "Ledsen att höra om era problem! Vi hade samma strul med vår värmepump och det visade sig vara ett fel på expansionsventilen. Vår installatör Hasan kom på det direkt. Bor du i närheten av Falköping kan jag rekommendera honom varmt. Hälsningar Ingrid på Provdatagatan 8, person34@example.com",
+  "forvantad": [
+   "Ingrid",
+   "Provdatagatan 8",
+   "person34@example.com",
+   "Hasan"
+  ]
+ },
+ {
+  "id": "blandat-webb-09",
+  "kategori": "blandat-webb",
+  "text": "SÖKES: 1:a eller 2:a för uthyrning, gärna Södermalm eller nära pendel. Jag är 28, jobbar som sjuksköterska på natt, behöver det tyst dagtid. Pnr för kreditupplysning: 850623-2381. Nås bäst på person35@example.com. Mvh Elin Nyström",
+  "forvantad": [
+   "850623-2381",
+   "person35@example.com",
+   "Elin Nyström"
+  ]
+ },
+ {
+  "id": "blandat-webb-10",
+  "kategori": "blandat-webb",
+  "text": "Insändaren om cykelbanan vid ån: Författaren, som uppenbarligen inte cyklar, föreslår att vi ska dela väg med bussarna. Jag har cyklat sträckan dagligen i elva år och blivit påkörd en gång — av en bil som svängde ut från just den rastplats som nu föreslås bli infart. Tänk om, tänk rätt. Lennart Sjöqvist, Maskeravägen 3, Katrineholm",
+  "forvantad": [
+   "Lennart Sjöqvist",
+   "Maskeravägen 3"
+  ]
+ },
+ {
+  "id": "blandat-webb-11",
+  "kategori": "blandat-webb",
+  "text": "Byter min Toyota Auris -16 mot mindre bil + mellanskillnad, eller säljer för 89 000. Gått 11 200 mil, nyservad, sommar+vinterdäck. Ring gunnar på 070-1740651 helst efter kl 17, bor i Skellefteå. Bara seriösa tack!!",
+  "forvantad": [
+   "gunnar",
+   "070-1740651"
+  ]
+ },
+ {
+  "id": "blandat-webb-12",
+  "kategori": "blandat-webb",
+  "text": "Den här espressoautomaten är värd varenda krona. Min fru Camilla var skeptisk först men nu gör hon tre koppar om dagen. Enda minus: vattentanken är lite bökig att fylla. Vi testade mot vår gamla DeLonghi och skillnaden är enorm. Rekommenderas! /Patrik Lundqvist",
+  "forvantad": [
+   "Camilla",
+   "Patrik Lundqvist"
+  ]
+ },
+ {
+  "id": "blandat-webb-13",
+  "kategori": "blandat-webb",
+  "text": "fy fan för den här leveranstjänsten alltså. paketet stod ute i regnet, kvittensen låg i grannens brevlåda på Testkorpusvägen 11 (jag bor på 9!). mailat dem tre gånger utan svar. mitt nr är 070-174 06 52 om nån på företaget läser det här, ring mig. Sara W",
+  "forvantad": [
+   "Testkorpusvägen 11",
+   "070-174 06 52",
+   "Sara"
+  ]
+ },
+ {
+  "id": "blandat-webb-14",
+  "kategori": "blandat-webb",
+  "text": "Tack för en fin text om föräldraledighet. Jag var hemma nio månader med vår son och min partner Nils tog resten, och ändå är det jag som får frågan \"men vem tar hand om honom nu?\". Tröttsamt. Vi bor i Visby för övrigt, där är förskolesituationen bättre än du beskriver. Med vänlig hälsning, Åsa Lindblom-Karlsson, person36@example.com",
+  "forvantad": [
+   "Nils",
+   "Åsa Lindblom-Karlsson",
+   "person36@example.com"
+  ]
+ },
+ {
+  "id": "blandat-webb-15",
+  "kategori": "blandat-webb",
+  "text": "Säljer 4 st vinterdäck på fälg (205/55 R16), suttit på en Golf, två säsonger körda. 1200 kr för alla. Hämtas hos mig, Bo Andreasson, på Påhittsvägen 27 i Karlskrona. Sms:a 0701740653, svarar inte på okända samtal.",
+  "forvantad": [
+   "Bo Andreasson",
+   "Påhittsvägen 27",
+   "0701740653"
+  ]
+ },
+ {
+  "id": "blandat-webb-16",
+  "kategori": "blandat-webb",
+  "text": "Varning för \"hantverkaren\" som annonserat här tidigare. Han tog 8000 i förskott för att byta takpannor och har inte synt till på tre veckor, telefonen är avstängd. Jag har polisanmält, mitt referensnummer hos polisen kan ni få om ni mailar mig: person37@example.com. Sprid vidare så ingen annan blir lurad. Britt Göransson, 1949 års modell, pnr 000101-9801 för den som tvivlar på att jag är äkta.",
+  "forvantad": [
+   "person37@example.com",
+   "Britt Göransson",
+   "000101-9801"
+  ]
+ },
+ {
+  "id": "blandat-webb-17",
+  "kategori": "blandat-webb",
+  "text": "Bostad bytes! Har 3:a om 74 kvm på Provdatagatan 15 i Malmö med balkong i söder, söker 4:a eller större i samma område, barnen behöver varsitt rum. Hyra 11 400. Bara seriösa förfrågningar. Kontakta mig, Farhad Karimi, person38@example.com eller 070 174 06 54.",
+  "forvantad": [
+   "Provdatagatan 15",
+   "Farhad Karimi",
+   "person38@example.com",
+   "070 174 06 54"
+  ]
+ },
+ {
+  "id": "blandat-webb-18",
+  "kategori": "blandat-webb",
+  "text": "Insändare: När ska politiken förstå att landsbygden behöver sina skolor? Min dotter åker 4 mil enkel resa till skolan sedan klasserna på vår by ska slås ihop. Jag har skrivit till kommunen fyra gånger, nås på person39@example.com om någon där vill svara. Nästa val vet vi var vi lägger rösten. Torbjörn Åhl, 070-1740655",
+  "forvantad": [
+   "person39@example.com",
+   "Torbjörn Åhl",
+   "070-1740655"
+  ]
+ },
+ {
+  "id": "edge2-01",
+  "kategori": "edge2",
+  "text": "Hej! Ebba Björk ringde och sa att leveransen till sommarstugan är sen. Hon bor på Maskeravägen 8 i Fjälkinge, hennes nummer är 070-174 06 56.",
+  "forvantad": [
+   "Ebba Björk",
+   "Maskeravägen 8",
+   "070-174 06 56"
+  ]
+ },
+ {
+  "id": "edge2-02",
+  "kategori": "edge2",
+  "text": "ärende: sten ros (ja det är ett namn) vill att vi ändrar hans fakturaadress till Testkorpusgatan 14 lgh 1102, 123 45 stockholm. han nås på person40@example.com",
+  "forvantad": [
+   "sten ros",
+   "Testkorpusgatan 14 lgh 1102",
+   "person40@example.com"
+  ]
+ },
+ {
+  "id": "edge2-03",
+  "kategori": "edge2",
+  "text": "Kund: Linnéa Dahl, personnummer 640823-3234. Hon frågade om en dahlia (blomman, alltså) går att beställa till bröllopet. Jag lovade återkomma i morgon.",
+  "forvantad": [
+   "Linnéa Dahl",
+   "640823-3234"
+  ]
+ },
+ {
+  "id": "edge2-04",
+  "kategori": "edge2",
+  "text": "Samordningsnummer kund: TEST-700178-2395 (ogiltigt format enl. kunden själv, systemet vägrar ta det). Kunden heter Mario Berglund och vill bli uppringd på 0701740657 när det är löst.",
+  "forvantad": [
+   "700178-2395",
+   "Mario Berglund",
+   "0701740657"
+  ]
+ },
+ {
+  "id": "edge2-05",
+  "kategori": "edge2",
+  "text": "Vikarieanmälan: personen har samordningsnummer 781101-2397? eller var det vanligt pnr... Kolla med HR. Det är vikarien som täcker upp för Anna under mammaledigheten.",
+  "forvantad": [
+   "781101-2397",
+   "Anna"
+  ]
+ },
+ {
+  "id": "edge2-06",
+  "kategori": "edge2",
+  "text": "Flyttärende med två personer på samma abonnemang: Gunnar Sjöström, 850601-2387, och hans fru Maj Sjöström, 850623-2381. Båda ska flyttas till Påhittsvägen 21, Nacka.",
+  "forvantad": [
+   "Gunnar Sjöström",
+   "850601-2387",
+   "Maj Sjöström",
+   "850623-2381",
+   "Påhittsvägen 21"
+  ]
+ },
+ {
+  "id": "edge2-07",
+  "kategori": "edge2",
+  "text": "Hej support! Tre personnummer i samma familj: 900101-2385, 991201-2391 och 020301-2398. Kolla om alla tre är upplagda på rätt avtal. Det gäller familjen Ek.",
+  "forvantad": [
+   "900101-2385",
+   "991201-2391",
+   "020301-2398",
+   "Ek"
+  ]
+ },
+ {
+  "id": "edge2-08",
+  "kategori": "edge2",
+  "text": "Hi, this is about my invoice. My name is Sara Lindqvist and my personnummer is 000101-9801. Sorry for writing in English, my Swedish är inte så bra. Kan ni ändå svara på svenska?",
+  "forvantad": [
+   "Sara Lindqvist",
+   "000101-9801"
+  ]
+ },
+ {
+  "id": "edge2-09",
+  "kategori": "edge2",
+  "text": "From: Jonas Falk\nSubject: password reset\n\nHi team, can you reset the lösenord for my account? Min mail är person41@example.com och kundnumret hittar ni under mitt personnummer 640823-3234. Tack!",
+  "forvantad": [
+   "Jonas Falk",
+   "person41@example.com",
+   "640823-3234"
+  ]
+ },
+ {
+  "id": "edge2-10",
+  "kategori": "edge2",
+  "text": "SCANNED INBETALNINGSKORT (OCR):\n\nBetalningsmottagare: ELISAB\nET KARLBERG\nPNR: 580722-437\n2\nAdress: Provdatavägen 17,\nSollefteå",
+  "forvantad": [
+   "580722-437",
+   "Provdatavägen 17",
+   "ELISAB",
+   "ET KARLBERG"
+  ]
+ },
+ {
+  "id": "edge2-11",
+  "kategori": "edge2",
+  "text": "OCR-läsning av receptet blev så här:\nPatient: Rune\nHolmquist\nPersonnr 730928-\n1231\nTelefon: 070-\n174-06 83\nHämtas på apoteket Torsplan.",
+  "forvantad": [
+   "Holmquist",
+   "730928-",
+   "1231",
+   "070-",
+   "174-06 83",
+   "Rune"
+  ]
+ },
+ {
+  "id": "edge2-12",
+  "kategori": "edge2",
+  "text": "Kunden Petronella Ekström uppger adress Maskeragatan 45, 3 tr, lägenhet 1204, 123 45 Göteborg. Portkoden ska inte ligga i systemet längre enligt henne.",
+  "forvantad": [
+   "Petronella Ekström",
+   "Maskeragatan 45, 3 tr, lägenhet 1204"
+  ]
+ },
+ {
+  "id": "edge2-13",
+  "kategori": "edge2",
+  "text": "nytt flyttkort: Bengt Wallin, Testkorpusallé 101 lgh 1803 (18e våningen), 123 45 sthlm. gamla adressen ska avslutas den 30e.",
+  "forvantad": [
+   "Bengt Wallin",
+   "Testkorpusallé 101 lgh 1803"
+  ]
+ },
+ {
+  "id": "edge2-14",
+  "kategori": "edge2",
+  "text": "Det är Karlssons bil som står i vägen för snöröjningen, grannen sa att vi kan ringa Karlsson på 070-1740659. Annars får vi skjuta undan den, hans mackapär är fruktansvärd att backa.",
+  "forvantad": [
+   "Karlsson",
+   "070-1740659"
+  ]
+ },
+ {
+  "id": "edge2-15",
+  "kategori": "edge2",
+  "text": "Hämtaren kommer hos Annas mamma i morgon bitti. Annas mamma heter Ulla Brännström och bor på Påhittsgatan 3 i Knivsta. Anna själv är inte hemma.",
+  "forvantad": [
+   "Ulla Brännström",
+   "Påhittsgatan 3",
+   "Anna"
+  ]
+ },
+ {
+  "id": "edge2-16",
+  "kategori": "edge2",
+  "text": "pnr från kund (kopierade in det så här, kolla med mellanslag): 781101 2397. Kunden Veronika Mellander säger att det är så det står på hennes id-kort.",
+  "forvantad": [
+   "781101 2397",
+   "Veronika Mellander"
+  ]
+ },
+ {
+  "id": "edge2-17",
+  "kategori": "edge2",
+  "text": "Kundservice logg: personnummer angavs som '850601-2387' men i ett senare mejl stod det 8506 23-2381 (felradat, antagligen copy-paste). Det är Filip Östling, person42@example.com, som vill ha sin deklarationsavi.",
+  "forvantad": [
+   "850601-2387",
+   "8506 23-2381",
+   "Filip Östling",
+   "person42@example.com"
+  ]
+ },
+ {
+  "id": "edge2-18",
+  "kategori": "edge2",
+  "text": "Namnet låter som ett sammansatt ord men det är två: Kerstin Fält. Hon och maken Ove Fält delar nummer 031-390 06 60 och bor på Provdatavägen 9 i Visby.",
+  "forvantad": [
+   "Kerstin Fält",
+   "Ove Fält",
+   "031-390 06 60",
+   "Provdatavägen 9"
+  ]
+ },
+ {
+  "id": "edge2-19",
+  "kategori": "edge2",
+  "text": "Adressen i ordern står som Maskeratorget 2 vån 2 c/o Lindgrens, Malmö — det är alltså Karin Lindgren som mottar paketet åt sin svåger. Telefon vid problem: 0701740661.",
+  "forvantad": [
+   "Maskeratorget 2 vån 2",
+   "Karin Lindgren",
+   "0701740661"
+  ]
+ },
+ {
+  "id": "edge2-20",
+  "kategori": "edge2",
+  "text": "Blandat gränsfall: kunden 'Bo Gran' (inte granen gran) har pnr 900101-2385, hans dotter Hedda Gran 991201-2391, och båda står på kontraktet för Testkorpusvägen 27 lgh 2 i Vadstena. Bo skrev under med bläckpenna, skicka kopia till person43@example.com.",
+  "forvantad": [
+   "Bo Gran",
+   "900101-2385",
+   "Hedda Gran",
+   "991201-2391",
+   "Testkorpusvägen 27 lgh 2",
+   "person43@example.com"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-01",
+  "kategori": "hyra-fastighet",
+  "text": "Hej! Det droppar från elementet i köket igen, tredje gången nu. Jag bor på Påhittsgatan 12, lgh 1102 och är hemma efter 16. Hälsningar Lisa Andersson, 070 174 06 62.",
+  "forvantad": [
+   "Påhittsgatan 12",
+   "Lisa Andersson",
+   "070 174 06 62"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-02",
+  "kategori": "hyra-fastighet",
+  "text": "FELANMÄLAN. Ärende gäller tvättstugan på Provdatavägen 4B. Torktumlaren tar inte betalt men startar inte heller. Kontakta mig på person44@example.com eller 070-1740663. Mvh Karl-Gustav Berg, lgh 1201.",
+  "forvantad": [
+   "Provdatavägen 4B",
+   "person44@example.com",
+   "070-1740663",
+   "Karl-Gustav Berg"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-03",
+  "kategori": "hyra-fastighet",
+  "text": "till störningsjouren: grannen i 1103 ovanför oss spelar trummor kl 23 på en tisdag. har pratat me han men han bryr sig inte. vi bor maskeragatan 7 lgh 1102. ring mig 070-174 06 64 / maja",
+  "forvantad": [
+   "maskeragatan 7",
+   "070-174 06 64",
+   "maja"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-04",
+  "kategori": "hyra-fastighet",
+  "text": "Jag vill överlåta mitt kontrakt på Testkorpusgatan 22, lgh 0903 till min syster Sara Nyström (pnr 900101-2385) från och med 1 november. Jag heter själv Emma Nyström, 000101-9801, och ni når mig på person45@example.com.",
+  "forvantad": [
+   "Testkorpusgatan 22",
+   "Sara Nyström",
+   "900101-2385",
+   "Emma Nyström",
+   "000101-9801",
+   "person45@example.com"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-05",
+  "kategori": "hyra-fastighet",
+  "text": "Detta är en formell protest mot hyreshöjningen på 4,8 % för lägenheten på Påhittsgatan 3, lgh 1402. Höjningen saknar förhandlingsunderlag och överstiger vad Hyresgästföreningen meddelat. Undertecknad: Olof Sandell, personnummer 640823-3234, telefon 031-390 06 66.",
+  "forvantad": [
+   "Påhittsgatan 3",
+   "Olof Sandell",
+   "640823-3234",
+   "031-390 06 66"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-06",
+  "kategori": "hyra-fastighet",
+  "text": "Hej kontaktpersonen på växeln sa att ni heter Fastighetsservice och att jag ska prata med er kontaktperson Jenny Hollström direkt. Mitt vatten i badrummet blir aldrig varmt. Adress Provdatastigen 9, lgh 0601. Jag heter Nils Pettersson och mitt nummer är 070-1740667.",
+  "forvantad": [
+   "Jenny Hollström",
+   "Provdatastigen 9",
+   "Nils Pettersson",
+   "070-1740667"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-07",
+  "kategori": "hyra-fastighet",
+  "text": "ang dörrtelefonen: den har inte funkat sen i fredags, leverantören kom ju aldrig. bud går åt grannen istället. vi är två som bor här, jag Amina Yusuf och min man Idris Yusuf. Maskeragatan 15 lgh 0802. maila person46@example.com, jag kollar oftare än telefonen.",
+  "forvantad": [
+   "Amina Yusuf",
+   "Idris Yusuf",
+   "Maskeragatan 15",
+   "person46@example.com"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-08",
+  "kategori": "hyra-fastighet",
+  "text": "Hej, jag flyttar ut den 31 oktober och vill anmäla slutbesiktning för Testkorpusvägen 27, lgh 1304. Bankgiro för depositionen ska återbetalas till mig. Kontakt: Henrik Lindqvist, 781101-2397, tel 070-174 06 68, e-post person47@example.com.",
+  "forvantad": [
+   "Testkorpusvägen 27",
+   "Henrik Lindqvist",
+   "781101-2397",
+   "070-174 06 68",
+   "person47@example.com"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-09",
+  "kategori": "hyra-fastighet",
+  "text": "Klämt i ventilationen på Påhittsgatan 6 lgh 0503 låter som ett jetplan på nätterna. Har anmält det här två gånger sen mars utan återkoppling. Sover inte ordentligt. Jag heter Pia Fahlström och bor själv med min dotter. Vänligen återkom till 0701740669.",
+  "forvantad": [
+   "Påhittsgatan 6",
+   "Pia Fahlström",
+   "0701740669"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-10",
+  "kategori": "hyra-fastighet",
+  "text": "Till hyresvärden: jag har fått hemfallenhet för bostadsrätt och säljer min hyresrätt på Provdatavägen 2C, lgh 1004. Önskar godkännande av andrahandsuthyrning till min kollega Dawit Gebru, pnr 850601-2387, under 12 månader. Vänliga hälsningar Birgitta Åslund, 850623-2381, person48@example.com, 070 174 06 70.",
+  "forvantad": [
+   "Provdatavägen 2C",
+   "Dawit Gebru",
+   "850601-2387",
+   "Birgitta Åslund",
+   "850623-2381",
+   "person48@example.com",
+   "070 174 06 70"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-11",
+  "kategori": "hyra-fastighet",
+  "text": "Hej! Kan ni kolla varför det kommer mögel i sovrummet igen? Samma ställe som i fjol. Vi bor på Maskeragatan 19, lgh 0702. Ring före besöket, hunden är skygg. // Jonte Karlsson 070-1740671",
+  "forvantad": [
+   "Maskeragatan 19",
+   "Jonte Karlsson",
+   "070-1740671"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-12",
+  "kategori": "hyra-fastighet",
+  "text": "Störningsanmälan: lägenheten under oss, Testkorpusgatan 8 lgh 0901, har fester varje helg fram till 04. Vi har barn som ska upp tidigt. Tidigare larm ska finnas hos er. Vår kontaktperson hos er är väl Fredrik Ekeblad? Jag heter Susanna Myhr, min man är Peter Myhr, tel 070-174 06 72.",
+  "forvantad": [
+   "Testkorpusgatan 8",
+   "Fredrik Ekeblad",
+   "Susanna Myhr",
+   "Peter Myhr",
+   "070-174 06 72"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-13",
+  "kategori": "hyra-fastighet",
+  "text": "Hej, jag heter Leila Ahmadi och bor på Påhittsstigen 11, lgh 1501. Jag fick hem en avi om hyreshöjning som jag inte förstår. Kan någon ringa mig på 0701740673 och förklara på enkel svenska? Jag kan även nås på person49@example.com. Tack!",
+  "forvantad": [
+   "Leila Ahmadi",
+   "Påhittsstigen 11",
+   "0701740673",
+   "person49@example.com"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-14",
+  "kategori": "hyra-fastighet",
+  "text": "Felanmälan hissen i trapphus B, Provdatavägen 33. Den stannar mellan planen och lamporna blinkar. Många äldre i huset. Min mamma Greta Vallin, 900101-2385, bor i lgh 0204 och vågar inte åka den. Jag anmäler åt henne: Tomas Vallin, 070 174 06 74.",
+  "forvantad": [
+   "Provdatavägen 33",
+   "Greta Vallin",
+   "900101-2385",
+   "Tomas Vallin",
+   "070 174 06 74"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-15",
+  "kategori": "hyra-fastighet",
+  "text": "överlåtelse!! jag ska plugga i norge ett år och tänkte att lillasyster tar över kontraktet på maskeravägen 5 lgh 0304. hon heter tilda fors och har fast jobb. jag är elin fors, 991201-2391, och min mail person50@example.com funkar även om jag är borta. hör av er!!!",
+  "forvantad": [
+   "maskeravägen 5",
+   "tilda fors",
+   "elin fors",
+   "991201-2391",
+   "person50@example.com"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-16",
+  "kategori": "hyra-fastighet",
+  "text": "Hej. Infällda spisen i vår lägenhet på Testkorpusvägen 17, lgh 0605, värmer bara på en platta. Vi har vant oss men barnen behöver varm mat. Beställ gärna elektriker via er jour. Vänligen Anders Hagman och Cecilia Hagman, telefon 031-390 06 75.",
+  "forvantad": [
+   "Testkorpusvägen 17",
+   "Anders Hagman",
+   "Cecilia Hagman",
+   "031-390 06 75"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-17",
+  "kategori": "hyra-fastighet",
+  "text": "Ärende: hyresavierna ska fortsättningsvis skickas till min nya adress Påhittsgatan 14, lgh 1105. Gamla adressen ska tas bort ur era register. Jag heter Margareta Sköld, pnr 991201-2391. Telefon 0701740677 om något är oklart.",
+  "forvantad": [
+   "Påhittsgatan 14",
+   "Margareta Sköld",
+   "991201-2391",
+   "0701740677"
+  ]
+ },
+ {
+  "id": "hyra-fastighet-18",
+  "kategori": "hyra-fastighet",
+  "text": "Hej, det är Måns i 1204 på Provdatagränd 9. Någon har klottrat i källargången igen och cykelrummet är uppbrutet. Larmet gick inte. Jag ringde störningsjouren igår men ingen kom. Er kontaktperson Veronica Stjerna lovade åtgärd i maj. Ring tillbaka: 070 174 06 78.",
+  "forvantad": [
+   "Måns",
+   "Provdatagränd 9",
+   "Veronica Stjerna",
+   "070 174 06 78"
+  ]
+ },
+ {
+  "id": "intern-chatt-01",
+  "kategori": "intern-chatt",
+  "text": "standup: jag är klar med login-fixen, kvar är deploy till staging. emma h tar över testerna för jag ska på tandläkaren kl 14. hör av mig på 070-1740679 om nåt brinner :)",
+  "forvantad": [
+   "emma h",
+   "070-1740679"
+  ]
+ },
+ {
+  "id": "intern-chatt-02",
+  "kategori": "intern-chatt",
+  "text": "Hej alla! Vi har en ny kollega som börjar måndag: Lisa Bergström. Hon nås på person51@example.com tills hennes konto är klart, interna kontot blir nog klart i veckan. Ge henne en varm välkomstkram!",
+  "forvantad": [
+   "Lisa Bergström",
+   "person51@example.com"
+  ]
+ },
+ {
+  "id": "intern-chatt-03",
+  "kategori": "intern-chatt",
+  "text": "hr-update: ang sjukskrivningen för kalle så är han sjukskriven 100% t o m 15/9, läkarintyget kom in igår. han har pnr 000101-9801 i systemet om löneteamet frågar. ingen info vidare utanför denna kanal tack.",
+  "forvantad": [
+   "kalle",
+   "000101-9801"
+  ]
+ },
+ {
+  "id": "intern-chatt-04",
+  "kategori": "intern-chatt",
+  "text": "någon som har telefonnumret till kontaktpersonen hos kund i Malmö? det ska vara en Sara Lindqvist, tror hennes nr är 070-174 06 80. behöver boka om mötet på tors",
+  "forvantad": [
+   "Sara Lindqvist",
+   "070-174 06 80"
+  ]
+ },
+ {
+  "id": "intern-chatt-05",
+  "kategori": "intern-chatt",
+  "text": "onboardingchecklista för den nya praktikanten: skapa ad-konto, beställ nyckelkort, maila välkomstmailet till person52@example.com så länge. han bor på Maskeragatan 45 om vi ska skicka datorn hem.",
+  "forvantad": [
+   "person52@example.com",
+   "Maskeragatan 45"
+  ]
+ },
+ {
+  "id": "intern-chatt-06",
+  "kategori": "intern-chatt",
+  "text": "planering kundmöte nästa vecka: jag, johan och Petter Sandberg åker dit tis 9.30. kundens beställare heter Ingrid Holmberg, mail person53@example.com. ta med offertunderlaget!",
+  "forvantad": [
+   "johan",
+   "Petter Sandberg",
+   "Ingrid Holmberg",
+   "person53@example.com"
+  ]
+ },
+ {
+  "id": "intern-chatt-07",
+  "kategori": "intern-chatt",
+  "text": "fy vad segt, har legat i möte med ekonomichefen hela fm. Greta Wennberg ska ringa mig på 0701740681 kl 15, kan nån ta min telefon om jag inte hinner tillbaka?",
+  "forvantad": [
+   "Greta Wennberg",
+   "0701740681"
+  ]
+ },
+ {
+  "id": "intern-chatt-08",
+  "kategori": "intern-chatt",
+  "text": "notera att ändrad löneinfo för anställd 640823-3234 ska in i systemet före fredag. det gäller alltså Birgitta Olsson som gått upp i tjänstegrad.",
+  "forvantad": [
+   "640823-3234",
+   "Birgitta Olsson"
+  ]
+ },
+ {
+  "id": "intern-chatt-09",
+  "kategori": "intern-chatt",
+  "text": "födelsedagsfika på fredag!! 🎂 sara fyller år, vi samlas i köket 14.30. swisha lotta svensson 30 kr om du är med på presentkortet, hennes nr är 070 174 06 82",
+  "forvantad": [
+   "sara",
+   "lotta svensson",
+   "070 174 06 82"
+  ]
+ },
+ {
+  "id": "intern-chatt-10",
+  "kategori": "intern-chatt",
+  "text": "kan någon kolla varför Åke har två konton i kundregistret? ena står det Åke Petersson, person54@example.com, andra bara ake p med gamla numret 08-465 00 483. slå ihop dem pls",
+  "forvantad": [
+   "Åke",
+   "Åke Petersson",
+   "person54@example.com",
+   "ake p",
+   "08-465 00 483"
+  ]
+ },
+ {
+  "id": "intern-chatt-11",
+  "kategori": "intern-chatt",
+  "text": "standup imorgon flyttas till 9.45 för jag ska lämna barn på förskolan. annika b leder den om jag är sen, pinga henne på teams. /Karl",
+  "forvantad": [
+   "annika b",
+   "Karl"
+  ]
+ },
+ {
+  "id": "intern-chatt-12",
+  "kategori": "intern-chatt",
+  "text": "HR här igen. Nu är det klart: rehabiliteringsmötet med den sjukskrivna kollegan bokat, kontakta mig om ni behöver detaljer. Hen heter Jesper Falk, pnr 781101-2397, och ska inte kontaktas direkt av teamet under sjukskrivningen.",
+  "forvantad": [
+   "Jesper Falk",
+   "781101-2397"
+  ]
+ },
+ {
+  "id": "intern-chatt-13",
+  "kategori": "intern-chatt",
+  "text": "kund vill ha demo på plats hos dem, adressen är Testkorpusvägen 7 i Eskilstuna. ansvarig där heter fatima, hennes mail person55@example.com. vem kan åka?",
+  "forvantad": [
+   "Testkorpusvägen 7",
+   "fatima",
+   "person55@example.com"
+  ]
+ },
+ {
+  "id": "intern-chatt-14",
+  "kategori": "intern-chatt",
+  "text": "påminnelse: nya konsulten Filip Norén börjar idag, påhittsgatan 34. hans privata mail tills ad-kontot är klart: person56@example.com, tel 070-174 06 84",
+  "forvantad": [
+   "Filip Norén",
+   "person56@example.com",
+   "070-174 06 84"
+  ]
+ },
+ {
+  "id": "intern-chatt-15",
+  "kategori": "intern-chatt",
+  "text": "vet nån om ulla jobbar idag? hennes telefon verkar avstängd, provade 0701740685 men går bara till röstsvar. hon skulle ju skicka kvartalsrapporten",
+  "forvantad": [
+   "ulla",
+   "0701740685"
+  ]
+ },
+ {
+  "id": "intern-chatt-16",
+  "kategori": "intern-chatt",
+  "text": "lite känsligt men: vi måste prata om situationen med en medarbetare, gäller hälsan. hennes pnr i lönesystemet är 850601-2387. håll detta inom ledningsgruppen, boka möte med mig och hr-chefen.",
+  "forvantad": [
+   "850601-2387"
+  ]
+ },
+ {
+  "id": "intern-chatt-17",
+  "kategori": "intern-chatt",
+  "text": "kundmötet gick bra 👍 de vill ha uppföljning med vår säljare Oskar Melin, person57@example.com, och deras nya it-chef Gunnar Ahl ska vara med nästa gång. han bor visst granne med mig på Provdatavägen 3 lol",
+  "forvantad": [
+   "Oskar Melin",
+   "person57@example.com",
+   "Gunnar Ahl",
+   "Provdatavägen 3"
+  ]
+ },
+ {
+  "id": "intern-chatt-18",
+  "kategori": "intern-chatt",
+  "text": "glömde säga det på standup men taxi bokat till mässan tors 7.30, upphämtning hos mig, Maskeragatan 22. mejla kvittona till mig sen på person58@example.com så bokför jag. /henke",
+  "forvantad": [
+   "Maskeragatan 22",
+   "person58@example.com",
+   "henke"
+  ]
+ },
+ {
+  "id": "juridik-01",
+  "kategori": "juridik",
+  "text": "POLISANMÄLAN - Stöld av cykel. Målsägande: Karin Lundqvist, 850623-2381, boende på Testkorpusgatan 14 i Falun. Cykeln, en Crescent damcykel, stals någon gång mellan tisdag kväll och onsdag morgon utanför porten. Vittne Bengt Åkesson, tel 070 174 06 86, såg en man vid förrådet runt 23-tiden.",
+  "forvantad": [
+   "Karin Lundqvist",
+   "850623-2381",
+   "Testkorpusgatan 14",
+   "Bengt Åkesson",
+   "070 174 06 86"
+  ]
+ },
+ {
+  "id": "juridik-02",
+  "kategori": "juridik",
+  "text": "anmäler bedrägeri. nån har tagit kredit i mitt namn hos klarna för 4300 spänn. jag heter mikeal sjöström och mitt pnr är 900101-2385. bor på påhittsvägen 7 i hudiksvall, nå mig på 0701740687 eller person59@example.com. har inte beställt nåt alls",
+  "forvantad": [
+   "mikeal sjöström",
+   "900101-2385",
+   "påhittsvägen 7",
+   "0701740687",
+   "person59@example.com"
+  ]
+ },
+ {
+  "id": "juridik-03",
+  "kategori": "juridik",
+  "text": "UPPDRAGSAVTAL mellan Advokatfirman Lindén & Partners (uppdragstagaren) och Ann-Marie Blom, personnummer 781101-2397, Provdatavägen 22, Örebro (uppdragsgivaren). Uppdraget avser tvist angående köp av bostadsrätt. Arvode enligt rådande timtaxa, förskott om 15 000 kr erläggs vid undertecknande.",
+  "forvantad": [
+   "Ann-Marie Blom",
+   "781101-2397",
+   "Provdatavägen 22"
+  ]
+ },
+ {
+  "id": "juridik-04",
+  "kategori": "juridik",
+  "text": "Bouppteckningsutkast efter avlidne Sven-Erik Dahl, 000101-9801, som avled i våras. Dödsbodelägare är makan Gunvor Dahl, 640823-3234, samt barnen Petra Dahl-Möller och Kristoffer Dahl. Kontaktuppgifter till Gunvor: Maskeravägen 3, Nässjö, 070-174 06 88. Fastigheten TEST-Björken-4 och ett bankkonto ingår i dödsboet.",
+  "forvantad": [
+   "Sven-Erik Dahl",
+   "000101-9801",
+   "Gunvor Dahl",
+   "640823-3234",
+   "Petra Dahl-Möller",
+   "Kristoffer Dahl",
+   "Maskeravägen 3",
+   "070-174 06 88"
+  ]
+ },
+ {
+  "id": "juridik-05",
+  "kategori": "juridik",
+  "text": "Anmälan om namnändring: Undertecknad Elin Sofie Karlsson, född 810206, personnummer 781101-2397, anmäler härmed att jag önskar byta efternamn till Karlsson-Westman. Skälet är giftermål med Tobias Westman, 850601-2387. Vi bor på Testkorpusgatan 9B i Växjö och kan nås på person60@example.com.",
+  "forvantad": [
+   "Elin Sofie Karlsson",
+   "781101-2397",
+   "Tobias Westman",
+   "850601-2387",
+   "Testkorpusgatan 9B",
+   "person60@example.com"
+  ]
+ },
+ {
+  "id": "juridik-06",
+  "kategori": "juridik",
+  "text": "Hej! Vill anmäla stöld av min plånbok på tåget mellan Gävle och Uppsala i lördags. Den innehöll körkort, kort och ungefär 600 kronor kontant. Mina uppgifter: Lotta Hedén, 850623-2381, Påhittsgatan 45, 0701740689. Banken Nordea har redan spärrat korten men polisen ville ha en anmälan för försäkringen.",
+  "forvantad": [
+   "Lotta Hedén",
+   "850623-2381",
+   "Påhittsgatan 45",
+   "0701740689"
+  ]
+ },
+ {
+  "id": "juridik-07",
+  "kategori": "juridik",
+  "text": "ÄRENDE: Bedrägeri via falsk faktura. Anmälare Göran Sandell, 900101-2385, Provdatavägen 18, Kiruna, uppger att han betalat en faktura på 12 400 kr till ett konto han trodde tillhörde Byggbolaget Norr AB. Vittne till händelsen är arbetskamraten Jörgen Falk, tel 070 174 06 90. Sandells ombud är advokat Catarina Rosén på Advokatbyrån Aurora.",
+  "forvantad": [
+   "Göran Sandell",
+   "900101-2385",
+   "Provdatavägen 18",
+   "Jörgen Falk",
+   "070 174 06 90",
+   "Catarina Rosén"
+  ]
+ },
+ {
+  "id": "juridik-08",
+  "kategori": "juridik",
+  "text": "uppdragsavtal digital marknadsföring. kund: stina eriksson, pnr 991201-2391, maskeravägen 2, umeå. mail person61@example.com, tel 070-1740691. uppdraget gäller seo och annonsering för hennes webshop. arvode 950 kr/timme ex moms. undertecknat av stina eriksson och byrån Nords Digital.",
+  "forvantad": [
+   "stina eriksson",
+   "991201-2391",
+   "maskeravägen 2",
+   "person61@example.com",
+   "070-1740691"
+  ]
+ },
+ {
+  "id": "juridik-09",
+  "kategori": "juridik",
+  "text": "Utkast till bouppteckning efter Maj-Britt Lindström, 850601-2387, som avled 2025-11-30. Efterlevande make: Åke Lindström, pnr okänt för tillfället, kompletteras. Dödsboets adress: Testkorpusgatan 31, Lycksele. Dödsbodelägare: dottern Siv Karlsson-Lindström, 000101-9801, och sonen Urban Lindström. Kontaktperson: Siv, person62@example.com, 0701740693.",
+  "forvantad": [
+   "Maj-Britt Lindström",
+   "850601-2387",
+   "Åke Lindström",
+   "Testkorpusgatan 31",
+   "Siv Karlsson-Lindström",
+   "000101-9801",
+   "Urban Lindström",
+   "person62@example.com",
+   "0701740693"
+  ]
+ },
+ {
+  "id": "juridik-10",
+  "kategori": "juridik",
+  "text": "namnändringsanmälan!! jag Byter mitt förnamn från Kjell-Olov till Kim. kjell-olov bäckman, 640823-3234, påhittsgatan 12 lgh 1102, piteå. alla kallar mig kim sen högstadiet och jag pallar inte längre fylla i kjell-olov på allt. nås på 070 174 06 94 om skatteverket undrar nåt",
+  "forvantad": [
+   "kjell-olov bäckman",
+   "640823-3234",
+   "påhittsgatan 12",
+   "070 174 06 94"
+  ]
+ },
+ {
+  "id": "juridik-11",
+  "kategori": "juridik",
+  "text": "POLISANMÄLAN — Inbrott i villa. Målsägande: Håkan Norberg, 781101-2397, Provdatagatan 6, Sundsvall. Inbrottet skedde natt mot söndag via krossat fönster i källaren. Tillgrivit: verktyg till ett uppskattat värde av 20 000 kr. Vittnet Sonja Meijer, granne på Ämaskeragatan 8, hörde ljud klockan 03.15 och kan nås på 070-1740695.",
+  "forvantad": [
+   "Håkan Norberg",
+   "781101-2397",
+   "Provdatagatan 6",
+   "Sonja Meijer",
+   "070-1740695"
+  ]
+ },
+ {
+  "id": "juridik-12",
+  "kategori": "juridik",
+  "text": "Uppdragsavtal avseende fastighetsförsäljning. Uppdragsgivare: Britt-Inger Holmqvist, 850601-2387, Testkorpusvägen 11, Skellefteå. Uppdragstagare: Fastighetsbyrån Länstinget. Britt-Inger företräds vid behov av sonen Magnus Holmqvist med fullmakt, tel 070-174 06 96, person63@example.com. Provision 3,5 % på försäljningspriset.",
+  "forvantad": [
+   "Britt-Inger Holmqvist",
+   "850601-2387",
+   "Testkorpusvägen 11",
+   "Magnus Holmqvist",
+   "070-174 06 96",
+   "person63@example.com"
+  ]
+ },
+ {
+  "id": "juridik-13",
+  "kategori": "juridik",
+  "text": "Anmälan om bedrägeri — blocketsvindel. Jag, Veronica Åhlund (850623-2381), betalade 8 900 kr via swish för en biljett som aldrig kom. Min adress är Påhittsgatan 25 i Borlänge och mitt nummer 0701740697. Säljaren använde namnet Jens Vikström och swishnumret 070 174 06 98, om det hjälper.",
+  "forvantad": [
+   "Veronica Åhlund",
+   "850623-2381",
+   "Påhittsgatan 25",
+   "0701740697",
+   "Jens Vikström",
+   "070 174 06 98"
+  ]
+ },
+ {
+  "id": "juridik-14",
+  "kategori": "juridik",
+  "text": "BOUPPTECKNING (utkast 2) efter Ernst Holger Sandin, 900101-2385, avliden i hemmet på Provdatagatan 3, Säter. Enda dödsbodelägare är systersonen Oskar Sundin, 991201-2391, som är kontaktperson: person64@example.com, 070-1740699. Tillgångar: bankmedel hos SEB, en bil av märket Volvo samt lösöre. Skulder: obetald elräkning.",
+  "forvantad": [
+   "Ernst Holger Sandin",
+   "900101-2385",
+   "Provdatagatan 3",
+   "Oskar Sundin",
+   "991201-2391",
+   "person64@example.com",
+   "070-1740699"
+  ]
+ },
+ {
+  "id": "juridik-15",
+  "kategori": "juridik",
+  "text": "Hej skatteverket, här kommer min anmälan om namnbyte. jag heter idag fatima isaksson, 991201-2391, och vill byta efternamn till min mammas gamla flicknamn brandt. adress: maskeragatan 17, borås. mejl person65@example.com. hoppas det är ok att skicka så här, blanketten krånglade",
+  "forvantad": [
+   "fatima isaksson",
+   "991201-2391",
+   "maskeragatan 17",
+   "person65@example.com"
+  ]
+ },
+ {
+  "id": "juridik-16",
+  "kategori": "juridik",
+  "text": "Anmälan — dataintrång och identitetskapning. Anmälare: Roland Bertilsson, 000101-9801, Testkorpusvägen 44, Arvika, telefon 0701740606. Okänd gärningsman har använt Bertilssons uppgifter för att teckna tre mobilabonnemang hos Tele2 och Telia. Vittne: kollegan Miriam Ek, 070 174 06 07, som var närvarande när inkassokravet kom.",
+  "forvantad": [
+   "Roland Bertilsson",
+   "000101-9801",
+   "Testkorpusvägen 44",
+   "0701740606",
+   "Miriam Ek",
+   "070 174 06 07"
+  ]
+ },
+ {
+  "id": "juridik-17",
+  "kategori": "juridik",
+  "text": "uppdragsbekräftelse: advokatbyrån Kvist & Söder åtar sig att företräda naim hadzic, 640823-3234, i ärende om avskedande. kontakt: person66@example.com / 070-1740608. adress tillsvidare c/o farbrorn på påhittsvägen 9, visby. motpart är arbetsgivaren Gotlands Städservice AB.",
+  "forvantad": [
+   "naim hadzic",
+   "640823-3234",
+   "person66@example.com",
+   "070-1740608",
+   "påhittsvägen 9"
+  ]
+ },
+ {
+  "id": "juridik-18",
+  "kategori": "juridik",
+  "text": "Bouppteckningsutkast: Efter Ruth Viola Melander, 781101-2397, avliden i Boden. Dödsbodelägare: barnen Leif Melander, 850601-2387, och Anita Melander-Roos, 850623-2381. Bodelägarnas adresser: Leif, Provdatavägen 5, Boden; Anita, Maskeragatan 2, Luleå, person67@example.com, 070-174 06 09.",
+  "forvantad": [
+   "Ruth Viola Melander",
+   "781101-2397",
+   "Leif Melander",
+   "850601-2387",
+   "Anita Melander-Roos",
+   "850623-2381",
+   "Provdatavägen 5",
+   "Maskeragatan 2",
+   "person67@example.com",
+   "070-174 06 09"
+  ]
+ },
+ {
+  "id": "juridik-19",
+  "kategori": "juridik",
+  "text": "Stöldanmälan, kortversion: Sonens moped (Peugeot, röd) stals från cykelstället vid skolan i förrgår. Han heter Oskar Lindholm, pnr 900101-2385. Jag som anmäler är hans mamma Malin Lindholm, 0701740610, Testkorpusvägen 28, Täby. Vi vill att försäkringsärendet går vidare.",
+  "forvantad": [
+   "Oskar Lindholm",
+   "900101-2385",
+   "Malin Lindholm",
+   "0701740610",
+   "Testkorpusvägen 28"
+  ]
+ },
+ {
+  "id": "kansliga-01",
+  "kategori": "kansliga",
+  "text": "Hej Lawen Begravningsbyrå! Det är Maj-Lis Holmberg, dotter till avlidne Sigvard Holmberg, 991201-2391. Vi vill boka in begravningen och undrar om ni kan ringa mig på 070 174 06 11 så vi kan gå igenom detaljerna. Pappa bodde på Påhittsvägen 7 i Enköping.",
+  "forvantad": [
+   "Maj-Lis Holmberg",
+   "Sigvard Holmberg",
+   "991201-2391",
+   "070 174 06 11",
+   "Påhittsvägen 7"
+  ]
+ },
+ {
+  "id": "kansliga-02",
+  "kategori": "kansliga",
+  "text": "ANTECKNING socialtjänsten. Klient: Karin Emanuelsson, 900101-2385. Har sökt ekonomiskt bistånd för hyra och el. Bor ensam med två barn på Provdatagatan 14, Falun. Uppsagd från arbetet i maj. Följs upp av handläggare om två veckor.",
+  "forvantad": [
+   "Karin Emanuelsson",
+   "900101-2385",
+   "Provdatagatan 14"
+  ]
+ },
+ {
+  "id": "kansliga-03",
+  "kategori": "kansliga",
+  "text": "hej jag vet inte vart jag ska vända mig. min man slog mig igår igen och jag har barnen hos min syster nu. jag heter sofia lindqvist och bor på maskeravägen 3 i nynäshamn men jag vågar inte vara hemma. kan ni ringa 0701740613? snälla ring inte för sent på kvällen",
+  "forvantad": [
+   "sofia lindqvist",
+   "maskeravägen 3",
+   "0701740613"
+  ]
+ },
+ {
+  "id": "kansliga-04",
+  "kategori": "kansliga",
+  "text": "Till begravningsbyrån i Västerås: Min farbror Ernst Glad, 640823-3234, avled i fredags. Jag, Nina Glad, är kontaktperson. Jag nås på person68@example.com eller 070-174 06 13. Undrar om kostnad för kremation och om ni hanterar dödsboet åt oss.",
+  "forvantad": [
+   "Ernst Glad",
+   "640823-3234",
+   "Nina Glad",
+   "person68@example.com",
+   "070-174 06 13"
+  ]
+ },
+ {
+  "id": "kansliga-05",
+  "kategori": "kansliga",
+  "text": "Beslutsförslag LVU: Vårdnadshavare Lisa Granberg, 781101-2397, har vid upprepade tillfällen lämnat barnet Alvin Granberg (2015) utan uppsikt. Grannar på Testkorpusvägen 22 i Hallsberg har larmat polis tre gånger. Rekommenderar omedelbart omhändertagande.",
+  "forvantad": [
+   "Lisa Granberg",
+   "781101-2397",
+   "Alvin Granberg",
+   "Testkorpusvägen 22"
+  ]
+ },
+ {
+  "id": "kansliga-06",
+  "kategori": "kansliga",
+  "text": "Från stödlinjen: Tack för ditt samtal i natt, Ahmed. Som vi pratade om skickar jag numren till skyddat boende till din mail person69@example.com. Du kan också nå mig direkt på 0701740614 om det brådskar. Mvh volontär Stina på jourlinjen.",
+  "forvantad": [
+   "Ahmed",
+   "person69@example.com",
+   "0701740614",
+   "Stina"
+  ]
+ },
+ {
+  "id": "kansliga-07",
+  "kategori": "kansliga",
+  "text": "klient rolf edlund 850601-2387 ringer åter om bidraget. säger att han inte fått utbetalningen trots beslut. bor på påhittsgatan 9 hudiksvall. han var mycket upprörd och nämnde att hans dotter camilla edlund ska hjälpa honom med papperen. återkoppla snarast.",
+  "forvantad": [
+   "rolf edlund",
+   "850601-2387",
+   "påhittsgatan 9",
+   "camilla edlund"
+  ]
+ },
+ {
+  "id": "kansliga-08",
+  "kategori": "kansliga",
+  "text": "Hej! Vi ska ordna begravning för mamma, Birgit Åhs, 850623-2381. Hon önskade vita rosor och psalm 249. Vi syskon är fyra stycken: jag (Eva Åhs-Melin, person70@example.com, 070 174 06 15), min bror Ola Åhs och systrarna. Ceremonin gärna i Örebro.",
+  "forvantad": [
+   "Birgit Åhs",
+   "850623-2381",
+   "Eva Åhs-Melin",
+   "person70@example.com",
+   "070 174 06 15",
+   "Ola Åhs"
+  ]
+ },
+ {
+  "id": "kansliga-09",
+  "kategori": "kansliga",
+  "text": "Anteckning efter hembesök hos Gunvor Stål, 900101-2385, Provdatagatan 18, Köping. Lägenheten saneringsbehövande, klienten nekar insatser. Missbruk misstänks. Grannen Birger på 031-390 06 16 har ringt in oro flera gånger. Ärendet skickas vidare till LVM-handläggare.",
+  "forvantad": [
+   "Gunvor Stål",
+   "900101-2385",
+   "Provdatagatan 18",
+   "Birger",
+   "031-390 06 16"
+  ]
+ },
+ {
+  "id": "kansliga-10",
+  "kategori": "kansliga",
+  "text": "jag sitter i bilen utanför huset nu och vågar inte gå in. han är full igen. mitt namn är petra wallin och jag bor på maskeravägen 11 i kumla. min adress får absolut inte synas någonstans, han hittar mig annars. kan ni sms:a mig på 0701740617 istället för att ringa",
+  "forvantad": [
+   "petra wallin",
+   "maskeravägen 11",
+   "0701740617"
+  ]
+ },
+ {
+  "id": "kansliga-11",
+  "kategori": "kansliga",
+  "text": "Angående dödsboet efter Tore Ljung, 850601-2387: Begravningsbyrån meddelar att kistan levereras till kapellet på tisdag. Anhörig, systern Maud Ljung (0701740618), önskar att notan skickas till person71@example.com. Avlidne bodde senast på Testkorpusvägen 5, Arboga.",
+  "forvantad": [
+   "Tore Ljung",
+   "850601-2387",
+   "Maud Ljung",
+   "0701740618",
+   "person71@example.com",
+   "Testkorpusvägen 5"
+  ]
+ },
+ {
+  "id": "kansliga-12",
+  "kategori": "kansliga",
+  "text": "Ekonomiskt bistånd - avslag. Sökande: Yousef Al-Kader, 000101-9801, adress Påhittsgatan 27, Sala. Sökande saknar fullständiga kontoutdrag för april och maj trots två påminnelser. Ny ansökan möjlig när underlag inkommit. Sökande informerad per telefon 070 174 06 19.",
+  "forvantad": [
+   "Yousef Al-Kader",
+   "000101-9801",
+   "Påhittsgatan 27",
+   "070 174 06 19"
+  ]
+ },
+ {
+  "id": "kansliga-13",
+  "kategori": "kansliga",
+  "text": "Journalanteckning kvinnojouren: Klienten, som kallar sig \"Sara\", berättar att hon flytt från sin partner tillsammans med sonen Liam, 6 år. Hon vistas just nu på skyddad adress i länet och vill inte uppge gatuadress. Kontakt sker endast via hennes nya nummer 070-1740620. Följdsamtal bokat nästa vecka.",
+  "forvantad": [
+   "Sara",
+   "Liam",
+   "070-1740620"
+  ]
+ },
+ {
+  "id": "kansliga-14",
+  "kategori": "kansliga",
+  "text": "Till er på Rosenlunds begravningsbyrå. Min mormor Hjördis Wennerberg har somnat in, hennes personnummer är 640823-3234... förlåt det ska vara farmor. Jag heter Viktor Wennerberg och står som kontakt, telefon 070-174 06 21. Kan ni hjälpa oss med urnsättning i Heby?",
+  "forvantad": [
+   "Hjördis Wennerberg",
+   "640823-3234",
+   "Viktor Wennerberg",
+   "070-174 06 21"
+  ]
+ },
+ {
+  "id": "kansliga-15",
+  "kategori": "kansliga",
+  "text": "uppföljning lvu-ärende. placerad ungdom: ellen söderström, född 781101-2397. placerad i familjehem i Lindesberg sedan mars. biologisk mor veronica söderström ringde enheten gråtande och krävde umgänge. mor nås på 0701740622. sammanträde med nämnden planerat.",
+  "forvantad": [
+   "ellen söderström",
+   "781101-2397",
+   "veronica söderström",
+   "0701740622"
+  ]
+ },
+ {
+  "id": "kansliga-16",
+  "kategori": "kansliga",
+  "text": "Jag skriver åt min vän som inte vågar själv. Hon heter Annika Bjurström, 850601-2387, och håller sig gömd hos mig sedan måndagen. Hennes ex har stakat henne i månader. Min adress där hon bor nu är Provdatagatan 16 i Skinnskatteberg, men den får inte läcka ut! Nå henne via mig: person72@example.com eller 070 174 06 23.",
+  "forvantad": [
+   "Annika Bjurström",
+   "850601-2387",
+   "Provdatagatan 16",
+   "person72@example.com",
+   "070 174 06 23"
+  ]
+ },
+ {
+  "id": "kansliga-17",
+  "kategori": "kansliga",
+  "text": "Ärende ekonomiskt bistånd, månadsansökan. Klient: Bertil Nordqvist, 850623-2381. Uppger boendekostnad för hyresrätt på Maskeragatan 2, Surahammar. Klientens bror, Stefan Nordqvist, står som borgensman för depositionen och kan nås på 031-390 06 24. Beviljas grundbelopp enligt norm.",
+  "forvantad": [
+   "Bertil Nordqvist",
+   "850623-2381",
+   "Maskeragatan 2",
+   "Stefan Nordqvist",
+   "031-390 06 24"
+  ]
+ },
+ {
+  "id": "kansliga-18",
+  "kategori": "kansliga",
+  "text": "Ang begravning av Karin Asp, 900101-2385. Vi i familjen vill ha en enkel borgerlig ceremoni. Dottern Mikaela Asp ordnar med musiken, hennes mail är person73@example.com. Betalning sköter sonen Jonny Asp, 070-174 06 25. Avlidnas adress var Testkorpusgatan 45 i Skinnskatteberg.",
+  "forvantad": [
+   "Karin Asp",
+   "900101-2385",
+   "Mikaela Asp",
+   "person73@example.com",
+   "Jonny Asp",
+   "070-174 06 25",
+   "Testkorpusgatan 45"
+  ]
+ },
+ {
+  "id": "myndighet-01",
+  "kategori": "myndighet",
+  "text": "Hej, jag skickar härmed läkarintyget som ni bad om i ärende FK-2024/11833. Mitt personnummer är 991201-2391 och jag heter Elsa Lindqvist. Ni når mig enklast på 0701740626 efter klockan tre.",
+  "forvantad": [
+   "991201-2391",
+   "Elsa Lindqvist",
+   "0701740626"
+  ]
+ },
+ {
+  "id": "myndighet-02",
+  "kategori": "myndighet",
+  "text": "Angående er komplettering av den 12 april: jag har bott på Påhittsgatan 18 i Örebro sedan mars, och min arbetsgivare är fortfarande samma. Personnummer 900101-2385. Vänligen bekräfta att ni tagit emot detta.",
+  "forvantad": [
+   "Påhittsgatan 18",
+   "900101-2385"
+  ]
+ },
+ {
+  "id": "myndighet-03",
+  "kategori": "myndighet",
+  "text": "Till handläggare Gunnar Eklund på Försäkringskassan. Jag, Maja Söderström, pnr 000101-9801, överklagar beslutet om avslag på sjukpenning. Min sjuksköterska heter Birgitta Holm och kan intyga att jag inte klarar mer än halvtid. Jag bor på Provdatagatan 5B och min mail är person74@example.com.",
+  "forvantad": [
+   "Gunnar Eklund",
+   "Maja Söderström",
+   "000101-9801",
+   "Birgitta Holm",
+   "Provdatagatan 5B",
+   "person74@example.com"
+  ]
+ },
+ {
+  "id": "myndighet-04",
+  "kategori": "myndighet",
+  "text": "hej a-kassan! jag heter tim pettersson och har precis blivit arbetslös, vill anmäla mig. mitt pnr är 640823-3234, bor på maskeragatan 12 lgh 1403. ring gärna 070-1740628, svarar nästan alltid",
+  "forvantad": [
+   "tim pettersson",
+   "640823-3234",
+   "maskeragatan 12",
+   "070-1740628"
+  ]
+ },
+ {
+  "id": "myndighet-05",
+  "kategori": "myndighet",
+  "text": "Skatteverket, jag undrar om min skatteåterbäring. Jag heter Roland Bergström, personnummer 781101-2397, och deklarerade i mars. Kontaktuppgifter: person75@example.com eller 070-174 06 29.",
+  "forvantad": [
+   "Roland Bergström",
+   "781101-2397",
+   "person75@example.com",
+   "070-174 06 29"
+  ]
+ },
+ {
+  "id": "myndighet-06",
+  "kategori": "myndighet",
+  "text": "Ärende: utvisning till Algeriet. Jag, Fatima Nasser, född 1992-08-30 med personnummer 850601-2387, överklagar Migrationsverkets beslut. Min make Omar Nasser (pnr 850623-2381) är sjuk och kan inte lämna landet. Vi bor på Testkorpusvägen 4 och vår advokat heter Lisa Åkerman.",
+  "forvantad": [
+   "Fatima Nasser",
+   "850601-2387",
+   "Omar Nasser",
+   "850623-2381",
+   "Testkorpusvägen 4",
+   "Lisa Åkerman"
+  ]
+ },
+ {
+  "id": "myndighet-07",
+  "kategori": "myndighet",
+  "text": "Hej! Det är Kerstin från ärendet om föräldrapenningtillägg. Mitt pnr är 900101-2385. Jag undrar bara om kompletteringen jag mailade i tisdags kommit fram till rätt handläggare?",
+  "forvantad": [
+   "Kerstin",
+   "900101-2385"
+  ]
+ },
+ {
+  "id": "myndighet-08",
+  "kategori": "myndighet",
+  "text": "Angående er avstämning: min nya adress är Påhittsgatan 27, uppg C. Jag, Viktor Sandell, personnummer 991201-2391, bytte jobb i februari och det syns kanske inte hos er än. Nås på person76@example.com.",
+  "forvantad": [
+   "Påhittsgatan 27",
+   "Viktor Sandell",
+   "991201-2391",
+   "person76@example.com"
+  ]
+ },
+ {
+  "id": "myndighet-09",
+  "kategori": "myndighet",
+  "text": "till försäkringskassan. jag fattar inte er uträkning av min sjukpenning. jag är anneli nordin, 781101-2397, och har varit sjukskriven på heltid sen november. min läkare anders forsell skrev ju att jag inte kan jobba alls. ring mig 070 174 06 31.",
+  "forvantad": [
+   "anneli nordin",
+   "781101-2397",
+   "anders forsell",
+   "070 174 06 31"
+  ]
+ },
+ {
+  "id": "myndighet-10",
+  "kategori": "myndighet",
+  "text": "Migrationsverket, jag heter Danilo Petkovic och mitt personnummer är 000101-9801. Jag skickar härmed anställningsintyget ni begärde i ärendet. Min telefon 070-1740632 och adressen är Provdatagatan 9.",
+  "forvantad": [
+   "Danilo Petkovic",
+   "000101-9801",
+   "070-1740632",
+   "Provdatagatan 9"
+  ]
+ },
+ {
+  "id": "myndighet-11",
+  "kategori": "myndighet",
+  "text": "Skatteverket! Jag och min fru, Margareta Lind (640823-3234), har flyttat isär och jag undrar hur vi gör med folkbokföringen. Jag heter Per-Olof Lind och stannar kvar på Maskeravägen 3, min mail person77@example.com.",
+  "forvantad": [
+   "Margareta Lind",
+   "640823-3234",
+   "Per-Olof Lind",
+   "Maskeravägen 3",
+   "person77@example.com"
+  ]
+ },
+ {
+  "id": "myndighet-12",
+  "kategori": "myndighet",
+  "text": "Hej, det gäller min ansökan om bostadsbidrag. Jag heter Yara Abdi, pnr 781101-2397, och min handläggare Tomas Wik sa att en bilaga saknades. Här kommer hyreskontraktet. Adress: Testkorpusväg 14. Telefon: 070-174 06 33.",
+  "forvantad": [
+   "Yara Abdi",
+   "781101-2397",
+   "Tomas Wik",
+   "Testkorpusväg 14",
+   "070-174 06 33"
+  ]
+ },
+ {
+  "id": "myndighet-13",
+  "kategori": "myndighet",
+  "text": "hej hej, ulf granath här. mitt ärende om underhållsstöd, pnr 850601-2387. kan ni kolla varför utbetalningen uteblivit? jag bor på påhittsgatan 8 och mailar från person78@example.com om ni vill svara skriftligt istället",
+  "forvantad": [
+   "ulf granath",
+   "850601-2387",
+   "påhittsgatan 8",
+   "person78@example.com"
+  ]
+ },
+ {
+  "id": "myndighet-14",
+  "kategori": "myndighet",
+  "text": "Överklagan gällande beslut den 3 maj. Jag, Hanna Ekström, personnummer 850623-2381, bestrider Skatteverkets bedömning av min reseavdragsrätt. Min revisor Kristina Palm har sammanställt underlaget. Kontakt: person79@example.com, telefon 0701740634.",
+  "forvantad": [
+   "Hanna Ekström",
+   "850623-2381",
+   "Kristina Palm",
+   "person79@example.com",
+   "0701740634"
+  ]
+ },
+ {
+  "id": "myndighet-15",
+  "kategori": "myndighet",
+  "text": "A-kassan: jag ska på semester i tre veckor och kan inte vara till arbetsmarknadens förfogande då, måste jag anmäla det? Heter Stefan Börjesson, 900101-2385. Sms:a gärna 070 174 06 35.",
+  "forvantad": [
+   "Stefan Börjesson",
+   "900101-2385",
+   "070 174 06 35"
+  ]
+ },
+ {
+  "id": "myndighet-16",
+  "kategori": "myndighet",
+  "text": "Till Migrationsverket. Min son Ali Hassan (991201-2391) ska flytta hit enligt anhöriginvandringen. Jag heter Nadja Hassan och bor på Provdatagatan 21 lgh 2. Vår ombudsperson Sara Nilsson hjälper oss med blankett 260011.",
+  "forvantad": [
+   "Ali Hassan",
+   "991201-2391",
+   "Nadja Hassan",
+   "Provdatagatan 21",
+   "Sara Nilsson"
+  ]
+ },
+ {
+  "id": "myndighet-17",
+  "kategori": "myndighet",
+  "text": "komplettering till vab-ärendet. jag är sara-maria johansson, pnr 850623-2381. barnets läkare heter rickard lundell på vårdcentralen och intyget är bifogat. min mail: person80@example.com",
+  "forvantad": [
+   "sara-maria johansson",
+   "850623-2381",
+   "rickard lundell",
+   "person80@example.com"
+  ]
+ },
+ {
+  "id": "myndighet-18",
+  "kategori": "myndighet",
+  "text": "Hej, jag heter Magnus Wallin och har personnummer 000101-9801. Jag ansökte om sjukersättning i januari men har inte hört något. Adressen är Maskeravägen 6 och mitt telefonnummer är 070-174 06 37. Min dotter Elin Wallin kan också svara åt mig om jag inte är hemma.",
+  "forvantad": [
+   "Magnus Wallin",
+   "000101-9801",
+   "Maskeravägen 6",
+   "070-174 06 37",
+   "Elin Wallin"
+  ]
+ },
+ {
+  "id": "myndighet-19",
+  "kategori": "myndighet",
+  "text": "Skatteverket ang bankkonto för skatteåterbäring: jag bytte bank i maj och vill att utbetalningen går till mitt nya konto. Jag heter Desirée Fält, personnummer 640823-3234, adress Testkorpusbacken 2, och nås på person81@example.com eller 0701740638.",
+  "forvantad": [
+   "Desirée Fält",
+   "640823-3234",
+   "Testkorpusbacken 2",
+   "person81@example.com",
+   "0701740638"
+  ]
+ },
+ {
+  "id": "myndighet-20",
+  "kategori": "myndighet",
+  "text": "ärende ang asyl. jag mohammad rahimi pratar lite dålig svenska förlåt. mitt personnummer är 781101-2397 och jag bor på påhittsgatan 15. tolk på dari behövs vid samtalet, boka gärna till farhad karimi som hjälpt mig förut.",
+  "forvantad": [
+   "mohammad rahimi",
+   "781101-2397",
+   "påhittsgatan 15",
+   "farhad karimi"
+  ]
+ },
+ {
+  "id": "skola-01",
+  "kategori": "skola",
+  "text": "Hej! Albin Lindqvist i 4B är sjuk idag, feber sen igår kväll. Han är hemma med mig. Hälsningar mamma Sara Lindqvist, 070 174 06 39",
+  "forvantad": [
+   "Albin Lindqvist",
+   "Sara Lindqvist",
+   "070 174 06 39"
+  ]
+ },
+ {
+  "id": "skola-02",
+  "kategori": "skola",
+  "text": "Frånvaroanmälan för min dotter Elsa Bergström (pnr 850601-2387). Hon har vabbat hela veckan och vi har tid hos läkaren på fredag. Hör av er om ni behöver intyg. /Maria Bergström",
+  "forvantad": [
+   "Elsa Bergström",
+   "850601-2387",
+   "Maria Bergström"
+  ]
+ },
+ {
+  "id": "skola-03",
+  "kategori": "skola",
+  "text": "Hej fröken! Tyvärr måste vi hämta Wille tidigt imorgon, tandläkarkl 14. Vi bor ju på Provdatagatan 7 så det är nära att svänga förbi. Mvh Johan och Petra",
+  "forvantad": [
+   "Wille",
+   "Provdatagatan 7",
+   "Johan",
+   "Petra"
+  ]
+ },
+ {
+  "id": "skola-04",
+  "kategori": "skola",
+  "text": "Till mentor Kristina Åberg. Jag är orolig för min son Noah Engström i 7A. Han har varit ledsen länge och pratar om att ingen vill vara med honom på rasterna. Kan vi boka ett samtal nästa vecka? Nå mig på 070-1740640 eller person82@example.com. Tack på förhand, Johan Engström",
+  "forvantad": [
+   "Noah Engström",
+   "070-1740640",
+   "person82@example.com",
+   "Johan Engström"
+  ]
+ },
+ {
+  "id": "skola-05",
+  "kategori": "skola",
+  "text": "Utvecklingssamtal 12/3 – Ella Norén, klass 5C. Närvarande: Ella, mamma Lotta Norén, klasslärare. Ella trivs bra socialt men matematiken går trögt, särskilt multiplikation. Mamma undrar om extra anpassningar. Nytt samtal i höst. Kontakt: person83@example.com",
+  "forvantad": [
+   "Ella Norén",
+   "Lotta Norén",
+   "person83@example.com"
+  ]
+ },
+ {
+  "id": "skola-06",
+  "kategori": "skola",
+  "text": "hej! lille Hugo har spytt hela natten så han stannar hemma idag. ring mig om det är nåt, 070-174 06 41. /pappa Oskar",
+  "forvantad": [
+   "Hugo",
+   "070-174 06 41",
+   "Oskar"
+  ]
+ },
+ {
+  "id": "skola-07",
+  "kategori": "skola",
+  "text": "Meddelande via Unikum: Saga Ekholm hämtas idag av sin mormor Birgitta Ekholm då jag sitter i möte till 17. Mormor hämtar ca 15.30. Godkänner ni detta? Mvh Frida Ekholm, 0701740642",
+  "forvantad": [
+   "Saga Ekholm",
+   "Birgitta Ekholm",
+   "Frida Ekholm",
+   "0701740642"
+  ]
+ },
+ {
+  "id": "skola-08",
+  "kategori": "skola",
+  "text": "Hej förskolan! Vi bytte adress förra veckan, kan ni uppdatera i systemet? Ny adress är Maskeravägen 44 i Bagarmossen. Gäller både Liam Hedman (Solrosen) och storebror Axel Hedman som går i fritids. Tack! /Anna Hedman",
+  "forvantad": [
+   "Maskeravägen 44",
+   "Liam Hedman",
+   "Axel Hedman",
+   "Anna Hedman"
+  ]
+ },
+ {
+  "id": "skola-09",
+  "kategori": "skola",
+  "text": "Angående matsedeln: min dotter Maja Lind (6B) är laktosintolerant och fick fel mat igår. Hon fick magont och vi hämtade henne tidigt. Vill att ni flaggar detta i köket. Ring mig gärna: Karin Lind 070 174 06 43.",
+  "forvantad": [
+   "Maja Lind",
+   "Karin Lind",
+   "070 174 06 43"
+  ]
+ },
+ {
+  "id": "skola-10",
+  "kategori": "skola",
+  "text": "Hej! Jag skriver för mitt barn Theodor Ahlström, personnummer 850623-2381, som ska börja ettan till hösten. Vi har precis flyttat hit från Falun och behöver skicka in vaccinationsintyg. Vart skickar jag dem? Med vänlig hälsning, Cecilia Ahlström, person84@example.com",
+  "forvantad": [
+   "Theodor Ahlström",
+   "850623-2381",
+   "Cecilia Ahlström",
+   "person84@example.com"
+  ]
+ },
+ {
+  "id": "skola-11",
+  "kategori": "skola",
+  "text": "frånvaro: ida sjuk idag. hostar som en galning. hoppas hon är tillbaka på måndag /henrik",
+  "forvantad": [
+   "ida",
+   "henrik"
+  ]
+ },
+ {
+  "id": "skola-12",
+  "kategori": "skola",
+  "text": "Till rektor och mentor: Jag heter Patrik Sjöberg och är pappa till Alma Sjöberg i 8C. Alma berättade att hon blivit utsatt för kränkande kommentarer i skolkorridoren av äldre elever. Detta är andra gången det händer och jag kräver att ni agerar enligt skolans plan mot kränkande behandling. Jag vill ha återkoppling inom en vecka. Ni når mig på 070-1740644 eller person85@example.com.",
+  "forvantad": [
+   "Patrik Sjöberg",
+   "Alma Sjöberg",
+   "070-1740644",
+   "person85@example.com"
+  ]
+ },
+ {
+  "id": "skola-13",
+  "kategori": "skola",
+  "text": "Glömt att anmäla – Viktor är hos sin pappa i Örebro hela vecka 42 så han är inte på fritids. För säkerhets skull: mitt nummer är 070-174 06 45 om något händer. /Malin, mamma till Viktor Hallgren",
+  "forvantad": [
+   "Viktor",
+   "070-174 06 45",
+   "Malin",
+   "Viktor Hallgren"
+  ]
+ },
+ {
+  "id": "skola-14",
+  "kategori": "skola",
+  "text": "Vab idag för båda ungarna. Selma har feber och Nils sover dåligt. Jag är hemma imorgon också om det behövs. Hälsningar från Jonas på Testkorpusvägen 3",
+  "forvantad": [
+   "Selma",
+   "Nils",
+   "Jonas",
+   "Testkorpusvägen 3"
+  ]
+ },
+ {
+  "id": "skola-15",
+  "kategori": "skola",
+  "text": "Anteckning efter samtal med förälder 2026-03-04. Förälder: Gunilla Strand, tel 0701740646, gäller sonen Melvin Strand (klass 3A, pnr 900101-2385). Tidigare antecknat pnr i registret stämde ej, administrationen ska korrigera. Melvin har svårt att koncentrera sig på förmiddagarna. Familjen håller på med separation vilket påverkar honom. Uppföljning om 6 veckor.",
+  "forvantad": [
+   "Gunilla Strand",
+   "0701740646",
+   "Melvin Strand",
+   "900101-2385"
+  ]
+ },
+ {
+  "id": "skola-16",
+  "kategori": "skola",
+  "text": "Hej Bumbibjörnarna! Tack för en fin vecka. Edith har pratat jättemycket om det nya klätterstället. En fråga: kan ni kolla så hennes solhatt ligger i hatthylla två? Vi hittar den inte hemma. Kram, Lisa och Daniel (Ediths föräldrar). Ps. Mormor Ulla-Britt Karlsson hämtar på torsdag.",
+  "forvantad": [
+   "Edith",
+   "Lisa",
+   "Daniel",
+   "Ulla-Britt Karlsson"
+  ]
+ },
+ {
+  "id": "skola-17",
+  "kategori": "skola",
+  "text": "Hej, det är Ebbe Sandins mamma. Ebbe kommer sent imorgon, vi har läkartid kl 9 hos BVC i Knivsta. Han är på plats senast 10.30. Behöver han ha med matsäck då? Mvh Therese Sandin",
+  "forvantad": [
+   "Ebbe Sandin",
+   "Ebbe",
+   "Therese Sandin"
+  ]
+ },
+ {
+  "id": "skola-18",
+  "kategori": "skola",
+  "text": "OBS fel nummer i elevhälsans lista! Rätt telefon till mig är 070 174 06 47 (inte 070-1740648 som står hos er). Gäller kontakt för min dotter Alice Wahlgren i förskoleklass. Vänligen Anders Wahlgren, Påhittsvägen 18",
+  "forvantad": [
+   "070 174 06 47",
+   "Alice Wahlgren",
+   "Anders Wahlgren",
+   "Påhittsvägen 18"
+  ]
+ },
+ {
+  "id": "telefon-transkript-01",
+  "kategori": "telefon-transkript",
+  "text": "Agent: Tack för att du ringer kundtjänst, mitt namn är Sara, hur kan jag hjälpa dig? Kund: hej hej, ööh, det är det är Morgan Flemmingström som ringer, jag undrar över fakturan som kom i måndags. Agent: Okej Morgan, kan du ta ditt kundnummer? Kund: nej alltså jag hittar det inte, men ni kan väl slå upp mig på namnet istället.",
+  "forvantad": [
+   "Morgan Flemmingström"
+  ]
+ },
+ {
+  "id": "telefon-transkript-02",
+  "kategori": "telefon-transkript",
+  "text": "Kund: mitt personnummer, vänta lite... åttioett noll två noll sex... nej vänta, jag säger fel, det är 991201-2391. Agent: Tack, då hittar jag dig direkt. Kund: bra bra, för det är bråttom med det här ärendet.",
+  "forvantad": [
+   "991201-2391"
+  ]
+ },
+ {
+  "id": "telefon-transkript-03",
+  "kategori": "telefon-transkript",
+  "text": "Agent: Vilken e-postadress vill du ha bekräftelsen till? Kund: ööh, det är pelle punkt johansson snabel-a outlook punkt com. Agent: Kan du bokstavera efternamnet? Kund: j-o-h-a-n-s-s-o-n. Agent: Tack Pelle Johansson, då skickar jag dit.",
+  "forvantad": [
+   "pelle punkt johansson snabel-a outlook punkt com",
+   "Pelle Johansson"
+  ]
+ },
+ {
+  "id": "telefon-transkript-04",
+  "kategori": "telefon-transkript",
+  "text": "Kund: jag heter Kajsa, det stavas k-a-j-s-a. Kajsa Lundmark alltså. Agent: Förlåt, kan du upprepa efternamnet, det brusar i linjen. Kund: L-u-n-d-m-a-r-k! Agent: Tack, nu hörde jag.",
+  "forvantad": [
+   "Kajsa Lundmark",
+   "k-a-j-s-a"
+  ]
+ },
+ {
+  "id": "telefon-transkript-05",
+  "kategori": "telefon-transkript",
+  "text": "Kund: du når mig på noll sju noll två ett fyra sex fem åtta, kan du läsa upp det tillbaka? Agent: Ja, noll sju noll två ett fyra sex fem åtta, stämmer det? Kund: japp, exakt så.",
+  "forvantad": [
+   "noll sju noll två ett fyra sex fem åtta"
+  ]
+ },
+ {
+  "id": "telefon-transkript-06",
+  "kategori": "telefon-transkript",
+  "text": "Kund: jag bor på Maskeragatan 14... förlåt, jag menade Provdatagatan 14, så klart, i Göteborg. Agent: Okej, Provdatagatan 14, då ändrar jag det i systemet. Kund: ja tack, annars kommer ju breven fel igen.",
+  "forvantad": [
+   "Provdatagatan 14"
+  ]
+ },
+ {
+  "id": "telefon-transkript-07",
+  "kategori": "telefon-transkript",
+  "text": "Agent: Kan jag få ditt personnummer och ett telefonnummer? Kund: visst, personnummer 850601-2387 och telefon 0701740650. Agent: Tack. Kund: ring helst efter klockan fem, jag jobbar skift.",
+  "forvantad": [
+   "850601-2387",
+   "0701740650"
+  ]
+ },
+ {
+  "id": "telefon-transkript-08",
+  "kategori": "telefon-transkript",
+  "text": "Kund: jag he- jag heter Bosse... Bosse Wetterqvist, och min fru Ingrid Wetterqvist står också på avtalet. Agent: Ska jag lägga till henne som kontaktperson? Kund: ja gör det, hon brukar ringa åt oss båda.",
+  "forvantad": [
+   "Bosse Wetterqvist",
+   "Ingrid Wetterqvist"
+  ]
+ },
+ {
+  "id": "telefon-transkript-09",
+  "kategori": "telefon-transkript",
+  "text": "Kund: min mejl, öh, det stavas m-a-r-i-a punkt e-k-l-u-n-d snabel-a hotmail punkt com. Agent: Okej, så maria punkt eklund på hotmail? Kund: ja precis, med k i eklund. Agent: Då är det noterat, tack Maria Eklund.",
+  "forvantad": [
+   "m-a-r-i-a punkt e-k-l-u-n-d snabel-a hotmail punkt com",
+   "Maria Eklund"
+  ]
+ },
+ {
+  "id": "telefon-transkript-10",
+  "kategori": "telefon-transkript",
+  "text": "Kund: hej det är kalle som ringer igen, vi pratades ju vid i förra veckan om elavtalet. Agent: Hej Kalle, vilket nummer ringer du ifrån? Kund: TEST-070 174 06 51, men jag byter snart operatör så ni får det nya sen.",
+  "forvantad": [
+   "kalle",
+   "070 174 06 51"
+  ]
+ },
+ {
+  "id": "telefon-transkript-11",
+  "kategori": "telefon-transkript",
+  "text": "Agent: Vilken adress ska teknikern till? Kund: adressen är Testkorpusvägen 7 B, andra våningen, portkoden får han vid dörren. Agent: Och personnumret för abonnemanget? Kund: det är sexsiosju elva noll fyra... alltså 000101-9801.",
+  "forvantad": [
+   "Testkorpusvägen 7 B",
+   "000101-9801"
+  ]
+ },
+ {
+  "id": "telefon-transkript-12",
+  "kategori": "telefon-transkript",
+  "text": "Kund: jag heter Åsa Ström... alltså Å-s-a, inte Osa, det blir alltid fel i era system. Agent: Förlåt, Åsa Ström med Å, nu är det rättat. Kund: äntligen, tack.",
+  "forvantad": [
+   "Åsa Ström"
+  ]
+ },
+ {
+  "id": "telefon-transkript-13",
+  "kategori": "telefon-transkript",
+  "text": "Kund: mitt mobilnummer är noll sju tre nio... vänta... nej jag säger det med siffror istället: 070-1740652. Agent: Tack, då skickar jag sms dit. Kund: gör det.",
+  "forvantad": [
+   "070-1740652"
+  ]
+ },
+ {
+  "id": "telefon-transkript-14",
+  "kategori": "telefon-transkript",
+  "text": "Agent: Vem har jag nöjet att prata med? Kund: Gun-Britt Törnros, med bindestreck alltså, Gun-Britt. Agent: Och e-posten? Kund: gun punkt britt snabel-a bredband punkt net, fast jag kollar den sällan, ring hellre.",
+  "forvantad": [
+   "Gun-Britt Törnros",
+   "gun punkt britt snabel-a bredband punkt net"
+  ]
+ },
+ {
+  "id": "telefon-transkript-15",
+  "kategori": "telefon-transkript",
+  "text": "Kund: personnumret är noll tre noll fyra noll fyra... ett två tre två. Agent: Kan du säga det med bindestreck? Kund: TEST-640823-3234. Agent: Perfekt, då hittade jag dig.",
+  "forvantad": [
+   "640823-3234"
+  ]
+ },
+ {
+  "id": "telefon-transkript-16",
+  "kategori": "telefon-transkript",
+  "text": "Agent: Så ditt nummer är 070-174 06 53, har jag fattat rätt? Kund: ja, 070-174 06 53, exakt. Agent: Då ringer vi upp på det i eftermiddag. Kund: bra, svara gör jag i alla fall.",
+  "forvantad": [
+   "070-174 06 53"
+  ]
+ },
+ {
+  "id": "telefon-transkript-17",
+  "kategori": "telefon-transkript",
+  "text": "Kund: hej det är Veronica Sande- *pip* ...hallå, försvann jag? Agent: Nej nej, jag hör dig, vi bröts en sekund. Kund: okej, numret är 070 174 06 55 om vi bryts igen, ring tillbaka dit. Agent: Absolut, Veronica.",
+  "forvantad": [
+   "Veronica",
+   "070 174 06 55"
+  ]
+ },
+ {
+  "id": "telefon-transkript-18",
+  "kategori": "telefon-transkript",
+  "text": "Kund: jag bor i Norge nu för tiden, så jag har norskt nummer, plus fyra sju, alltså +46 70 174 06 56. Agent: Då noterar jag det som utlandsnummer. Kund: ja, och namnet är förtäljt, Torbjörn Haugli, H-a-u-g-l-i.",
+  "forvantad": [
+   "+46 70 174 06 56",
+   "Torbjörn Haugli"
+  ]
+ },
+ {
+  "id": "vard-psyk-01",
+  "kategori": "vard-psyk",
+  "text": "Journalanteckning psykiatriska mottagningen. Patient: Karin Eklund, 781101-2397. Kontaktorsak: uppföljning depression. p.t. beskriver fortsatt nedsatt stämningsläge men bättre sömn sedan dosjustering av sertralin till 100 mg. Anamn: inga suicidtankar idag. Status: adekvat affekt, god ögonkontakt. Plan: återbesök om 6 v veckor.",
+  "forvantad": [
+   "Karin Eklund",
+   "781101-2397"
+  ]
+ },
+ {
+  "id": "vard-psyk-02",
+  "kategori": "vard-psyk",
+  "text": "BUP samtalsanteckning. Närvarande: Liam Hedström (20110415, dvs 850601-2387 ej korrekt — se identitetshandling), mamma Sara Hedström och pappa Jonas Hedström. Samtal om skolfrånvaro och konflikter hemma. Liam tystlåten i början, öppnade upp när föräldrarna lämnade rummet. Nästa samtal bokat, mammas tel 070-174 06 57 vid avbokning.",
+  "forvantad": [
+   "Liam Hedström",
+   "Sara Hedström",
+   "Jonas Hedström",
+   "850601-2387",
+   "070-174 06 57"
+  ]
+ },
+ {
+  "id": "vard-psyk-03",
+  "kategori": "vard-psyk",
+  "text": "telkontakt med anhörig. ringde upp maken Bo Söderqvist, 0701740658, ang fru Margareta Söderqvist 850623-2381. Bo orolig över att hon slutat äta ordentligt och står upp om nätterna. informerade om vikten av att hon tar sitt mirtazapin. erbjöd tid hos kurator, bo ska återkomma.",
+  "forvantad": [
+   "Bo Söderqvist",
+   "0701740658",
+   "Margareta Söderqvist",
+   "850623-2381"
+  ]
+ },
+ {
+  "id": "vard-psyk-04",
+  "kategori": "vard-psyk",
+  "text": "Bedömning inför LPT-fråga. Patienten Elsa Nyberg, 900101-2385, intagen pga akut psykos med vanföreställningar. Status: hyperverbal, tryckt tal, påverkad dygnsrytm. Anamn enl sambon Tobias Nyberg: medicinslett sedan 3 v, tidigare ep 2021. Kontaktorsak: hämtad av polis efter utåtagerande i bostaden. Rekom vård enligt LPT, överlämnat till jourläkare.",
+  "forvantad": [
+   "Elsa Nyberg",
+   "900101-2385",
+   "Tobias Nyberg"
+  ]
+ },
+ {
+  "id": "vard-psyk-05",
+  "kategori": "vard-psyk",
+  "text": "Hembesök psykiatriska öppenvården kl 10.30 hos p.t. Gustav Öhrn, 991201-2391, Påhittsvägen 17, Borlänge. p.t. öppnade efter ca 10 min. Lägenheten ostädad, odiskad disk, men p.t. själv acceptabelt hygienisk. Har ätit lite. Stämmer av medicinering: olanzapin 10 mg finns hemma, dosett ifylld. Dotter Ulrika Öhrn deltog per telefon 070 174 06 59. Nästa hembesök om 2 v.",
+  "forvantad": [
+   "Gustav Öhrn",
+   "991201-2391",
+   "Påhittsvägen 17",
+   "Ulrika Öhrn",
+   "070 174 06 59"
+  ]
+ },
+ {
+  "id": "vard-psyk-06",
+  "kategori": "vard-psyk",
+  "text": "BUP utredning adhd, första besök. Elev: Nora Blom, 900101-2385. Anamn: koncentrationssvårigheter sedan lågstadiet, strukturerat arbetsminne enligt skolans observationer. Mamma Pia Blom rapporterar sömnsvårigheter. Plan: QB-test, formulär till skola och föräldrar, återbudgivning om 6 v. Kontakt mottagningen via mamma person86@example.com.",
+  "forvantad": [
+   "Nora Blom",
+   "900101-2385",
+   "Pia Blom",
+   "person86@example.com"
+  ]
+ },
+ {
+  "id": "vard-psyk-07",
+  "kategori": "vard-psyk",
+  "text": "ordination: p.t. Amir Haddad 000101-9801. forts venlafaxin 75 mg x2, tillägg mirtazapin 15 mg till natten pga insomningssvårigheter. p.t. informerad om biverkningar, förstått. egenkontroll efter 4 v, sjuksköterska ringer upp. e-recept utfärdat.",
+  "forvantad": [
+   "Amir Haddad",
+   "000101-9801"
+  ]
+ },
+ {
+  "id": "vard-psyk-08",
+  "kategori": "vard-psyk",
+  "text": "Samtalsanteckning kurator. Klient: Veronica Lindqvist, 640823-3234. Tema: ångest kopplat till separation, barnens boende. Grät under stora delar av samtalet men framkom att hon sover bättre än i våras. Pågående kontakt med familjerätten. Ex-maken Henrik Lindqvist har inte hört av sig på 3 mån. Överens om fortsatt samtal varannan vecka.",
+  "forvantad": [
+   "Veronica Lindqvist",
+   "640823-3234",
+   "Henrik Lindqvist"
+  ]
+ },
+ {
+  "id": "vard-psyk-09",
+  "kategori": "vard-psyk",
+  "text": "Jouranteckning. p.t. Filip Ahlström, 781101-2397, inburen av ambulans efter överdos av alvedon, taget i förtvivlan efter bråk med partnern. p.t. medv klar, ångrar sig. Giftinformation kontaktad, läkemedelsbehandling påbörjad på akuten. Suicidriskbedömning: låg-medel, framför allt impulsiv handlande. Vänligen kolla med systern Malin Ahlström 070-174 06 61 innan utskrivning. Vaktskötare sitter inne.",
+  "forvantad": [
+   "Filip Ahlström",
+   "781101-2397",
+   "Malin Ahlström",
+   "070-174 06 61"
+  ]
+ },
+ {
+  "id": "vard-psyk-10",
+  "kategori": "vard-psyk",
+  "text": "Telefonåterbudgivning BUP. Samtal med mor Anneli Karlsson ang sonen Oliver Karlsson 850601-2387. BUP-kontakten har gett diagnos AST (autismspektrumtillstånd) enligt utredning. Mamman lättad men orolig för gymnasievalet. Skickar habiliteringsremiss. Oliver själv nåbar på person87@example.com, vill ha information direkt.",
+  "forvantad": [
+   "Anneli Karlsson",
+   "Oliver Karlsson",
+   "850601-2387",
+   "person87@example.com"
+  ]
+ },
+ {
+  "id": "vard-psyk-11",
+  "kategori": "vard-psyk",
+  "text": "Status psykiatrisk avd: Siv Bergman, 850623-2381, dag 12 på avd. Sover 6-7 h med zopiklon. Äter ca 75%. Delaktig i gemenskapen, i morse promenad på gården med skötare. Forts avstämning av litium, senaste nivå 0,8. Anhörigkontakt: sonen Rickard Bergman ringde 0701740662, fick info med p:s samtycke. Planerad utskrivning tors om allt stabilt.",
+  "forvantad": [
+   "Siv Bergman",
+   "850623-2381",
+   "Rickard Bergman",
+   "0701740662"
+  ]
+ },
+ {
+  "id": "vard-psyk-12",
+  "kategori": "vard-psyk",
+  "text": "kontaktorsak: sömnproblem + oro. p.t. daniel sjöström, 900101-2385, påträffad i väntrummet 15 min före bokad tid. beskriver att han vaknar kl 03 varje natt och ligger och maler om jobbet. ingen suicidaltank, inga psykossymtom. erbjöds sömnhygienskola hos ssk, p.t. tackar ja. prova inte sömntabletter än enligt p:t:s egen önskan.",
+  "forvantad": [
+   "daniel sjöström",
+   "900101-2385"
+  ]
+ },
+ {
+  "id": "vard-psyk-13",
+  "kategori": "vard-psyk",
+  "text": "Anhörigsamtal psykiatriska kliniken. Närvarande: dotter Cecilia Rask och sonen Mikael Rask, patienten Birgitta Rask 991201-2391 avböjde att delta. Diskussion om mammas minnessvikt och säkerheten i hemmet — hon bor ensam på Provdatagatan 4 i Västerås. Rekommenderar biståndshandläggare och trygghetslarm. Cecilia tar kontakt med kommunen, hennes tel 070 174 06 63.",
+  "forvantad": [
+   "Cecilia Rask",
+   "Mikael Rask",
+   "Birgitta Rask",
+   "991201-2391",
+   "Provdatagatan 4",
+   "070 174 06 63"
+  ]
+ },
+ {
+  "id": "vard-psyk-14",
+  "kategori": "vard-psyk",
+  "text": "Bedömning ätstörningsmottagningen. Patient: Tuva Lindén, 991201-2391. BMI 17,1, stabil vikt sedan förra månaden. p.t. motiverad, äter enligt måltidsplan på mottagningen 3 dgr/v. Mamma Karolina Lindén med vid dagens besök, samtal om hemsituationen och pusslande vid måltider. Labbeställning ordinerad. Åter om 2 v.",
+  "forvantad": [
+   "Tuva Lindén",
+   "991201-2391",
+   "Karolina Lindén"
+  ]
+ },
+ {
+  "id": "vard-psyk-15",
+  "kategori": "vard-psyk",
+  "text": "missat besök igen. p.t. Hassan Yilmaz, 000101-9801, uteblev från bokat samtal kl 14. ringde mobil 070-174 06 65, inget svar. sms skickat. detta är tredje uteblivna tiden i rad — diskutera på teammötet om fortsatt vårdplan eller utskrivning enl rutin.",
+  "forvantad": [
+   "Hassan Yilmaz",
+   "000101-9801",
+   "070-174 06 65"
+  ]
+ },
+ {
+  "id": "vard-psyk-16",
+  "kategori": "vard-psyk",
+  "text": "Intagningssamtal BUP familjeenheten. Familjen: föräldrar Maria och Stefan Ek, barnen Elsa Ek (14 år) och Hugo Ek (9 år). Kontaktorsak: Elsas vägran att gå till skolan sedan höstlovet. Anamn: oroligt på skolan, klassen delad i höstas. Maria Ek bär mycket av samtalet, Stefan tyst. Hembesök föreslaget pga svårt att komma hit — familjen bor på Maskeravägen 23, Enköping. Stefans tel 0701740666.",
+  "forvantad": [
+   "Maria",
+   "Stefan Ek",
+   "Elsa Ek",
+   "Hugo Ek",
+   "Maskeravägen 23",
+   "0701740666"
+  ]
+ },
+ {
+  "id": "vard-psyk-17",
+  "kategori": "vard-psyk",
+  "text": "Läkemedelsgenomgång äldrepsykiatri. p.t. Ingrid Sundqvist 640823-3234: citalopram 20 mg, quetiapin 25 mg note, zopiklon 7,5 mg p.r.n. dottern Agneta Palmér undrade om quetiapin kan tas bort — bokar läkartid för det. p.t. förvirrad igår kväll enligt hemtjänst, ingen feber. fortsatt observation.",
+  "forvantad": [
+   "Ingrid Sundqvist",
+   "640823-3234",
+   "Agneta Palmér"
+  ]
+ },
+ {
+  "id": "vard-psyk-18",
+  "kategori": "vard-psyk",
+  "text": "Psykologbedömning trauma. Klient Petter Vikström, 781101-2397, remitterad från företagshälsovården efter arbetsplatsolycka i februari. Symtombild förenlig med PTSD: mardrömmar, undvikande av garaget där olyckan skedde. Förslag: EMDR-behandling 10-12 sessioner. p.t. nåbar bäst på person88@example.com dagtid, jobbar skift.",
+  "forvantad": [
+   "Petter Vikström",
+   "781101-2397",
+   "person88@example.com"
+  ]
+ },
+ {
+  "id": "vard-psyk-19",
+  "kategori": "vard-psyk",
+  "text": "Kontaktorsak: återinsjuknande i bipolär sjukdom typ II. p.t. Sanna Löfgren, 850601-2387, har slutat med lamotrigin för 2 mån sen pga hudutslag, ej återkopplat trots påminnelser. Hypoman period i juni enl maken Erik Löfgren (070 174 06 67). Nu depressiv fas. Startar litium efter njurfunktionsprov. Remiss till Bipolärskolan, p.t. och maken välkomnas.",
+  "forvantad": [
+   "Sanna Löfgren",
+   "850601-2387",
+   "Erik Löfgren",
+   "070 174 06 67"
+  ]
+ },
+ {
+  "id": "vard-psyk-20",
+  "kategori": "vard-psyk",
+  "text": "hembesök pga uteblivna besök, far mider. knackade på hos p.t. edvin holmberg 850623-2381, testkorpusgatan 8 lgh 1203, gävle. öppnade ej först, granne uppgav att han sågs igår. efter 15 min öppnade p.t. — tillståndet i lägenheten anmärkningsvärt, sophögar. oro för vanvård. p.t. nekar till insatser. överväger orosanmälan till soc, diskuteras med chef imorgon.",
+  "forvantad": [
+   "edvin holmberg",
+   "850623-2381",
+   "testkorpusgatan 8 lgh 1203"
+  ]
+ },
+ {
+  "id": "vard-remiss-01",
+  "kategori": "vard-remiss",
+  "text": "REMISS till Ortopedmottagningen, Akademiska sjukhuset. Pat: Gunvor Sandström, 900101-2385. Remitteras pga ca 4 mån svällnad och instabilitet hö knä efter fall i trappan. MR visar misstänkt partiell ruptur akl. Tidigare frisk i övrigt, ej allergier. Bedömer ej brådskande men pat är högaktiv och önskar återgå till golf. Remitterande läkare: dr Henrik Lindqvist, Vårdcentralen Kråkudden, tel 031-390 06 68.",
+  "forvantad": [
+   "Gunvor Sandström",
+   "900101-2385",
+   "Henrik Lindqvist",
+   "031-390 06 68"
+  ]
+ },
+ {
+  "id": "vard-remiss-02",
+  "kategori": "vard-remiss",
+  "text": "remiss ang sven oskarsson 991201-2391. pat kom till akuten inatt kl 03 med bröstsmärta, ekg utan påtagliga ischemifynd, troponin x3 neg. Nu smärtfri. Önskar ändå remiss till kardiolog för arb ekg pga anamnes på ansträngningsutlöst besvär. obs pat bor ensam på Påhittsvägen 7 och har ingen anhörig i närheten. mvh karin, undersköterska akuten",
+  "forvantad": [
+   "sven oskarsson",
+   "991201-2391",
+   "karin",
+   "Påhittsvägen 7"
+  ]
+ },
+ {
+  "id": "vard-remiss-03",
+  "kategori": "vard-remiss",
+  "text": "LABBSVAR. Patient: Elsa-Marie Berggren, 850601-2387. Beställare: Annika Öhman, VC Söderport, Borlänge. Provtagningsdatum 2026-07-28. P-Glukos 7,8 (H), B-Hb 112 (L), S-Kreatinin 88, eGFR 62. CRP 5. S-Kalium 4,1. P-Glukos lätt förhöjt, rekommenderar fP-glukos + HbA1c vid nästa besök. Klinisk kommentar: glukosvärdet bör bekräftas fastande.",
+  "forvantad": [
+   "Elsa-Marie Berggren",
+   "850601-2387",
+   "Annika Öhman"
+  ]
+ },
+ {
+  "id": "vard-remiss-04",
+  "kategori": "vard-remiss",
+  "text": "Röntgensvar lungrtg 2 proj. Pat: Milos Petrovic 000101-9801. Indikation: hosta 3 v, feber. Jmf m tidigare unders saknas. Normala lungor, ingen infilt, inga vätskenivåer. Hjärta ej förstorat. Slutsats: röntgen fynden passar ej för pneumoni, överväg virusinfektion. Undersökande radiolog: Sofia Wallentin, Röntgenavd 2. Svar till: VC Norr om Stadsparken, tfn 031-390 06 70.",
+  "forvantad": [
+   "Milos Petrovic",
+   "000101-9801",
+   "Sofia Wallentin",
+   "031-390 06 70"
+  ]
+ },
+ {
+  "id": "vard-remiss-05",
+  "kategori": "vard-remiss",
+  "text": "AMBULANSJOURNAL SOSTEST-1123047. Larminkomst 14:22:07, händelseadress Provdatavägen 14B, Länsmansgården, Uppsala. Man 60-tal, vaket tal men förvirrad, blodtryck 90/60, puls 112, sat 93% RA. Anhörig (dottern Frida på plats) uppger att fadern, Bertil Åsman 640823-3234, fallit i köket och slagit i höft. Transportlas IV, morfin 5 mg iv. Prioritet 2, ankomst akuten 14:57. Besättning: Tim Jönsson, Lennart Fa.",
+  "forvantad": [
+   "Provdatavägen 14B",
+   "Frida",
+   "Bertil Åsman",
+   "640823-3234",
+   "Tim Jönsson",
+   "Lennart Fa"
+  ]
+ },
+ {
+  "id": "vard-remiss-06",
+  "kategori": "vard-remiss",
+  "text": "REMISSTEXTER ÄR ALDRIG ROLIGA ATT SKRIVA men här kommer en: Patienten Stina Holmberg, 781101-2397, remitteras till gynekologen på Akademiska pga recidiverande urinvägsinfektioner (4 st senaste året) samt dyspareuni. Odling visat e coli x3. Pat är 45, tre barn, vb 2 sectio. Test av ab-behandling med nitrofurantoin utan effekt. Önskar utredning mtp urodynamik. Remittent: Kerstin Sundell, distriktsläkare, VC Mörbylånga, tel 031-390 06 71, e-post person89@example.com.",
+  "forvantad": [
+   "Stina Holmberg",
+   "781101-2397",
+   "Kerstin Sundell",
+   "031-390 06 71",
+   "person89@example.com"
+  ]
+ },
+ {
+  "id": "vard-remiss-07",
+  "kategori": "vard-remiss",
+  "text": "journalanteckning akutmottagningen. pat torsten nyblom 850601-2387 inkom 23.10 med ambulans från adress Maskeragatan 3 efter olycka med vinkelslip. djup skärskada vänster underarm, ca 8 cm, pulsationell blödning initialt. tryckförband + tranexamsyra 1g iv. sutureras med 12 stygn i 2 lager. tetanusbooster givet. hemgång 02.15 med återbesök vc om 10 dgr för stygnborttagning. pat uppger att han är svetsare och måste jobba imorgon. pratade med honom om vikten av vila.",
+  "forvantad": [
+   "torsten nyblom",
+   "850601-2387",
+   "Maskeragatan 3"
+  ]
+ },
+ {
+  "id": "vard-remiss-08",
+  "kategori": "vard-remiss",
+  "text": "112-LARMANTECKNING. LarmidTEST-88231, kommunikationscentral Mitt. Inringare: kvinnlig röst, uppger sig vara Maja Ekström och ringer från Testkorpusgatan 22, Höganäs. Man andas ej, misstänkt hjärtstopp i trapphuset. CPR instruerad via telefon i 4 min innan ambulans framme. Ringarens tel: 070-1740672. Patientidentifiering oklar vid larmtillfället, senare konstaterad: Leif Brännström, 850623-2381. ROSC efter 3 stötar, defibrillerad x3.",
+  "forvantad": [
+   "Maja Ekström",
+   "Testkorpusgatan 22",
+   "070-1740672",
+   "Leif Brännström",
+   "850623-2381"
+  ]
+ },
+ {
+  "id": "vard-remiss-09",
+  "kategori": "vard-remiss",
+  "text": "Remiss till BUP Östergötland. Pat: Nils-Åke Fredriksson, 900101-2385 (pojke 23 år). Föräldrarna medverkar ej vid besöket. Pat visar sedan ca ett halvår tecken på tvångstankar, kontrollerar spis och lås upp till 30 ggr/dygn. Fungerar dåligt i skolan (läser master i Linköping). SU-raden 0, AUDIT 2 poäng. Ingen aktuell suicidrisk enl pat. Remittent: Klas Wetterberg, ST-läkare psykiatri, VC Berga, tel 031-390 06 73. Obs pat nås enklast på mobil 0701740674 då han sällan svarar på brev.",
+  "forvantad": [
+   "Nils-Åke Fredriksson",
+   "900101-2385",
+   "Klas Wetterberg",
+   "031-390 06 73",
+   "0701740674"
+  ]
+ },
+ {
+  "id": "vard-remiss-10",
+  "kategori": "vard-remiss",
+  "text": "RÖNTGENSVAR THORAX. Margareta Eliasson 991201-2391 remitterad från VC Fjälkinge pga dyspné vid ansträngning. Lungrtg: inga akuta fynd, hjärta normalstorlek, inga pleuravätskor. Redan kända förändringar i höger övre lob (förhårdnader, förmodat gamla) oförändrade mot 2019. Rekommenderar spirometri om kliniken kvarstår. Radiolog on call: Dr. Farhad Naderi. Svarsdatum 2026-08-01.",
+  "forvantad": [
+   "Margareta Eliasson",
+   "991201-2391",
+   "Farhad Naderi"
+  ]
+ },
+ {
+  "id": "vard-remiss-11",
+  "kategori": "vard-remiss",
+  "text": "hej det är susanne på vc granbäcken. skickar remiss i efterhand pga systemkrasch igår, patienten sitter kvar här: lars pettersson 850623-2381, kom in med akut ryggsmärta (lumbago ischias misstänkt) strålande ut i v ben, pat går inte att räta upp, kryper in till toaletten. Gett diklofenak 75 mg im + paracetamol. Bor på Påhittsvägen 5 i Forsmark, sambo. Skicka gärna tid för fysio snarast, pat är lantbrukare mitt i skördetider och är väldigt stressad över det.",
+  "forvantad": [
+   "susanne",
+   "lars pettersson",
+   "850623-2381",
+   "Påhittsvägen 5"
+  ]
+ },
+ {
+  "id": "vard-remiss-12",
+  "kategori": "vard-remiss",
+  "text": "Labbsvar mikrobiologi. Pat: Vivianne Ahlström, 000101-9801. Prov: svalgsekret, beställt av Peter Grankvist, VC Hästhagen, Nässjö. Fynd: Betahemolyserande streptokocker grupp A. EUCAST: känslig för pcV. Pat uppges vara penicillinallergisk sedan barndomen (osäkert vilken reaktion). Överväg klindamycin alt makrolid. Vid frågor ring labbet 031-390 06 76.",
+  "forvantad": [
+   "Vivianne Ahlström",
+   "000101-9801",
+   "Peter Grankvist",
+   "031-390 06 76"
+  ]
+ },
+ {
+  "id": "vard-remiss-13",
+  "kategori": "vard-remiss",
+  "text": "AMBULANSJOURNAL. Larmtid 07:44, prio 1. Händelse: Provdatagatan 44B, Södermalm, trappuppgång 3 tr. Pat liggande medvetslös i trapphus, bystander (grannen Rolf uppger han hittade pat vid postutdelning) påbörjat HLR. Maskeragatan 07:51. Pat identifierad via plånbok: Gunnar Vestman, 640823-3234. Initialt pVT, defib x4, adrenalin 1 mg x3, amiodaron 300 mg. ROSC 08:12. Intuberad, transport till SÖS IVA. Besättning: Anna-Klara Svensson (ambulanssjuksköterska), Jim Walfridsson (ambulanssjukvårdare). Kontaktperson: sambon Ewa, tel 070-174 06 77.",
+  "forvantad": [
+   "Provdatagatan 44B",
+   "Rolf",
+   "Gunnar Vestman",
+   "640823-3234",
+   "Anna-Klara Svensson",
+   "Jim Walfridsson",
+   "Ewa",
+   "070-174 06 77"
+  ]
+ },
+ {
+  "id": "vard-remiss-14",
+  "kategori": "vard-remiss",
+  "text": "Remiss dermatologi. Pat: Beata Lindfors, 781101-2397, 114 år. Sedan ca 6 v rodnad och fjällning i ansiktet, mest periorbitalt. Provat hydrokortison mild och emolientia utan effekt. Pat har tidigare haft liknande besvär vid stress och säger själv att det är 'eksem igen'. Allergisk mot jordnötter (anafylaxi som barn). Remitterar för bedömning och ev pricktest. Remittent: Lisa-Marie Strand, AT-läkare VC Solhaga, Karlshamn.",
+  "forvantad": [
+   "Beata Lindfors",
+   "781101-2397",
+   "Lisa-Marie Strand"
+  ]
+ },
+ {
+  "id": "vard-remiss-15",
+  "kategori": "vard-remiss",
+  "text": "112-larmanteckning, SOS Öst. Larm 17:02. Kvinna ringer och skriker att hennes man inte svarar när hon ropar. Adress: Testkorpusvägen 9, Vetlanda. Inringare ger namnet Sonja Wallin och telefonnummer 031-390 06 78. Ambulans dirigerad. Vid ankomst: man sittande vid matbordet, GCS 14, förvirrad, blodsocker 2,1. Pat: Åke Wallin, 850601-2387, typ 1-diabetiker. Glukagon 1 mg im av besättning, pat piggnar. Händelse avslutad 17:58 utan transport eftersom pat vägrar åka med och blodsocker nu 6,4.",
+  "forvantad": [
+   "Testkorpusvägen 9",
+   "Sonja Wallin",
+   "031-390 06 78",
+   "Åke Wallin",
+   "850601-2387"
+  ]
+ },
+ {
+  "id": "vard-remiss-16",
+  "kategori": "vard-remiss",
+  "text": "remiss till ortopeden. har patient igen, hette vet du vem: Britt-Inger Carlsson 850623-2381. hon som vi pratade om på konferensen, den med knäartrosen som inte blir bättre. Nu har hon haft värk i hö höft i 3 mån, rtg visar måttlig artros. NSAID hjälper inte, pat mår illa av dem dessutom. Tror vi behöver diskutera protes. hon bor på Påhittsvägen 31 och har ingen bil, så hon behöver åka med anhörig om det blir op. remittent: ali hadadian, vc björkåsen",
+  "forvantad": [
+   "Britt-Inger Carlsson",
+   "850623-2381",
+   "Påhittsvägen 31",
+   "ali hadadian"
+  ]
+ },
+ {
+  "id": "vard-remiss-17",
+  "kategori": "vard-remiss",
+  "text": "Labbsvar endokrinologi. Pat: Fanny Roos, 900101-2385. TSH 6,8 (H), fT4 11 (L), fT3 normal. Kliniken: trötthet, viktuppgång, förstoppning. TPO-ak 340 (pos). Diagnos: autoimmun hypotyreos (Hashimoto). Startat levotyroxin 25 µg. Kontroll TSH om 8 v. Svar till beställare: Malin Bäckström, VC Skogås, tel 08-465 00 479.",
+  "forvantad": [
+   "Fanny Roos",
+   "900101-2385",
+   "Malin Bäckström",
+   "08-465 00 479"
+  ]
+ },
+ {
+  "id": "vard-remiss-18",
+  "kategori": "vard-remiss",
+  "text": "pat kom in till drop-in utan remiss. heter enver hoxha (pnr saknas, pat saknar svenskt personnummer, uppehållstillstånd enligt uppgift). skärskada höger hand efter arbetsplatsolycka, byggarbetsplats vid Provdatagatan 17. suturerat 3 stygn. pat talar bruten svenska, tolk behövdes via telefon. bossen ringde och ville ha sjukintyg direkt, sa att jag skriver intyg när pat kommer tillbaka om 2 v. obs pat har ingen fast adress än, bor hos kusinen provisoriskt.",
+  "forvantad": [
+   "enver hoxha",
+   "Provdatagatan 17"
+  ]
+ }
+]
