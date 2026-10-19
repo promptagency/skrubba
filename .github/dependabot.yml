@@ -10,6 +10,11 @@ updates:
     schedule:
       interval: monthly
     open-pull-requests-limit: 5
+    ignore:
+      # Types for the Node we run (24, in .node-version and the workflow).
+      # Remove this when moving to a newer Node.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     groups:
       # Build and test tools in one pull request.
       dev-tools:
