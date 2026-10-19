@@ -15,8 +15,25 @@ describe("findTerms", () => {
     expect(surfaces("POLARIS AIR och polaris air", ["Polaris Air"])).toEqual(["POLARIS AIR", "polaris air"]);
   });
 
-  it("matches whole words only", () => {
-    expect(surfaces("Atea och Ateamet", ["Atea"])).toEqual(["Atea"]);
+  it("matches whole words, or the start of a compound word in any case", () => {
+    expect(surfaces("Atea, Atealeveransen och atealeveransen", ["Atea"])).toEqual(["Atea", "Atea", "atea"]);
+    expect(surfaces("FENIXLANSERINGEN", ["Fenix"])).toEqual(["FENIX"]);
+    expect(surfaces("Kampanjen Sommarglöd och Sommarglödens budget", ["sommarglöd"])).toEqual([
+      "Sommarglöd",
+      "Sommarglöd",
+    ]);
+  });
+
+  it("does not match terms shorter than four characters inside longer words", () => {
+    expect(surfaces("Per på Personalavdelningen", ["Per"])).toEqual(["Per"]);
+  });
+
+  it("over-masks an ordinary word that starts with a term, by design", () => {
+    expect(surfaces("Anna har en annan tid", ["Anna"])).toEqual(["Anna", "anna"]);
+  });
+
+  it("matches a lowercase genitive", () => {
+    expect(surfaces("fjällgrens jacka", ["Fjällgren"])).toEqual(["fjällgren"]);
   });
 
   it("matches genitive forms but leaves the s outside the span", () => {

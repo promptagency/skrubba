@@ -95,6 +95,24 @@ describe("a name the model finds in one place", () => {
     expect(await masked(masker, "Anna bor på Annagatan.")).toBe("[NAMN_1] bor på Annagatan.");
   });
 
+  it("is masked at the start of a compound word when it is a company or place", async () => {
+    const masker = new MaskeraMasker(onceNer([["Volvo", "ORGANISATION", 0], ["Malmö", "PLATS", 0]]));
+    expect(await masked(masker, "Volvo i Malmö. Volvoavtalet och Malmökontoret.")).toBe(
+      "[ORGANISATION_1] i [PLATS_1]. [ORGANISATION_1]avtalet och [PLATS_1]kontoret.",
+    );
+  });
+
+  it("cuts a compound the model found whole to the name inside it", async () => {
+    const masker = new MaskeraMasker(onceNer([["Volvo", "ORGANISATION", 0], ["Volvoavtalet", "ORGANISATION", 0]]));
+    expect(await masked(masker, "Volvo. Volvoavtalet löper ut.")).toBe("[ORGANISATION_1]. [ORGANISATION_1]avtalet löper ut.");
+  });
+
+  it("leaves the rest of a compound unmasked after a word-list term", async () => {
+    const masker = new MaskeraMasker(onceNer([["Nordljuskampanjen", "ORGANISATION", 0]]));
+    const entities = await masker.mask("Nordljuskampanjen startar.", { wordList: ["Nordljus"], manual: [] });
+    expect(masker.applyMask("Nordljuskampanjen startar.", entities, []).masked).toBe("[ORD_1]kampanjen startar.");
+  });
+
   it("is not spread when it is a lowercase word or shorter than three letters", async () => {
     const masker = new MaskeraMasker(onceNer([["teknik", "ORGANISATION", 0], ["AI", "ORGANISATION", 0]]));
     expect(await masked(masker, "AI, teknik. AI och teknik.")).toBe("[ORGANISATION_1], [ORGANISATION_2]. AI och teknik.");

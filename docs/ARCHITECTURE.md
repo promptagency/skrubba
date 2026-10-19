@@ -11,7 +11,7 @@ src/
     maskeraMasker.ts     Masker implementation: merges all span sources
     rules.ts             rule layer (@maskera/core detectors + our own rules in contextRules.ts)
     contextRules.ts      our own rules, e.g. labelled org.nr with a bad checksum
-    wordList.ts          manual and word-list terms → ORD spans, whole word, case-insensitive
+    wordList.ts          manual and word-list terms → ORD spans, whole word or compound start, case-insensitive
     spans.ts             priority, clipping, joining split model spans, spreading model values
     entities.ts          session numbering, value merging, first-name linking
     applyMask.ts         masked text + key
@@ -109,6 +109,8 @@ Priority on overlap: manual > word list > rules > model. A lower-priority span w
 Adjacent model spans separated only by a space or an apostrophe are joined into one span ("Arc'teryx" came back as ORGANISATION + NAMN). The joined span is ORGANISATION if either part was, otherwise the first part's type.
 
 The model can find a value in one place and miss it in another (a real case: "Norrström Media" found in a sentence, "Norrström Media AB" on the Arbetsgivare line missed). So every value the model found that starts with a capital letter and has three characters or more is also marked wherever else it occurs in the text as a whole word, genitive included, with any whitespace (a PDF line break) between its words. The spread spans rank as model spans. Lowercase and shorter values are not spread, so a stray hit like "teknik" or "AI" stays where it was found.
+
+Swedish glues names into compound words ("Volvoavtalet", "Malmökontoret", "Fenixlanseringen"), and a whole-word match leaves those in clear text. So a value that starts with a capital letter, has four characters or more and is followed directly by a lowercase letter is masked as the start of that word: "[ORGANISATION_1]avtalet", restored as "Volvoavtalet". Manual and word-list terms of four characters or more start compounds in any case ("fenixlanseringen" too), since the user chose them: a hit in an ordinary word ("Anna" in "annan") is an over-mask they can keep. For values the model found, the capital letter is required, and only spread organisations and places start compounds, not names, since a name inside a compound is mostly a street name ("Annagatan"). A model span that covers a spread value plus such a tail is cut to the value, so "Volvoavtalet" next to "Volvo" is one company, not two. When a higher-priority span claims the start of a compound, a lowercase remainder glued to it ("kampanjen" in "Nordljuskampanjen") is dropped rather than kept as a model span of its own. Values of three characters or fewer never start compounds, so "Per" stays out of "Personal".
 
 maskera's `regnummer` rule (ABC 123, ABC 12D) is off by default upstream because booking codes share the shape. We turn it on: a miss is worse than an over-mask, and the user can keep a false hit with one click.
 

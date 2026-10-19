@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Compound words no longer leak.** A word-list term, or a company or place the model found, is now also masked where it starts a longer word: *Fenixlanseringen* becomes *[ORD_1]lanseringen*, *Volvoavtalet* becomes *[ORGANISATION_1]avtalet*, and restore puts the name back. Word-list terms match in lowercase text too (*fenixlanseringen*). Before, these stayed in clear text.
+
 ## [1.3.0] - 2026-10-16
 
 ### Added

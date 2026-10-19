@@ -4,7 +4,7 @@ import type { Entity, InitOptions, Key, Masker, MaskInput, MaskOptions, Progress
 import type { NerBackend } from "./ner.ts";
 import { splitForModel } from "./parts.ts";
 import { ruleSpans } from "./rules.ts";
-import { resolveSpans, spreadModelValues } from "./spans.ts";
+import { resolveSpans, spreadModelValues, withoutCompoundForms } from "./spans.ts";
 import { tolerantRestore } from "./tolerantRestore.ts";
 import { findTerms } from "./wordList.ts";
 
@@ -124,6 +124,6 @@ export class MaskeraMasker implements Masker {
       ...modelSpans,
     ];
     const spread = spreadModelValues(text, resolveSpans(text, spans));
-    return buildEntities(text, resolveSpans(text, [...spans, ...spread]), this.registry);
+    return buildEntities(text, resolveSpans(text, [...withoutCompoundForms(text, spans, spread), ...spread]), this.registry);
   }
 }

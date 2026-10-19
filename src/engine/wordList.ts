@@ -13,21 +13,41 @@ export function parseWordList(raw: string): string[] {
   return terms;
 }
 
+const COMPOUND_MIN = 4;
+const WORD_END = /(?::?s)?(?![\p{L}\p{N}])/uy;
+
+/**
+ * Whether text[start, end) is a proper noun that a longer word starts with:
+ * capitalised, four characters or more, and followed by a lowercase letter.
+ * Used for values the model found: shorter or lowercase ones would hit
+ * ordinary words ("Anna" in "annan").
+ */
+export function startsCompound(text: string, start: number, end: number): boolean {
+  return end - start >= COMPOUND_MIN && /^\p{Lu}/u.test(text[start] ?? "") && /^\p{Ll}/u.test(text[end] ?? "");
+}
+
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 // Whole word, case-insensitive. A trailing genitive "s" or ":s" may follow the
-// term; it stays outside the span so the output reads "[ORD_1]s".
+// term; it stays outside the span so the output reads "[ORD_1]s". A term of
+// four characters or more that starts a longer word, in any case
+// ("Fenixlanseringen", "fenixlanseringen", "Sommarglödens"), is masked too, as
+// "[ORD_1]lanseringen". The user chose the term, so a hit in an ordinary word
+// ("Anna" in "annan") is an over-mask they can keep.
 export function findTerms(text: string, terms: string[], source: Extract<Source, "manual" | "wordlist">): Span[] {
   const sorted = [...terms].filter((t) => t.trim()).sort((a, b) => b.length - a.length);
   if (sorted.length === 0) return [];
   const alternatives = sorted.map((t) => escapeRegExp(t.trim())).join("|");
-  const re = new RegExp(`(?<![\\p{L}\\p{N}])(${alternatives})(?=(?::?s)?(?![\\p{L}\\p{N}]))`, "giu");
+  const re = new RegExp(`(?<![\\p{L}\\p{N}])(${alternatives})(?=(?::?s)?(?![\\p{L}\\p{N}])|\\p{L})`, "giu");
   const spans: Span[] = [];
   for (const m of text.matchAll(re)) {
     const start = m.index;
-    spans.push({ start, end: start + m[1].length, type: "ORD", source });
+    const end = start + m[1].length;
+    WORD_END.lastIndex = end;
+    if (!WORD_END.test(text) && !(end - start >= COMPOUND_MIN && /^\p{L}/u.test(text[end] ?? ""))) continue;
+    spans.push({ start, end, type: "ORD", source });
   }
   return spans;
 }
