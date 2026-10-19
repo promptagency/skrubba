@@ -19,10 +19,10 @@ const CORPUS: DomainText[] = JSON.parse(readFileSync(new URL("./fixtures/maskera
 
 /**
  * "id: value", for every value left in clear text, in whole or in part. Plain
- * maskera with the same model leaks the same values (measured 2026-10-19).
+ * maskera with the same model leaks these too, and "Jonas Falk" on a "From:"
+ * line, which our header rule masks (measured 2026-10-19).
  */
 const KNOWN_LEAKS: string[] = [
-  "edge2-09: Jonas Falk", // "From: Jonas Falk" header line
   "edge2-10: 580722-437", // OCR-garbled personnummer
   "edge2-11: Holmquist",
   "edge2-11: 730928-",

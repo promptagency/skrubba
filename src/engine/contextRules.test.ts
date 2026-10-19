@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { companyName, domainName, labelledNumber, momsnummer, orgnrInContext } from "./contextRules.ts";
+import { companyName, domainName, headerName, labelledNumber, momsnummer, orgnrInContext } from "./contextRules.ts";
 
 const values = (text: string) => orgnrInContext.detect(text).map((d) => d.value);
 
@@ -95,6 +95,28 @@ describe("companyName", () => {
 
   it("is labelled ORGANISATION", () => {
     expect(companyName.label).toBe("ORGANISATION");
+  });
+});
+
+describe("headerName", () => {
+  const names = (text: string) => headerName.detect(text).map((d) => d.value);
+
+  it("masks the name on a From line, and where it recurs", () => {
+    expect(names("From: Jonas Falk\nSubject: reset\n\nHälsningar Jonas Falk")).toEqual(["Jonas Falk", "Jonas Falk"]);
+  });
+
+  it("reads Swedish labels, lists, quotes and addresses", () => {
+    expect(
+      names('Från: "Anna Berg" <anna.berg@norrstrom.se>\nTill: Erik Holm <erik@x.se>; Lisa Ek\nKopia: lisa.ek@norrstrom.se'),
+    ).toEqual(["Anna Berg", "Erik Holm", "Lisa Ek"]);
+  });
+
+  it("leaves lowercase words, addresses and lines that are not headers", () => {
+    expect(names("Till: alla medarbetare\nFrån: anna.berg@norrstrom.se\nVi åkte från Malmö: Anna Berg körde")).toEqual([]);
+  });
+
+  it("is labelled NAMN", () => {
+    expect(headerName.label).toBe("NAMN");
   });
 });
 

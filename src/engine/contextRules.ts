@@ -74,13 +74,36 @@ export const companyName: Detector = {
     // the list does not know ("Tillsammans Norrström Media"): use the shorter.
     const shortest = [...names].filter((n) => ![...names].some((m) => n.endsWith(` ${m}`)));
     // Every occurrence of the name, with or without the form: "Norrström Media", "Norrström Media:s".
-    const out: Found[] = [];
-    for (const name of shortest) {
-      const pattern = name.split(" ").map(escape).join(String.raw`\s+`);
-      for (const m of input.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${pattern}(?::?s)?(?![\\p{L}\\p{N}])`, "gu")))
-        out.push({ start: m.index, end: m.index + m[0].length, value: m[0] });
-    }
-    return out.sort((a, b) => a.start - b.start);
+    return everyOccurrence(input, shortest);
+  },
+};
+
+/** Every whole-word occurrence of each name, genitive included, any whitespace between its words. */
+function everyOccurrence(input: string, names: Iterable<string>): Found[] {
+  const out: Found[] = [];
+  for (const name of names) {
+    const pattern = name.split(" ").map(escape).join(String.raw`\s+`);
+    for (const m of input.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${pattern}(?::?s)?(?![\\p{L}\\p{N}])`, "gu")))
+      out.push({ start: m.index, end: m.index + m[0].length, value: m[0] });
+  }
+  return out.sort((a, b) => a.start - b.start);
+}
+
+// The name on an email header line ("From: Jonas Falk", "Till: Anna Berg
+// <anna@…>, Erik Holm") is a person, also where it recurs in the body. The
+// model misses it there, since a header is not a sentence. Only capitalised
+// words count, so a memo's "Till: alla medarbetare" stays.
+const HEADER_LINE = /^[^\S\n]*(?:from|från|to|till|cc|bcc|kopia|hemlig kopia|avsändare|mottagare|sender|reply-to|svara till)[^\S\n]*:([^\n]*)/gimu;
+const HEADER_NAME =
+  /(?<=^|[,;"'<(]|[^\S\n])(\p{Lu}[\p{L}'’-]*\.?(?:[^\S\n]+\p{Lu}[\p{L}'’-]*\.?){0,3})(?=[^\S\n]*(?:[,;"'<>)]|$))/gu;
+
+export const headerName: Detector = {
+  label: "NAMN",
+  detect(input) {
+    const names = new Set<string>();
+    for (const line of input.matchAll(HEADER_LINE))
+      for (const m of line[1].matchAll(HEADER_NAME)) if (m[1].replace(/\.$/, "").length >= 2) names.add(m[1].replace(/\.$/, ""));
+    return everyOccurrence(input, names);
   },
 };
 
