@@ -57,7 +57,8 @@ export function EntityPanel(props: EntityPanelProps) {
                 {e.active ? "●" : "○"}
               </span>
               <span className="row-text">
-                <span className="row-value">{e.value}</span>
+                <span className="row-value">{e.value}</span>{" "}
+                {/* The space keeps "Karin Namn" two words for the name check (WCAG 2.5.3). */}
                 <span className="row-type">{TYPE_LABEL[e.type]}</span>
               </span>
               <span className="row-count">×{e.occurrences.length}</span>
