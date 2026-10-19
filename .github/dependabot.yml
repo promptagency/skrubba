@@ -16,6 +16,10 @@ updates:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
     groups:
+      # react and react-dom must always be the same version. First, so the
+      # @types packages land here and not in dev-tools.
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
       # Build and test tools in one pull request.
       dev-tools:
         dependency-type: development
