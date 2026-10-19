@@ -32,6 +32,8 @@ describe("tolerantRestore silent matches", () => {
     ["Hej [förnamn_1].", "Hej Anna."],
     ["[ORGANISATIONSNUMMER_1] för [ORGANISATION_1]", "556677-8899 för Atea"],
     ["IP [IP_ADRESS_1].", "IP 10.0.0.1."],
+    ["(18[NAMN_2])", "(18Anders)"],
+    ["Projekt[ORGANISATION_1]avtalet", "ProjektAteaavtalet"],
   ])("%s", (input, expected) => {
     const r = restore(input);
     expect(r.text).toBe(expected);
@@ -73,6 +75,12 @@ describe("tolerantRestore suggestions", () => {
     expect(restore("NAMN_1s bil och NAMN_2:s cykel", new Set(["NAMN_1s", "NAMN_2:s"])).text).toBe(
       "Anna Bergs bil och Anders cykel",
     );
+  });
+});
+
+describe("tolerantRestore boundaries", () => {
+  it("leaves a placeholder without brackets alone when it follows a letter or digit", () => {
+    expect(restore("XNAMN_1 och 7NAMN_1").text).toBe("XNAMN_1 och 7NAMN_1");
   });
 });
 

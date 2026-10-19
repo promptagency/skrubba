@@ -37,7 +37,6 @@ const KNOWN_LEAKS: string[] = [
 
 /** Texts that do not restore to themselves. */
 const KNOWN_RESTORE_FAILURES: string[] = [
-  "edge2-13", // "(18e våningen)" masked as "(18[ADRESS_2])": a placeholder right after a digit keeps a stray "["
   "juridik-10", // "kjell-olov" comes back as the key has it, "Kjell-Olov"
   "telefon-transkript-10", // "Kalle" comes back as "kalle"
   "vard-remiss-03", // "glukos" comes back as "Glukos"

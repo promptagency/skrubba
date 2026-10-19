@@ -38,8 +38,11 @@ const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const typeWords = [...TYPES, ...Object.keys(ALIASES)].sort((a, b) => b.length - a.length).map(escapeRegExp);
 
 // Brackets and backticks are consumed; quotes are not (they belong to the prose).
+// A bracketed placeholder may follow a letter or digit, as when the model masked
+// a word that starts mid-token ("18[ADRESS_2]" for "18e våningen"); a bare one
+// may not, so "XNAMN_1" in prose is left alone.
 const CANDIDATE = new RegExp(
-  `(?<![\\p{L}\\p{N}_])([\\[\`]*)(${typeWords.join("|")})([_ -]?)(\\d+)(:?s)?(?![\\p{L}\\p{N}_])([\\]\`]*)`,
+  `(?:([\\[\`]+)|(?<![\\p{L}\\p{N}_]))(${typeWords.join("|")})([_ -]?)(\\d+)(:?s)?(?![\\p{L}\\p{N}_])([\\]\`]*)`,
   "giu",
 );
 

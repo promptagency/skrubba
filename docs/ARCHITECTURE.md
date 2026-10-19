@@ -147,6 +147,8 @@ LLMs mangle placeholders. `tolerantRestore.ts` normalises candidates before matc
 4. Inflected or translated forms: `NAMN_1s`, `NAMN_1:s`, `NAME_1`, `PERSON_1` → map via a small alias table to the Swedish type.
 5. Everything matched with rules 1–2 is restored silently. Rules 3–5 produce a **suggestion** the user confirms.
 
+A placeholder in brackets or backticks is found even right after a letter or digit, since a masked word can start mid-token ("18e våningen" masked as "18[ADRESS_2]") and restoring must not leave the "[" behind. One without brackets must stand on its own, so prose like "XNAMN_1" is left alone.
+
 Never restore a placeholder number that does not exist in the key. Report it.
 
 ## Reading documents
