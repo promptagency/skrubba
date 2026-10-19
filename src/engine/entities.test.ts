@@ -42,6 +42,30 @@ describe("buildEntities numbering", () => {
     expect(summary(build(text, [["Anna Berg", "NAMN"], ["anna  berg", "NAMN"]]))).toEqual(["[NAMN_1]=Anna Berg×2"]);
   });
 
+  it("stores the first capitalised form as the value", () => {
+    const text = "det är kalle. Hej Kalle!";
+    expect(summary(build(text, [["kalle", "NAMN"], ["Kalle", "NAMN"]]))).toEqual(["[NAMN_1]=Kalle×2"]);
+  });
+
+  it("keeps a lowercase value when no other form is seen", () => {
+    expect(summary(build("det är kalle", [["kalle", "NAMN"]]))).toEqual(["[NAMN_1]=kalle×1"]);
+  });
+
+  it("stores a word-list term as the user typed it", () => {
+    const text = "fenix och FENIX";
+    const spans = spansFor(text, [["fenix", "ORD", "wordlist"], ["FENIX", "ORD", "wordlist"]]).map((s) => ({
+      ...s,
+      term: "Fenix",
+    }));
+    expect(summary(buildEntities(text, spans, new EntityRegistry()))).toEqual(["[ORD_1]=Fenix×2"]);
+  });
+
+  it("replaces a lowercase value with a capitalised one from a later text, keeping the placeholder", () => {
+    const registry = new EntityRegistry();
+    build("det är kalle", [["kalle", "NAMN"]], registry);
+    expect(summary(build("Hej Kalle", [["Kalle", "NAMN"]], registry))).toEqual(["[NAMN_1]=Kalle×1"]);
+  });
+
   it("numbers ORD like other types", () => {
     expect(summary(build("Nordljus", [["Nordljus", "ORD", "wordlist"]]))).toEqual(["[ORD_1]=Nordljus×1"]);
   });

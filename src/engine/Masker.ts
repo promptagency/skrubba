@@ -43,6 +43,8 @@ export interface Span {
   end: number;
   type: EntityType;
   source: Source;
+  /** For manual and word-list spans: the term as the user typed it. */
+  term?: string;
 }
 
 export interface Occurrence {

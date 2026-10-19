@@ -7,6 +7,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 ### Fixed
 
 - **Compound words no longer leak.** A word-list term, or a company or place the model found, is now also masked where it starts a longer word: *Fenixlanseringen* becomes *[ORD_1]lanseringen*, *Volvoavtalet* becomes *[ORGANISATION_1]avtalet*, and restore puts the name back. Word-list terms match in lowercase text too (*fenixlanseringen*). Before, these stayed in clear text.
+- **Restore writes names the way names are written.** When a name appeared both as *kalle* and *Kalle*, restore wrote whichever came first everywhere. It now writes the capitalised form, and a word-list term as you typed it.
 - **No stray bracket after restore.** When a masked word started right after a digit or letter (*18e våningen* masked as *18[ADRESS_2]*), restore left a "[" in the text. It now restores cleanly.
 
 ## [1.3.0] - 2026-10-16

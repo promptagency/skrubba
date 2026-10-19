@@ -42,12 +42,11 @@ const KNOWN_LEAKS: string[] = [
  */
 const LEAKS_ON_SOME_CPUS = new Set(["blandat-webb-02: Malin"]);
 
-/** Texts that do not restore to themselves. */
-const KNOWN_RESTORE_FAILURES: string[] = [
-  "juridik-10", // "kjell-olov" comes back as the key has it, "Kjell-Olov"
-  "telefon-transkript-10", // "Kalle" comes back as "kalle"
-  "vard-remiss-03", // "glukos" comes back as "Glukos"
-];
+/**
+ * Texts that do not restore to themselves, up to case: an entity has one
+ * stored spelling ("kjell-olov" and "Kjell-Olov" both come back as "Kjell-Olov").
+ */
+const KNOWN_RESTORE_FAILURES: string[] = [];
 
 const run = await runModelTests();
 
@@ -78,7 +77,7 @@ describe.skipIf(!run)("maskera's domain corpus through Skrubba", () => {
       const masker = new MaskeraMasker(backend);
       const { masked, key } = masker.applyMask(text, await masker.mask(text, { wordList: [], manual: [] }), []);
       for (const value of forvantad) if (leaked(value, masked)) leaks.push(`${id}: ${value}`);
-      if (masker.restore(masked, key).text !== text) restoreFailures.push(id);
+      if (masker.restore(masked, key).text.toLowerCase() !== text.toLowerCase()) restoreFailures.push(id);
     }
     const total = CORPUS.reduce((n, t) => n + t.forvantad.length, 0);
     console.log(`Domain corpus: ${total - leaks.length}/${total} values masked, ${leaks.length} leaked`);

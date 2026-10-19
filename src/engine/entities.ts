@@ -28,9 +28,17 @@ export class EntityRegistry {
     return this.entries.get(key);
   }
 
+  /**
+   * The entry for `key`, created if new. A capitalised `value` replaces a
+   * lowercase one already stored ("kalle", later "Kalle"), so restore writes
+   * the name-like form; the placeholder stays.
+   */
   register(key: string, value: string, type: EntityType): Registered {
     const existing = this.entries.get(key);
-    if (existing) return existing;
+    if (existing) {
+      if (CAPITALISED.test(value) && !CAPITALISED.test(existing.value)) existing.value = value;
+      return existing;
+    }
     const n = (this.counters.get(type) ?? 0) + 1;
     this.counters.set(type, n);
     const entry = { placeholder: `[${type}_${n}]`, value, type };
@@ -70,6 +78,8 @@ export class EntityRegistry {
     return this.links.keys();
   }
 }
+
+const CAPITALISED = /^\p{Lu}/u;
 
 function norm(s: string): string {
   return s.toLowerCase().replace(/\s+/g, " ").trim();
@@ -154,9 +164,21 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
     }
   }
 
+  // One value per entity is stored in the key, and restore writes it wherever
+  // the AI's answer has the placeholder: the answer says which entity, not
+  // which spelling. So prefer a capitalised form, then the term as the user
+  // typed it, then the first form seen.
+  const stored = new Map<string, { value: string; rank: number }>();
+  for (const r of resolved) {
+    const value = r.firstName ? r.value : (r.span.term ?? r.value);
+    const rank = (CAPITALISED.test(value) ? 0 : 2) + (r.span.term !== undefined && !r.firstName ? 0 : 1);
+    const best = stored.get(r.key);
+    if (!best || rank < best.rank) stored.set(r.key, { value, rank });
+  }
+
   const byKey = new Map<string, Entity>();
   for (const r of resolved) {
-    const reg = registry.register(r.key, r.value, r.span.type);
+    const reg = registry.register(r.key, stored.get(r.key)?.value ?? r.value, r.span.type);
     let entity = byKey.get(r.key);
     if (!entity) {
       entity = {

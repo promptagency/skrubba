@@ -39,6 +39,7 @@ function escapeRegExp(s: string): string {
 export function findTerms(text: string, terms: string[], source: Extract<Source, "manual" | "wordlist">): Span[] {
   const sorted = [...terms].filter((t) => t.trim()).sort((a, b) => b.length - a.length);
   if (sorted.length === 0) return [];
+  const typed = new Map(sorted.map((t) => [t.trim().toLowerCase(), t.trim()]));
   const alternatives = sorted.map((t) => escapeRegExp(t.trim())).join("|");
   const re = new RegExp(`(?<![\\p{L}\\p{N}])(${alternatives})(?=(?::?s)?(?![\\p{L}\\p{N}])|\\p{L})`, "giu");
   const spans: Span[] = [];
@@ -47,7 +48,7 @@ export function findTerms(text: string, terms: string[], source: Extract<Source,
     const end = start + m[1].length;
     WORD_END.lastIndex = end;
     if (!WORD_END.test(text) && !(end - start >= COMPOUND_MIN && /^\p{L}/u.test(text[end] ?? ""))) continue;
-    spans.push({ start, end, type: "ORD", source });
+    spans.push({ start, end, type: "ORD", source, term: typed.get(m[1].toLowerCase()) ?? m[1] });
   }
   return spans;
 }

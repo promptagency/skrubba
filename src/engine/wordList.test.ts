@@ -32,6 +32,10 @@ describe("findTerms", () => {
     expect(surfaces("Anna har en annan tid", ["Anna"])).toEqual(["Anna", "anna"]);
   });
 
+  it("carries the term as the user typed it", () => {
+    expect(findTerms("fenixlanseringen", ["Fenix"], "wordlist").map((s) => s.term)).toEqual(["Fenix"]);
+  });
+
   it("matches a lowercase genitive", () => {
     expect(surfaces("fjällgrens jacka", ["Fjällgren"])).toEqual(["fjällgren"]);
   });
@@ -53,6 +57,6 @@ describe("findTerms", () => {
 
   it("types matches as ORD with the given source", () => {
     const [span] = findTerms("Nordljus", ["Nordljus"], "manual");
-    expect(span).toEqual({ start: 0, end: 8, type: "ORD", source: "manual" });
+    expect(span).toEqual({ start: 0, end: 8, type: "ORD", source: "manual", term: "Nordljus" });
   });
 });
