@@ -126,7 +126,7 @@ export const COPY = {
   "feedback.link": "Missade Skrubba något? Berätta.",
   "feedback.subject": "Skrubba missade något",
   "feedback.body":
-    "Berätta vilken sorts uppgift Skrubba missade och hur den såg ut, till exempel ett kundnummer i stil med AB-1234-567. Skicka inte den riktiga uppgiften eller din text.",
+    "Skriv en påhittad mening där Skrubba missar på samma sätt, med påhittade namn och nummer i samma form som de riktiga. Till exempel \"Ring Kalle Persson om kundnummer AB-1234-567.\" Testa gärna meningen i Skrubba först, så vet du att den visar missen. Berätta också vilken sorts text det var, som ett mejl eller ett protokoll. Skicka inte den riktiga uppgiften eller din text.",
   "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Kontrollera dina val innan du kopierar.",
   "mode.switch": "Vad vill du göra?",
   "pane.scrubIn": "Din text",

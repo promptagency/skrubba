@@ -134,7 +134,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | howto.open | Så här funkar det |
 | feedback.link | Missade Skrubba något? Berätta. |
 | feedback.subject | Skrubba missade något |
-| feedback.body | Berätta vilken sorts uppgift Skrubba missade och hur den såg ut, till exempel ett kundnummer i stil med AB-1234-567. Skicka inte den riktiga uppgiften eller din text. |
+| feedback.body | Skriv en påhittad mening där Skrubba missar på samma sätt, med påhittade namn och nummer i samma form som de riktiga. Till exempel "Ring Kalle Persson om kundnummer AB-1234-567." Testa gärna meningen i Skrubba först, så vet du att den visar missen. Berätta också vilken sorts text det var, som ett mejl eller ett protokoll. Skicka inte den riktiga uppgiften eller din text. |
 | caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Kontrollera dina val innan du kopierar. |
 | mode.switch | Vad vill du göra? |
 | pane.scrubIn | Din text |
@@ -267,6 +267,10 @@ Nytt 2026-10-16, godkänt av ägaren 2026-10-16. Medan språkmodellen läser en 
 - `status.scanningStart`: det skärmläsare hör när en sådan läsning börjar. När den är klar hör de antalet uppgifter (`panel.count`).
 - `action.scrubbing`: knappen Skrubba medan den väntar på modellen, till exempel "Skrubbar … 40 %".
 - `toast.pressCopy`: när någon trycker kortkommandot för Kopiera innan texten är skrubbad och modellen hinner läsa längre än webbläsaren tillåter en kopiering efter tangenttrycket. Texten skrubbas, Kopiera får fokus och den här raden visas, så att ett tryck till kopierar.
+
+Ändrat 2026-10-20, godkänt av ägaren 2026-10-20.
+
+- `feedback.body`: ber om en påhittad mening som visar missen, gärna testad i Skrubba först, och vilken sorts text det var. Förut "Berätta vilken sorts uppgift Skrubba missade och hur den såg ut, till exempel ett kundnummer i stil med AB-1234-567." Sista meningen är kvar.
 
 ## Typer
 

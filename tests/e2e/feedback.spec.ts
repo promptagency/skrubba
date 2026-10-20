@@ -14,7 +14,7 @@ test("the warning under the text ends with a link to report a miss by email, nev
   expect(mail.pathname).toBe("micke@promptagency.se");
   expect(mail.searchParams.get("subject")).toBe("Skrubba missade något");
   expect(mail.searchParams.get("body")).toBe(
-    "Berätta vilken sorts uppgift Skrubba missade och hur den såg ut, till exempel ett kundnummer i stil med AB-1234-567. Skicka inte den riktiga uppgiften eller din text.",
+    "Skriv en påhittad mening där Skrubba missar på samma sätt, med påhittade namn och nummer i samma form som de riktiga. Till exempel \"Ring Kalle Persson om kundnummer AB-1234-567.\" Testa gärna meningen i Skrubba först, så vet du att den visar missen. Berätta också vilken sorts text det var, som ett mejl eller ett protokoll. Skicka inte den riktiga uppgiften eller din text.",
   );
   // The user's text never goes into the email.
   for (const secret of ["Johan", "Lindqvist", "850412-1234"]) expect(decodeURIComponent(href!)).not.toContain(secret);
