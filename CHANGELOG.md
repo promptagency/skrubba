@@ -4,6 +4,12 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-20
+
+### Changed
+
+- **The feedback email asks for an example.** *Missade Skrubba något? Berätta.* now opens an email that asks for a made-up sentence where Skrubba misses in the same way, and what kind of text it was. It still asks you not to send the real value or your text.
+
 ### Fixed
 
 - **Compound words no longer leak.** A word-list term, or a company or place the model found, is now also masked where it starts a longer word: *Fenixlanseringen* becomes *[ORD_1]lanseringen*, *Volvoavtalet* becomes *[ORGANISATION_1]avtalet*, and restore puts the name back. Word-list terms match in lowercase text too (*fenixlanseringen*). Before, these stayed in clear text.
@@ -104,7 +110,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/promptagency/skrubba/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/promptagency/skrubba/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/promptagency/skrubba/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/promptagency/skrubba/compare/v1.1.1...v1.2.0
