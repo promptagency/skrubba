@@ -50,6 +50,24 @@ describe("applyMask", () => {
     ]);
   });
 
+  it("writes a linked surname as [EFTERNAMN_n] and adds it to the key", () => {
+    const t = "Johan Lindqvist är sjuk. Lindqvists lön.";
+    const johan = entity({
+      placeholder: "[NAMN_1]",
+      value: "Johan Lindqvist",
+      occurrences: [
+        { start: 0, end: 15, surface: "Johan Lindqvist" },
+        { start: 25, end: 34, surface: "Lindqvist", lastName: true },
+      ],
+    });
+    const { masked, key } = applyMask(t, [johan], []);
+    expect(masked).toBe("[NAMN_1] är sjuk. [EFTERNAMN_1]s lön.");
+    expect(key.entries).toEqual([
+      { placeholder: "[NAMN_1]", value: "Johan Lindqvist", type: "NAMN" },
+      { placeholder: "[EFTERNAMN_1]", value: "Lindqvist", type: "EFTERNAMN" },
+    ]);
+  });
+
   it("builds a key with the word list and metadata", () => {
     const { key } = applyMask(text, [anna], ["Nordljus"]);
     expect(key.wordList).toEqual(["Nordljus"]);

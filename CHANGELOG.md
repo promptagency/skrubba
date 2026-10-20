@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Changed
+
+- **A surname on its own is linked to the full name.** In *Johan Lindqvist ringde. Lindqvist vill ha svar.* the second *Lindqvist* used to get a placeholder of its own, so the AI saw two people. It now becomes *[EFTERNAMN_1]*, numbered like *[NAMN_1]*, and restore writes *Lindqvist*. When two full names share the surname, it is left on its own, as before.
+
 ## [1.3.1] - 2026-10-20
 
 ### Changed

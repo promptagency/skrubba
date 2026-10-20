@@ -228,7 +228,7 @@ Nytt 2026-10-12. Har gått igenom COPY.md manuellt och gjort vissa korrigeringar
 Nytt 2026-10-12, ägarens godkännande av utkasten.
 
 - `toast.copyFailed`: när webbläsaren stoppar kopieringen, i både Skrubba och Avskrubba. Högra rutan går att markera, så rådet fungerar.
-- `entity.tip.scrub` och `entity.tip.keep`: tipset när man håller musen över en markering. {type} är typens namn, till exempel Namn eller Förnamn, och {placeholder} är platshållaren som markeringen blir.
+- `entity.tip.scrub` och `entity.tip.keep`: tipset när man håller musen över en markering. {type} är typens namn, till exempel Namn, Förnamn eller Efternamn, och {placeholder} är platshållaren som markeringen blir.
 - `entity.row`, `entity.count`, `entity.count.one`, `entity.state.scrub`, `entity.state.keep`: radens namn för skärmläsare i fönstret Uppgifter, till exempel "Johan Lindqvist, namn, 3 gånger, skrubbas". Typen skrivs med liten bokstav mitt i meningen, utom förkortningar som IBAN och IP-adress. Knappen på raden säger fortfarande vad som händer (`entity.keepAction`, `entity.scrubAction`).
 
 Ändrat 2026-10-12, ägarens granskning: `app.title`, `app.tagline`, `editor.empty`, `gate.body`, `status.trust`, `restore.empty`, `key.downloadWarning` och `caveat.short`.
@@ -272,12 +272,17 @@ Nytt 2026-10-16, godkänt av ägaren 2026-10-16. Medan språkmodellen läser en 
 
 - `feedback.body`: ber om en påhittad mening som visar missen, gärna testad i Skrubba först, och vilken sorts text det var. Förut "Berätta vilken sorts uppgift Skrubba missade och hur den såg ut, till exempel ett kundnummer i stil med AB-1234-567." Sista meningen är kvar.
 
+Nytt 2026-10-20, godkänt av ägaren 2026-10-20. Ett efternamn som står ensamt för ett helt namn i texten får en egen platshållare, som förnamnet.
+
+- Typen `EFTERNAMN` visas som "Efternamn", till exempel i tipset över markeringen och i kodnyckeln. Platshållaren är `[EFTERNAMN_1]`, numrerad som namnets `[NAMN_1]`.
+
 ## Typer
 
 | Intern typ | Visas som |
 |---|---|
 | NAMN | Namn |
 | FÖRNAMN | Förnamn |
+| EFTERNAMN | Efternamn |
 | PLATS | Plats |
 | ORGANISATION | Organisation |
 | ADRESS | Adress |

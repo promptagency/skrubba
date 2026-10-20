@@ -3,13 +3,15 @@
 
 /**
  * maskera's labels verbatim, so placeholders match its format, plus ORD
- * (manual selection or word list) and FÖRNAMN: a first name standing alone
- * for a full name in the text, numbered like that name ([FÖRNAMN_1] is the
- * first name of [NAMN_1]), so restore writes back the form that was there.
+ * (manual selection or word list), FÖRNAMN and EFTERNAMN: a first name or
+ * surname standing alone for a full name in the text, numbered like that name
+ * ([FÖRNAMN_1] is the first name of [NAMN_1], [EFTERNAMN_1] its surname), so
+ * restore writes back the form that was there.
  */
 export const ENTITY_TYPES = [
   "NAMN",
   "FÖRNAMN",
+  "EFTERNAMN",
   "PLATS",
   "ORGANISATION",
   "ADRESS",
@@ -53,6 +55,8 @@ export interface Occurrence {
   surface: string;
   /** A first name linked to the entity's full name. Masked as [FÖRNAMN_n]. */
   firstName?: boolean;
+  /** A surname linked to the entity's full name. Masked as [EFTERNAMN_n]. */
+  lastName?: boolean;
 }
 
 export interface Entity {

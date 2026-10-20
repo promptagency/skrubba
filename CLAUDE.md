@@ -48,7 +48,7 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 - Code, commits and docs under `docs/` except `COPY.md`: English. UI: Swedish, per `docs/COPY.md`.
 - Engine behind `src/engine/` with a single interface (`Masker`). Nothing outside imports `maskera` directly.
 - Document reading behind `src/reader/` with a single entry, `readDocument`. Nothing outside imports pdf.js or a format reader. Every dropped or chosen file goes through the window Läs in dokument; only text comes out. In Skrubba a document starts a new kodnyckel, as Ny text does.
-- Placeholders follow maskera's format `[NAMN_1]`, `[PLATS_1]`, `[ORGANISATION_1]`, `[ADRESS_1]`, `[PERSONNUMMER_1]`; manual and word-list entries use `[ORD_1]`; a first name standing alone for a full name uses `[FÖRNAMN_1]`, numbered like that name's `[NAMN_1]`. Restore must be tolerant (see `docs/ARCHITECTURE.md`).
+- Placeholders follow maskera's format `[NAMN_1]`, `[PLATS_1]`, `[ORGANISATION_1]`, `[ADRESS_1]`, `[PERSONNUMMER_1]`; manual and word-list entries use `[ORD_1]`; a first name standing alone for a full name uses `[FÖRNAMN_1]`, and a surname `[EFTERNAMN_1]`, numbered like that name's `[NAMN_1]`. Restore must be tolerant (see `docs/ARCHITECTURE.md`).
 - One page, two operations picked with a switch: Skrubba (mask) and Avskrubba (restore). Input on the left, the button between the panes runs it, the result on the right, then Kopiera. The items found (Uppgifter), the kodnyckel (placeholder → real value list, not an encryption key), Vanliga frågor and Så här funkar det (a captioned video, re-recorded with `npm run demo-video` after visible changes) are windows on top. No wizard. See `docs/UX.md`.
 - Commit small, one feature per commit, with the test that proves it.
 

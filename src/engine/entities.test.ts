@@ -142,11 +142,29 @@ describe("buildEntities first-name linking", () => {
     ]);
   });
 
-  it("does not link a lone surname", () => {
-    const text = "Johan Lindqvist. Lindqvist ringde.";
-    expect(summary(build(text, [["Johan Lindqvist", "NAMN"], ["Lindqvist", "NAMN"]]))).toEqual([
+  it("links a lone surname and its genitive, flagged so they can be written as [EFTERNAMN_1]", () => {
+    const text = "Johan Lindqvist. Lindqvist ringde. Lindqvists lön.";
+    const [e] = build(text, [["Johan Lindqvist", "NAMN"], ["Lindqvist", "NAMN"], ["Lindqvists", "NAMN"]]);
+    expect(summary([e])).toEqual(["[NAMN_1]=Johan Lindqvist×3"]);
+    expect(e.occurrences.map((o) => o.lastName ?? false)).toEqual([false, true, true]);
+    expect(e.occurrences.some((o) => o.firstName)).toBe(false);
+  });
+
+  it("does not link when two full names share the surname", () => {
+    const text = "Johan Lindqvist och Eva Lindqvist. Lindqvist ringde.";
+    expect(summary(build(text, [["Johan Lindqvist", "NAMN"], ["Eva Lindqvist", "NAMN"], ["Lindqvist", "NAMN"]]))).toEqual([
       "[NAMN_1]=Johan Lindqvist×1",
-      "[NAMN_2]=Lindqvist×1",
+      "[NAMN_2]=Eva Lindqvist×1",
+      "[NAMN_3]=Lindqvist×1",
+    ]);
+  });
+
+  it("does not link a word that is one name's first name and another's surname", () => {
+    const text = "Henrik Jonas och Jonas Berg. Jonas ringde.";
+    expect(summary(build(text, [["Henrik Jonas", "NAMN"], ["Jonas Berg", "NAMN"], ["Jonas", "NAMN"]]))).toEqual([
+      "[NAMN_1]=Henrik Jonas×1",
+      "[NAMN_2]=Jonas Berg×1",
+      "[NAMN_3]=Jonas×1",
     ]);
   });
 
@@ -217,5 +235,16 @@ describe("EntityRegistry.seed", () => {
     const [e] = build("Johan ringde. Erik Ek svarade.", [["Johan", "NAMN"], ["Erik Ek", "NAMN"]], registry);
     expect(summary([e])).toEqual(["[NAMN_1]=Johan Lindqvist×1"]);
     expect(e.occurrences[0].firstName).toBe(true);
+  });
+
+  it("reads an [EFTERNAMN_n] row as the surname of [NAMN_n]", () => {
+    const registry = new EntityRegistry();
+    registry.seed([
+      { placeholder: "[NAMN_1]", value: "Johan Lindqvist", type: "NAMN" },
+      { placeholder: "[EFTERNAMN_1]", value: "Lindqvist", type: "EFTERNAMN" },
+    ]);
+    const [e] = build("Lindqvist ringde.", [["Lindqvist", "NAMN"]], registry);
+    expect(summary([e])).toEqual(["[NAMN_1]=Johan Lindqvist×1"]);
+    expect(e.occurrences[0].lastName).toBe(true);
   });
 });

@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { type Entity, firstNamePlaceholder } from "../engine/index.ts";
+import { type Entity, firstNamePlaceholder, lastNamePlaceholder } from "../engine/index.ts";
 import { t, TYPE_LABEL, typeGroup } from "./copy.ts";
 import { cleanPaste } from "./pasteCleanup.ts";
 import { entityAt, entityMarks, segments } from "./segments.ts";
@@ -124,10 +124,13 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
     if (area.current) area.current.style.cursor = entity ? "pointer" : "";
     if (!entity) return setTip(null);
     const box = e.currentTarget.getBoundingClientRect();
+    const mark = markUnder(e);
     const [type, placeholder] =
-      markUnder(e)?.dataset.first === undefined
-        ? [entity.type, entity.placeholder]
-        : (["FÖRNAMN", firstNamePlaceholder(entity.placeholder)] as const);
+      mark?.dataset.first !== undefined
+        ? (["FÖRNAMN", firstNamePlaceholder(entity.placeholder)] as const)
+        : mark?.dataset.last !== undefined
+          ? (["EFTERNAMN", lastNamePlaceholder(entity.placeholder)] as const)
+          : [entity.type, entity.placeholder];
     const label = entity.active
       ? t("entity.tip.scrub", { type: TYPE_LABEL[type], placeholder })
       : t("entity.tip.keep", { type: TYPE_LABEL[type] });
@@ -143,6 +146,7 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
               key={s.start}
               data-ph={s.data.placeholder}
               data-first={s.data.occurrences.some((o) => o.start === s.start && o.firstName) ? "" : undefined}
+              data-last={s.data.occurrences.some((o) => o.start === s.start && o.lastName) ? "" : undefined}
               className={[
                 "hl",
                 `hl-${typeGroup(s.data.type)}`,

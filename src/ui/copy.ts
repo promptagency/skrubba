@@ -174,6 +174,7 @@ export function rowLabel(row: { value: string; type: EntityType; count: number; 
 export const TYPE_LABEL: Record<EntityType, string> = {
   NAMN: "Namn",
   FÖRNAMN: "Förnamn",
+  EFTERNAMN: "Efternamn",
   PLATS: "Plats",
   ORGANISATION: "Organisation",
   ADRESS: "Adress",
@@ -199,7 +200,7 @@ export const TYPE_LABEL: Record<EntityType, string> = {
 
 /** Colour group per type. Colour is never the only signal; labels are always available. */
 export function typeGroup(type: EntityType): "name" | "place" | "org" | "word" | "number" {
-  if (type === "NAMN" || type === "FÖRNAMN") return "name";
+  if (type === "NAMN" || type === "FÖRNAMN" || type === "EFTERNAMN") return "name";
   if (type === "PLATS" || type === "ADRESS") return "place";
   if (type === "ORGANISATION") return "org";
   if (type === "ORD") return "word";

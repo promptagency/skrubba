@@ -17,7 +17,7 @@ interface Registered {
  */
 export class EntityRegistry {
   private readonly entries = new Map<string, Registered>();
-  private readonly links = new Map<string, string>(); // first name → full-name key
+  private readonly links = new Map<string, string>(); // first name or surname → full-name key
   private readonly counters = new Map<EntityType, number>();
 
   has(key: string): boolean {
@@ -48,14 +48,14 @@ export class EntityRegistry {
 
   /**
    * Start from an uploaded key: its values keep their placeholders, and new
-   * values are numbered after the highest number per type. A [FÖRNAMN_n] row
-   * links that first name to [NAMN_n] again.
+   * values are numbered after the highest number per type. A [FÖRNAMN_n] or
+   * [EFTERNAMN_n] row links that name to [NAMN_n] again.
    */
   seed(entries: KeyEntry[]): void {
     const byPlaceholder = new Map(entries.map((e) => [e.placeholder, e]));
     for (const e of entries) {
-      if (e.type === "FÖRNAMN") {
-        const full = byPlaceholder.get(e.placeholder.replace("[FÖRNAMN_", "[NAMN_"));
+      if (e.type === "FÖRNAMN" || e.type === "EFTERNAMN") {
+        const full = byPlaceholder.get(e.placeholder.replace(/^\[(FÖR|EFTER)NAMN_/, "[NAMN_"));
         if (full) this.link(norm(e.value), norm(full.value));
         continue;
       }
@@ -66,12 +66,12 @@ export class EntityRegistry {
     }
   }
 
-  link(firstName: string, fullKey: string): void {
-    this.links.set(firstName, fullKey);
+  link(part: string, fullKey: string): void {
+    this.links.set(part, fullKey);
   }
 
-  linkedTo(firstName: string): string | undefined {
-    return this.links.get(firstName);
+  linkedTo(part: string): string | undefined {
+    return this.links.get(part);
   }
 
   linkedNames(): Iterable<string> {
@@ -86,6 +86,7 @@ function norm(s: string): string {
 }
 
 const firstWord = (key: string) => key.slice(0, key.indexOf(" "));
+const lastWord = (key: string) => key.slice(key.lastIndexOf(" ") + 1);
 
 interface Resolved {
   span: Span; // genitive suffix already cut off the end
@@ -93,6 +94,7 @@ interface Resolved {
   key: string;
   value: string;
   firstName?: boolean;
+  lastName?: boolean;
 }
 
 /** "[NAMN_3]" → "[FÖRNAMN_3]": the placeholder for the first name alone. */
@@ -100,9 +102,16 @@ export function firstNamePlaceholder(placeholder: string): string {
   return placeholder.replace(/^\[NAMN_/, "[FÖRNAMN_");
 }
 
+/** "[NAMN_3]" → "[EFTERNAMN_3]": the placeholder for the surname alone. */
+export function lastNamePlaceholder(placeholder: string): string {
+  return placeholder.replace(/^\[NAMN_/, "[EFTERNAMN_");
+}
+
 /** The placeholder an occurrence is written as. */
 export function placeholderOf(entity: Entity, occurrence: Occurrence): string {
-  return occurrence.firstName ? firstNamePlaceholder(entity.placeholder) : entity.placeholder;
+  if (occurrence.firstName) return firstNamePlaceholder(entity.placeholder);
+  if (occurrence.lastName) return lastNamePlaceholder(entity.placeholder);
+  return entity.placeholder;
 }
 
 function stripSuffix(span: Span, surface: string, key: string, n: number): Resolved {
@@ -110,7 +119,7 @@ function stripSuffix(span: Span, surface: string, key: string, n: number): Resol
   return { span: { ...span, end: span.end - n }, surface: value, key: key.slice(0, -n), value };
 }
 
-/** Group spans into entities, merging surface forms and linking first names. */
+/** Group spans into entities, merging surface forms and linking first names and surnames. */
 export function buildEntities(text: string, spans: Span[], registry: EntityRegistry): Entity[] {
   const sorted = [...spans].sort((a, b) => a.start - b.start);
   const surfaces = sorted.map((s) => text.slice(s.start, s.end));
@@ -120,7 +129,7 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
   sorted.forEach((s, i) => {
     const key = norm(surfaces[i]);
     known.add(key);
-    if (s.type === "NAMN" && key.includes(" ")) known.add(firstWord(key));
+    if (s.type === "NAMN" && key.includes(" ")) known.add(firstWord(key)).add(lastWord(key));
   });
 
   const resolved: Resolved[] = sorted.map((span, i) => {
@@ -134,33 +143,36 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
     return { span, surface, key, value: surface };
   });
 
-  // First name → full names in this text that start with it.
-  const fullNames = new Map<string, Map<string, string>>(); // first → (full key → value)
+  // First name or surname → full names in this text that start or end with it.
+  // A word that is the first name of one and the surname of another is two
+  // candidates, so it is not linked.
+  const fullNames = new Map<string, Map<string, string>>(); // part → (full key → value)
   for (const r of resolved) {
     if (r.span.type !== "NAMN" || !r.key.includes(" ")) continue;
-    const first = firstWord(r.key);
-    const forFirst = fullNames.get(first) ?? new Map<string, string>();
-    if (!forFirst.has(r.key)) forFirst.set(r.key, r.value);
-    fullNames.set(first, forFirst);
+    for (const part of new Set([firstWord(r.key), lastWord(r.key)])) {
+      const forPart = fullNames.get(part) ?? new Map<string, string>();
+      if (!forPart.has(r.key)) forPart.set(r.key, r.value);
+      fullNames.set(part, forPart);
+    }
   }
 
+  const linkTo = (r: Resolved, fullKey: string, fullValue: string) => {
+    if (firstWord(fullKey) === r.key) r.firstName = true;
+    else r.lastName = true;
+    r.key = fullKey;
+    r.value = fullValue;
+  };
   for (const r of resolved) {
     if (r.span.type !== "NAMN" || r.key.includes(" ")) continue;
     const candidates = fullNames.get(r.key);
     if (candidates?.size === 1) {
       const [[fullKey, fullValue]] = candidates;
       registry.link(r.key, fullKey);
-      r.key = fullKey;
-      r.value = fullValue;
-      r.firstName = true;
+      linkTo(r, fullKey, fullValue);
     } else if (!candidates) {
       const linked = registry.linkedTo(r.key);
       const entry = linked && registry.get(linked);
-      if (linked && entry) {
-        r.key = linked;
-        r.value = entry.value;
-        r.firstName = true;
-      }
+      if (linked && entry) linkTo(r, linked, entry.value);
     }
   }
 
@@ -170,8 +182,9 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
   // typed it, then the first form seen.
   const stored = new Map<string, { value: string; rank: number }>();
   for (const r of resolved) {
-    const value = r.firstName ? r.value : (r.span.term ?? r.value);
-    const rank = (CAPITALISED.test(value) ? 0 : 2) + (r.span.term !== undefined && !r.firstName ? 0 : 1);
+    const linked = r.firstName || r.lastName;
+    const value = linked ? r.value : (r.span.term ?? r.value);
+    const rank = (CAPITALISED.test(value) ? 0 : 2) + (r.span.term !== undefined && !linked ? 0 : 1);
     const best = stored.get(r.key);
     if (!best || rank < best.rank) stored.set(r.key, { value, rank });
   }
@@ -197,6 +210,7 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
       end: r.span.end,
       surface: r.surface,
       ...(r.firstName && { firstName: true }),
+      ...(r.lastName && { lastName: true }),
     });
     if (SOURCE_RANK[r.span.source] < SOURCE_RANK[entity.source]) entity.source = r.span.source;
   }

@@ -141,6 +141,17 @@ test.describe("clicking a highlighted word in the text", () => {
     await expect(page.getByRole("tooltip")).toHaveText("Namn behålls. Klicka för att skrubba.");
   });
 
+  test("hovering a linked surname names it Efternamn and its own placeholder", async ({ page }) => {
+    await openReady(page);
+    await editor(page).fill("Johan Lindqvist ringde. Lindqvist vill ha svar.");
+    const mark = page.locator("mark[data-last]");
+    await expect(mark).toHaveText("Lindqvist");
+    const ph = (await mark.getAttribute("data-ph"))!.replace("[NAMN_", "[EFTERNAMN_");
+    const box = (await mark.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(page.getByRole("tooltip")).toHaveText(`Efternamn blir ${ph}. Klicka för att behålla.`);
+  });
+
   test("a kept word gets a border in its type's darker shade, set off from the text", async ({ page }) => {
     await openReady(page);
     await editor(page).fill(SHORT);

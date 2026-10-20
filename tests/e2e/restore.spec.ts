@@ -53,6 +53,24 @@ test("a first name standing alone comes back as the first name", async ({ page }
   await expect(restoredBox(page)).toHaveValue("Hej Johan! Vi har registrerat Johan Lindqvists flytt.");
 });
 
+test("a surname standing alone comes back as the surname", async ({ page }) => {
+  await openReady(page);
+  await editor(page).fill("Johan Lindqvist (850412-1234) flyttar till Umeå. Lindqvist börjar i mars.");
+  await expect(rows(page).filter({ hasText: "Johan Lindqvist" })).toHaveCount(1);
+  await scrub(page);
+
+  const full = await placeholderOf(page, "Johan Lindqvist");
+  const last = full.replace("[NAMN_", "[EFTERNAMN_");
+  await expect(scrubbedBox(page)).toHaveValue(new RegExp(`^${escape(full)} .* ${escape(last)} börjar i mars\\.$`));
+  const dialog = await openKey(page);
+  await expect(dialog.getByRole("row").filter({ hasText: last })).toContainText("Efternamn");
+  await page.keyboard.press("Escape");
+
+  await (await answerBox(page)).fill(`Hej ${full}! ${last}s flytt är registrerad.`);
+  await page.keyboard.press(`${MOD}+Enter`);
+  await expect(restoredBox(page)).toHaveValue("Hej Johan Lindqvist! Lindqvists flytt är registrerad.");
+});
+
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 test("Nej hides a suggestion and leaves the text", async ({ page }) => {
