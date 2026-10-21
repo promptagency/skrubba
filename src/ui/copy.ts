@@ -120,6 +120,7 @@ export const COPY = {
   "footer.kbbert": "KB-BERT",
   "footer.github": "Github",
   "footer.version": "Version {version}",
+  "footer.whatsNew": "Vad är nytt i version {version}",
   "footer.credits": "Bygger på {maskera} (MIT) av Hägvall Labs och {kbbert} (CC0) från Kungliga biblioteket. Källkod till Skrubba finns på {github}.",
   "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
   "faq.open": "Vanliga frågor",

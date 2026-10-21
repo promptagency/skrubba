@@ -603,7 +603,15 @@ export function App() {
             {t("status.trust")}
           </button>
         </p>
-        <p>{t("footer.version", { version: APP_VERSION })}</p>
+        <p>
+          {REPO_URL ? (
+            <ExternalLink href={`${REPO_URL}/releases/tag/v${APP_VERSION}`} label={t("footer.whatsNew", { version: APP_VERSION })}>
+              {t("footer.version", { version: APP_VERSION })}
+            </ExternalLink>
+          ) : (
+            t("footer.version", { version: APP_VERSION })
+          )}
+        </p>
       </footer>
 
       <ItemsDialog
@@ -651,9 +659,9 @@ function fill(template: string, parts: Record<string, ReactNode>): ReactNode[] {
 }
 
 /** Opens in a new tab, so leaving never loses the text and kodnyckel in this one. */
-function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+function ExternalLink({ href, label, children }: { href: string; label?: string; children: ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
       {children}
     </a>
   );

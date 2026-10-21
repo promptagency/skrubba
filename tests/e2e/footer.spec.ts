@@ -44,5 +44,12 @@ test("the footer ends with the version from package.json", async ({ page }) => {
   const { version } = JSON.parse(readFileSync("package.json", "utf8")) as { version: string };
   expect(version).toMatch(/^\d+\.\d+\.\d+$/);
   await openReady(page);
-  await expect(page.locator(".site-footer p").last()).toHaveText(`Version ${version}`);
+  const last = page.locator(".site-footer p").last();
+  await expect(last).toHaveText(`Version ${version}`);
+  // The version links to what is new in it, once the repository is public.
+  if (!REPO_URL) return;
+  const link = last.getByRole("link", { name: `Vad är nytt i version ${version}`, exact: true });
+  await expect(link).toHaveAttribute("href", `${REPO_URL}/releases/tag/v${version}`);
+  await expect(link).toHaveAttribute("target", "_blank");
+  await expect(link).toHaveAttribute("rel", "noopener noreferrer");
 });

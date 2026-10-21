@@ -130,6 +130,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | footer.kbbert | KB-BERT |
 | footer.github | Github |
 | footer.version | Version {version} |
+| footer.whatsNew | Vad är nytt i version {version} |
 | key.explainer | Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. |
 | faq.open | Vanliga frågor |
 | howto.open | Så här funkar det |
@@ -277,10 +278,15 @@ Nytt 2026-10-20, godkänt av ägaren 2026-10-20. Ett efternamn som står ensamt 
 
 - Typen `EFTERNAMN` visas som "Efternamn", till exempel i tipset över markeringen och i kodnyckeln. Platshållaren är `[EFTERNAMN_1]`, numrerad som namnets `[NAMN_1]`.
 
-Nytt 2026-10-21. Fönstret Läs in dokument säger när bilder inte lästes.
+Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Fönstret Läs in dokument säger när bilder inte lästes.
 
 - `file.note.images`: visas när ett Word-, PowerPoint-, Excel-, OpenDocument- eller RTF-dokument har en bild i själva texten, eller när en PDF med text också har en skannad sida. En logga i sidhuvudet eller i bildmallen räknas inte. Bilder läses aldrig, och inte heller text i dem.
 - Vanliga frågor, "Kan jag släppa in PDF och Word?": "Kommentarer, dolda delar och bilagor tas inte med." blir "Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder."
+
+Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Versionen i sidfoten är en länk.
+
+- `footer.version` länkar till versionens sida med vad som är nytt på Github, i en ny flik. Sidan är på engelska.
+- `footer.whatsNew`: länkens namn för skärmläsare, till exempel "Vad är nytt i version 1.4.0".
 
 ## Typer
 
