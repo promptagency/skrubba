@@ -69,9 +69,9 @@ export const HARD_CASES: HardCase[] = [
 
   // Probe of 2026-10-21: texts shaped like real HR, agency, finance and
   // healthcare material, outside maskera's own corpus.
-  // Dates: no rule masks them yet.
-  { text: "Kandidaten är född 1987-03-14 och bor i Täby.", secrets: ["1987-03-14", "Täby"], fails: true },
-  { text: "Född: 14 mars 1987. Ålder: 39 år.", secrets: ["14 mars 1987"], fails: true },
+  // Dates.
+  { text: "Kandidaten är född 1987-03-14 och bor i Täby.", secrets: ["1987-03-14", "Täby"] },
+  { text: "Född: 14 mars 1987. Ålder: 39 år.", secrets: ["14 mars 1987"] },
   { text: "Personnummer 870314-1234 (kontrollsiffra fel). Även 8703141234.", secrets: ["870314-1234", "8703141234"] },
   { text: "Pnr: 19870314-1239", secrets: ["19870314-1239"] },
 

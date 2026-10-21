@@ -4,6 +4,17 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **Birth dates are masked.** A date right after *född*, *f.*, *födelsedatum* and similar, in any common form (*1987-03-14*, *14/3-87*, *14 mars 1987*), becomes `[FÖDELSEDATUM_1]`. Other dates are still left for the AI, and so is a birth year on its own.
+- **Any labelled identifier is masked.** *Passnummer*, *diarienummer*, *anst.nr*, *medarbetar-id* and every other word ending in nummer, nr, id or kod used to need to be on a list; now any such label counts. *Box 1234* is masked as an address.
+
+### Fixed
+
+- **A company form no longer gets a placeholder of its own.** *Fjällbris Konsult AB* came out as *[ORGANISATION_1] [ORGANISATION_2]*, with *AB* in the key. It now reads *[ORGANISATION_1] AB*.
+- **A phone number with the 00 exit code is a phone number.** *0046701234567* was masked as a personnummer.
+- **Medication is no longer taken for an address.** *Sertralin 50 mg* and *Alvedon 500 mg x 3* used to become *[ADRESS_1]*, which hid what a healthcare text is about. A dose with no street name is left alone.
+
 ## [1.5.0] - 2026-10-21
 
 ### Added

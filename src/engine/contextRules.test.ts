@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ampersandName,
+  birthDate,
   companyName,
   domainName,
   headerName,
@@ -130,6 +131,36 @@ describe("headerName", () => {
 
   it("is labelled NAMN", () => {
     expect(headerName.label).toBe("NAMN");
+  });
+});
+
+describe("birthDate", () => {
+  it.each([
+    ["Kandidaten är född 1987-03-14 i Täby.", "1987-03-14"],
+    ["Född: 14 mars 1987.", "14 mars 1987"],
+    ["född den 14 mars 1987", "14 mars 1987"],
+    ["Anna Berg, f. 14/3-87, bor här.", "14/3-87"],
+    ["Född 14/3 1987", "14/3 1987"],
+    ["Födelsedatum: 19870314", "19870314"],
+    ["född 870314", "870314"],
+    ["fdat 1987-03-14", "1987-03-14"],
+    ["Date of birth: 14.3.1987", "14.3.1987"],
+    ["Född 3:e maj 1990", "3:e maj 1990"],
+  ])("masks the date after a birth label: %s", (text, value) => {
+    expect(found(birthDate, text)).toEqual([value]);
+  });
+
+  it.each([
+    ["a date without a birth label", "Mötet hölls 1987-03-14 och 14 mars 1987."],
+    ["a year alone", "Född 1987 i Täby."],
+    ["a label inside a word", "Nyfödd 1987-03-14"],
+    ["an age", "född för 39 år sedan"],
+  ])("leaves %s alone", (_, text) => {
+    expect(found(birthDate, text)).toEqual([]);
+  });
+
+  it("is labelled FÖDELSEDATUM", () => {
+    expect(birthDate.label).toBe("FÖDELSEDATUM");
   });
 });
 

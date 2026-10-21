@@ -288,6 +288,11 @@ Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Versionen i sidfoten är en lä
 - `footer.version` länkar till listan med versioner och vad som är nytt i dem på Github, i en ny flik. Sidan är på engelska.
 - `footer.whatsNew`: länkens namn för skärmläsare, till exempel "Vad är nytt i version 1.4.0".
 
+Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Födelsedatum döljs.
+
+- Typen `FÖDELSEDATUM` visas som "Födelsedatum": ett datum direkt efter född, f., födelsedatum eller liknande. Andra datum döljs inte, inte heller ett födelseår för sig.
+- Vanliga frågor, "Vilka uppgifter hittar Skrubba?": "… och referensnummer samt födelsedatum hittas med regler. Andra datum, belopp och vanliga ord döljs inte …".
+
 ## Typer
 
 | Intern typ | Visas som |
@@ -300,6 +305,7 @@ Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Versionen i sidfoten är en lä
 | ADRESS | Adress |
 | PERSONNUMMER | Personnummer |
 | SAMORDNINGSNUMMER | Samordningsnummer |
+| FÖDELSEDATUM | Födelsedatum |
 | ORGANISATIONSNUMMER | Organisationsnummer |
 | TELEFON | Telefon |
 | EPOST | E-post |
@@ -354,7 +360,7 @@ Texten går igenom regler och en liten svensk språkmodell som laddas ner till d
 
 ### Vilka uppgifter hittar Skrubba?
 
-Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer, registreringsnummer och kund-, avtals-, faktura- och referensnummer hittas med regler. Datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.
+Namn, platser och organisationer hittas av språkmodellen. Personnummer, samordningsnummer, organisations- och momsnummer, telefonnummer, e-post, webbadresser, adresser, postnummer, bankuppgifter, kortnummer, registreringsnummer och kund-, avtals-, faktura- och referensnummer samt födelsedatum hittas med regler. Andra datum, belopp och vanliga ord döljs inte, eftersom AI:n ofta behöver dem för att svara. Är de känsliga lägger du till dem under Egna ord.
 
 ### Hur döljer jag något som Skrubba missade?
 

@@ -134,6 +134,27 @@ export const labelledNumber: Detector = {
   },
 };
 
+// A date right after a word that says it is a birth date ("född 1987-03-14",
+// "Född: 14 mars 1987", "Berg, f. 14/3-87"). Other dates stay: the AI often
+// needs them to answer. The year alone ("född 1987") stays too.
+const BIRTH_LABEL = String.raw`(?:född|fodd|födelsedatum|födelsedag|födelsetid|f\.|fdat\.?|date of birth|dob|birthdate)`;
+const MONTH = String.raw`(?:jan(?:uari)?|feb(?:ruari)?|mars?|apr(?:il)?|maj|juni?|juli?|aug(?:usti)?|sep(?:tember)?|okt(?:ober)?|nov(?:ember)?|dec(?:ember)?)`;
+const DATE = String.raw`(?:\d{4}-\d{2}-\d{2}|\d{8}|\d{6}|\d{1,2}[./]\d{1,2}(?:[./-]|\s)\s?\d{2,4}|\d{1,2}(?::e)?\s+${MONTH}\.?(?:\s+-?\d{2,4})?)`;
+const BIRTH_DATE = new RegExp(String.raw`(?<![\p{L}\p{N}])${BIRTH_LABEL}\s*:?\s*(?:den\s+)?(${DATE})(?![\p{L}\p{N}])`, "giu");
+
+export const birthDate: Detector = {
+  label: "FÖDELSEDATUM",
+  detect(input) {
+    const out: Found[] = [];
+    for (const m of input.matchAll(BIRTH_DATE)) {
+      const value = m[1];
+      const start = m.index + m[0].length - value.length;
+      out.push({ start, end: start + value.length, value });
+    }
+    return out;
+  },
+};
+
 // A post office box ("Box 1234") is an address. maskera's address rule
 // wants a street name.
 const BOX = /(?<![\p{L}\p{N}])(?:Box|Postbox)\s?\d{2,6}(?![\p{L}\p{N}])/giu;
