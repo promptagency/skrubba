@@ -8,6 +8,7 @@ import {
   labelledNumber,
   momsnummer,
   orgnrInContext,
+  postbox,
   splitPersonnummer,
   spokenEmail,
   spokenPhone,
@@ -132,6 +133,16 @@ describe("headerName", () => {
   });
 });
 
+describe("postbox", () => {
+  it("masks a post office box", () => {
+    expect(found(postbox, "Box 1234, 111 22 Stockholm. Postbox 77.")).toEqual(["Box 1234", "Postbox 77"]);
+  });
+
+  it("leaves other boxes alone", () => {
+    expect(found(postbox, "Xbox 360, box 1, en Box med 3 saker")).toEqual([]);
+  });
+});
+
 describe("domainName", () => {
   it("masks a bare web address", () => {
     expect(found(domainName, "Läs mer på norrstrommedia.se eller shop.fjallvind.com.")).toEqual([
@@ -176,6 +187,12 @@ describe("labelledNumber", () => {
     ["Bokningsnummer XQ7T2P", "XQ7T2P"],
     ["Försäkringsnummer 123-456-789", "123-456-789"],
     ["OCR-nummer 4412 3390 1182", "4412 3390 1182"],
+    ["Passnummer 12345678", "12345678"],
+    ["anst.nr 10234", "10234"],
+    ["Medarbetar-id 7781", "7781"],
+    ["Ärende nr. 2024-00118", "2024-00118"],
+    ["Diarienummer HR 2024/118.", "HR 2024/118"],
+    ["Löpnummer 42", "42"],
   ])("masks the number after a label: %s", (text, value) => {
     expect(found(labelledNumber, text)).toEqual([value]);
   });
@@ -189,6 +206,9 @@ describe("labelledNumber", () => {
     ["a label inside a longer word", "Kundnummerfältet 123 är tomt."],
     ["a number that is not right after the label", "Kundnumret skickas senare, ring 0701234567."],
     ["ref inside another word", "Han refererade till 2025 års avtal."],
+    ["a number maskera types itself", "Telefonnummer 070-1234567, personnummer 19870314-1239, pnr 870314-1239, kontonummer 1234567"],
+    ["a version number", "Versionsnummer 2.3 och version nr 4"],
+    ["a page, a count or an ordinal", "Sidnummer 4 av 12, antal nr 3, barnen nr 1 och nr 2"],
   ])("leaves %s alone", (_, text) => {
     expect(found(labelledNumber, text)).toEqual([]);
   });

@@ -8,6 +8,7 @@ import {
   headerName,
   intlPhone,
   labelledNumber,
+  postbox,
   momsnummer,
   orgnrInContext,
   splitPersonnummer,
@@ -18,7 +19,7 @@ import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
   it("is maskera's hybrid default set plus regnummer and our own rules", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, postbox, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
   });
 });
 

@@ -108,12 +108,16 @@ export const headerName: Detector = {
 };
 
 // A number right after a word that says what it is ("kundnummer 48213377",
-// "avtalsnummer AB-1234-567", "Anläggnings-ID 7359…") identifies a customer,
-// a contract or a case. Without the label such numbers look like amounts or
-// dates, so only labelled ones are masked.
-const NUMBER_LABEL = String.raw`(?:(?:kund|avtals?|order|faktura|referens|ärende|medlems?|anställnings|personal|kontrakts?|boknings|försäkrings|abonnemangs|objekt|anläggnings|mätpunkts|ocr)-?(?:nummer|nr\.?|id)|referens|ref(?:\.?\s?nr)?\.?)`;
+// "avtalsnummer AB-1234-567", "Anläggnings-ID 7359…", "anst.nr 10234")
+// identifies a customer, a contract, a case, an employee or a passport.
+// Without the label such numbers look like amounts or dates, so only
+// labelled ones are masked. Any word ending in nummer, nr, id or kod counts,
+// except the kinds maskera types on its own, a version and a page. A space
+// before "nr" counts only with a dot or colon ("Ärende nr."), so "barnen nr 1" stays.
+const OWN_TYPE = String.raw`(?:tele?fon|tel|mobil|person|p|samordnings|organisations|org|moms|vat|konto|bankkonto|post|bankgiro|plusgiro|lägenhets|journal|registrerings|reg|versions?|sid)`;
+const NUMBER_LABEL = String.raw`(?:(?!${OWN_TYPE}[-.\s]?(?:nummer|nr|id|kod))\p{L}+(?:-?(?:nummer|id|kod)|[-.]?nr\.?|\snr(?:\.|(?=\s*:)))|referens|ref(?:\.?\s?nr)?\.?)`;
 const NUMBER_FILLER = String.raw`(?:\s*[:#]\s*|\s+(?:är\s+)?#?)`;
-const NUMBER_VALUE = String.raw`[\p{L}\p{N}](?:[\p{L}\p{N}/.\-]*[\p{L}\p{N}])?(?: \d{2,}(?![\p{L}\p{N}]))*`;
+const NUMBER_VALUE = String.raw`[\p{L}\p{N}](?:[\p{L}\p{N}/.\-]*[\p{L}\p{N}])?(?: \d(?:[\p{N}/.\-]*\p{N})?(?![\p{L}\p{N}]))*`;
 const LABELLED = new RegExp(String.raw`(?<![\p{L}\p{N}])${NUMBER_LABEL}(?![\p{L}])${NUMBER_FILLER}(${NUMBER_VALUE})`, "giu");
 
 export const labelledNumber: Detector = {
@@ -127,6 +131,17 @@ export const labelledNumber: Detector = {
       out.push({ start, end: start + value.length, value });
     }
     return out;
+  },
+};
+
+// A post office box ("Box 1234") is an address. maskera's address rule
+// wants a street name.
+const BOX = /(?<![\p{L}\p{N}])(?:Box|Postbox)\s?\d{2,6}(?![\p{L}\p{N}])/giu;
+
+export const postbox: Detector = {
+  label: "ADRESS",
+  detect(input) {
+    return [...input.matchAll(BOX)].map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0] }));
   },
 };
 

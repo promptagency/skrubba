@@ -91,21 +91,21 @@ export const HARD_CASES: HardCase[] = [
   { text: "Användare: aekstrom, inloggning aek123 misslyckades.", secrets: ["aekstrom"] },
   { text: "A n d e r s  E k s t r ö m skrev under.", secrets: ["E k s t r ö m"], fails: true },
 
-  // Numbers and identifiers. The labelled-number rule knows a closed list of labels.
+  // Numbers and identifiers.
   { text: "Ring +46 70 123 45 67 eller 0046701234567 eller 08-123 456 78.", secrets: ["123 45 67", "0046701234567", "123 456 78"] },
   { text: "Tel 0701234567, mobil 070 123 45 67", secrets: ["0701234567", "070 123 45 67"] },
   { text: "Clearingnummer 8327-9, kontonummer 123 456 789-0. Swish 123 456 78 90.", secrets: ["123 456 789-0"] },
   { text: "Bankkonto: 9960 1234567890", secrets: ["1234567890"] },
   { text: "Bilen ABC 123 och den nya ABC12A står på parkeringen.", secrets: ["ABC 123", "ABC12A"] },
-  { text: "Passnummer 12345678, körkortsnummer 870314-1234.", secrets: ["12345678"], fails: true },
-  { text: "Diarienummer HR 2024/118. Ärende nr. 2024-00118.", secrets: ["2024/118", "2024-00118"], fails: true },
+  { text: "Passnummer 12345678, körkortsnummer 870314-1234.", secrets: ["12345678"] },
+  { text: "Diarienummer HR 2024/118. Ärende nr. 2024-00118.", secrets: ["2024/118", "2024-00118"] },
   { text: "Lön 48 500 kr/mån. Personnr 19870314-1239.", secrets: ["19870314-1239"] },
-  { text: "Anställningsnummer 10233, anst.nr 10234, medarbetar-id 7781", secrets: ["10233", "10234", "7781"], fails: true },
+  { text: "Anställningsnummer 10233, anst.nr 10234, medarbetar-id 7781", secrets: ["10233", "10234", "7781"] },
 
   // Addresses and places.
   { text: "Hon bor på Björkvägen 14B, 2 tr, 123 45 Huddinge.", secrets: ["Björkvägen 14B", "123 45", "Huddinge"] },
   { text: "Hyresgästen på Storgatan har klagat.", secrets: ["Storgatan"] },
-  { text: "Box 1234, 111 22 Stockholm", secrets: ["Box 1234", "111 22"], fails: true },
+  { text: "Box 1234, 111 22 Stockholm", secrets: ["Box 1234", "111 22"] },
   { text: "c/o Ekström, Lillgatan 3, Visby", secrets: ["Ekström", "Lillgatan 3", "Visby"] },
   { text: "Kunden bor i Vittsjö och jobbar i Bjärnum.", secrets: ["Vittsjö", "Bjärnum"] },
   { text: "Stockholmskontoret och Göteborgsteamet slås ihop. Malmöbor klagar.", secrets: ["Stockholm", "Göteborg", "Malmö"], fails: true },
