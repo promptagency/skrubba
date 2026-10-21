@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-21
+
 ### Changed
 
 - **A surname on its own is linked to the full name.** In *Johan Lindqvist ringde. Lindqvist vill ha svar.* the second *Lindqvist* used to get a placeholder of its own, so the AI saw two people. It now becomes *[EFTERNAMN_1]*, numbered like *[NAMN_1]*, and restore writes *Lindqvist*. When two full names share the surname, it is left on its own, as before.
@@ -18,6 +20,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 ### Changed
 
 - **The feedback email asks for an example.** *Missade Skrubba något? Berätta.* now opens an email that asks for a made-up sentence where Skrubba misses in the same way, and what kind of text it was. It still asks you not to send the real value or your text.
+- **Dependencies.** TypeScript 7, React 19.3.1 and newer test tools. The app works the same.
 
 ### Fixed
 
@@ -25,6 +28,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 - **Names on email header lines are masked.** *From: Jonas Falk* or *Till: Anna Berg <anna@…>* used to send the name in clear text, since the language model does not read a header as a sentence. Now the name is masked there and wherever it recurs.
 - **Restore writes names the way names are written.** When a name appeared both as *kalle* and *Kalle*, restore wrote whichever came first everywhere. It now writes the capitalised form, and a word-list term as you typed it.
 - **No stray bracket after restore.** When a masked word started right after a digit or letter (*18e våningen* masked as *18[ADRESS_2]*), restore left a "[" in the text. It now restores cleanly.
+- **Uppgifter rows read the same to a screen reader as they look.** The value and the type in a row are kept apart by a space, so a voice command that says what is on screen hits the right row (WCAG 2.5.3).
 
 ## [1.3.0] - 2026-10-16
 
@@ -119,7 +123,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/promptagency/skrubba/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/promptagency/skrubba/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/promptagency/skrubba/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/promptagency/skrubba/compare/v1.2.0...v1.2.1
