@@ -1,5 +1,6 @@
 import { COMPANY_FORM } from "./contextRules.ts";
 import type { Source, Span } from "./Masker.ts";
+import { KNOWN_ORGANISATIONS } from "./organisations.ts";
 import { startsCompound } from "./wordList.ts";
 
 const PRIORITY: Record<Source, number> = { manual: 0, wordlist: 1, rule: 2, model: 3 };
@@ -121,6 +122,32 @@ export function spreadModelValues(text: string, resolved: Span[]): Span[] {
     }
   }
   return spread;
+}
+
+const stem = (s: string) => s.toLowerCase().replace(/\s+/g, " ").replace(/(?::s|s)$/u, "");
+
+/**
+ * Model NAMN spans that are a company: the model types a company it does not
+ * know as a person now and then. A value is a company when the text has it
+ * typed ORGANISATION elsewhere (by the model or a rule), when it is the first
+ * word of a company name a rule found ("Fjällbris" next to "Fjällbris Konsult
+ * AB"), or when it is a well-known company (KNOWN_ORGANISATIONS).
+ */
+export function retypeOrganisations(text: string, spans: Span[]): Span[] {
+  const orgs = new Set<string>();
+  for (const s of spans) {
+    if (s.type !== "ORGANISATION") continue;
+    const value = text.slice(s.start, s.end);
+    orgs.add(stem(value));
+    if (s.source === "rule" && value.includes(" ")) orgs.add(stem(value.slice(0, value.indexOf(" "))));
+  }
+  return spans.map((s) => {
+    if (s.source !== "model" || s.type !== "NAMN") return s;
+    const value = text.slice(s.start, s.end);
+    const key = stem(value);
+    const known = orgs.has(key) || orgs.has(value.toLowerCase()) || KNOWN_ORGANISATIONS.has(key) || KNOWN_ORGANISATIONS.has(value.toLowerCase());
+    return known ? { ...s, type: "ORGANISATION" } : s;
+  });
 }
 
 // A dose or a quantity: "50 mg", "500 mg x 3", "2 st".

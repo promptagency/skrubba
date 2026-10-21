@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
-import { resolveSpans, withoutDoseAddresses } from "./spans.ts";
+import { resolveSpans, retypeOrganisations, withoutDoseAddresses } from "./spans.ts";
 
 function at(text: string, needle: string, type: EntityType, source: Source, from = 0): Span {
   const start = text.indexOf(needle, from);
@@ -102,5 +102,31 @@ describe("withoutDoseAddresses", () => {
       at(t, "2 st", "ADRESS", "rule"),
     ];
     expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["Storgatan 5 g:ADRESS:model", "Vintergatan 12:ADRESS:model", "2 st:ADRESS:rule"]);
+  });
+});
+
+describe("retypeOrganisations", () => {
+  const types = (text: string, spans: Span[]) => retypeOrganisations(text, spans).map((s) => `${text.slice(s.start, s.end)}:${s.type}`);
+
+  it("types a model name as a company when the text has it as a company elsewhere, genitive included", () => {
+    const t = "Essitys vd ringde. Essity vill ha mer.";
+    expect(types(t, [at(t, "Essitys", "NAMN", "model"), at(t, "Essity", "ORGANISATION", "model", 10)])).toEqual([
+      "Essitys:ORGANISATION",
+      "Essity:ORGANISATION",
+    ]);
+  });
+
+  it("types the first word of a rule-found company name as the company", () => {
+    const t = "Fjällbris Konsult AB svarar. Fjällbris vill se offerten.";
+    expect(types(t, [at(t, "Fjällbris Konsult", "ORGANISATION", "rule"), at(t, "Fjällbris", "NAMN", "model", 20)])).toEqual([
+      "Fjällbris Konsult:ORGANISATION",
+      "Fjällbris:ORGANISATION",
+    ]);
+  });
+
+  it("types a well-known company as a company, and leaves people and other sources alone", () => {
+    const t = "Pitchen för Arla gick bra, sa Anna. Arla är med.";
+    const spans = [at(t, "Arla", "NAMN", "model"), at(t, "Anna", "NAMN", "model"), at(t, "Arla", "NAMN", "rule", 20)];
+    expect(types(t, spans)).toEqual(["Arla:ORGANISATION", "Anna:NAMN", "Arla:NAMN"]);
   });
 });

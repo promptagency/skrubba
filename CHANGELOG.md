@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **A company the language model takes for a person is shown as a company.** *Arla* in *Pitchen för Arla gick bra* used to become *[NAMN_1]*. It is now *[ORGANISATION_1]* when the text has it as a company elsewhere, when it starts a company name such as *Fjällbris Konsult AB*, or when it is a well-known company, and compounds such as *Arlaavtalet* are masked with it.
+
 ## [1.6.0] - 2026-10-21
 
 ### Added

@@ -119,6 +119,13 @@ describe("a name the model finds in one place", () => {
   });
 });
 
+describe("a company the model takes for a person", () => {
+  it("is typed and spread as a company", async () => {
+    const masker = new MaskeraMasker(fakeNer([["Arla", "NAMN"]]));
+    expect(summary(await masker.mask("Pitchen för Arla gick bra. Arlaavtalet är klart.", none))).toEqual(["[ORGANISATION_1]=Arla:model"]);
+  });
+});
+
 describe("MaskeraMasker round trip", () => {
   it("restores the masked text to the original", async () => {
     const masker = new MaskeraMasker(fakeNer([["Anna Berg", "NAMN"], ["Umeå", "PLATS"]]));
