@@ -27,6 +27,11 @@ export const HARD_CASES: HardCase[] = [
   { text: "Vi ses på Polarisworkshopen i morgon.", secrets: ["Polaris"], wordList: ["Polaris"] },
   { text: "hej! fenixlanseringen flyttas, säg inget till kunden om fenix än", secrets: ["fenix"], wordList: ["Fenix"] },
   { text: "Kundens nya produkt Aurora X släpps i maj. Aurora X-lanseringen är hemlig.", secrets: ["Aurora X"], wordList: ["Aurora X"] },
+  {
+    text: "Projekt Havsvind lanseras i maj. Havsvind-teamet och Havsvindsteamet är klara.",
+    secrets: ["Havsvind"],
+    wordList: ["Projekt Havsvind"],
+  },
 
   // Compound words of names the model finds.
   // The model types Ikea and Lidl as NAMN; the known-organisations list retypes them, so they spread.

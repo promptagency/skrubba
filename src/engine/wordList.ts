@@ -50,16 +50,23 @@ export function findTerms(text: string, terms: string[], source: Extract<Source,
     if (!WORD_END.test(text) && !(end - start >= COMPOUND_MIN && /^\p{L}/u.test(text[end] ?? ""))) continue;
     spans.push({ start, end, type: "ORD", source, term: typed.get(m[1].toLowerCase()) ?? m[1] });
   }
-  // The head word of a multi-word term ("Aurora" of "Aurora X") where it starts
-  // a hyphenated word ("Aurora-lanseringen"), never bare and never glued on:
-  // "Projekt Fenix" must not take "projektledaren". It is an entity of its
-  // own, so restore writes "Aurora-lanseringen".
+  // The words of a multi-word term where they start a longer word, never bare.
+  // The head ("Aurora" of "Aurora X") only hyphenated ("Aurora-lanseringen"),
+  // since it is often an ordinary word: "Projekt Fenix" must not take
+  // "projektledaren". The last word ("Havsvind" of "Projekt Havsvind") is the
+  // distinctive one, so hyphenated or glued on ("Havsvind-teamet",
+  // "Havsvindsteamet"). Each is an entity of its own, so restore writes the
+  // compound back as it was.
   for (const term of sorted) {
-    const head = term.trim().split(/\s+/)[0];
-    if (!/\s/.test(term.trim()) || head.length < COMPOUND_MIN) continue;
-    for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(head)}(?=-\\p{Ll})`, "giu")))
-      if (!spans.some((s) => s.start <= m.index && m.index < s.end))
-        spans.push({ start: m.index, end: m.index + head.length, type: "ORD", source, term: head });
+    const words = term.trim().split(/\s+/);
+    if (words.length < 2) continue;
+    const parts: Array<[string, string]> = [[words[0], String.raw`-\p{Ll}`], [words.at(-1)!, String.raw`-\p{Ll}|\p{L}`]];
+    for (const [word, after] of parts) {
+      if (word.length < COMPOUND_MIN) continue;
+      for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(word)}(?=${after})`, "giu")))
+        if (!spans.some((s) => s.start <= m.index && m.index < s.end))
+          spans.push({ start: m.index, end: m.index + word.length, type: "ORD", source, term: word });
+    }
   }
   return spans.sort((a, b) => a.start - b.start);
 }

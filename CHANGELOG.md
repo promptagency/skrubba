@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **The last word of a word-list term is masked in compounds.** With *Projekt Havsvind* on the word list, *Havsvind-teamet* and *Havsvindsteamet* used to leak the name. They are now masked, with a placeholder of their own. *Havsvind* on its own is not; list it alone if the text uses it that way.
+
 ## [1.6.4] - 2026-10-21
 
 ### Fixed

@@ -71,6 +71,15 @@ describe("the head word of a multi-word term", () => {
     ]);
   });
 
+  it("masks the last word where it starts a hyphenated or glued word, but not bare", () => {
+    expect(values("Projekt Havsvind är hemligt. Havsvind-teamet och havsvindsteamet jobbar. Havsvind själv.", ["Projekt Havsvind"])).toEqual([
+      "Projekt Havsvind",
+      "Havsvind",
+      "havsvind",
+    ]);
+    expect(findTerms("Havsvind-teamet", ["Projekt Havsvind"], "wordlist").map((s) => s.term)).toEqual(["Havsvind"]);
+  });
+
   it("leaves ordinary words that start with the head word alone", () => {
     expect(values("Projekt Fenix: projektledaren, projektplanen och Projektet.", ["Projekt Fenix"])).toEqual(["Projekt Fenix"]);
   });
