@@ -4,9 +4,11 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-21
+
 ### Added
 
-- **The version in the footer links to what is new.** *Version 1.4.0* opens the release notes on GitHub, newest first, in a new tab.
+- **The version in the footer links to what is new.** *Version 1.5.0* opens the release notes on GitHub, newest first, in a new tab.
 - **The file window says when images were left out.** Skrubba does not read images, nor text in them. A Word, PowerPoint, Excel, OpenDocument or RTF file with a picture in its text, or a PDF with a scanned page among pages of text, now shows *Bilder och text i bilder togs inte med.* A logo in a header or a slide template does not count. Before, only a PDF that was all images said so.
 
 ### Fixed
@@ -132,7 +134,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/promptagency/skrubba/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/promptagency/skrubba/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/promptagency/skrubba/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/promptagency/skrubba/compare/v1.2.1...v1.3.0
