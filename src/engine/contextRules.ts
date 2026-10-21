@@ -1,6 +1,6 @@
 // Rules of our own, shaped like a maskera Detector so they run in the same
 // pipeline (and the worker clips model spans against them too).
-import type { Detector } from "@maskera/core";
+import { type Detector, isPersonnummerShape } from "@maskera/core";
 
 type Found = { start: number; end: number; value: string };
 
@@ -154,5 +154,54 @@ export const domainName: Detector = {
     for (const domain of emailDomains)
       for (const m of input.matchAll(new RegExp(`${NOT_BEFORE}${escape(domain)}${NOT_AFTER}`, "gu"))) add(m.index, m[0]);
     return [...found.values()].sort((a, b) => a.start - b.start);
+  },
+};
+
+// A personnummer broken by a space or a line break, as OCR and copy-paste
+// leave it ("730928-\n1231", "8506 23-2381"). The dash must be there and
+// stand after six or eight digits, so a phone number split by spaces
+// ("070-123 45 67") is not taken for one.
+const GAP = String.raw`[^\S\n]*\n?[^\S\n]*`;
+const SPLIT_PNR = new RegExp(
+  String.raw`(?<![\p{L}\p{N}])\d(?:${GAP}\d){5}(?:(?:${GAP}\d){2})?${GAP}[-+]${GAP}\d(?:${GAP}\d){3}(?![\p{L}\p{N}])`,
+  "gu",
+);
+
+export const splitPersonnummer: Detector = {
+  label: "PERSONNUMMER",
+  detect(input) {
+    return [...input.matchAll(SPLIT_PNR)]
+      .filter((m) => /\s/.test(m[0]) && (m[0].match(/\n/g)?.length ?? 0) <= 1 && isPersonnummerShape(m[0].replace(/\s/g, "")))
+      .map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0] }));
+  },
+};
+
+// A phone number read out digit by digit, as in a call transcript ("noll sju
+// noll två ett fyra sex fem åtta"). It starts with noll, as Swedish numbers
+// do, and has at least seven digits, so counting ("ett, två, tre") stays.
+const DIGIT_WORD = "(?:noll|ett|en|två|tre|fyra|fem|sex|sju|åtta|nio)";
+const SPOKEN_PHONE = new RegExp(
+  String.raw`(?<![\p{L}\p{N}])noll(?:(?:,?[^\S\n]+|-)${DIGIT_WORD}){6,}(?![\p{L}\p{N}])`,
+  "giu",
+);
+
+export const spokenPhone: Detector = {
+  label: "TELEFON",
+  detect(input) {
+    return [...input.matchAll(SPOKEN_PHONE)].map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0] }));
+  },
+};
+
+// An email address read out ("pelle punkt johansson snabel-a outlook punkt com").
+const SPOKEN_WORD = String.raw`[\p{L}\p{N}_]+(?:-[\p{L}\p{N}_]+)*`;
+const SPOKEN_EMAIL = new RegExp(
+  String.raw`(?<![\p{L}\p{N}])${SPOKEN_WORD}(?:\s+punkt\s+${SPOKEN_WORD})*\s+snabel(?:-|\s)?a\s+${SPOKEN_WORD}(?:\s+punkt\s+${SPOKEN_WORD})+(?![\p{L}\p{N}])`,
+  "giu",
+);
+
+export const spokenEmail: Detector = {
+  label: "EPOST",
+  detect(input) {
+    return [...input.matchAll(SPOKEN_EMAIL)].map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0] }));
   },
 };

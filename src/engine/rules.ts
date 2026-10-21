@@ -1,7 +1,17 @@
 // The rule layer. Runs synchronously on the main thread and, with the same
 // list, inside the worker so model spans are clipped against it.
 import { adress, contextualDetectors, type Detector, defaultDetectors, lagenhetsnummer, redact, regnummer } from "@maskera/core";
-import { companyName, domainName, headerName, labelledNumber, momsnummer, orgnrInContext } from "./contextRules.ts";
+import {
+  companyName,
+  domainName,
+  headerName,
+  labelledNumber,
+  momsnummer,
+  orgnrInContext,
+  splitPersonnummer,
+  spokenEmail,
+  spokenPhone,
+} from "./contextRules.ts";
 import type { EntityType, Span } from "./Masker.ts";
 
 // maskera's hybridDefaultDetectors (a test guards against drift), rebuilt
@@ -21,6 +31,9 @@ export const ruleDetectors: Detector[] = [
   headerName,
   domainName,
   labelledNumber,
+  splitPersonnummer,
+  spokenPhone,
+  spokenEmail,
 ];
 
 export function ruleSpans(text: string): Span[] {

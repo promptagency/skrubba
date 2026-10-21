@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { companyName, domainName, headerName, labelledNumber, momsnummer, orgnrInContext } from "./contextRules.ts";
+import {
+  companyName,
+  domainName,
+  headerName,
+  labelledNumber,
+  momsnummer,
+  orgnrInContext,
+  splitPersonnummer,
+  spokenEmail,
+  spokenPhone,
+} from "./contextRules.ts";
 
 const values = (text: string) => orgnrInContext.detect(text).map((d) => d.value);
 
@@ -183,5 +193,55 @@ describe("labelledNumber", () => {
 
   it("is labelled REFERENSNUMMER", () => {
     expect(labelledNumber.label).toBe("REFERENSNUMMER");
+  });
+});
+
+describe("splitPersonnummer", () => {
+  const found = (text: string) => splitPersonnummer.detect(text).map((d) => d.value);
+
+  it("finds a personnummer broken by a line break or a space", () => {
+    expect(found("Personnr 730928-\n1231\nTelefon")).toEqual(["730928-\n1231"]);
+    expect(found("PNR: 580722-437\n2\nAdress")).toEqual(["580722-437\n2"]);
+    expect(found("det stod 8506 23-2381 (felradat)")).toEqual(["8506 23-2381"]);
+    expect(found("19580722 - 4372")).toEqual(["19580722 - 4372"]);
+  });
+
+  it("leaves whole ones to maskera, and phone numbers, dates and two line breaks alone", () => {
+    expect(found("Pnr 850623-2381")).toEqual([]);
+    expect(found("Ring 070-123 45 67 eller 08-465 00 483")).toEqual([]);
+    expect(found("Ring 070123 - 4567 i dag")).toEqual(["070123 - 4567"]); // a date shape, so masked: a miss is worse
+    expect(found("850699 -2381")).toEqual([]);
+    expect(found("730928-\n12\n31")).toEqual([]);
+  });
+});
+
+describe("spokenPhone", () => {
+  const found = (text: string) => spokenPhone.detect(text).map((d) => d.value);
+
+  it("finds a number read out digit by digit", () => {
+    expect(found("du når mig på noll sju noll två ett fyra sex fem åtta, kan du läsa upp det")).toEqual([
+      "noll sju noll två ett fyra sex fem åtta",
+    ]);
+    expect(found("Noll-sju-tre, fyra fem sex, sju åtta nio.")).toEqual(["Noll-sju-tre, fyra fem sex, sju åtta nio"]);
+  });
+
+  it("leaves counting and short runs alone", () => {
+    expect(found("ett, två, tre, fyra, fem, sex, sju")).toEqual([]);
+    expect(found("noll sju noll, sen tystnad")).toEqual([]);
+  });
+});
+
+describe("spokenEmail", () => {
+  const found = (text: string) => spokenEmail.detect(text).map((d) => d.value);
+
+  it("finds an address read out with punkt and snabel-a", () => {
+    expect(found("det är pelle punkt johansson snabel-a outlook punkt com. Agent")).toEqual([
+      "pelle punkt johansson snabel-a outlook punkt com",
+    ]);
+    expect(found("gun punkt britt snabel a bredband punkt net, fast")).toEqual(["gun punkt britt snabel a bredband punkt net"]);
+  });
+
+  it("needs a domain with punkt", () => {
+    expect(found("skriv snabel-a och sen namnet")).toEqual([]);
   });
 });

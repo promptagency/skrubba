@@ -1,12 +1,22 @@
 import { regnummer } from "@maskera/core";
 import { hybridDefaultDetectors } from "maskera";
 import { describe, expect, it } from "vitest";
-import { companyName, domainName, headerName, labelledNumber, momsnummer, orgnrInContext } from "./contextRules.ts";
+import {
+  companyName,
+  domainName,
+  headerName,
+  labelledNumber,
+  momsnummer,
+  orgnrInContext,
+  splitPersonnummer,
+  spokenEmail,
+  spokenPhone,
+} from "./contextRules.ts";
 import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
   it("is maskera's hybrid default set plus regnummer and our own rules", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, domainName, labelledNumber]);
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, domainName, labelledNumber, splitPersonnummer, spokenPhone, spokenEmail]);
   });
 });
 

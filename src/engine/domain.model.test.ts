@@ -19,20 +19,14 @@ const CORPUS: DomainText[] = JSON.parse(readFileSync(new URL("./fixtures/maskera
 
 /**
  * "id: value", for every value left in clear text, in whole or in part. Plain
- * maskera with the same model leaks these too, and "Jonas Falk" on a "From:"
- * line, which our header rule masks (measured 2026-10-19).
+ * maskera with the same model leaks these too, and more that our own rules
+ * mask: "Jonas Falk" on a "From:" line, personnummer split by OCR, and phone
+ * numbers and email addresses read out in a call (measured 2026-10-21).
  */
 const KNOWN_LEAKS: string[] = [
-  "edge2-10: 580722-437", // OCR-garbled personnummer
-  "edge2-11: Holmquist",
-  "edge2-11: 730928-",
-  "edge2-11: 1231",
+  "edge2-11: Holmquist", // "Rune\nHolmquist", a name split over two lines by OCR
   "edge2-11: Rune",
-  "edge2-17: 8506 23-2381", // personnummer with a stray space
-  "intern-chatt-10: ake p",
-  "telefon-transkript-03: pelle punkt johansson snabel-a outlook punkt com", // spoken email address
-  "telefon-transkript-05: noll sju noll två ett fyra sex fem åtta", // spoken phone number
-  "telefon-transkript-14: gun punkt britt snabel-a bredband punkt net",
+  "intern-chatt-10: ake p", // "Åke Petersson" without the å, and only an initial
 ];
 
 /**

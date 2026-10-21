@@ -8,6 +8,11 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 - **A surname on its own is linked to the full name.** In *Johan Lindqvist ringde. Lindqvist vill ha svar.* the second *Lindqvist* used to get a placeholder of its own, so the AI saw two people. It now becomes *[EFTERNAMN_1]*, numbered like *[NAMN_1]*, and restore writes *Lindqvist*. When two full names share the surname, it is left on its own, as before.
 
+### Fixed
+
+- **Personnummer split by a line break or a space are masked.** OCR and copy-paste can leave *730928-* on one line and *1231* on the next, or *8506 23-2381*. These used to stay in clear text.
+- **Phone numbers and email addresses read out in a call are masked.** In a transcript, *noll sju noll två ett fyra sex fem åtta* and *pelle punkt johansson snabel-a outlook punkt com* used to stay in clear text.
+
 ## [1.3.1] - 2026-10-20
 
 ### Changed
