@@ -192,6 +192,17 @@ export const spokenPhone: Detector = {
   },
 };
 
+// A foreign-format number with the 00 exit code ("0046 70 123 45 67"). maskera's
+// phone rule knows +46 but not 00, so the personnummer rule took the digits.
+const INTL_PHONE = /(?<![\p{L}\p{N}+])00[1-9]\d{0,2}[\s-]?\d(?:[\s-]?\d){6,11}(?![\p{L}\p{N}])/gu;
+
+export const intlPhone: Detector = {
+  label: "TELEFON",
+  detect(input) {
+    return [...input.matchAll(INTL_PHONE)].map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0] }));
+  },
+};
+
 // An email address read out ("pelle punkt johansson snabel-a outlook punkt com").
 const SPOKEN_WORD = String.raw`[\p{L}\p{N}_]+(?:-[\p{L}\p{N}_]+)*`;
 const SPOKEN_EMAIL = new RegExp(

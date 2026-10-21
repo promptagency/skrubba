@@ -4,6 +4,7 @@ import {
   companyName,
   domainName,
   headerName,
+  intlPhone,
   labelledNumber,
   momsnummer,
   orgnrInContext,
@@ -213,6 +214,16 @@ describe("splitPersonnummer", () => {
     expect(found("Ring 070123 - 4567 i dag")).toEqual(["070123 - 4567"]); // a date shape, so masked: a miss is worse
     expect(found("850699 -2381")).toEqual([]);
     expect(found("730928-\n12\n31")).toEqual([]);
+  });
+});
+
+describe("intlPhone", () => {
+  it("finds a number with the 00 exit code, spaced or not", () => {
+    expect(found(intlPhone, "Ring 0046701234567 eller 0046 70-123 45 67.")).toEqual(["0046701234567", "0046 70-123 45 67"]);
+  });
+
+  it("leaves other digit runs alone", () => {
+    expect(found(intlPhone, "Konto 0012345, år 2024, pnr 19870314-1239, 070-1234567")).toEqual([]);
   });
 });
 
