@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.6.5] - 2026-10-21
+
 ### Fixed
 
 - **The last word of a word-list term is masked in compounds.** With *Projekt Havsvind* on the word list, *Havsvind-teamet* and *Havsvindsteamet* used to leak the name. They are now masked, with a placeholder of their own. *Havsvind* on its own is not; list it alone if the text uses it that way.
@@ -177,7 +179,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.4...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.5...HEAD
+[1.6.5]: https://github.com/promptagency/skrubba/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/promptagency/skrubba/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/promptagency/skrubba/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/promptagency/skrubba/compare/v1.6.1...v1.6.2
