@@ -64,12 +64,15 @@ describe("findTerms", () => {
 describe("the head word of a multi-word term", () => {
   const values = (text: string, terms: string[]) => findTerms(text, terms, "wordlist").map((s) => text.slice(s.start, s.end));
 
-  it("is masked where it starts a hyphenated or compound word, but not bare", () => {
+  it("is masked where it starts a hyphenated word, but not bare or glued on", () => {
     expect(values("Aurora X släpps. Aurora-lanseringen och auroramötet är hemliga. Aurora själv är en gud.", ["Aurora X"])).toEqual([
       "Aurora X",
       "Aurora",
-      "aurora",
     ]);
+  });
+
+  it("leaves ordinary words that start with the head word alone", () => {
+    expect(values("Projekt Fenix: projektledaren, projektplanen och Projektet.", ["Projekt Fenix"])).toEqual(["Projekt Fenix"]);
   });
 
   it("is stored as the head word, so restore writes the compound back", () => {

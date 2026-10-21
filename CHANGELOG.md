@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Ordinary words are no longer hidden because a word-list term starts with them.** With *Projekt Fenix* on the word list, 1.6.2 masked *projektledaren* and *projektplanen* as *[ORD_2]ledaren* and so on. The first word of a term is now masked only in a hyphenated form, such as *Aurora-lanseringen*.
+
 ## [1.6.3] - 2026-10-21
 
 ### Fixed

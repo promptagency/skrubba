@@ -116,12 +116,12 @@ export function spreadModelValues(text: string, resolved: Span[]): Span[] {
       values.delete(value);
   const spread: Span[] = [];
   // The head word of a multi-word company, place or address ("Zephyr" of
-  // "Zephyr 2") where it starts a hyphenated or compound word ("Zephyr-teamet",
-  // "Zephyrteamet"), never bare: bare it could be any word ("Norra").
+  // "Zephyr 2") where it starts a hyphenated word ("Zephyr-teamet"), never
+  // bare or glued on: it could be any word ("Norra", "Byrå" in "byråchefen").
   for (const [value, type] of values) {
     const head = value.split(" ")[0];
     if (!value.includes(" ") || head.length < 4 || !HEAD_TYPES.has(type)) continue;
-    for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${escape(head)}(?=-\\p{Ll}|\\p{Ll})`, "gu")))
+    for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${escape(head)}(?=-\\p{Ll})`, "gu")))
       spread.push({ start: m.index, end: m.index + head.length, type, source: "model" });
   }
   for (const [value, type] of values) {

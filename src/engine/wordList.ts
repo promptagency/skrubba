@@ -51,12 +51,13 @@ export function findTerms(text: string, terms: string[], source: Extract<Source,
     spans.push({ start, end, type: "ORD", source, term: typed.get(m[1].toLowerCase()) ?? m[1] });
   }
   // The head word of a multi-word term ("Aurora" of "Aurora X") where it starts
-  // a hyphenated or compound word ("Aurora-lanseringen"), never bare. It is an
-  // entity of its own, so restore writes "Aurora-lanseringen".
+  // a hyphenated word ("Aurora-lanseringen"), never bare and never glued on:
+  // "Projekt Fenix" must not take "projektledaren". It is an entity of its
+  // own, so restore writes "Aurora-lanseringen".
   for (const term of sorted) {
     const head = term.trim().split(/\s+/)[0];
     if (!/\s/.test(term.trim()) || head.length < COMPOUND_MIN) continue;
-    for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(head)}(?=-\\p{Ll}|\\p{L})`, "giu")))
+    for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${escapeRegExp(head)}(?=-\\p{Ll})`, "giu")))
       if (!spans.some((s) => s.start <= m.index && m.index < s.end))
         spans.push({ start: m.index, end: m.index + head.length, type: "ORD", source, term: head });
   }
