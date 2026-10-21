@@ -88,7 +88,7 @@ export const HARD_CASES: HardCase[] = [
   { text: "Dr Håkansson bedömde att pat. har diabetes. Ssk Pia noterade.", secrets: ["Håkansson", "Pia"] },
   { text: "Ann-Christin Lövgren-Holm ringde.", secrets: ["Ann-Christin", "Lövgren-Holm"] },
   { text: "Användare: aekstrom, inloggning aek123 misslyckades.", secrets: ["aekstrom"] },
-  { text: "A n d e r s  E k s t r ö m skrev under.", secrets: ["E k s t r ö m"], fails: true },
+  { text: "A n d e r s  E k s t r ö m skrev under.", secrets: ["E k s t r ö m"] },
 
   // Numbers and identifiers.
   { text: "Ring +46 70 123 45 67 eller 0046701234567 eller 08-123 456 78.", secrets: ["123 45 67", "0046701234567", "123 456 78"] },

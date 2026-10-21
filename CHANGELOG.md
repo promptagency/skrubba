@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Names written with a space between every letter are masked.** A PDF or a scanned text can give *A n d e r s  E k s t r ö m*. The language model now reads such words closed up, and the name is masked and restored as it was written.
+
 ## [1.6.2] - 2026-10-21
 
 ### Fixed

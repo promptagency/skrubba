@@ -18,6 +18,7 @@ src/
     tolerantRestore.ts   placeholder normalisation + suggestions
     ner.ts               NerBackend interface
     nerModel.ts          maskera recognizer on our files + model spans
+    unspace.ts           closes up letter-spaced words for the model, maps spans back
     worker.ts            Web Worker: loads model, verifies sha256, runs NER
     workerBackend.ts     main-thread side of the worker protocol (worker created on first use)
     packed.ts            join + gunzip files served in parts
@@ -102,6 +103,10 @@ export interface Masker {
 ## Placeholder numbering
 
 Numbering is assigned once per session per unique value and never reused. A session ends with Rensa allt, a key upload, or Ny text in Skrubba; numbering then starts again at `_1`. If the user edits the text and an entity disappears, its number is retired, not recycled. This keeps the key stable across edits.
+
+## Letter-spaced text
+
+A PDF or OCR can leave a space between every letter ("A n d e r s  E k s t r ö m"). The model sees single letters and finds nothing, and a rule cannot tell such a name from a heading set the same way ("I N N E H Å L L"). So the model layer (`modelSpans` in `nerModel.ts`) closes up runs of three or more single letters with one space between each before the model reads the text, and maps the model's spans back to the original offsets (`unspace.ts`). The entity's value is the text as it stands, spaces included, so restore writes it back unchanged. Rules and the main thread see the original text.
 
 ## Merging rules and model
 
