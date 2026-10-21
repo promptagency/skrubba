@@ -6,6 +6,8 @@ export interface HardCase {
   text: string;
   secrets: string[];
   wordList?: string[];
+  /** Leaks today. The test fails when it starts passing, so the flag is removed on purpose. */
+  fails?: true;
 }
 
 export const HARD_CASES: HardCase[] = [
@@ -64,4 +66,76 @@ export const HARD_CASES: HardCase[] = [
   { text: "Kampanjen för H&M startar i maj, i alla H&M-butiker.", secrets: ["H&M"] },
   { text: "Bokade möte med Birgitta på Fastighetsbolaget Norrkåken.", secrets: ["Birgitta", "Norrkåken"] },
   { text: "Byrån Kvist & Lönn tar över kontot från Ahlström Media.", secrets: ["Kvist", "Lönn", "Ahlström"] },
+
+  // Probe of 2026-10-21: texts shaped like real HR, agency, finance and
+  // healthcare material, outside maskera's own corpus.
+  // Dates: no rule masks them yet.
+  { text: "Kandidaten är född 1987-03-14 och bor i Täby.", secrets: ["1987-03-14", "Täby"], fails: true },
+  { text: "Född: 14 mars 1987. Ålder: 39 år.", secrets: ["14 mars 1987"], fails: true },
+  { text: "Personnummer 870314-1234 (kontrollsiffra fel). Även 8703141234.", secrets: ["870314-1234", "8703141234"] },
+  { text: "Pnr: 19870314-1239", secrets: ["19870314-1239"] },
+
+  // Names in tricky forms.
+  { text: "pratade med anders ekström igår, han var sur", secrets: ["anders", "ekström"] },
+  { text: "MÖTE MED ANDERS EKSTRÖM OCH LISA BERG", secrets: ["ANDERS", "EKSTRÖM", "LISA", "BERG"] },
+  { text: "Ansvarig: A. Ekström. Granskad av L.B.", secrets: ["Ekström"] },
+  { text: "Ekströms rapport var dålig. Vi tar Anders Ekströms förslag.", secrets: ["Ekström"] },
+  { text: "Namn\tRoll\tLön\nAnders Ekström\tSäljare\t42000\nLisa Berg\tChef\t61000", secrets: ["Ekström", "Lisa Berg", "Anders"] },
+  { text: "Med vänlig hälsning\n\nAnders\nKey Account Manager", secrets: ["Anders"] },
+  { text: "@anders.ekstrom kan du kolla? /lisa", secrets: ["anders.ekstrom", "lisa"] },
+  { text: "Vi anställer Nguyen Thi Lan och Oluwaseun Adeyemi till teamet.", secrets: ["Nguyen", "Thi Lan", "Oluwaseun", "Adeyemi"] },
+  { text: "Sökande: Fatima El-Sayed, Youssef Haddad.", secrets: ["Fatima", "El-Sayed", "Youssef", "Haddad"] },
+  { text: "Björn Stig och Rune Dal kom till mötet. Björn tar över.", secrets: ["Björn", "Stig", "Rune", "Dal"] },
+  { text: "Dr Håkansson bedömde att pat. har diabetes. Ssk Pia noterade.", secrets: ["Håkansson", "Pia"] },
+  { text: "Ann-Christin Lövgren-Holm ringde.", secrets: ["Ann-Christin", "Lövgren-Holm"] },
+  { text: "Användare: aekstrom, inloggning aek123 misslyckades.", secrets: ["aekstrom"] },
+  { text: "A n d e r s  E k s t r ö m skrev under.", secrets: ["E k s t r ö m"], fails: true },
+
+  // Numbers and identifiers. The labelled-number rule knows a closed list of labels.
+  { text: "Ring +46 70 123 45 67 eller 0046701234567 eller 08-123 456 78.", secrets: ["123 45 67", "0046701234567", "123 456 78"] },
+  { text: "Tel 0701234567, mobil 070 123 45 67", secrets: ["0701234567", "070 123 45 67"] },
+  { text: "Clearingnummer 8327-9, kontonummer 123 456 789-0. Swish 123 456 78 90.", secrets: ["123 456 789-0"] },
+  { text: "Bankkonto: 9960 1234567890", secrets: ["1234567890"] },
+  { text: "Bilen ABC 123 och den nya ABC12A står på parkeringen.", secrets: ["ABC 123", "ABC12A"] },
+  { text: "Passnummer 12345678, körkortsnummer 870314-1234.", secrets: ["12345678"], fails: true },
+  { text: "Diarienummer HR 2024/118. Ärende nr. 2024-00118.", secrets: ["2024/118", "2024-00118"], fails: true },
+  { text: "Lön 48 500 kr/mån. Personnr 19870314-1239.", secrets: ["19870314-1239"] },
+  { text: "Anställningsnummer 10233, anst.nr 10234, medarbetar-id 7781", secrets: ["10233", "10234", "7781"], fails: true },
+
+  // Addresses and places.
+  { text: "Hon bor på Björkvägen 14B, 2 tr, 123 45 Huddinge.", secrets: ["Björkvägen 14B", "123 45", "Huddinge"] },
+  { text: "Hyresgästen på Storgatan har klagat.", secrets: ["Storgatan"] },
+  { text: "Box 1234, 111 22 Stockholm", secrets: ["Box 1234", "111 22"], fails: true },
+  { text: "c/o Ekström, Lillgatan 3, Visby", secrets: ["Ekström", "Lillgatan 3", "Visby"] },
+  { text: "Kunden bor i Vittsjö och jobbar i Bjärnum.", secrets: ["Vittsjö", "Bjärnum"] },
+  { text: "Stockholmskontoret och Göteborgsteamet slås ihop. Malmöbor klagar.", secrets: ["Stockholm", "Göteborg", "Malmö"], fails: true },
+
+  // Organisations and client secrets.
+  { text: "Pitchen för Arla gick bra, men Telia tvekar. Essity vill ha mer.", secrets: ["Arla", "Telia", "Essity"] },
+  { text: "kunden (arla) vill flytta lanseringen", secrets: ["arla"] },
+  { text: "Vi tappade Grönqvist Fastigheter till Byrå Nord. Fjällbris vill se offerten.", secrets: ["Grönqvist", "Byrå Nord", "Fjällbris"] },
+  { text: "Kund: Fjällbris Konsult AB (556123-4567). Kontakt: Åsa Rehn.", secrets: ["Fjällbris", "556123-4567", "Åsa", "Rehn"] },
+  // The model finds "Zephyr 2"; the head word alone is not spread to "Zephyr-teamet".
+  { text: "Produkten Zephyr 2 lanseras i Q3. Zephyr-teamet är klart.", secrets: ["Zephyr"], fails: true },
+  { text: 'Kampanjen "Sommar utan gränser" för Telia startar v.24.', secrets: ["Telia"] },
+  { text: "Budgeten för Telia är 4,2 MSEK och marginalen 23 %.", secrets: ["Telia"] },
+  { text: "Se mer på fjallbris.se och mejla asa@fjallbris.se", secrets: ["fjallbris.se", "asa@fjallbris.se"] },
+  { text: "SKF och ICA Gruppen är kunder. SEB är bank.", secrets: ["SKF", "ICA", "SEB"] },
+  { text: "Enligt mejlet från Telias inköpschef Per Holm är avtalet klart.", secrets: ["Telia", "Per", "Holm"] },
+  { text: "Meeting notes: Anders Ekström from Fjällbris joined. Lisa Berg (CFO) declined.", secrets: ["Ekström", "Fjällbris", "Lisa Berg"] },
+
+  // Healthcare.
+  { text: "Pat. Eva Lind, 54 år, F32.1 depression, Sertralin 50 mg. Ssk Ulla Mo.", secrets: ["Eva Lind", "Ulla Mo"] },
+  { text: "Anhörig: dottern Sara (070-111 22 33) hämtar.", secrets: ["Sara", "070-111 22 33"] },
+
+  // Messy text.
+  { text: "Namn: Rune\nHolmquist\nAdress: Ekvägen\n7", secrets: ["Rune", "Holmquist", "Ekvägen"] },
+  { text: "lisa: har du skickat till ekström?\nanders: nej, väntar på berg", secrets: ["lisa", "ekström", "anders", "berg"] },
+  { text: "Anders Ekstrom (utan prickar) och Andres Ekström.", secrets: ["Ekstrom", "Andres"] },
+  { text: "Zephyrs lansering, Zephyr:s team, ZEPHYR-mötet, zephyren", secrets: ["Zephyr"], wordList: ["Zephyr"] },
+  { text: "Projekt Norra Tornet och norra tornet-gruppen", secrets: ["Norra Tornet"], wordList: ["Norra Tornet"] },
+  {
+    text: "Anders Ekström är chef. Herr Ekström, eller Anders som han kallas, är 52. Ekströmarna bor i Nacka.",
+    secrets: ["Ekström", "Anders", "Nacka"],
+  },
 ];
