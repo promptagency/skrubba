@@ -605,7 +605,8 @@ export function App() {
         </p>
         <p>
           {REPO_URL ? (
-            <ExternalLink href={`${REPO_URL}/releases/tag/v${APP_VERSION}`} label={t("footer.whatsNew", { version: APP_VERSION })}>
+            // The list, not the version's own page: that page exists only once the tag's tests pass.
+            <ExternalLink href={`${REPO_URL}/releases`} label={t("footer.whatsNew", { version: APP_VERSION })}>
               {t("footer.version", { version: APP_VERSION })}
             </ExternalLink>
           ) : (

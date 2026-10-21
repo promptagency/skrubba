@@ -285,7 +285,7 @@ Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Fönstret Läs in dokument säg
 
 Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Versionen i sidfoten är en länk.
 
-- `footer.version` länkar till versionens sida med vad som är nytt på Github, i en ny flik. Sidan är på engelska.
+- `footer.version` länkar till listan med versioner och vad som är nytt i dem på Github, i en ny flik. Sidan är på engelska.
 - `footer.whatsNew`: länkens namn för skärmläsare, till exempel "Vad är nytt i version 1.4.0".
 
 ## Typer

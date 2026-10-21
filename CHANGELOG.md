@@ -6,7 +6,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ### Added
 
-- **The version in the footer links to what is new.** *Version 1.4.0* opens that version's release notes on GitHub, in a new tab.
+- **The version in the footer links to what is new.** *Version 1.4.0* opens the release notes on GitHub, newest first, in a new tab.
 - **The file window says when images were left out.** Skrubba does not read images, nor text in them. A Word, PowerPoint, Excel, OpenDocument or RTF file with a picture in its text, or a PDF with a scanned page among pages of text, now shows *Bilder och text i bilder togs inte med.* A logo in a header or a slide template does not count. Before, only a PDF that was all images said so.
 
 ### Fixed

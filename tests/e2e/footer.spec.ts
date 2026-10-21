@@ -49,7 +49,7 @@ test("the footer ends with the version from package.json", async ({ page }) => {
   // The version links to what is new in it, once the repository is public.
   if (!REPO_URL) return;
   const link = last.getByRole("link", { name: `Vad är nytt i version ${version}`, exact: true });
-  await expect(link).toHaveAttribute("href", `${REPO_URL}/releases/tag/v${version}`);
+  await expect(link).toHaveAttribute("href", `${REPO_URL}/releases`);
   await expect(link).toHaveAttribute("target", "_blank");
   await expect(link).toHaveAttribute("rel", "noopener noreferrer");
 });
