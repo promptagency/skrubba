@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-10-21
+
 ### Fixed
 
 - **A company the language model takes for a person is shown as a company.** *Arla* in *Pitchen för Arla gick bra* used to become *[NAMN_1]*. It is now *[ORGANISATION_1]* when the text has it as a company elsewhere, when it starts a company name such as *Fjällbris Konsult AB*, or when it is a well-known company, and compounds such as *Arlaavtalet* are masked with it.
@@ -151,7 +153,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/promptagency/skrubba/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/promptagency/skrubba/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/promptagency/skrubba/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/promptagency/skrubba/compare/v1.3.1...v1.4.0
