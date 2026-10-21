@@ -4,6 +4,12 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Places inside compound words are masked.** *Malmöbor*, *Stockholmskontoret* and *Skånetrafiken* used to stay in clear text when the place did not also stand alone. Swedish towns and provinces are now recognised at the start of such words, as *[PLATS_1]bor*. Surnames like *Lundgren* are left whole.
+- **The first word of a product or company name is masked in compounds.** With *Zephyr 2* found, or *Aurora X* on the word list, *Zephyr-teamet* and *Aurora-lanseringen* used to leak the name. They are now masked, with a placeholder of their own.
+- **A salary in a table is no longer taken for a postnummer.** Five digits in a table cell, such as *42000* under *Lön*, used to become *[POSTNUMMER_1]*. A postnummer before its town on a line is still masked.
+
 ## [1.6.1] - 2026-10-21
 
 ### Fixed

@@ -60,3 +60,23 @@ describe("findTerms", () => {
     expect(span).toEqual({ start: 0, end: 8, type: "ORD", source: "manual", term: "Nordljus" });
   });
 });
+
+describe("the head word of a multi-word term", () => {
+  const values = (text: string, terms: string[]) => findTerms(text, terms, "wordlist").map((s) => text.slice(s.start, s.end));
+
+  it("is masked where it starts a hyphenated or compound word, but not bare", () => {
+    expect(values("Aurora X släpps. Aurora-lanseringen och auroramötet är hemliga. Aurora själv är en gud.", ["Aurora X"])).toEqual([
+      "Aurora X",
+      "Aurora",
+      "aurora",
+    ]);
+  });
+
+  it("is stored as the head word, so restore writes the compound back", () => {
+    expect(findTerms("Aurora-lanseringen", ["Aurora X"], "wordlist").map((s) => s.term)).toEqual(["Aurora"]);
+  });
+
+  it("is not masked when it is short", () => {
+    expect(values("Max 2 lanseras. Max-teamet.", ["Max 2"])).toEqual(["Max 2"]);
+  });
+});

@@ -12,6 +12,7 @@ import {
   postbox,
   momsnummer,
   orgnrInContext,
+  placeCompound,
   splitPersonnummer,
   spokenEmail,
   spokenPhone,
@@ -38,17 +39,21 @@ export const ruleDetectors: Detector[] = [
   labelledNumber,
   postbox,
   birthDate,
+  placeCompound,
   splitPersonnummer,
   spokenPhone,
   spokenEmail,
   ampersandName,
 ];
 
+// maskera takes five digits before a capitalised word for a postnummer, so a
+// salary in a table cell ("Lön\t42000\nLisa") was one. A cell edge (a tab) on
+// either side says it is a table value.
+const inTableCell = (text: string, start: number, end: number) =>
+  /^\d{5}$/.test(text.slice(start, end)) && (text[start - 1] === "\t" || text[end] === "\t");
+
 export function ruleSpans(text: string): Span[] {
-  return redact(text, { detectors: ruleDetectors }).redactions.map((r) => ({
-    start: r.start,
-    end: r.end,
-    type: r.label as EntityType,
-    source: "rule",
-  }));
+  return redact(text, { detectors: ruleDetectors })
+    .redactions.filter((r) => !(r.label === "POSTNUMMER" && inTableCell(text, r.start, r.end)))
+    .map((r) => ({ start: r.start, end: r.end, type: r.label as EntityType, source: "rule" }));
 }

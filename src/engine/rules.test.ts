@@ -12,6 +12,7 @@ import {
   postbox,
   momsnummer,
   orgnrInContext,
+  placeCompound,
   splitPersonnummer,
   spokenEmail,
   spokenPhone,
@@ -20,7 +21,7 @@ import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
   it("is maskera's hybrid default set plus regnummer and our own rules", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, postbox, birthDate, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, postbox, birthDate, placeCompound, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
   });
 });
 
@@ -59,6 +60,14 @@ describe("ruleSpans", () => {
     expect(ruleSpans(text).map((s) => [text.slice(s.start, s.end), s.type])).toEqual([
       ["anna@norrstrommedia.se", "EPOST"],
       ["https://norrstrommedia.se/om", "URL"],
+    ]);
+  });
+
+  it("leaves a five-digit table cell alone, and keeps a postnummer before its town", () => {
+    const text = "Namn\tLön\nLisa Berg\t42000\nAnna Ek\t61000\tStockholm\n12345 Stockholm, 123 45 Lund";
+    expect(ruleSpans(text).map((s) => [text.slice(s.start, s.end), s.type])).toEqual([
+      ["12345", "POSTNUMMER"],
+      ["123 45", "POSTNUMMER"],
     ]);
   });
 

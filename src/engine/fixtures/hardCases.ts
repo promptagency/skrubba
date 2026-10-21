@@ -107,15 +107,14 @@ export const HARD_CASES: HardCase[] = [
   { text: "Box 1234, 111 22 Stockholm", secrets: ["Box 1234", "111 22"] },
   { text: "c/o Ekström, Lillgatan 3, Visby", secrets: ["Ekström", "Lillgatan 3", "Visby"] },
   { text: "Kunden bor i Vittsjö och jobbar i Bjärnum.", secrets: ["Vittsjö", "Bjärnum"] },
-  { text: "Stockholmskontoret och Göteborgsteamet slås ihop. Malmöbor klagar.", secrets: ["Stockholm", "Göteborg", "Malmö"], fails: true },
+  { text: "Stockholmskontoret och Göteborgsteamet slås ihop. Malmöbor klagar.", secrets: ["Stockholm", "Göteborg", "Malmö"] },
 
   // Organisations and client secrets.
   { text: "Pitchen för Arla gick bra, men Telia tvekar. Essity vill ha mer.", secrets: ["Arla", "Telia", "Essity"] },
   { text: "kunden (arla) vill flytta lanseringen", secrets: ["arla"] },
   { text: "Vi tappade Grönqvist Fastigheter till Byrå Nord. Fjällbris vill se offerten.", secrets: ["Grönqvist", "Byrå Nord", "Fjällbris"] },
   { text: "Kund: Fjällbris Konsult AB (556123-4567). Kontakt: Åsa Rehn.", secrets: ["Fjällbris", "556123-4567", "Åsa", "Rehn"] },
-  // The model finds "Zephyr 2"; the head word alone is not spread to "Zephyr-teamet".
-  { text: "Produkten Zephyr 2 lanseras i Q3. Zephyr-teamet är klart.", secrets: ["Zephyr"], fails: true },
+  { text: "Produkten Zephyr 2 lanseras i Q3. Zephyr-teamet är klart.", secrets: ["Zephyr"] },
   { text: 'Kampanjen "Sommar utan gränser" för Telia startar v.24.', secrets: ["Telia"] },
   { text: "Budgeten för Telia är 4,2 MSEK och marginalen 23 %.", secrets: ["Telia"] },
   { text: "Se mer på fjallbris.se och mejla asa@fjallbris.se", secrets: ["fjallbris.se", "asa@fjallbris.se"] },

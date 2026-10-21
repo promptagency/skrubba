@@ -9,6 +9,7 @@ import {
   labelledNumber,
   momsnummer,
   orgnrInContext,
+  placeCompound,
   postbox,
   splitPersonnummer,
   spokenEmail,
@@ -161,6 +162,25 @@ describe("birthDate", () => {
 
   it("is labelled FÖDELSEDATUM", () => {
     expect(birthDate.label).toBe("FÖDELSEDATUM");
+  });
+});
+
+describe("placeCompound", () => {
+  it("masks the place at the start of a compound, binding s included", () => {
+    expect(found(placeCompound, "Stockholmskontoret och Göteborgsteamet slås ihop. Malmöbor klagar. Skånetrafiken.")).toEqual([
+      "Stockholm",
+      "Göteborg",
+      "Malmö",
+      "Skåne",
+    ]);
+  });
+
+  it("leaves the place alone, surnames and other compounds", () => {
+    expect(found(placeCompound, "Vi ses i Malmö. Eva Lundgren och Per Malmberg. Lundaspexet.")).toEqual([]);
+  });
+
+  it("is labelled PLATS", () => {
+    expect(placeCompound.label).toBe("PLATS");
   });
 });
 

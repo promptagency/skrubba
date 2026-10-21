@@ -1,6 +1,7 @@
 // Rules of our own, shaped like a maskera Detector so they run in the same
 // pipeline (and the worker clips model spans against them too).
 import { type Detector, isPersonnummerShape } from "@maskera/core";
+import { PLACES } from "./places.ts";
 
 type Found = { start: number; end: number; value: string };
 
@@ -152,6 +153,27 @@ export const birthDate: Detector = {
       out.push({ start, end: start + value.length, value });
     }
     return out;
+  },
+};
+
+// A known place at the start of a compound ("Malmöbor", "Stockholmskontoret",
+// "Göteborgsteamet") when the model misses it, as it does when the place does
+// not also stand alone. Only the place is masked: "[PLATS_1]bor". The tail is
+// a listed word, so a surname ("Lundgren") is never cut.
+const PLACE_TAIL =
+  "bo|bor|borna|kontoret|kontor|kontorets|regionen|området|trakten|avtalet|teamet|filialen|fabriken|butiken|butikerna|" +
+  "mässan|projektet|marknaden|resan|besöket|mötet|festivalen|hamnen|flygplatsen|universitetet|högskolan|kommunen|" +
+  "polisen|tingsrätt|tingsrätten|lagret|anläggningen|enheten|avdelningen|gruppen|kunden|kunderna|distriktet|depån|" +
+  "terminalen|centralen|sjukhuset|skolan|dialekt|dialekten|trafiken|området|delen|området";
+const PLACE_COMPOUND = new RegExp(
+  String.raw`(?<![\p{L}\p{N}])(${PLACES.filter((p) => p.length >= 4).join("|")})s?(?:${PLACE_TAIL})(?![\p{L}])`,
+  "gu",
+);
+
+export const placeCompound: Detector = {
+  label: "PLATS",
+  detect(input) {
+    return [...input.matchAll(PLACE_COMPOUND)].map((m) => ({ start: m.index, end: m.index + m[1].length, value: m[1] }));
   },
 };
 

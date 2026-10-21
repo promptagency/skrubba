@@ -35,7 +35,7 @@ export function resolveSpans(text: string, spans: Span[]): Span[] {
       // The worker already clips model spans against the rules, so the leftover
       // form arrives as a span of its own, unclipped.
       if ((wasClipped || span.source === "model") && ONLY_COMPANY_FORM.test(text.slice(trimmed[0], trimmed[1]))) continue;
-      if (wasClipped && isCompoundTail(text, trimmed[0])) continue;
+      if ((wasClipped || span.source === "model") && isCompoundTail(text, trimmed[0])) continue;
       kept.push({ ...span, start: trimmed[0], end: trimmed[1] });
     }
   }
@@ -90,6 +90,8 @@ const PROPER_NOUN = /^\p{Lu}/u;
 // Companies and places start compounds ("Volvoavtalet", "Malmökontoret"). A
 // person's name mostly does so in a street name ("Annagatan"), so not names.
 const COMPOUND_TYPES: ReadonlySet<Span["type"]> = new Set(["ORGANISATION", "PLATS"]);
+const HEAD_TYPES: ReadonlySet<Span["type"]> = new Set(["ORGANISATION", "PLATS", "ADRESS"]);
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /**
  * The model can find a name in one place and miss it in another, for example
@@ -113,8 +115,17 @@ export function spreadModelValues(text: string, resolved: Span[]): Span[] {
     if ([...values.keys()].some((v) => compounding(v) && value.startsWith(v) && startsCompound(value, 0, v.length)))
       values.delete(value);
   const spread: Span[] = [];
+  // The head word of a multi-word company, place or address ("Zephyr" of
+  // "Zephyr 2") where it starts a hyphenated or compound word ("Zephyr-teamet",
+  // "Zephyrteamet"), never bare: bare it could be any word ("Norra").
   for (const [value, type] of values) {
-    const pattern = value.split(" ").map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s+");
+    const head = value.split(" ")[0];
+    if (!value.includes(" ") || head.length < 4 || !HEAD_TYPES.has(type)) continue;
+    for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${escape(head)}(?=-\\p{Ll}|\\p{Ll})`, "gu")))
+      spread.push({ start: m.index, end: m.index + head.length, type, source: "model" });
+  }
+  for (const [value, type] of values) {
+    const pattern = value.split(" ").map(escape).join("\\s+");
     for (const m of text.matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${pattern}(?:(?::?s)?(?![\\p{L}\\p{N}])|(?=\\p{L}))`, "gu"))) {
       const end = m.index + m[0].length;
       if (/\p{L}/u.test(text[end] ?? "") && !(COMPOUND_TYPES.has(type) && startsCompound(text, m.index, end))) continue;

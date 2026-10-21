@@ -119,6 +119,16 @@ describe("a name the model finds in one place", () => {
   });
 });
 
+describe("the head word of a multi-word value the model finds", () => {
+  it("is masked where it starts a hyphenated or compound word, not bare", async () => {
+    const masker = new MaskeraMasker(fakeNer([["Zephyr 2", "ORGANISATION"]]));
+    const text = "Zephyr 2 lanseras. Zephyr-teamet och Zephyrmötet. Zephyr själv.";
+    const entities = await masker.mask(text, none);
+    expect(summary(entities)).toEqual(["[ORGANISATION_1]=Zephyr 2:model", "[ORGANISATION_2]=Zephyr:model"]);
+    expect(masker.applyMask(text, entities, []).masked).toBe("[ORGANISATION_1] lanseras. [ORGANISATION_2]-teamet och [ORGANISATION_2]mötet. Zephyr själv.");
+  });
+});
+
 describe("a company the model takes for a person", () => {
   it("is typed and spread as a company", async () => {
     const masker = new MaskeraMasker(fakeNer([["Arla", "NAMN"]]));
