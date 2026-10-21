@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.6.3] - 2026-10-21
+
 ### Fixed
 
 - **Names written with a space between every letter are masked.** A PDF or a scanned text can give *A n d e r s  E k s t r ö m*. The language model now reads such words closed up, and the name is masked and restored as it was written.
@@ -165,7 +167,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.2...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.3...HEAD
+[1.6.3]: https://github.com/promptagency/skrubba/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/promptagency/skrubba/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/promptagency/skrubba/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/promptagency/skrubba/compare/v1.5.0...v1.6.0
