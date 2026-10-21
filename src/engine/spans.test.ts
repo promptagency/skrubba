@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
-import { resolveSpans } from "./spans.ts";
+import { resolveSpans, withoutDoseAddresses } from "./spans.ts";
 
 function at(text: string, needle: string, type: EntityType, source: Source, from = 0): Span {
   const start = text.indexOf(needle, from);
@@ -88,5 +88,19 @@ describe("resolveSpans joining", () => {
     const t = "Anna 070-1740612";
     const spans = [at(t, "Anna", "NAMN", "model"), at(t, "070-1740612", "TELEFON", "rule")];
     expect(resolveSpans(t, spans)).toHaveLength(2);
+  });
+});
+
+describe("withoutDoseAddresses", () => {
+  it("drops a model address that is a dose, keeps a street with a number", () => {
+    const t = "Sertralin 50 mg, Alvedon 500 mg x 3, Storgatan 5 g, Vintergatan 12, 2 st";
+    const spans = [
+      at(t, "Sertralin 50 mg", "ADRESS", "model"),
+      at(t, "Alvedon 500 mg x 3", "ADRESS", "model"),
+      at(t, "Storgatan 5 g", "ADRESS", "model"),
+      at(t, "Vintergatan 12", "ADRESS", "model"),
+      at(t, "2 st", "ADRESS", "rule"),
+    ];
+    expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["Storgatan 5 g:ADRESS:model", "Vintergatan 12:ADRESS:model", "2 st:ADRESS:rule"]);
   });
 });

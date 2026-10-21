@@ -123,6 +123,23 @@ export function spreadModelValues(text: string, resolved: Span[]): Span[] {
   return spread;
 }
 
+// A dose or a quantity: "50 mg", "500 mg x 3", "2 st".
+const DOSE = /\d\s?(?:mg|g|ml|mikrog|µg|mcg|st|tabl|x\s?\d)(?![\p{L}\p{N}])/iu;
+const STREET = /(?:gata|gatan|väg|vägen|gränd|gränden|torg|torget|plan|allé|allén|stig|stigen|backe|backen|led|leden|ring|ringen|plats|platsen|kaj|kajen|esplanaden|promenaden|strand|stranden|väg\.|v\.|g\.)\s?\d/iu;
+
+/**
+ * The model's address detector fires on "word + number + unit", so a
+ * medication ("Sertralin 50 mg") comes out as an address. Such a span is
+ * dropped unless it has a street name's ending before the number.
+ */
+export function withoutDoseAddresses(text: string, spans: Span[]): Span[] {
+  return spans.filter((s) => {
+    if (s.source !== "model" || s.type !== "ADRESS") return true;
+    const value = text.slice(s.start, s.end);
+    return !DOSE.test(value) || STREET.test(value);
+  });
+}
+
 /**
  * Model spans that cover a spread value plus a compound tail ("Volvoavtalet",
  * where "Volvo" was spread), so the value alone is masked: "[ORGANISATION_1]avtalet".
