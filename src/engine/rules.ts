@@ -2,6 +2,7 @@
 // list, inside the worker so model spans are clipped against it.
 import { adress, contextualDetectors, type Detector, defaultDetectors, lagenhetsnummer, redact, regnummer } from "@maskera/core";
 import {
+  ampersandName,
   companyName,
   domainName,
   headerName,
@@ -34,6 +35,7 @@ export const ruleDetectors: Detector[] = [
   splitPersonnummer,
   spokenPhone,
   spokenEmail,
+  ampersandName,
 ];
 
 export function ruleSpans(text: string): Span[] {

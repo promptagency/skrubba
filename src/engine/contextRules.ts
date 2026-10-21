@@ -205,3 +205,17 @@ export const spokenEmail: Detector = {
     return [...input.matchAll(SPOKEN_EMAIL)].map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0] }));
   },
 };
+
+// A company name of initials joined by "&" ("H&M", "AT&T"). The model sees no
+// word there and misses it. Common business shorthand is left alone.
+const AMPERSAND_NAME = /(?<![\p{L}\p{N}&])\p{Lu}{1,3}[^\S\n]?&[^\S\n]?\p{Lu}{1,3}(?![\p{L}\p{N}&])/gu;
+const AMPERSAND_SHORTHAND = new Set(["R&D", "Q&A", "M&A", "P&L", "B&B", "F&B", "D&I", "T&C"]);
+
+export const ampersandName: Detector = {
+  label: "ORGANISATION",
+  detect(input) {
+    return [...input.matchAll(AMPERSAND_NAME)]
+      .filter((m) => !AMPERSAND_SHORTHAND.has(m[0].replace(/\s/g, "")))
+      .map((m) => ({ start: m.index, end: m.index + m[0].length, value: m[0] }));
+  },
+};

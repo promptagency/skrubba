@@ -126,6 +126,7 @@ More rules of our own (`contextRules.ts`) cover what the owner's real texts show
 - **VAT numbers.** SE + ten digits + 01, spaces and a dash allowed, as ORGANISATIONSNUMMER (it contains one, or a sole trader's personnummer).
 - **Split personnummer.** A personnummer broken by spaces or one line break, as OCR and copy-paste leave it ("730928-⏎1231", "8506 23-2381"), is a PERSONNUMMER when the dash stands after six or eight digits and the digits have a personnummer's date shape. The dash is required, so a phone number split by spaces is not taken for one. Whole ones are maskera's.
 - **Read-out phone numbers and email addresses.** In a call transcript, seven or more digit words starting with "noll" ("noll sju noll två ett …") are a TELEFON, and words joined by "punkt" around "snabel-a" with a domain that has a "punkt" ("pelle punkt johansson snabel-a outlook punkt com") are an EPOST.
+- **Initials joined by "&".** "H&M" or "AT&T" (one to three capitals on each side) is an ORGANISATION, since the model sees no word there. Business shorthand (R&D, Q&A, M&A, P&L, B&B, F&B, D&I, T&C) is left alone.
 
 Reference codes like "AB-1234-567" and bare eight-digit numbers have no fixed format and are not masked: a rule for them would also hit amounts and dates. Dates, prices and contract terms are left to *Egna ord* and selection.
 

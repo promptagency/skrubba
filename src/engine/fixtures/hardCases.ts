@@ -27,6 +27,8 @@ export const HARD_CASES: HardCase[] = [
   { text: "Kundens nya produkt Aurora X släpps i maj. Aurora X-lanseringen är hemlig.", secrets: ["Aurora X"], wordList: ["Aurora X"] },
 
   // Compound words of names the model finds.
+  // The model types Ikea and Lidl as NAMN, so they do not spread into compounds; it masks
+  // "Ikeaavtalet" on its own instead, with a placeholder of its own (checked 2026-10-21).
   { text: "Vi jobbar med Volvo. Volvoavtalet löper ut i mars och Volvokampanjen startar.", secrets: ["Volvo"] },
   { text: "Möte med Ikea i dag. Ikeakontot måste förnyas.", secrets: ["Ikea"] },
   { text: "Spotify är vår största kund. Spotifyteamet vill ha en ny offert.", secrets: ["Spotify"] },
@@ -59,6 +61,7 @@ export const HARD_CASES: HardCase[] = [
   // Organisations and clients.
   { text: "Vi förlorade Ikea som kund till Accenture.", secrets: ["Ikea", "Accenture"] },
   { text: "Spotify och Klarna är med i piloten.", secrets: ["Spotify", "Klarna"] },
+  { text: "Kampanjen för H&M startar i maj, i alla H&M-butiker.", secrets: ["H&M"] },
   { text: "Bokade möte med Birgitta på Fastighetsbolaget Norrkåken.", secrets: ["Birgitta", "Norrkåken"] },
   { text: "Byrån Kvist & Lönn tar över kontot från Ahlström Media.", secrets: ["Kvist", "Lönn", "Ahlström"] },
 ];

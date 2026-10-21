@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  ampersandName,
   companyName,
   domainName,
   headerName,
@@ -243,5 +244,17 @@ describe("spokenEmail", () => {
 
   it("needs a domain with punkt", () => {
     expect(found("skriv snabel-a och sen namnet")).toEqual([]);
+  });
+});
+
+describe("ampersandName", () => {
+  const found = (text: string) => ampersandName.detect(text).map((d) => d.value);
+
+  it("finds a company name of initials joined by &", () => {
+    expect(found("Möte med H&M i dag, sen AT&T och H & M igen.")).toEqual(["H&M", "AT&T", "H & M"]);
+  });
+
+  it("leaves business shorthand and longer names alone", () => {
+    expect(found("Budget för R&D och en Q&A efter M&A-affären. Kvist & Lönn.")).toEqual([]);
   });
 });

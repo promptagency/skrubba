@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **H&M is masked.** A company name of initials joined by *&*, such as *H&M* or *AT&T*, used to stay in clear text. Shorthand like *R&D* and *Q&A* is left alone.
+
 ## [1.4.0] - 2026-10-21
 
 ### Changed
