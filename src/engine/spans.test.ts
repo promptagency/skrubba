@@ -17,6 +17,12 @@ describe("resolveSpans priority", () => {
     expect(show(t, resolveSpans(t, spans))).toEqual(["Norrström Media:ORGANISATION:rule"]);
   });
 
+  it("drops a model span that is only a company form, as the worker's clipping leaves it", () => {
+    const t = "Avtal med Norrström Media AB i dag";
+    const spans = [at(t, "AB", "ORGANISATION", "model"), at(t, "Norrström Media", "ORGANISATION", "rule")];
+    expect(show(t, resolveSpans(t, spans))).toEqual(["Norrström Media:ORGANISATION:rule"]);
+  });
+
   it("keeps non-overlapping spans sorted by position", () => {
     const t = "Anna bor i Umeå";
     expect(show(t, resolveSpans(t, [at(t, "Umeå", "PLATS", "model"), at(t, "Anna", "NAMN", "model")]))).toEqual([

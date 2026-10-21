@@ -31,7 +31,9 @@ export function resolveSpans(text: string, spans: Span[]): Span[] {
       if (!trimmed) continue;
       const wasClipped = trimmed[0] !== span.start || trimmed[1] !== span.end;
       if (wasClipped && trimmed[1] - trimmed[0] < 2) continue;
-      if (wasClipped && ONLY_COMPANY_FORM.test(text.slice(trimmed[0], trimmed[1]))) continue;
+      // The worker already clips model spans against the rules, so the leftover
+      // form arrives as a span of its own, unclipped.
+      if ((wasClipped || span.source === "model") && ONLY_COMPANY_FORM.test(text.slice(trimmed[0], trimmed[1]))) continue;
       if (wasClipped && isCompoundTail(text, trimmed[0])) continue;
       kept.push({ ...span, start: trimmed[0], end: trimmed[1] });
     }
