@@ -6,6 +6,8 @@ import { MODEL, MODEL_BASE } from "../config.ts";
 import type { EntityType, Span } from "./Masker.ts";
 import { ruleDetectors } from "./rules.ts";
 
+// minScore stays at maskera's 0.5: it only drops entities the model found, so
+// 0.2–0.4 caught nothing more on the domain corpus and masked "hantverkaren" (2026-10-21).
 export function createRecognizer(options: Partial<NerOptions> = {}): NerRecognizer {
   return createNerRecognizer({
     model: MODEL.directory,
