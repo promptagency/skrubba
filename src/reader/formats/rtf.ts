@@ -46,6 +46,7 @@ export function readRtf(bytes: Uint8Array): Extracted {
   const src = binaryString(bytes);
   let out = "";
   let hidden = false;
+  let images = false;
   let label = "windows-1252";
   let group: Group = { skip: "no", hiddenText: false, uc: 1 };
   const stack: Group[] = [];
@@ -140,6 +141,7 @@ export function readRtf(bytes: Uint8Array): Extracted {
         continue;
       }
       if (SKIP.has(word) || (starred && !KEEP_STARRED.has(word))) {
+        if (word === "pict") images = true;
         if (group.skip === "no") group.skip = "silent";
         continue;
       }
@@ -160,5 +162,5 @@ export function readRtf(bytes: Uint8Array): Extracted {
     } else if (SYMBOLS[word]) emit(SYMBOLS[word]);
   }
   flush();
-  return { text: out.replace(/[ \t]+$/gm, "").trim(), hidden };
+  return { text: out.replace(/[ \t]+$/gm, "").trim(), hidden, images };
 }

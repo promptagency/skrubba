@@ -25,6 +25,8 @@ function loadPdfJs(): Promise<PdfJs> {
 
 export async function readPdf(bytes: Uint8Array, onProgress?: Progress): Promise<Extracted> {
   const pdfjs = await loadPdfJs();
+  const { OPS } = pdfjs;
+  const PAINT_IMAGE = new Set<number>([OPS.paintImageXObject, OPS.paintInlineImageXObject, OPS.paintImageMaskXObject, OPS.paintImageXObjectRepeat]);
   const task = pdfjs.getDocument({
     data: bytes,
     disableFontFace: true,
@@ -44,6 +46,7 @@ export async function readPdf(bytes: Uint8Array, onProgress?: Progress): Promise
   try {
     const pages: string[] = [];
     let hidden = false;
+    let images = false;
     for (let n = 1; n <= doc.numPages; n++) {
       onProgress?.(n, doc.numPages);
       const page = await doc.getPage(n);
@@ -66,11 +69,15 @@ export async function readPdf(bytes: Uint8Array, onProgress?: Progress): Promise
           if (contents) lines.push(contents);
         } else if (a.subtype !== "Link" && contents) hidden = true;
       }
-      pages.push(lines.filter(Boolean).join("\n"));
+      const text = lines.filter(Boolean).join("\n");
+      // A page without text but with a picture is a scanned page. Pages with
+      // text are not checked: that decodes every logo, and they are rarely scans.
+      if (!text.trim() && !images) images = (await page.getOperatorList()).fnArray.some((op) => PAINT_IMAGE.has(op));
+      pages.push(text);
       page.cleanup();
     }
     if (!pages.some((p) => p.trim())) throw new ReadError("noText");
-    return { text: cleanPaste(pages.join("\n\n")).text, pages: doc.numPages, hidden };
+    return { text: cleanPaste(pages.join("\n\n")).text, pages: doc.numPages, hidden, images };
   } finally {
     await task.destroy();
   }

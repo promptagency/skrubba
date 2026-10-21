@@ -16,9 +16,24 @@ import { readText } from "./formats/text.ts";
 import { readXlsx } from "./formats/xlsx.ts";
 import { LIMITS } from "./limits.ts";
 import { type Extracted, type Format, type Note, type Progress, ReadError, type ReadResult, type Stats } from "./types.ts";
-import { openZip, zipFormat } from "./zip.ts";
+import { openZip, type Zip, zipFormat } from "./zip.ts";
 
 const WORD = /[\p{L}\p{N}]+/gu;
+// Pictures placed in the text itself: the Word body, a slide, a sheet's drawing, the
+// OpenDocument body. Logos in headers, slide masters and layouts do not count, or the
+// note would show on nearly every file made from a template.
+const BODY_IMAGES: Array<[part: RegExp, picture: RegExp]> = [
+  [/^word\/document\.xml$/, /<(?:[\w-]+:)?(?:pic|imagedata)[\s/>]/],
+  [/^ppt\/slides\/slide\d+\.xml$/, /<(?:[\w-]+:)?pic[\s/>]/],
+  [/^xl\/drawings\/drawing\d+\.xml$/, /<(?:[\w-]+:)?pic[\s/>]/],
+  [/^content\.xml$/, /<draw:image[\s/>]/],
+];
+
+async function hasBodyImage(zip: Zip): Promise<boolean> {
+  for (const name of zip.names())
+    for (const [part, picture] of BODY_IMAGES) if (part.test(name) && picture.test((await zip.text(name)) ?? "")) return true;
+  return false;
+}
 
 export async function extract(bytes: Uint8Array, name: string, onProgress?: Progress): Promise<ReadResult> {
   try {
@@ -35,10 +50,11 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
     case "zip": {
       const zip = openZip(bytes);
       const format = await zipFormat(zip);
-      if (format === "docx") return { format, extracted: await readDocx(zip) };
-      if (format === "odt") return { format, extracted: await readOdt(zip) };
-      if (format === "xlsx") return { format, extracted: await readXlsx(zip) };
-      if (format === "pptx") return { format, extracted: await readPptx(zip) };
+      const withImages = async (x: Extracted) => ({ ...x, images: await hasBodyImage(zip) });
+      if (format === "docx") return { format, extracted: await withImages(await readDocx(zip)) };
+      if (format === "odt") return { format, extracted: await withImages(await readOdt(zip)) };
+      if (format === "xlsx") return { format, extracted: await withImages(await readXlsx(zip)) };
+      if (format === "pptx") return { format, extracted: await withImages(await readPptx(zip)) };
       throw new ReadError("unsupported");
     }
     case "ole": {
@@ -71,6 +87,7 @@ function finish(format: Format, x: Extracted): ReadResult {
   const notes: Note[] = [];
   if (x.hidden) notes.push("hiddenLeftOut");
   if (x.attachments) notes.push("attachmentsLeftOut");
+  if (x.images) notes.push("imagesLeftOut");
   const stats: Stats = { words: text.match(WORD)?.length ?? 0 };
   if (x.pages !== undefined) stats.pages = x.pages;
   if (x.slides !== undefined) stats.slides = x.slides;

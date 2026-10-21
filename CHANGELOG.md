@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **The file window says when images were left out.** Skrubba does not read images, nor text in them. A Word, PowerPoint, Excel, OpenDocument or RTF file with a picture in its text, or a PDF with a scanned page among pages of text, now shows *Bilder och text i bilder togs inte med.* A logo in a header or a slide template does not count. Before, only a PDF that was all images said so.
+
 ### Fixed
 
 - **H&M is masked.** A company name of initials joined by *&*, such as *H&M* or *AT&T*, used to stay in clear text. Shorthand like *R&D* and *Q&A* is left alone.

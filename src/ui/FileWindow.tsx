@@ -29,6 +29,7 @@ const ERROR_KEY: Record<ErrorReason, CopyKey> = {
 const NOTE_KEY: Record<Note, CopyKey> = {
   hiddenLeftOut: "file.note.hidden",
   attachmentsLeftOut: "file.note.attachments",
+  imagesLeftOut: "file.note.images",
   onlyFirstFile: "file.note.firstOnly",
 };
 

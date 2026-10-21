@@ -80,6 +80,7 @@ export const COPY = {
   "file.cancel": "Avbryt",
   "file.note.hidden": "Kommentarer och dolda delar togs inte med.",
   "file.note.attachments": "Bilagor togs inte med.",
+  "file.note.images": "Bilder och text i bilder togs inte med.",
   "file.note.firstOnly": "Bara en fil i taget. Den första lästes.",
   "file.error.unsupported":
     "Den här filtypen går inte att läsa. Spara dokumentet som PDF eller Word och försök igen, eller kopiera texten och klistra in den.",
@@ -268,7 +269,7 @@ export const FAQ = {
     },
     {
       q: "Kan jag släppa in PDF och Word?",
-      a: "Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar och bilagor tas inte med. En skannad PDF utan text går inte att läsa.",
+      a: "Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder. En skannad PDF utan text går inte att läsa.",
     },
   ],
 };

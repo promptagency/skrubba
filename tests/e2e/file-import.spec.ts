@@ -184,6 +184,21 @@ test.describe("PDF", () => {
     await expect(fileWindow(page).getByRole("alert")).toHaveText(/^PDF:en innehåller bara bilder, ingen text\./);
   });
 
+  test("a scanned page in a PDF with text is left out, and the window says so", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "blandad.pdf", PDF, buildPdf([[SAMPLE.title], { image: true }]));
+    const w = fileWindow(page);
+    await expect(w).toContainText("PDF · 2 sidor");
+    await expect(w).toContainText("Bilder och text i bilder togs inte med.");
+  });
+
+  test("a PDF with text on every page has no image note", async ({ page }) => {
+    await openReady(page);
+    await dropFile(page, editor(page), "rehab.pdf", PDF, buildPdf(PDF_WRAPPED));
+    await expect(fileWindow(page)).toContainText("PDF · 2 sidor");
+    await expect(fileWindow(page)).not.toContainText("Bilder och text i bilder togs inte med.");
+  });
+
   test("a password-protected PDF says so", async ({ page }) => {
     await openReady(page);
     await dropFile(page, editor(page), "last.pdf", PDF, buildPdf([[SAMPLE.title]], { encrypted: true }));

@@ -1,8 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { buildDocx, buildZip, latin1, SAMPLE, wp } from "../../tests/fixtures/documents/build.ts";
+import { buildDocx, buildPptx, buildZip, latin1, SAMPLE, wp } from "../../tests/fixtures/documents/build.ts";
 import { extract } from "./extract.ts";
+import { openZip } from "./zip.ts";
 
 const utf8 = (s: string) => new TextEncoder().encode(s);
+
+/** A zip's files, to build a copy with more in it. */
+async function unzipped(data: Uint8Array): Promise<Record<string, Uint8Array>> {
+  const zip = openZip(data);
+  return Object.fromEntries(await Promise.all(zip.names().map(async (n) => [n, (await zip.bytes(n))!] as const)));
+}
 
 describe("extract", () => {
   it("reads a text file and counts its words", async () => {
@@ -45,6 +52,25 @@ describe("extract", () => {
     const docx = buildDocx({ body: [SAMPLE.title, ...SAMPLE.lines].map(wp).join("") });
     expect(await extract(docx, "avtal.docx")).toMatchObject({ kind: "text", format: "docx", notes: [] });
     expect(await extract(docx, "avtal.pdf")).toMatchObject({ kind: "text", format: "docx" });
+  });
+
+  it("says when a picture in a Word file's text is left out, but not for a logo in the header", async () => {
+    const picture = '<w:p><w:r><w:drawing><a:graphic><a:graphicData><pic:pic><pic:blipFill/></pic:pic></a:graphicData></a:graphic></w:drawing></w:r></w:p>';
+    const media = { "word/media/image1.png": new Uint8Array([0x89, 0x50]) };
+    const inBody = buildZip({ ...(await unzipped(buildDocx({ body: wp(SAMPLE.title) + picture }))), ...media });
+    expect(await extract(inBody, "avtal.docx")).toMatchObject({ kind: "text", format: "docx", notes: ["imagesLeftOut"] });
+    const inHeader = buildZip({ ...(await unzipped(buildDocx({ body: wp(SAMPLE.title), headers: [picture] }))), ...media });
+    expect(await extract(inHeader, "avtal.docx")).toMatchObject({ kind: "text", format: "docx", notes: [] });
+  });
+
+  it("says when a slide has a picture, but not for one in the slide layout", async () => {
+    const files = await unzipped(buildPptx([{ texts: ["Anna Berg"] }]));
+    const pic = new TextEncoder().encode("<p:pic><p:blipFill/></p:pic>");
+    const layout = { "ppt/slideLayouts/slideLayout1.xml": pic };
+    expect(await extract(buildZip({ ...files, ...layout }), "bilder.pptx")).toMatchObject({ kind: "text", notes: [] });
+    const slide = new TextDecoder().decode(files["ppt/slides/slide1.xml"]).replace("</p:spTree>", "<p:pic><p:blipFill/></p:pic></p:spTree>");
+    const withPicture = buildZip({ ...files, "ppt/slides/slide1.xml": slide });
+    expect(await extract(withPicture, "bilder.pptx")).toMatchObject({ kind: "text", notes: ["imagesLeftOut"] });
   });
 
   it("refuses a zip that is no office file", async () => {

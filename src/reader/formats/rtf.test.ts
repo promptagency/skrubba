@@ -8,7 +8,7 @@ const read = (rtf: string) => readRtf(latin1(rtf));
 describe("readRtf", () => {
   it("reads paragraphs, hex bytes in the code page, and skips metadata and tables of fonts and colours", () => {
     const rtf = String.raw`{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0 Arial;}}{\colortbl;\red0\green0\blue0;}{\info{\author Erik Holm}{\title Avtal}}\pard Anst\'e4llningsavtal\par Mellan Norrstr\'f6m Media AB och Anna Berg.\par}`;
-    expect(read(rtf)).toEqual({ text: "Anställningsavtal\nMellan Norrström Media AB och Anna Berg.", hidden: false });
+    expect(read(rtf)).toEqual({ text: "Anställningsavtal\nMellan Norrström Media AB och Anna Berg.", hidden: false, images: false });
   });
 
   it("reads Unicode escapes and skips their fallback characters", () => {
@@ -20,8 +20,13 @@ describe("readRtf", () => {
     expect(read(String.raw`{\rtf1{\field{\*\fldinst HYPERLINK "https://example.se"}{\fldrslt example.se}}}`).text).toBe("example.se");
   });
 
+  it("leaves out pictures and says so", () => {
+    const x = read(String.raw`{\rtf1 Logga:{\pict\pngblip 89504e47}\par Avtal\par}`);
+    expect(x).toEqual({ text: "Logga:\nAvtal", hidden: false, images: true });
+  });
+
   it("leaves out hidden text and annotations and says so", () => {
-    expect(read(String.raw`{\rtf1 Kontakt Anna{\v Dold Uppgift}.{\*\annotation Fr\'e5ga Lisa Ek}\par}`)).toEqual({ text: "Kontakt Anna.", hidden: true });
+    expect(read(String.raw`{\rtf1 Kontakt Anna{\v Dold Uppgift}.{\*\annotation Fr\'e5ga Lisa Ek}\par}`)).toEqual({ text: "Kontakt Anna.", hidden: true, images: false });
   });
 
   it("reads a table row with cells by tab", () => {

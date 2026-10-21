@@ -2,7 +2,7 @@
 // it, or why it could not be read. See docs/ARCHITECTURE.md, Reading documents.
 
 export type Format = "txt" | "md" | "csv" | "html" | "rtf" | "eml" | "msg" | "docx" | "doc" | "odt" | "pptx" | "xlsx" | "pdf";
-export type Note = "hiddenLeftOut" | "attachmentsLeftOut" | "onlyFirstFile";
+export type Note = "hiddenLeftOut" | "attachmentsLeftOut" | "imagesLeftOut" | "onlyFirstFile";
 export type Stats = { words: number; pages?: number; slides?: number; sheets?: number };
 export type ErrorReason = "unsupported" | "encrypted" | "empty" | "noText" | "tooLarge" | "timeout" | "failed";
 
@@ -17,6 +17,8 @@ export interface Extracted {
   hidden?: boolean;
   /** Attachments were present and left out. */
   attachments?: boolean;
+  /** Images were present and left out, and any text in them. */
+  images?: boolean;
   pages?: number;
   slides?: number;
   sheets?: number;

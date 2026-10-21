@@ -92,6 +92,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | file.cancel | Avbryt |
 | file.note.hidden | Kommentarer och dolda delar togs inte med. |
 | file.note.attachments | Bilagor togs inte med. |
+| file.note.images | Bilder och text i bilder togs inte med. |
 | file.note.firstOnly | Bara en fil i taget. Den första lästes. |
 | file.error.unsupported | Den här filtypen går inte att läsa. Spara dokumentet som PDF eller Word och försök igen, eller kopiera texten och klistra in den. |
 | file.error.encrypted | Dokumentet är lösenordsskyddat. Ta bort lösenordet och försök igen. |
@@ -276,6 +277,11 @@ Nytt 2026-10-20, godkänt av ägaren 2026-10-20. Ett efternamn som står ensamt 
 
 - Typen `EFTERNAMN` visas som "Efternamn", till exempel i tipset över markeringen och i kodnyckeln. Platshållaren är `[EFTERNAMN_1]`, numrerad som namnets `[NAMN_1]`.
 
+Nytt 2026-10-21. Fönstret Läs in dokument säger när bilder inte lästes.
+
+- `file.note.images`: visas när ett Word-, PowerPoint-, Excel-, OpenDocument- eller RTF-dokument har en bild i själva texten, eller när en PDF med text också har en skannad sida. En logga i sidhuvudet eller i bildmallen räknas inte. Bilder läses aldrig, och inte heller text i dem.
+- Vanliga frågor, "Kan jag släppa in PDF och Word?": "Kommentarer, dolda delar och bilagor tas inte med." blir "Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder."
+
 ## Typer
 
 | Intern typ | Visas som |
@@ -378,4 +384,4 @@ Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som s
 
 ### Kan jag släppa in PDF och Word?
 
-Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar och bilagor tas inte med. En skannad PDF utan text går inte att läsa.
+Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder. En skannad PDF utan text går inte att läsa.
