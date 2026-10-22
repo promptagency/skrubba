@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ampersandName,
+  birthColumn,
   birthDate,
   companyName,
   domainName,
@@ -181,6 +182,23 @@ describe("placeCompound", () => {
 
   it("is labelled PLATS", () => {
     expect(placeCompound.label).toBe("PLATS");
+  });
+});
+
+describe("birthColumn", () => {
+  it("masks the dates in a tab-separated column headed Född, until a blank line", () => {
+    const text = "Namn\tFödd\tRoll\nAnna Berg\t1987-03-14\tChef\nErik Ek\t14/3-87\tSäljare\n\nMötet 2024-05-01\t1990-01-01";
+    expect(found(birthColumn, text)).toEqual(["1987-03-14", "14/3-87"]);
+    const [first] = birthColumn.detect(text);
+    expect(text.slice(first.start, first.end)).toBe("1987-03-14");
+  });
+
+  it("leaves other columns and tables without such a heading alone", () => {
+    expect(found(birthColumn, "Namn\tAnställd\nAnna Berg\t2020-01-01\nDatum\t2024-05-01")).toEqual([]);
+  });
+
+  it("is labelled FÖDELSEDATUM", () => {
+    expect(birthColumn.label).toBe("FÖDELSEDATUM");
   });
 });
 

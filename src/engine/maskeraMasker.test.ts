@@ -119,6 +119,16 @@ describe("a name the model finds in one place", () => {
   });
 });
 
+describe("a date right after a name the model finds", () => {
+  it("is masked as a birth date", async () => {
+    const masker = new MaskeraMasker(fakeNer([["Anna Berg", "NAMN"]]));
+    const text = "Deltagare: Anna Berg, 1987-03-14, och mötet 2024-05-01.";
+    const entities = await masker.mask(text, none);
+    expect(summary(entities)).toEqual(["[NAMN_1]=Anna Berg:model", "[FÖDELSEDATUM_1]=1987-03-14:rule"]);
+    expect(masker.applyMask(text, entities, []).masked).toBe("Deltagare: [NAMN_1], [FÖDELSEDATUM_1], och mötet 2024-05-01.");
+  });
+});
+
 describe("the head word of a multi-word value the model finds", () => {
   it("is masked where it starts a hyphenated word, not bare or glued on", async () => {
     const masker = new MaskeraMasker(fakeNer([["Zephyr 2", "ORGANISATION"], ["Byrå Nord", "ORGANISATION"]]));

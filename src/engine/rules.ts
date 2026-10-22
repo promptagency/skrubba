@@ -3,6 +3,7 @@
 import { adress, contextualDetectors, type Detector, defaultDetectors, lagenhetsnummer, redact, regnummer } from "@maskera/core";
 import {
   ampersandName,
+  birthColumn,
   birthDate,
   companyName,
   domainName,
@@ -39,6 +40,7 @@ export const ruleDetectors: Detector[] = [
   labelledNumber,
   postbox,
   birthDate,
+  birthColumn,
   placeCompound,
   splitPersonnummer,
   spokenPhone,

@@ -3,6 +3,7 @@ import { hybridDefaultDetectors } from "maskera";
 import { describe, expect, it } from "vitest";
 import {
   ampersandName,
+  birthColumn,
   birthDate,
   companyName,
   domainName,
@@ -21,7 +22,7 @@ import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
   it("is maskera's hybrid default set plus regnummer and our own rules", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, postbox, birthDate, placeCompound, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, postbox, birthDate, birthColumn, placeCompound, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
   });
 });
 

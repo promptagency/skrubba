@@ -1,4 +1,4 @@
-import { COMPANY_FORM } from "./contextRules.ts";
+import { COMPANY_FORM, DATE } from "./contextRules.ts";
 import type { Source, Span } from "./Masker.ts";
 import { KNOWN_ORGANISATIONS } from "./organisations.ts";
 import { startsCompound } from "./wordList.ts";
@@ -159,6 +159,23 @@ export function retypeOrganisations(text: string, spans: Span[]): Span[] {
     const known = orgs.has(key) || orgs.has(value.toLowerCase()) || KNOWN_ORGANISATIONS.has(key) || KNOWN_ORGANISATIONS.has(value.toLowerCase());
     return known ? { ...s, type: "ORGANISATION" } : s;
   });
+}
+
+// A date right after a name, as in a list of people ("Anna Berg, 1987-03-14",
+// "Anna Berg (*1987-03-14)"). Not when a time follows: that is a log line.
+const DATE_AFTER_NAME = new RegExp(String.raw`^[ \t]*[,(]?[ \t]*\*?[ \t]*(${DATE})(?![\p{L}\p{N}])(?![ \t]*(?:kl\.?[ \t]*)?\d{1,2}[:.]\d{2})`, "iu");
+
+/** FÖDELSEDATUM spans for a date that directly follows a NAMN span. */
+export function birthDatesAfterNames(text: string, spans: Span[]): Span[] {
+  const out: Span[] = [];
+  for (const s of spans) {
+    if (s.type !== "NAMN") continue;
+    const m = DATE_AFTER_NAME.exec(text.slice(s.end, s.end + 40));
+    if (!m) continue;
+    const start = s.end + m[0].length - m[1].length;
+    out.push({ start, end: start + m[1].length, type: "FÖDELSEDATUM", source: "rule" });
+  }
+  return out;
 }
 
 // A dose or a quantity: "50 mg", "500 mg x 3", "2 st".

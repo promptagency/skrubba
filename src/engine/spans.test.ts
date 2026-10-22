@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
-import { resolveSpans, retypeOrganisations, withoutDoseAddresses } from "./spans.ts";
+import { birthDatesAfterNames, resolveSpans, retypeOrganisations, withoutDoseAddresses } from "./spans.ts";
 
 function at(text: string, needle: string, type: EntityType, source: Source, from = 0): Span {
   const start = text.indexOf(needle, from);
@@ -134,5 +134,26 @@ describe("retypeOrganisations", () => {
     const t = "Pitchen för Arla gick bra, sa Anna. Arla är med.";
     const spans = [at(t, "Arla", "NAMN", "model"), at(t, "Anna", "NAMN", "model"), at(t, "Arla", "NAMN", "rule", 20)];
     expect(types(t, spans)).toEqual(["Arla:ORGANISATION", "Anna:NAMN", "Arla:NAMN"]);
+  });
+});
+
+describe("birthDatesAfterNames", () => {
+  const dates = (t: string, spans: Span[]) => birthDatesAfterNames(t, spans).map((s) => `${t.slice(s.start, s.end)}:${s.type}:${s.source}`);
+
+  it("takes a date right after a name, with a comma, a parenthesis or a birth asterisk", () => {
+    const t = "Anna Berg, 1987-03-14, chef. Erik Ek (*14/3-87). Siv Lund 19870314 och Bo Alm (1987-03-14).";
+    const spans = [at(t, "Anna Berg", "NAMN", "model"), at(t, "Erik Ek", "NAMN", "model"), at(t, "Siv Lund", "NAMN", "model"), at(t, "Bo Alm", "NAMN", "model")];
+    expect(dates(t, spans)).toEqual([
+      "1987-03-14:FÖDELSEDATUM:rule",
+      "14/3-87:FÖDELSEDATUM:rule",
+      "19870314:FÖDELSEDATUM:rule",
+      "1987-03-14:FÖDELSEDATUM:rule",
+    ]);
+  });
+
+  it("leaves a log line, a date after other words and a date after a company alone", () => {
+    const t = "Anna Berg 2024-05-01 10:32 skrev. Anna Berg skrev 2024-05-01. Volvo 2024-05-01.";
+    const spans = [at(t, "Anna Berg", "NAMN", "model"), at(t, "Anna Berg", "NAMN", "model", 30), at(t, "Volvo", "ORGANISATION", "model")];
+    expect(dates(t, spans)).toEqual([]);
   });
 });

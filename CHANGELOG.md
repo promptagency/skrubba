@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Birth dates without a label are masked in the usual places.** A date right after a name, as in *Anna Berg, 1987-03-14* or *Erik Ek (*14/3-87)*, and the dates in a table column headed *Född* or *Födelsedatum* now become *[FÖDELSEDATUM_1]*. A date followed by a time, as in a log, is left alone.
+
 ## [1.6.5] - 2026-10-21
 
 ### Fixed

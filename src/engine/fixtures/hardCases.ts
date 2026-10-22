@@ -78,6 +78,8 @@ export const HARD_CASES: HardCase[] = [
   { text: "Född: 14 mars 1987. Ålder: 39 år.", secrets: ["14 mars 1987"] },
   { text: "Personnummer 870314-1234 (kontrollsiffra fel). Även 8703141234.", secrets: ["870314-1234", "8703141234"] },
   { text: "Pnr: 19870314-1239", secrets: ["19870314-1239"] },
+  { text: "Deltagare: Anna Berg, 1987-03-14, och Erik Ek (*14/3-87).", secrets: ["Anna Berg", "1987-03-14", "Erik Ek", "14/3-87"] },
+  { text: "Namn\tFödd\tRoll\nAnna Berg\t1987-03-14\tChef\nErik Ek\t1990-11-02\tSäljare", secrets: ["Anna Berg", "1987-03-14", "Erik Ek", "1990-11-02"] },
 
   // Names in tricky forms.
   { text: "pratade med anders ekström igår, han var sur", secrets: ["anders", "ekström"] },

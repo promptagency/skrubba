@@ -140,7 +140,7 @@ export const labelledNumber: Detector = {
 // needs them to answer. The year alone ("född 1987") stays too.
 const BIRTH_LABEL = String.raw`(?:född|fodd|födelsedatum|födelsedag|födelsetid|f\.|fdat\.?|date of birth|dob|birthdate)`;
 const MONTH = String.raw`(?:jan(?:uari)?|feb(?:ruari)?|mars?|apr(?:il)?|maj|juni?|juli?|aug(?:usti)?|sep(?:tember)?|okt(?:ober)?|nov(?:ember)?|dec(?:ember)?)`;
-const DATE = String.raw`(?:\d{4}-\d{2}-\d{2}|\d{8}|\d{6}|\d{1,2}[./]\d{1,2}(?:[./-]|\s)\s?\d{2,4}|\d{1,2}(?::e)?\s+${MONTH}\.?(?:\s+-?\d{2,4})?)`;
+export const DATE = String.raw`(?:\d{4}-\d{2}-\d{2}|\d{8}|\d{6}|\d{1,2}[./]\d{1,2}(?:[./-]|\s)\s?\d{2,4}|\d{1,2}(?::e)?\s+${MONTH}\.?(?:\s+-?\d{2,4})?)`;
 const BIRTH_DATE = new RegExp(String.raw`(?<![\p{L}\p{N}])${BIRTH_LABEL}\s*:?\s*(?:den\s+)?(${DATE})(?![\p{L}\p{N}])`, "giu");
 
 export const birthDate: Detector = {
@@ -174,6 +174,36 @@ export const placeCompound: Detector = {
   label: "PLATS",
   detect(input) {
     return [...input.matchAll(PLACE_COMPOUND)].map((m) => ({ start: m.index, end: m.index + m[1].length, value: m[1] }));
+  },
+};
+
+// A tab-separated table (as the document readers write one) with a column
+// headed Född, Födelsedatum or the like: each date in that column is a birth
+// date, though no label stands next to it. A blank line ends the table.
+const BIRTH_HEADER = new RegExp(String.raw`^${BIRTH_LABEL}\.?$`, "iu");
+const DATE_CELL = new RegExp(String.raw`^(${DATE})$`, "u");
+
+export const birthColumn: Detector = {
+  label: "FÖDELSEDATUM",
+  detect(input) {
+    const out: Found[] = [];
+    let column = -1;
+    let offset = 0;
+    for (const line of input.split("\n")) {
+      const cells = line.split("\t");
+      if (!line.trim()) column = -1;
+      else if (cells.length > 1 && column < 0) column = cells.findIndex((c) => BIRTH_HEADER.test(c.trim()));
+      else if (column >= 0 && cells[column] !== undefined) {
+        const cell = cells[column];
+        const m = DATE_CELL.exec(cell.trim());
+        if (m) {
+          const start = offset + cells.slice(0, column).reduce((n, c) => n + c.length + 1, 0) + cell.indexOf(m[1]);
+          out.push({ start, end: start + m[1].length, value: m[1] });
+        }
+      }
+      offset += line.length + 1;
+    }
+    return out;
   },
 };
 
