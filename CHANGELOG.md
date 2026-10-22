@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Changed
+
+- **Skrubba's address is skrubba.app.** The old address, skrubba.promptagency.se, redirects there. Visits are counted under the new name.
+
 ## [1.6.9] - 2026-10-22
 
 ### Added

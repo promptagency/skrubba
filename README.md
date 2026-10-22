@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://skrubba.promptagency.se">skrubba.promptagency.se</a>
+  <a href="https://skrubba.app">skrubba.app</a>
 </p>
 
 <picture>

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Product name: **Skrubba**. Free, open source (MIT), launched at `skrubba.promptagency.se`. Name and URL live in `src/config.ts` only.
+Product name: **Skrubba**. Free, open source (MIT), launched at `skrubba.app`. Name and URL live in `src/config.ts` only.
 
 ## What this is
 
@@ -40,7 +40,7 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 - `maskera` + `@huggingface/transformers`. Rules-only (`@maskera/core`) runs instantly; the NER model loads in the background.
 - `pdfjs-dist` (exact version, nothing fetched) for PDF, in a worker of its own inside the reader worker. Every other document format is read by our own code in `src/reader/`.
 - PWA (service worker) so the app works offline after first visit.
-- Deploy: static build to Cloudflare Pages at `skrubba.promptagency.se`.
+- Deploy: static build to Cloudflare Pages at `skrubba.app`.
 - Tests: Vitest for logic, Playwright for the mask/restore round trip and the "no external requests" check.
 
 ## Conventions

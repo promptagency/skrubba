@@ -8,6 +8,6 @@ import base from "./playwright.config.ts";
 export default defineConfig({
   ...base,
   testMatch: ["no-egress.spec.ts", "model.spec.ts", "flow.spec.ts", "restore.spec.ts", "offline.spec.ts", "feedback.spec.ts"],
-  use: { ...base.use, baseURL: process.env.SKRUBBA_URL ?? "https://skrubba.promptagency.se" },
+  use: { ...base.use, baseURL: process.env.SKRUBBA_URL ?? "https://skrubba.app" },
   webServer: undefined,
 });

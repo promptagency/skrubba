@@ -2,7 +2,7 @@
 // view (src/ui/analytics.ts) on to Prompt Agency's self-hosted Plausible, so
 // the browser itself only ever talks to Skrubba's own address.
 //
-// Only a page view for skrubba.promptagency.se gets through, and only the four
+// Only a page view for skrubba.app gets through, and only the four
 // known fields: anything else is refused or dropped, so this can never carry
 // text on. The visitor's IP and browser string go along because Plausible
 // needs them to count unique visitors; Plausible stores neither, only a hash
@@ -10,7 +10,7 @@
 // honoured here too.
 
 const PLAUSIBLE = "https://plausible.app.promptagency.se/api/event";
-const SITE = "skrubba.promptagency.se";
+const SITE = "skrubba.app";
 const MAX_BODY = 2048;
 
 interface PageView {

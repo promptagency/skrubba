@@ -11,10 +11,10 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-const PAGEVIEW = { n: "pageview", u: "https://skrubba.promptagency.se/", d: "skrubba.promptagency.se", r: null };
+const PAGEVIEW = { n: "pageview", u: "https://skrubba.app/", d: "skrubba.app", r: null };
 
 function post(body: unknown, headers: Record<string, string> = {}) {
-  const request = new Request("https://skrubba.promptagency.se/api/event", {
+  const request = new Request("https://skrubba.app/api/event", {
     method: "POST",
     headers: { "CF-Connecting-IP": "203.0.113.7", "User-Agent": "Firefox/140", ...headers },
     body: typeof body === "string" ? body : JSON.stringify(body),
@@ -46,7 +46,7 @@ describe("/api/event", () => {
     ["another event than a page view", { ...PAGEVIEW, n: "signup" }],
     ["a referrer that is not a string", { ...PAGEVIEW, r: { a: 1 } }],
     ["no JSON", "Johan"],
-    ["a body that is too long", { ...PAGEVIEW, u: `https://skrubba.promptagency.se/?utm_x=${"a".repeat(3000)}` }],
+    ["a body that is too long", { ...PAGEVIEW, u: `https://skrubba.app/?utm_x=${"a".repeat(3000)}` }],
   ])("refuses %s and forwards nothing", async (_, body) => {
     expect((await post(body)).status).toBe(400);
     expect(forwarded).not.toHaveBeenCalled();
