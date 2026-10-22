@@ -12,6 +12,7 @@ import {
   trimEdgeWords,
   withoutCompoundForms,
   withoutDoseAddresses,
+  withoutTitles,
 } from "./spans.ts";
 import { tolerantRestore } from "./tolerantRestore.ts";
 import { findTerms } from "./wordList.ts";
@@ -129,9 +130,14 @@ export class MaskeraMasker implements Masker {
       ...findTerms(text, input.manual, "manual"),
       ...findTerms(text, input.wordList, "wordlist"),
       ...ruleSpans(text),
-      // Trimmed again after resolveSpans has joined adjacent model spans, so a
-      // plain word the model split off ("contact" before "Johan Nilsson") goes too.
-      ...withoutDoseAddresses(text, trimEdgeWords(text, resolveSpans(text, trimEdgeWords(text, modelSpans)))),
+      // Titles go before resolveSpans joins adjacent model spans ("CTO" + "Johan
+      // Nilsson" would become one organisation), and plain words are trimmed
+      // again after it, so a word the model split off ("contact" before "Johan
+      // Nilsson") goes too.
+      ...withoutDoseAddresses(
+        text,
+        trimEdgeWords(text, resolveSpans(text, withoutTitles(text, trimEdgeWords(text, modelSpans)))),
+      ),
     ]);
     const spans = [...found, ...birthDatesAfterNames(text, found)];
     const spread = spreadModelValues(text, resolveSpans(text, spans));

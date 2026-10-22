@@ -146,6 +146,13 @@ export const HARD_CASES: HardCase[] = [
     keeps: ["Our contact", "will present", "Hi team", "sent it"],
   },
 
+  // Job titles the model takes for companies.
+  {
+    text: "Lisa Berg (CFO) och Per Holm (VD) deltog. Controller: Anna Ek. Styrelsen: Erik Ek (ordf.), Sara Lind (ledamot).",
+    secrets: ["Lisa Berg", "Per Holm", "Anna Ek", "Erik Ek", "Sara Lind"],
+    keeps: ["CFO", "VD", "Controller", "ordf", "ledamot"],
+  },
+
   // Healthcare.
   { text: "Pat. Eva Lind, 54 år, F32.1 depression, Sertralin 50 mg. Ssk Ulla Mo.", secrets: ["Eva Lind", "Ulla Mo"] },
   { text: "Anhörig: dottern Sara (070-111 22 33) hämtar.", secrets: ["Sara", "070-111 22 33"] },

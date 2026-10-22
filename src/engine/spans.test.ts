@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
-import { birthDatesAfterNames, resolveSpans, retypeOrganisations, trimEdgeWords, withoutDoseAddresses } from "./spans.ts";
+import {
+  birthDatesAfterNames,
+  resolveSpans,
+  retypeOrganisations,
+  trimEdgeWords,
+  withoutDoseAddresses,
+  withoutTitles,
+} from "./spans.ts";
 
 function at(text: string, needle: string, type: EntityType, source: Source, from = 0): Span {
   const start = text.indexOf(needle, from);
@@ -151,6 +158,29 @@ describe("trimEdgeWords", () => {
     const t = "jag byter förnamn från Kjell-Olov till Kim. kjell-olov bäckman, piteå. alla kallar mig kim";
     const spans = [at(t, "Kim. kjell-olov bäckman", "NAMN", "model")];
     expect(trimEdgeWords(t, spans)).toEqual(spans);
+  });
+});
+
+describe("withoutTitles", () => {
+  it("drops a model span that is only a job title and cuts a title off a name", () => {
+    const t = "Lisa Berg (CFO), Erik Ek (vice ordf.), Controller: Sara Lind. ÖL Per Holm. KTH. Konsult AB";
+    const spans = [
+      at(t, "Lisa Berg", "NAMN", "model"),
+      at(t, "CFO", "ORGANISATION", "model"),
+      at(t, "vice ordf.", "ORGANISATION", "model"),
+      at(t, "Controller", "ORGANISATION", "model"),
+      at(t, "ÖL Per Holm", "NAMN", "model"),
+      at(t, "KTH", "ORGANISATION", "model"),
+      at(t, "Konsult AB", "ORGANISATION", "model"),
+      at(t, "CFO", "ORGANISATION", "rule"),
+    ];
+    expect(show(t, withoutTitles(t, spans))).toEqual([
+      "Lisa Berg:NAMN:model",
+      "Per Holm:NAMN:model",
+      "KTH:ORGANISATION:model",
+      "Konsult AB:ORGANISATION:model",
+      "CFO:ORGANISATION:rule",
+    ]);
   });
 });
 

@@ -238,6 +238,27 @@ export function trimEdgeWords(text: string, spans: Span[]): Span[] {
   });
 }
 
+// Job titles and roles the model takes for a company or a name.
+const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|chef|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist)`;
+const ONLY_TITLE = new RegExp(`^(?:vice )?${TITLE}$`, "iu");
+const LEADING_TITLE = new RegExp(`^(?:vice )?${TITLE} (?=\\p{Lu})`, "iu");
+
+/**
+ * Model name and organisation spans without job titles: "CFO", "ordf" and
+ * "Controller" came out as companies, which hid who did what from the AI. A
+ * span that is only a title is dropped, and a title in front of a name
+ * ("ÖL Per Holm") is cut off it.
+ */
+export function withoutTitles(text: string, spans: Span[]): Span[] {
+  return spans.flatMap((s) => {
+    if (s.source !== "model" || (s.type !== "NAMN" && s.type !== "ORGANISATION")) return [s];
+    const value = text.slice(s.start, s.end);
+    if (ONLY_TITLE.test(value)) return [];
+    const lead = s.type === "NAMN" ? LEADING_TITLE.exec(value)?.[0].length : undefined;
+    return [lead ? { ...s, start: s.start + lead } : s];
+  });
+}
+
 /**
  * Model spans that cover a spread value plus a compound tail ("Volvoavtalet",
  * where "Volvo" was spread), so the value alone is masked: "[ORGANISATION_1]avtalet".

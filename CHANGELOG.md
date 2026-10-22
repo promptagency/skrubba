@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Job titles are no longer masked as companies.** *CFO*, *VD*, *ordf.* and *Controller* next to a name used to become *[ORGANISATION_1]*, so the AI could not tell who did what. Common titles now stay readable. The name and the company beside them are masked as before.
+
 ## [1.6.7] - 2026-10-22
 
 ### Fixed
