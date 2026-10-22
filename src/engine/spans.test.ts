@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
-import { birthDatesAfterNames, resolveSpans, retypeOrganisations, withoutDoseAddresses } from "./spans.ts";
+import { birthDatesAfterNames, resolveSpans, retypeOrganisations, trimEdgeWords, withoutDoseAddresses } from "./spans.ts";
 
 function at(text: string, needle: string, type: EntityType, source: Source, from = 0): Span {
   const start = text.indexOf(needle, from);
@@ -108,6 +108,49 @@ describe("withoutDoseAddresses", () => {
       at(t, "2 st", "ADRESS", "rule"),
     ];
     expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["Storgatan 5 g:ADRESS:model", "Vintergatan 12:ADRESS:model", "2 st:ADRESS:rule"]);
+  });
+});
+
+describe("trimEdgeWords", () => {
+  it("cuts plain lowercase words off both ends of a model name, organisation or place", () => {
+    const t = "Please call Per Holm today. Fjällbris joined the call. wants a new deck. Hon bor i Umeå nu. Hi team, Dear Anna. Our contact Johan";
+    const spans = [
+      at(t, "Please call Per Holm today", "NAMN", "model"),
+      at(t, "Fjällbris joined the call", "ORGANISATION", "model"),
+      at(t, "wants a new deck", "PLATS", "model"),
+      at(t, "i Umeå nu", "PLATS", "model"),
+      at(t, "Hi", "ORGANISATION", "model"),
+      at(t, "Dear Anna", "NAMN", "model"),
+      // The model may split the opener off the name; joined again, it would hide "contact".
+      at(t, "Our contact", "NAMN", "model"),
+      at(t, "Johan", "NAMN", "model"),
+    ];
+    expect(show(t, trimEdgeWords(t, spans))).toEqual([
+      "Per Holm:NAMN:model",
+      "Fjällbris:ORGANISATION:model",
+      "wants a new deck:PLATS:model",
+      "Umeå:PLATS:model",
+      "Anna:NAMN:model",
+      "Johan:NAMN:model",
+    ]);
+  });
+
+  it("keeps lowercase names, name particles, rule spans and other types", () => {
+    const t = "the client (arla) and von Trapp, de la Gardie; see Storgatan 5 i dag; call anna berg";
+    const spans = [
+      at(t, "arla", "ORGANISATION", "model"),
+      at(t, "von Trapp", "NAMN", "model"),
+      at(t, "de la Gardie", "NAMN", "model"),
+      at(t, "Storgatan 5 i dag", "ADRESS", "model"),
+      at(t, "call anna berg", "NAMN", "rule"),
+    ];
+    expect(trimEdgeWords(t, spans)).toEqual(spans);
+  });
+
+  it("leaves Swedish text alone, where a lowercase word after a name is often a surname", () => {
+    const t = "jag byter förnamn från Kjell-Olov till Kim. kjell-olov bäckman, piteå. alla kallar mig kim";
+    const spans = [at(t, "Kim. kjell-olov bäckman", "NAMN", "model")];
+    expect(trimEdgeWords(t, spans)).toEqual(spans);
   });
 });
 

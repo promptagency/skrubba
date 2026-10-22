@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Plain words next to a name are no longer masked with it in English text.** The model is trained on Swedish and used to take *Please call* or *joined the call* into the placeholder for the name beside them, so the AI lost those words. They now stay readable. Swedish text, names written in lowercase and particles such as *von* and *de la* are handled as before.
+
 ## [1.6.6] - 2026-10-22
 
 ### Fixed

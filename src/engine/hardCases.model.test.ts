@@ -16,13 +16,14 @@ const leaks = (masked: string, secrets: string[]) =>
 describe.skipIf(!run)("hard cases with the real model", () => {
   beforeAll(() => backend.init(() => {}), 60_000);
 
-  for (const { text, secrets, wordList = [], fails } of HARD_CASES) {
+  for (const { text, secrets, wordList = [], keeps = [], fails } of HARD_CASES) {
     const test = fails ? it.fails : it;
     test(text, async () => {
       const masker = new MaskeraMasker(backend);
       const entities = await masker.mask(text, { wordList, manual: [] });
       const { masked, key } = masker.applyMask(text, entities, wordList);
       expect(leaks(masked, secrets), masked).toEqual([]);
+      expect(keeps.filter((k) => !masked.includes(k)), masked).toEqual([]);
       expect(masker.restore(masked, key).text.toLowerCase()).toBe(text.toLowerCase());
     });
   }

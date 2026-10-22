@@ -6,6 +6,8 @@ export interface HardCase {
   text: string;
   secrets: string[];
   wordList?: string[];
+  /** Plain words that must stay readable in the masked text. */
+  keeps?: string[];
   /** Leaks today. The test fails when it starts passing, so the flag is removed on purpose. */
   fails?: true;
 }
@@ -127,7 +129,22 @@ export const HARD_CASES: HardCase[] = [
   { text: "Se mer på fjallbris.se och mejla asa@fjallbris.se", secrets: ["fjallbris.se", "asa@fjallbris.se"] },
   { text: "SKF och ICA Gruppen är kunder. SEB är bank.", secrets: ["SKF", "ICA", "SEB"] },
   { text: "Enligt mejlet från Telias inköpschef Per Holm är avtalet klart.", secrets: ["Telia", "Per", "Holm"] },
-  { text: "Meeting notes: Anders Ekström from Fjällbris joined. Lisa Berg (CFO) declined.", secrets: ["Ekström", "Fjällbris", "Lisa Berg"] },
+  {
+    text: "Meeting notes: Anders Ekström from Fjällbris joined. Lisa Berg (CFO) declined.",
+    secrets: ["Ekström", "Fjällbris", "Lisa Berg"],
+    keeps: ["joined"],
+  },
+  // The model, trained on Swedish, takes English function words into its spans.
+  {
+    text: "Please call Per Holm on Monday. Fjällbris joined the call and Zephyr launches in Q3.",
+    secrets: ["Per Holm", "Fjällbris", "Zephyr"],
+    keeps: ["Please call", "joined the call", "launches"],
+  },
+  {
+    text: "Our contact Johan Nilsson from Fjällbris Konsult will present. Hi team, Karin Öhman at Grönqvist Fastigheter sent it.",
+    secrets: ["Johan Nilsson", "Fjällbris", "Karin Öhman", "Grönqvist"],
+    keeps: ["Our contact", "will present", "Hi team", "sent it"],
+  },
 
   // Healthcare.
   { text: "Pat. Eva Lind, 54 år, F32.1 depression, Sertralin 50 mg. Ssk Ulla Mo.", secrets: ["Eva Lind", "Ulla Mo"] },

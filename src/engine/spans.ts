@@ -195,6 +195,49 @@ export function withoutDoseAddresses(text: string, spans: Span[]): Span[] {
   });
 }
 
+const EDGE_TYPES = new Set(["NAMN", "ORGANISATION", "PLATS"]);
+// Lowercase words that belong to a name, so they are not trimmed off.
+const PARTICLE = /^(?:af|av|von|van|der|den|de|la|le|du|di|da)$/u;
+// English words that start a sentence or greeting right before a name.
+const OPENER = /^(?:hi|hello|dear|please|the|our|your|my|call|contact)$/iu;
+const CAPITAL_WORD = /(?:^|\s)[\p{Lu}\p{N}]/u;
+const ENGLISH_WORDS = /(?<!\p{L})(?:the|and|from|with|please|call|will|for|is|are|our|your|team|meeting|notes|on|at|to|of)(?!\p{L})/giu;
+const SWEDISH_WORDS = /(?<!\p{L})(?:och|att|det|som|med|för|på|är|till|från|inte|jag|vi|den|en|ett|hon|han)(?!\p{L})/giu;
+
+/** Whether the text reads as English rather than Swedish, by its function words. */
+export function looksEnglish(text: string): boolean {
+  return (text.match(ENGLISH_WORDS)?.length ?? 0) > (text.match(SWEDISH_WORDS)?.length ?? 0);
+}
+
+/**
+ * In English text, model name, organisation and place spans without the plain
+ * words the Swedish-trained model tacks on ("Please call Per Holm", "Fjällbris
+ * joined the call"): the AI would lose those words. Lowercase words come off
+ * both ends, and a few English openers also when capitalised. A span with no
+ * capitalised word ("arla") stays whole, since the user may write names in
+ * lowercase, and so does a lowercase name particle ("von", "de la"). A span of
+ * plain words only ("Please call", which the model may split off the name) is
+ * dropped, since resolveSpans would join it back onto the name. Swedish text
+ * is left alone: there a lowercase word after a name is often a surname
+ * ("kjell-olov bäckman" in a chat).
+ */
+export function trimEdgeWords(text: string, spans: Span[]): Span[] {
+  if (!looksEnglish(text)) return spans;
+  return spans.flatMap((s) => {
+    if (s.source !== "model" || !EDGE_TYPES.has(s.type) || !CAPITAL_WORD.test(text.slice(s.start, s.end))) return [s];
+    const words = text.slice(s.start, s.end).split(/(\s+)/);
+    const plain = (w: string) => (/^\p{Ll}+$/u.test(w) && !PARTICLE.test(w)) || OPENER.test(w);
+    let first = 0;
+    let last = words.length - 1;
+    while (first <= last && plain(words[first])) first += 2;
+    while (first <= last && plain(words[last])) last -= 2;
+    if (first > last) return [];
+    const start = s.start + words.slice(0, first).join("").length;
+    const end = s.end - words.slice(last + 1).join("").length;
+    return [start === s.start && end === s.end ? s : { ...s, start, end }];
+  });
+}
+
 /**
  * Model spans that cover a spread value plus a compound tail ("Volvoavtalet",
  * where "Volvo" was spread), so the value alone is masked: "[ORGANISATION_1]avtalet".

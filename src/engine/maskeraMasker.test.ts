@@ -148,6 +148,13 @@ describe("a company the model takes for a person", () => {
   });
 });
 
+describe("plain words the model tacks onto a name", () => {
+  it("are trimmed, also when the model split them off the name", async () => {
+    const masker = new MaskeraMasker(fakeNer([["Our", "NAMN"], ["contact", "NAMN"], ["Johan Nilsson", "NAMN"]]));
+    expect(summary(await masker.mask("Our contact Johan Nilsson presents.", none))).toEqual(["[NAMN_1]=Johan Nilsson:model"]);
+  });
+});
+
 describe("MaskeraMasker round trip", () => {
   it("restores the masked text to the original", async () => {
     const masker = new MaskeraMasker(fakeNer([["Anna Berg", "NAMN"], ["Umeå", "PLATS"]]));
