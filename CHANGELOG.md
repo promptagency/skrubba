@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.6.8] - 2026-10-22
+
 ### Fixed
 
 - **Job titles are no longer masked as companies.** *CFO*, *VD*, *ordf.* and *Controller* next to a name used to become *[ORGANISATION_1]*, so the AI could not tell who did what. Common titles now stay readable. The name and the company beside them are masked as before.
@@ -195,7 +197,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.7...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.8...HEAD
+[1.6.8]: https://github.com/promptagency/skrubba/compare/v1.6.7...v1.6.8
 [1.6.7]: https://github.com/promptagency/skrubba/compare/v1.6.6...v1.6.7
 [1.6.6]: https://github.com/promptagency/skrubba/compare/v1.6.5...v1.6.6
 [1.6.5]: https://github.com/promptagency/skrubba/compare/v1.6.4...v1.6.5
