@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.6.7] - 2026-10-22
+
 ### Fixed
 
 - **Plain words next to a name are no longer masked with it in English text.** The model is trained on Swedish and used to take *Please call* or *joined the call* into the placeholder for the name beside them, so the AI lost those words. They now stay readable. Swedish text, names written in lowercase and particles such as *von* and *de la* are handled as before.
@@ -189,7 +191,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.6...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.7...HEAD
+[1.6.7]: https://github.com/promptagency/skrubba/compare/v1.6.6...v1.6.7
 [1.6.6]: https://github.com/promptagency/skrubba/compare/v1.6.5...v1.6.6
 [1.6.5]: https://github.com/promptagency/skrubba/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/promptagency/skrubba/compare/v1.6.3...v1.6.4
