@@ -130,14 +130,25 @@ describe("a date right after a name the model finds", () => {
 });
 
 describe("the head word of a multi-word value the model finds", () => {
-  it("is masked where it starts a hyphenated word, not bare or glued on", async () => {
+  it("is masked where it starts a hyphenated word, not bare or glued on, as [DEL_ORGANISATION_n] of the value", async () => {
     const masker = new MaskeraMasker(fakeNer([["Zephyr 2", "ORGANISATION"], ["Byrå Nord", "ORGANISATION"]]));
     const text = "Zephyr 2 lanseras. Zephyr-teamet och Zephyrmötet. Zephyr själv. Byrå Nord och Byråchefen.";
     const entities = await masker.mask(text, none);
-    expect(summary(entities)).toEqual(["[ORGANISATION_1]=Zephyr 2:model", "[ORGANISATION_2]=Zephyr:model", "[ORGANISATION_3]=Byrå Nord:model"]);
-    expect(masker.applyMask(text, entities, []).masked).toBe(
-      "[ORGANISATION_1] lanseras. [ORGANISATION_2]-teamet och Zephyrmötet. Zephyr själv. [ORGANISATION_3] och Byråchefen.",
-    );
+    expect(summary(entities)).toEqual(["[ORGANISATION_1]=Zephyr 2:model", "[ORGANISATION_2]=Byrå Nord:model"]);
+    const { masked, key } = masker.applyMask(text, entities, []);
+    expect(masked).toBe("[ORGANISATION_1] lanseras. [DEL_ORGANISATION_1]-teamet och Zephyrmötet. Zephyr själv. [ORGANISATION_2] och Byråchefen.");
+    expect(key.entries.find((e) => e.type === "DEL_ORGANISATION")).toEqual({ placeholder: "[DEL_ORGANISATION_1]", value: "Zephyr", type: "DEL_ORGANISATION" });
+    expect(masker.restore(masked, key).text).toBe(text);
+  });
+
+  it("links the word of a word-list term the same way, and restores the compound as written", async () => {
+    const masker = new MaskeraMasker(fakeNer([]));
+    const text = "Aurora X släpps i maj. Aurora-lanseringen är hemlig. Projekt Havsvind och Havsvindsteamet.";
+    const entities = await masker.mask(text, { wordList: ["Aurora X", "Projekt Havsvind"], manual: [] });
+    expect(summary(entities)).toEqual(["[ORD_1]=Aurora X:wordlist", "[ORD_2]=Projekt Havsvind:wordlist"]);
+    const { masked, key } = masker.applyMask(text, entities, ["Aurora X", "Projekt Havsvind"]);
+    expect(masked).toBe("[ORD_1] släpps i maj. [DEL_ORD_1]-lanseringen är hemlig. [ORD_2] och [DEL_ORD_2]steamet.");
+    expect(masker.restore(masked, key).text).toBe(text);
   });
 });
 

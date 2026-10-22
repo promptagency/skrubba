@@ -6,12 +6,19 @@
  * (manual selection or word list), FÖRNAMN and EFTERNAMN: a first name or
  * surname standing alone for a full name in the text, numbered like that name
  * ([FÖRNAMN_1] is the first name of [NAMN_1], [EFTERNAMN_1] its surname), so
- * restore writes back the form that was there.
+ * restore writes back the form that was there, and DEL_ORGANISATION, DEL_PLATS
+ * and DEL_ORD: the first or last word of a multi-word organisation, place or
+ * word-list value standing alone, as in a compound ([DEL_ORGANISATION_1]-fabriken
+ * belongs to [ORGANISATION_1] "Volvo Cars"). The parent type is in the name
+ * because numbers are per type: [ORGANISATION_1] and [ORD_1] both exist.
  */
 export const ENTITY_TYPES = [
   "NAMN",
   "FÖRNAMN",
   "EFTERNAMN",
+  "DEL_ORGANISATION",
+  "DEL_PLATS",
+  "DEL_ORD",
   "PLATS",
   "ORGANISATION",
   "ADRESS",
@@ -54,9 +61,9 @@ export interface Occurrence {
   start: number;
   end: number;
   surface: string;
-  /** A first name linked to the entity's full name. Masked as [FÖRNAMN_n]. */
+  /** A first name linked to the entity's full name. Masked as [FÖRNAMN_n]; for a non-name entity its first word, masked as [DEL_<type>_n]. */
   firstName?: boolean;
-  /** A surname linked to the entity's full name. Masked as [EFTERNAMN_n]. */
+  /** A surname linked to the entity's full name. Masked as [EFTERNAMN_n]; for a non-name entity its last word, masked as [DEL_<type>_n]. */
   lastName?: boolean;
 }
 

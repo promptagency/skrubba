@@ -108,3 +108,20 @@ describe("tolerantRestore leaves ordinary text alone", () => {
     expect(r.restored).toEqual([]);
   });
 });
+
+describe("tolerantRestore [DEL_<type>_n]", () => {
+  const withPart: Key = {
+    ...key,
+    entries: [
+      ...key.entries,
+      { placeholder: "[ORGANISATION_2]", value: "Volvo Cars", type: "ORGANISATION" },
+      { placeholder: "[DEL_ORGANISATION_2]", value: "Volvo", type: "DEL_ORGANISATION" },
+    ],
+  };
+
+  it("restores the exact forms silently, brackets or not", () => {
+    expect(tolerantRestore("[ORGANISATION_2] och [DEL_ORGANISATION_2]-fabriken, DEL_ORGANISATION_2.", withPart).text).toBe(
+      "Volvo Cars och Volvo-fabriken, Volvo.",
+    );
+  });
+});

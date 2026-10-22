@@ -1,6 +1,8 @@
 import type { Entity, EntityType, KeyEntry, Occurrence, Source, Span } from "./Masker.ts";
 
 const GENITIVE_TYPES: ReadonlySet<EntityType> = new Set(["NAMN", "PLATS", "ORGANISATION"]);
+/** Types whose first or last word standing alone is linked to the multi-word value. */
+const LINK_TYPES: ReadonlySet<EntityType> = new Set(["NAMN", "ORGANISATION", "PLATS", "ORD"]);
 const SOURCE_RANK: Record<Source, number> = { manual: 0, wordlist: 1, rule: 2, model: 3 };
 
 interface Registered {
@@ -17,7 +19,8 @@ interface Registered {
  */
 export class EntityRegistry {
   private readonly entries = new Map<string, Registered>();
-  private readonly links = new Map<string, string>(); // first name or surname → full-name key
+  private readonly links = new Map<string, string>(); // first name, surname or part → full-value key
+  private readonly parts = new Map<string, string>(); // full-value key → its one linked part
   private readonly counters = new Map<EntityType, number>();
 
   has(key: string): boolean {
@@ -49,7 +52,8 @@ export class EntityRegistry {
   /**
    * Start from an uploaded key: its values keep their placeholders, and new
    * values are numbered after the highest number per type. A [FÖRNAMN_n] or
-   * [EFTERNAMN_n] row links that name to [NAMN_n] again.
+   * [EFTERNAMN_n] row links that name to [NAMN_n] again, and a [DEL_<type>_n]
+   * row its word to [<type>_n].
    */
   seed(entries: KeyEntry[]): void {
     const byPlaceholder = new Map(entries.map((e) => [e.placeholder, e]));
@@ -57,6 +61,11 @@ export class EntityRegistry {
       if (e.type === "FÖRNAMN" || e.type === "EFTERNAMN") {
         const full = byPlaceholder.get(e.placeholder.replace(/^\[(FÖR|EFTER)NAMN_/, "[NAMN_"));
         if (full) this.link(norm(e.value), norm(full.value));
+        continue;
+      }
+      if (e.type.startsWith("DEL_")) {
+        const full = byPlaceholder.get(e.placeholder.replace(/^\[DEL_/, "["));
+        if (full) this.claimPart(norm(full.value), norm(e.value));
         continue;
       }
       const n = Number(/_(\d+)\]$/.exec(e.placeholder)?.[1] ?? 0);
@@ -77,6 +86,18 @@ export class EntityRegistry {
   linkedNames(): Iterable<string> {
     return this.links.keys();
   }
+
+  /**
+   * Link `part` to the full value `fullKey` as its [DEL_<type>_n]. False when
+   * the value already has another word linked: one placeholder, one word.
+   */
+  claimPart(fullKey: string, part: string): boolean {
+    const linked = this.parts.get(fullKey);
+    if (linked !== undefined && linked !== part) return false;
+    this.parts.set(fullKey, part);
+    this.link(part, fullKey);
+    return true;
+  }
 }
 
 const CAPITALISED = /^\p{Lu}/u;
@@ -87,6 +108,8 @@ function norm(s: string): string {
 
 const firstWord = (key: string) => key.slice(0, key.indexOf(" "));
 const lastWord = (key: string) => key.slice(key.lastIndexOf(" ") + 1);
+/** The first and last word of a multi-word key, else nothing. */
+const edgeWords = (key: string) => (key.includes(" ") ? [firstWord(key), lastWord(key)] : []);
 
 interface Resolved {
   span: Span; // genitive suffix already cut off the end
@@ -95,6 +118,16 @@ interface Resolved {
   value: string;
   firstName?: boolean;
   lastName?: boolean;
+}
+
+/** "[ORGANISATION_3]" → "[DEL_ORGANISATION_3]": the placeholder for the first or last word of a non-name value alone. */
+export function partPlaceholder(placeholder: string): string {
+  return placeholder.replace(/^\[/, "[DEL_");
+}
+
+/** "ORGANISATION" → "DEL_ORGANISATION": the type of such a word. */
+export function partType(type: EntityType): EntityType {
+  return `DEL_${type}` as EntityType;
 }
 
 /** "[NAMN_3]" → "[FÖRNAMN_3]": the placeholder for the first name alone. */
@@ -109,9 +142,9 @@ export function lastNamePlaceholder(placeholder: string): string {
 
 /** The placeholder an occurrence is written as. */
 export function placeholderOf(entity: Entity, occurrence: Occurrence): string {
-  if (occurrence.firstName) return firstNamePlaceholder(entity.placeholder);
-  if (occurrence.lastName) return lastNamePlaceholder(entity.placeholder);
-  return entity.placeholder;
+  if (!occurrence.firstName && !occurrence.lastName) return entity.placeholder;
+  if (entity.type !== "NAMN") return partPlaceholder(entity.placeholder);
+  return occurrence.firstName ? firstNamePlaceholder(entity.placeholder) : lastNamePlaceholder(entity.placeholder);
 }
 
 function stripSuffix(span: Span, surface: string, key: string, n: number): Resolved {
@@ -119,7 +152,12 @@ function stripSuffix(span: Span, surface: string, key: string, n: number): Resol
   return { span: { ...span, end: span.end - n }, surface: value, key: key.slice(0, -n), value };
 }
 
-/** Group spans into entities, merging surface forms and linking first names and surnames. */
+/**
+ * Group spans into entities, merging surface forms and linking first names and
+ * surnames to full names, and the first or last word of a multi-word
+ * organisation, place or word-list value ("Volvo" of "Volvo Cars", in
+ * "Volvo-fabriken") to that value, as [DEL_ORGANISATION_n].
+ */
 export function buildEntities(text: string, spans: Span[], registry: EntityRegistry): Entity[] {
   const sorted = [...spans].sort((a, b) => a.start - b.start);
   const surfaces = sorted.map((s) => text.slice(s.start, s.end));
@@ -129,7 +167,7 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
   sorted.forEach((s, i) => {
     const key = norm(surfaces[i]);
     known.add(key);
-    if (s.type === "NAMN" && key.includes(" ")) known.add(firstWord(key)).add(lastWord(key));
+    if (LINK_TYPES.has(s.type)) for (const w of edgeWords(key)) known.add(w);
   });
 
   const resolved: Resolved[] = sorted.map((span, i) => {
@@ -143,16 +181,17 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
     return { span, surface, key, value: surface };
   });
 
-  // First name or surname → full names in this text that start or end with it.
-  // A word that is the first name of one and the surname of another is two
-  // candidates, so it is not linked.
-  const fullNames = new Map<string, Map<string, string>>(); // part → (full key → value)
+  // First or last word → multi-word values of the same type in this text that
+  // start or end with it. A word that is the first word of one and the last of
+  // another is two candidates, so it is not linked.
+  const fullValues = new Map<string, Map<string, string>>(); // "type|part" → (full key → value)
   for (const r of resolved) {
-    if (r.span.type !== "NAMN" || !r.key.includes(" ")) continue;
-    for (const part of new Set([firstWord(r.key), lastWord(r.key)])) {
-      const forPart = fullNames.get(part) ?? new Map<string, string>();
+    if (!LINK_TYPES.has(r.span.type)) continue;
+    for (const part of new Set(edgeWords(r.key))) {
+      const id = `${r.span.type}|${part}`;
+      const forPart = fullValues.get(id) ?? new Map<string, string>();
       if (!forPart.has(r.key)) forPart.set(r.key, r.value);
-      fullNames.set(part, forPart);
+      fullValues.set(id, forPart);
     }
   }
 
@@ -163,16 +202,18 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
     r.value = fullValue;
   };
   for (const r of resolved) {
-    if (r.span.type !== "NAMN" || r.key.includes(" ")) continue;
-    const candidates = fullNames.get(r.key);
+    if (!LINK_TYPES.has(r.span.type) || r.key.includes(" ")) continue;
+    const candidates = fullValues.get(`${r.span.type}|${r.key}`);
     if (candidates?.size === 1) {
       const [[fullKey, fullValue]] = candidates;
-      registry.link(r.key, fullKey);
+      // A non-name value has one linked word; a second stays an entity of its own.
+      if (r.span.type === "NAMN") registry.link(r.key, fullKey);
+      else if (!registry.claimPart(fullKey, r.key)) continue;
       linkTo(r, fullKey, fullValue);
     } else if (!candidates) {
       const linked = registry.linkedTo(r.key);
       const entry = linked && registry.get(linked);
-      if (linked && entry) linkTo(r, linked, entry.value);
+      if (linked && entry && entry.type === r.span.type) linkTo(r, linked, entry.value);
     }
   }
 

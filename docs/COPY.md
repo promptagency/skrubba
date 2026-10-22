@@ -293,6 +293,10 @@ Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Födelsedatum döljs.
 - Typen `FÖDELSEDATUM` visas som "Födelsedatum": ett datum direkt efter född, f., födelsedatum eller liknande. Andra datum döljs inte, inte heller ett födelseår för sig.
 - Vanliga frågor, "Vilka uppgifter hittar Skrubba?": "… och referensnummer samt födelsedatum hittas med regler. Andra datum, belopp och vanliga ord döljs inte …".
 
+Nytt 2026-10-22, godkänt av ägaren 2026-10-22. Ett ord ur ett flerordigt namn på en organisation, en plats eller ett ord i ordlistan får en egen platshållare, som förnamnet.
+
+- Typerna `DEL_ORGANISATION`, `DEL_PLATS` och `DEL_ORD` visas som "Del av namn", till exempel i tipset över markeringen och i kodnyckeln. Platshållaren bär värdets typ och nummer: "Volvo-fabriken" blir "[DEL_ORGANISATION_1]-fabriken" när "Volvo Cars" är [ORGANISATION_1], och "Havsvindsteamet" blir "[DEL_ORD_1]steamet" när "Projekt Havsvind" i ordlistan är [ORD_1]. (Ägaren godkände namnet DEL och "Del av namn"; typen i platshållaren behövs eftersom [ORGANISATION_1] och [ORD_1] finns samtidigt.)
+
 ## Typer
 
 | Intern typ | Visas som |
@@ -300,6 +304,9 @@ Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Födelsedatum döljs.
 | NAMN | Namn |
 | FÖRNAMN | Förnamn |
 | EFTERNAMN | Efternamn |
+| DEL_ORGANISATION | Del av namn |
+| DEL_PLATS | Del av namn |
+| DEL_ORD | Del av namn |
 | PLATS | Plats |
 | ORGANISATION | Organisation |
 | ADRESS | Adress |

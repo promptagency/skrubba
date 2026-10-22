@@ -226,6 +226,18 @@ describe("EntityRegistry.seed", () => {
     ]);
   });
 
+  it("reads a [DEL_ORGANISATION_n] row as a word of [ORGANISATION_n]", () => {
+    const registry = new EntityRegistry();
+    registry.seed([
+      { placeholder: "[ORGANISATION_1]", value: "Volvo Cars", type: "ORGANISATION" },
+      { placeholder: "[ORD_1]", value: "Aurora X", type: "ORD" },
+      { placeholder: "[DEL_ORGANISATION_1]", value: "Volvo", type: "DEL_ORGANISATION" },
+    ]);
+    const [e] = build("Volvo-fabriken.", [["Volvo", "ORGANISATION"]], registry);
+    expect(summary([e])).toEqual(["[ORGANISATION_1]=Volvo Cars×1"]);
+    expect(e.occurrences[0].firstName).toBe(true);
+  });
+
   it("reads a [FÖRNAMN_n] row as the first name of [NAMN_n], not as a value of its own", () => {
     const registry = new EntityRegistry();
     registry.seed([
@@ -246,5 +258,59 @@ describe("EntityRegistry.seed", () => {
     const [e] = build("Lindqvist ringde.", [["Lindqvist", "NAMN"]], registry);
     expect(summary([e])).toEqual(["[NAMN_1]=Johan Lindqvist×1"]);
     expect(e.occurrences[0].lastName).toBe(true);
+  });
+});
+
+describe("buildEntities part linking ([DEL_<type>_n])", () => {
+  it("links the first word of a company to it, flagged so it is written as [DEL_ORGANISATION_n]", () => {
+    const text = "Volvo Cars växer. Volvo-fabriken och Volvos vd.";
+    const [e] = build(text, [["Volvo Cars", "ORGANISATION"], ["Volvo", "ORGANISATION"], ["Volvos", "ORGANISATION"]]);
+    expect(summary([e])).toEqual(["[ORGANISATION_1]=Volvo Cars×3"]);
+    expect(e.occurrences.map((o) => o.firstName ?? false)).toEqual([false, true, true]);
+  });
+
+  it("links the last word of a word-list term, and a place", () => {
+    const text = "Projekt Havsvind. Havsvind-teamet. Södra Sandby och Sandby-borna.";
+    const out = build(text, [["Projekt Havsvind", "ORD", "wordlist"], ["Havsvind", "ORD", "wordlist"], ["Södra Sandby", "PLATS"], ["Sandby", "PLATS"]]);
+    expect(summary(out)).toEqual(["[ORD_1]=Projekt Havsvind×2", "[PLATS_1]=Södra Sandby×2"]);
+    expect(out.map((e) => e.occurrences[1].lastName)).toEqual([true, true]);
+  });
+
+  it("does not link across types, nor a word two values share", () => {
+    const text = "Volvo Cars och Volvo Trucks. Volvo. Aurora X på listan. Aurora själv.";
+    const out = build(text, [
+      ["Volvo Cars", "ORGANISATION"],
+      ["Volvo Trucks", "ORGANISATION"],
+      ["Volvo", "ORGANISATION"],
+      ["Aurora X", "ORD", "wordlist"],
+      ["Aurora", "ORGANISATION"],
+    ]);
+    expect(summary(out)).toEqual([
+      "[ORGANISATION_1]=Volvo Cars×1",
+      "[ORGANISATION_2]=Volvo Trucks×1",
+      "[ORGANISATION_3]=Volvo×1",
+      "[ORD_1]=Aurora X×1",
+      "[ORGANISATION_4]=Aurora×1",
+    ]);
+  });
+
+  it("links one word per value: a second one stays an entity of its own", () => {
+    const text = "Volvo Cars. Volvo-fabriken. Aurora X. Aurora-lanseringen. Cars-divisionen.";
+    const out = build(text, [
+      ["Volvo Cars", "ORGANISATION"],
+      ["Volvo", "ORGANISATION"],
+      ["Aurora X", "ORD", "wordlist"],
+      ["Aurora", "ORD", "wordlist"],
+      ["Cars", "ORGANISATION"],
+    ]);
+    expect(summary(out)).toEqual(["[ORGANISATION_1]=Volvo Cars×2", "[ORD_1]=Aurora X×2", "[ORGANISATION_2]=Cars×1"]);
+  });
+
+  it("keeps the link for the rest of the session", () => {
+    const registry = new EntityRegistry();
+    build("Volvo Cars. Volvo-fabriken.", [["Volvo Cars", "ORGANISATION"], ["Volvo", "ORGANISATION"]], registry);
+    const [e] = build("Volvo-mötet.", [["Volvo", "ORGANISATION"]], registry);
+    expect(summary([e])).toEqual(["[ORGANISATION_1]=Volvo Cars×1"]);
+    expect(e.occurrences[0].firstName).toBe(true);
   });
 });

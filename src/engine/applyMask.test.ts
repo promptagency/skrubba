@@ -76,3 +76,32 @@ describe("applyMask", () => {
     expect(Number.isNaN(Date.parse(key.createdAt))).toBe(false);
   });
 });
+
+describe("applyMask part of a value", () => {
+  it("writes a linked word of a company as [DEL_ORGANISATION_n] and adds it to the key", () => {
+    const text = "Volvo Cars växer. Volvo-fabriken.";
+    const { masked, key } = applyMask(
+      text,
+      [
+        {
+          id: "[ORGANISATION_1]",
+          value: "Volvo Cars",
+          type: "ORGANISATION",
+          placeholder: "[ORGANISATION_1]",
+          occurrences: [
+            { start: 0, end: 10, surface: "Volvo Cars" },
+            { start: 18, end: 23, surface: "Volvo", firstName: true },
+          ],
+          active: true,
+          source: "model",
+        },
+      ],
+      [],
+    );
+    expect(masked).toBe("[ORGANISATION_1] växer. [DEL_ORGANISATION_1]-fabriken.");
+    expect(key.entries).toEqual([
+      { placeholder: "[ORGANISATION_1]", value: "Volvo Cars", type: "ORGANISATION" },
+      { placeholder: "[DEL_ORGANISATION_1]", value: "Volvo", type: "DEL_ORGANISATION" },
+    ]);
+  });
+});

@@ -177,6 +177,9 @@ export const TYPE_LABEL: Record<EntityType, string> = {
   NAMN: "Namn",
   FÖRNAMN: "Förnamn",
   EFTERNAMN: "Efternamn",
+  DEL_ORGANISATION: "Del av namn",
+  DEL_PLATS: "Del av namn",
+  DEL_ORD: "Del av namn",
   PLATS: "Plats",
   ORGANISATION: "Organisation",
   ADRESS: "Adress",
@@ -204,9 +207,9 @@ export const TYPE_LABEL: Record<EntityType, string> = {
 /** Colour group per type. Colour is never the only signal; labels are always available. */
 export function typeGroup(type: EntityType): "name" | "place" | "org" | "word" | "number" {
   if (type === "NAMN" || type === "FÖRNAMN" || type === "EFTERNAMN") return "name";
-  if (type === "PLATS" || type === "ADRESS") return "place";
-  if (type === "ORGANISATION") return "org";
-  if (type === "ORD") return "word";
+  if (type === "PLATS" || type === "DEL_PLATS" || type === "ADRESS") return "place";
+  if (type === "ORGANISATION" || type === "DEL_ORGANISATION") return "org";
+  if (type === "ORD" || type === "DEL_ORD") return "word";
   return "number";
 }
 

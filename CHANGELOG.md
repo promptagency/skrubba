@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **A word out of a longer name gets a linked placeholder.** With *Volvo Cars* masked as *[ORGANISATION_1]*, *Volvo-fabriken* used to become *[ORGANISATION_2]-fabriken*, and the AI saw two unrelated companies. It now becomes *[DEL_ORGANISATION_1]-fabriken*, numbered like the full name, the way a first name alone becomes *[FÖRNAMN_1]*. The same goes for places, as *[DEL_PLATS_1]*, and for word-list terms, as *[DEL_ORD_1]*: *Havsvindsteamet* with *Projekt Havsvind* on the list. The key shows the row as *Del av namn*, and restore writes the compound back as it was.
+
 ## [1.6.8] - 2026-10-22
 
 ### Fixed

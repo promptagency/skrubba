@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { type Entity, firstNamePlaceholder, lastNamePlaceholder } from "../engine/index.ts";
+import { type Entity, type EntityType, firstNamePlaceholder, lastNamePlaceholder, partPlaceholder, partType } from "../engine/index.ts";
 import { t, TYPE_LABEL, typeGroup } from "./copy.ts";
 import { cleanPaste } from "./pasteCleanup.ts";
 import { entityAt, entityMarks, segments } from "./segments.ts";
@@ -125,12 +125,16 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
     if (!entity) return setTip(null);
     const box = e.currentTarget.getBoundingClientRect();
     const mark = markUnder(e);
-    const [type, placeholder] =
-      mark?.dataset.first !== undefined
-        ? (["FÖRNAMN", firstNamePlaceholder(entity.placeholder)] as const)
-        : mark?.dataset.last !== undefined
-          ? (["EFTERNAMN", lastNamePlaceholder(entity.placeholder)] as const)
-          : [entity.type, entity.placeholder];
+    const first = mark?.dataset.first !== undefined;
+    const last = mark?.dataset.last !== undefined;
+    const [type, placeholder]: [EntityType, string] =
+      !first && !last
+        ? [entity.type, entity.placeholder]
+        : entity.type !== "NAMN"
+          ? [partType(entity.type), partPlaceholder(entity.placeholder)]
+          : first
+            ? ["FÖRNAMN", firstNamePlaceholder(entity.placeholder)]
+            : ["EFTERNAMN", lastNamePlaceholder(entity.placeholder)];
     const label = entity.active
       ? t("entity.tip.scrub", { type: TYPE_LABEL[type], placeholder })
       : t("entity.tip.keep", { type: TYPE_LABEL[type] });

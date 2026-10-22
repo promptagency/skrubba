@@ -1,4 +1,4 @@
-import { firstNamePlaceholder, lastNamePlaceholder, placeholderOf } from "./entities.ts";
+import { firstNamePlaceholder, lastNamePlaceholder, partPlaceholder, partType, placeholderOf } from "./entities.ts";
 import type { Entity, Key, KeyEntry } from "./Masker.ts";
 
 export function applyMask(text: string, entities: Entity[], wordList: string[]): { masked: string; key: Key } {
@@ -25,10 +25,20 @@ export function applyMask(text: string, entities: Entity[], wordList: string[]):
   };
 }
 
-/** The entity's row, plus a [FÖRNAMN_n] or [EFTERNAMN_n] row when its first name or surname stands alone somewhere. */
+/**
+ * The entity's row, plus a [FÖRNAMN_n] or [EFTERNAMN_n] row when its first name
+ * or surname stands alone somewhere, or a [DEL_<type>_n] row when the first or
+ * last word of a non-name value does.
+ */
 function keyEntries(e: Entity): KeyEntry[] {
   const entries: KeyEntry[] = [{ placeholder: e.placeholder, value: e.value, type: e.type }];
   const words = e.value.split(/\s+/);
+  if (e.type !== "NAMN") {
+    const part = e.occurrences.find((o) => o.firstName || o.lastName);
+    if (part)
+      entries.push({ placeholder: partPlaceholder(e.placeholder), value: part.firstName ? words[0] : words.at(-1)!, type: partType(e.type) });
+    return entries;
+  }
   if (e.occurrences.some((o) => o.firstName))
     entries.push({ placeholder: firstNamePlaceholder(e.placeholder), value: words[0], type: "FÖRNAMN" });
   if (e.occurrences.some((o) => o.lastName))
