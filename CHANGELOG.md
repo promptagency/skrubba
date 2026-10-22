@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.6.6] - 2026-10-22
+
 ### Fixed
 
 - **Birth dates without a label are masked in the usual places.** A date right after a name, as in *Anna Berg, 1987-03-14* or *Erik Ek (*14/3-87)*, and the dates in a table column headed *Född* or *Födelsedatum* now become *[FÖDELSEDATUM_1]*. A date followed by a time, as in a log, is left alone.
@@ -183,7 +185,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.5...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.6.6...HEAD
+[1.6.6]: https://github.com/promptagency/skrubba/compare/v1.6.5...v1.6.6
 [1.6.5]: https://github.com/promptagency/skrubba/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/promptagency/skrubba/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/promptagency/skrubba/compare/v1.6.2...v1.6.3
