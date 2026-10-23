@@ -1,12 +1,15 @@
-# Dependabot: a monthly pull request for new versions, which runs the checks
-# and gets a Cloudflare preview. Never merge on autopilot: a merge to main
-# deploys straight to production. Before merging, see "Updating dependencies"
-# in docs/DEPLOY.md (maskera changes detection; onnxruntime-node needs its
-# allowScripts entry bumped; the runtime packages change the served files).
+# Dependabot: a monthly pull request for new versions, against the test branch
+# dev, which runs the checks and gets a Cloudflare preview. Never merge on
+# autopilot: main is production, and dev reaches it at the next release. Before
+# merging, see "Updating dependencies" in docs/DEPLOY.md (maskera changes
+# detection; onnxruntime-node needs its allowScripts entry bumped; the runtime
+# packages change the served files). GitHub reads this file from main, so a
+# change here takes effect at the next release.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    target-branch: dev
     schedule:
       interval: monthly
     open-pull-requests-limit: 5
@@ -27,6 +30,7 @@ updates:
 
   - package-ecosystem: github-actions
     directory: /
+    target-branch: dev
     schedule:
       interval: monthly
     labels: [dependencies]

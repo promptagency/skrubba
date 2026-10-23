@@ -38,22 +38,32 @@ On their next visit, every returning visitor gets a service worker that deletes 
 
 `npx playwright test deploy` checks all of this against three local builds (update, kill switch, old tab).
 
+## Branches
+
+Two branches, since 2026-10-23 (owner's decision):
+
+- **`dev`** is where all work happens. Every push runs the type check, the unit tests and the full browser suite on GitHub, and Cloudflare builds a preview at `https://dev.skrubba.pages.dev`, where `SKRUBBA_URL=https://dev.skrubba.pages.dev npm run smoke` checks the real thing before it goes live. Previews count no visits (`src/ui/analytics.ts` only counts on `skrubba.app`). Dependabot's pull requests target `dev`.
+- **`main`** is production: Cloudflare deploys every push to `skrubba.app`. Nothing is committed on `main` directly. It only moves by being fast-forwarded to `dev` at a release, so `main` is always a released, tagged state and `git log main` is the release history.
+
+A hotfix takes the same path: commit on `dev`, release.
+
 ## Releasing a version
 
 Versions follow [Semantic Versioning](https://semver.org/): a bug fix bumps the last number (1.0.1), a new feature the middle one (1.1.0), and a change that breaks something users rely on, such as the kodnyckel file format, the first (2.0.0).
 
-1. While working, note each user-visible change under `## [Unreleased]` in `CHANGELOG.md`.
-2. To release, rename that section to `## [X.Y.Z] - YYYY-MM-DD`, add a new empty `## [Unreleased]` above it, and update the compare links at the bottom.
-3. Set the version, commit and tag:
+1. While working on `dev`, note each user-visible change under `## [Unreleased]` in `CHANGELOG.md`.
+2. To release, with `dev` green on GitHub, rename that section to `## [X.Y.Z] - YYYY-MM-DD`, add a new empty `## [Unreleased]` above it, and update the compare links at the bottom.
+3. Set the version, commit and tag on `dev`, then move `main` to it:
 
    ```sh
    npm version X.Y.Z --no-git-tag-version   # package.json and package-lock.json
    git commit -am "Release X.Y.Z"
    git tag -a vX.Y.Z -m "Skrubba X.Y.Z"
-   git push --follow-tags
+   git push --follow-tags origin dev
+   git push origin dev:main                 # fast-forward: this deploys
    ```
 
-Pushing the tag also runs the full browser suite on GitHub (`.github/workflows/test.yml`); ordinary pushes to `main` only run the type check and unit tests. That split was made to save Actions minutes while the repo was private; since it went public (2026-10-12) minutes are free, but the split keeps pushes quick. There is no need to run `npm run e2e` locally before tagging: the tag run does the same, in all three browsers (owner's decision, 2026-10-15). A real failure then shows up after the tag instead of before; fix it and release the next patch version, as below. On CI a failing test is run once more (`retries` in `playwright.config.ts`), so a one-off flake passes and is reported as flaky. A bug that always shows up fails both tries and blocks the release page, but one that only shows up sometimes can pass on the retry, so the run's summary lists every flaky test ("Flaky tests", from `scripts/flaky.ts`): open each and check whether the test or the app is at fault. The privacy tests (`no-egress.spec.ts`, and the web storage test in `restore.spec.ts`) never retry, so a leak that happens only sometimes still blocks the release (owner's decision, 2026-10-16).
+Pushing the tag runs the full browser suite on GitHub once more (`.github/workflows/test.yml`), against the same commit `main` now deploys. There is no need to run `npm run e2e` locally before tagging: the `dev` push did the same, in all three browsers. A real failure on the tag shows up after the deploy; fix it on `dev` and release the next patch version, as below. On CI a failing test is run once more (`retries` in `playwright.config.ts`), so a one-off flake passes and is reported as flaky. A bug that always shows up fails both tries and blocks the release page, but one that only shows up sometimes can pass on the retry, so the run's summary lists every flaky test ("Flaky tests", from `scripts/flaky.ts`): open each and check whether the test or the app is at fault. The privacy tests (`no-egress.spec.ts`, and the web storage test in `restore.spec.ts`) never retry, so a leak that happens only sometimes still blocks the release (owner's decision, 2026-10-16).
 
 Once the tag's tests have passed, the workflow creates the GitHub release page for it, titled "Skrubba X.Y.Z", with that version's section from `CHANGELOG.md` as the notes (`scripts/release-notes.ts`). A version with failing tests gets no page; fix it, then release the next patch version. The page is only a label: the site was already deployed when `main` was pushed.
 
@@ -63,7 +73,7 @@ The footer shows the version from `package.json`, set when the app is built. A u
 
 Dependabot (`.github/dependabot.yml`) opens pull requests once a month: one per runtime package (maskera, transformers.js, React…), one for all build and test tools, and one for the GitHub Actions in the workflow. Dependabot security updates open a pull request at once when a dependency has a known vulnerability. Each pull request runs the checks and gets a Cloudflare preview address.
 
-Merging into `main` deploys to production, so never merge one unread or untested:
+A merge into `dev` reaches production at the next release, so never merge one unread or untested:
 
 1. Check out the branch, run `npm ci`, `npm test` and `npm run e2e`.
 2. **maskera or @maskera/core:** run `npm run spike` and compare leaks and over-masking with the previous run (counts only). A new maskera can find more, or less.

@@ -51,6 +51,7 @@ Both must feel equally easy. Sector does not matter; an HR person at an ad agenc
 - Placeholders follow maskera's format `[NAMN_1]`, `[PLATS_1]`, `[ORGANISATION_1]`, `[ADRESS_1]`, `[PERSONNUMMER_1]`; manual and word-list entries use `[ORD_1]`; a first name standing alone for a full name uses `[FÖRNAMN_1]`, and a surname `[EFTERNAMN_1]`, numbered like that name's `[NAMN_1]`; the first or last word of a multi-word organisation, place or word-list value standing alone (as in `Volvo-fabriken`) uses `[DEL_ORGANISATION_1]`, `[DEL_PLATS_1]` or `[DEL_ORD_1]`, numbered like that value. Restore must be tolerant (see `docs/ARCHITECTURE.md`).
 - One page, two operations picked with a switch: Skrubba (mask) and Avskrubba (restore). Input on the left, the button between the panes runs it, the result on the right, then Kopiera. The items found (Uppgifter), the kodnyckel (placeholder → real value list, not an encryption key), Vanliga frågor and Så här funkar det (a captioned video, re-recorded with `npm run demo-video` after visible changes) are windows on top. No wizard. See `docs/UX.md`.
 - Commit small, one feature per commit, with the test that proves it.
+- Work on the `dev` branch, never on `main`. `main` is production and only moves by being fast-forwarded to `dev` at a release (`docs/DEPLOY.md`, "Branches"). Every push to `dev` runs the full test suite and gets a preview at `dev.skrubba.pages.dev`.
 
 ## Out of scope for v1
 
