@@ -195,10 +195,11 @@ describe("trimEdgeWords", () => {
 
 describe("withoutTitles", () => {
   it("drops a model span that is only a job title and cuts a title off a name", () => {
-    const t = "Lisa Berg (CFO), Erik Ek (vice ordf.), Controller: Sara Lind. ÖL Per Holm. KTH. Konsult AB. Initierare";
+    const t = "Lisa Berg (CFO), Erik Ek (vice ordf.), Controller: Sara Lind. ÖL Per Holm. KTH. Konsult AB. Initierare. Dokument-ID";
     const spans = [
       at(t, "Lisa Berg", "NAMN", "model"),
       at(t, "Initierare", "NAMN", "model"),
+      at(t, "ID", "NAMN", "model"),
       at(t, "CFO", "ORGANISATION", "model"),
       at(t, "vice ordf.", "ORGANISATION", "model"),
       at(t, "Controller", "ORGANISATION", "model"),

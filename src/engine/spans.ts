@@ -299,7 +299,7 @@ export function trimEdgeWords(text: string, spans: Span[]): Span[] {
 
 // Job titles and roles the model takes for a company or a name, including
 // the roles in a signing log ("Initierare", "Signerare").
-const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|chef|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist|initierare|signerare|undertecknare|firmatecknare|mottagare|avsändare|handläggare|kontaktperson|granskare|attestant|vittne)`;
+const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|chef|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist|initierare|signerare|undertecknare|firmatecknare|mottagare|avsändare|handläggare|kontaktperson|granskare|attestant|vittne|id)`;
 
 /**
  * Model spans cut at line breaks: a name never continues on the next line,
