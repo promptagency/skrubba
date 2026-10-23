@@ -212,6 +212,46 @@ export function looksEnglish(text: string): boolean {
   return (text.match(ENGLISH_WORDS)?.length ?? 0) > (text.match(SWEDISH_WORDS)?.length ?? 0);
 }
 
+// A sentence start: the text's start, a line's start, or a full stop. A colon
+// is not one: a list after it starts lowercase.
+const SENTENCE_START = /(?:^|[.!?]\s+|\n\s*)(\p{L})/gu;
+
+/**
+ * Whether the text is a formal document, where proper nouns are capitalised:
+ * at least fifteen sentences, nearly all starting with a capital. The margin
+ * leaves room for abbreviations ("t.ex. något"), which look like a lowercase
+ * sentence start. A chat or a quick note ("kunden (arla) vill flytta
+ * lanseringen") is not formal.
+ */
+export function looksFormal(text: string): boolean {
+  let starts = 0;
+  let lower = 0;
+  for (const m of text.matchAll(SENTENCE_START)) {
+    starts++;
+    if (/\p{Ll}/u.test(m[1])) lower++;
+  }
+  return starts >= 15 && lower / starts <= 0.15;
+}
+
+/** Only a list marker, a single letter or digits ("ii", "iii", "b", "12"). */
+const MARKER = /^(?:[ivxIVX]{1,5}|\p{L}|\d+)$/u;
+
+/**
+ * Model name, organisation and place spans that are only a list marker, and,
+ * in a formal document, spans with no capital letter at all ("penningtvätt",
+ * "relevanta nationella myndigheter"): common nouns the model takes for
+ * names. In a chat a lowercase word can be a name, so there they stay.
+ */
+export function withoutCommonWords(text: string, spans: Span[]): Span[] {
+  const formal = looksFormal(text);
+  return spans.filter((s) => {
+    if (s.source !== "model" || !EDGE_TYPES.has(s.type)) return true;
+    const value = text.slice(s.start, s.end);
+    if (MARKER.test(value)) return false;
+    return !formal || /\p{Lu}/u.test(value);
+  });
+}
+
 /**
  * In English text, model name, organisation and place spans without the plain
  * words the Swedish-trained model tacks on ("Please call Per Holm", "Fjällbris
@@ -220,21 +260,26 @@ export function looksEnglish(text: string): boolean {
  * capitalised word ("arla") stays whole, since the user may write names in
  * lowercase, and so does a lowercase name particle ("von", "de la"). A span of
  * plain words only ("Please call", which the model may split off the name) is
- * dropped, since resolveSpans would join it back onto the name. In Swedish
- * text only function words and single letters come off ("Låntagaren i", "och
- * Anna Berg"): a lowercase word after a name is often a surname there
- * ("kjell-olov bäckman" in a chat).
+ * dropped, since resolveSpans would join it back onto the name. For a name
+ * in Swedish text only function words and single letters come off
+ * ("Låntagaren i", "och Anna Berg"): a lowercase word after a name is often
+ * a surname there ("kjell-olov bäckman" in a chat). An organisation or place
+ * loses a lowercase word at the start in any language ("lånevillkor
+ * InvestEU"), since a name with a capital in it does not begin with a common
+ * noun; at the end it keeps one, since Swedish capitalises only the first
+ * word of many names ("Europeiska investeringsbanken", "Svenska kyrkan").
  */
 export function trimEdgeWords(text: string, spans: Span[]): Span[] {
   const english = looksEnglish(text);
   return spans.flatMap((s) => {
     if (s.source !== "model" || !EDGE_TYPES.has(s.type) || !CAPITAL_WORD.test(text.slice(s.start, s.end))) return [s];
     const words = text.slice(s.start, s.end).split(/(\s+)/);
-    const plain = (w: string) =>
-      NEVER_NAME.test(w) || (english && ((/^\p{Ll}+$/u.test(w) && !PARTICLE.test(w)) || OPENER.test(w)));
+    const lowercase = (w: string) => /^\p{Ll}+$/u.test(w) && !PARTICLE.test(w);
+    const plain = (w: string) => NEVER_NAME.test(w) || (english && (lowercase(w) || OPENER.test(w)));
+    const plainFirst = (w: string) => plain(w) || (s.type !== "NAMN" && lowercase(w));
     let first = 0;
     let last = words.length - 1;
-    while (first <= last && plain(words[first])) first += 2;
+    while (first <= last && plainFirst(words[first])) first += 2;
     while (first <= last && plain(words[last])) last -= 2;
     if (first > last) return [];
     const start = s.start + words.slice(0, first).join("").length;

@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
 import {
   birthDatesAfterNames,
+  looksFormal,
   resolveSpans,
   retypeOrganisations,
   trimEdgeWords,
+  withoutCommonWords,
   withoutDoseAddresses,
   withoutTitles,
 } from "./spans.ts";
@@ -244,5 +246,55 @@ describe("birthDatesAfterNames", () => {
     const t = "Anna Berg 2024-05-01 10:32 skrev. Anna Berg skrev 2024-05-01. Volvo 2024-05-01.";
     const spans = [at(t, "Anna Berg", "NAMN", "model"), at(t, "Anna Berg", "NAMN", "model", 30), at(t, "Volvo", "ORGANISATION", "model")];
     expect(dates(t, spans)).toEqual([]);
+  });
+});
+
+const FORMAL = Array.from({ length: 16 }, (_, i) => `Mening ${i + 1} står här.`).join(" ") + " Se t.ex. bilagan. Följande gäller: a) ett, b) två.";
+
+describe("looksFormal", () => {
+  it("is true for a document of capitalised sentences, abbreviations and colon lists allowed", () => {
+    expect(looksFormal(FORMAL)).toBe(true);
+  });
+
+  it("is false for a chat and for a short note", () => {
+    expect(looksFormal(Array.from({ length: 20 }, () => "hej kan du kolla detta. tack.").join("\n"))).toBe(false);
+    expect(looksFormal("kunden (arla) vill flytta lanseringen")).toBe(false);
+  });
+});
+
+describe("withoutCommonWords", () => {
+  it("drops list markers everywhere, and lowercase model names, organisations and places in a formal document", () => {
+    const t = `${FORMAL} Volvo Cars, penningtvätt, relevanta nationella myndigheter, ii, iii och Umeå.`;
+    const spans = [
+      at(t, "Volvo Cars", "ORGANISATION", "model"),
+      at(t, "penningtvätt", "ORGANISATION", "model"),
+      at(t, "relevanta nationella myndigheter", "ORGANISATION", "model"),
+      at(t, "ii", "NAMN", "model"),
+      at(t, "iii", "ORGANISATION", "model"),
+      at(t, "Umeå", "PLATS", "model"),
+    ];
+    expect(show(t, withoutCommonWords(t, spans))).toEqual(["Volvo Cars:ORGANISATION:model", "Umeå:PLATS:model"]);
+  });
+
+  it("keeps a lowercase name in a chat, and never touches rule spans", () => {
+    const t = "kunden (arla) vill flytta lanseringen, säger anna. ii";
+    const spans = [at(t, "arla", "ORGANISATION", "model"), at(t, "anna", "NAMN", "model"), at(t, "ii", "NAMN", "rule")];
+    expect(withoutCommonWords(t, spans)).toEqual(spans);
+  });
+});
+
+describe("trimEdgeWords on organisations and places", () => {
+  it("cuts a lowercase word at the start but keeps one at the end, as Swedish names capitalise only the first word", () => {
+    const t = "Enligt lånevillkor InvestEU-garanti och Europeiska investeringsbanken samt EU:s ekonomi.";
+    const spans = [
+      at(t, "lånevillkor InvestEU-garanti", "ORGANISATION", "model"),
+      at(t, "Europeiska investeringsbanken", "ORGANISATION", "model"),
+      at(t, "EU:s ekonomi", "ORGANISATION", "model"),
+    ];
+    expect(show(t, trimEdgeWords(t, spans))).toEqual([
+      "InvestEU-garanti:ORGANISATION:model",
+      "Europeiska investeringsbanken:ORGANISATION:model",
+      "EU:s ekonomi:ORGANISATION:model",
+    ]);
   });
 });

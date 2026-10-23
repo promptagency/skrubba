@@ -10,6 +10,7 @@ import {
   retypeOrganisations,
   spreadModelValues,
   trimEdgeWords,
+  withoutCommonWords,
   withoutCompoundForms,
   withoutDoseAddresses,
   withoutTitles,
@@ -134,13 +135,19 @@ export class MaskeraMasker implements Masker {
       // Nilsson" would become one organisation), and plain words are trimmed
       // again after it, so a word the model split off ("contact" before "Johan
       // Nilsson") goes too.
-      ...withoutDoseAddresses(
+      ...withoutCommonWords(
         text,
-        trimEdgeWords(text, resolveSpans(text, withoutTitles(text, trimEdgeWords(text, modelSpans)))),
+        withoutDoseAddresses(
+          text,
+          trimEdgeWords(text, resolveSpans(text, withoutTitles(text, trimEdgeWords(text, modelSpans)))),
+        ),
       ),
     ]);
     const spans = [...found, ...birthDatesAfterNames(text, found)];
     const spread = spreadModelValues(text, resolveSpans(text, spans));
-    return buildEntities(text, resolveSpans(text, [...withoutCompoundForms(text, spans, spread), ...spread]), this.registry);
+    // Filtered once more: a spread value can claim the start of a model span
+    // ("Almis" of "Almis allmänna villkor") and leave a common word behind.
+    const resolved = withoutCommonWords(text, resolveSpans(text, [...withoutCompoundForms(text, spans, spread), ...spread]));
+    return buildEntities(text, resolved, this.registry);
   }
 }

@@ -331,3 +331,18 @@ describe("MaskeraMasker.mask while its only part is being read", () => {
     await fresh;
   });
 });
+
+describe("common words the model takes for names", () => {
+  const formal = Array.from({ length: 16 }, (_, i) => `Punkt ${i + 1} gäller fortfarande.`).join(" ");
+
+  it("are dropped in a formal document, where names are capitalised", async () => {
+    const masker = new MaskeraMasker(fakeNer([["penningtvätt", "ORGANISATION"], ["Volvo Cars", "ORGANISATION"], ["ii", "NAMN"]]));
+    const text = `${formal} Regler mot penningtvätt gäller Volvo Cars enligt punkt ii.`;
+    expect(summary(await masker.mask(text, none))).toEqual(["[ORGANISATION_1]=Volvo Cars:model"]);
+  });
+
+  it("stay in a chat, where a name may be written in lowercase", async () => {
+    const masker = new MaskeraMasker(fakeNer([["arla", "ORGANISATION"], ["anna", "NAMN"]]));
+    expect(summary(await masker.mask("kunden (arla) vill flytta, säger anna", none))).toEqual(["[ORGANISATION_1]=arla:model", "[NAMN_1]=anna:model"]);
+  });
+});
