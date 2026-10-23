@@ -181,4 +181,12 @@ export const HARD_CASES: HardCase[] = [
     text: "Anders Ekström är chef. Herr Ekström, eller Anders som han kallas, är 52. Ekströmarna bor i Nacka.",
     secrets: ["Ekström", "Anders", "Nacka"],
   },
+
+  // A transcript with repeated speaker labels (user report, 2026-10-23): the
+  // model took "Elevens" for a name once, and the spread masked all of them.
+  {
+    text: "**Elevens lärare (Emma)**\n\nVi ska prata om Liam.\n\n**Elevens mamma (Sara)**\n\nHan har haft det tufft med matten.\n\n**Elevens lärare (Emma)**\n\nVi har satt in stöd.\n\n**Rektorn (Per)**\n\nJag vill tillägga att Elevens lärare har gjort ett fint jobb.\n\n**Elevens pappa (Jonas)**\n\nTack.\n\n**Elevens lärare (Emma)**\n\nEmma här igen, ni når mig på emma.lind@skola.se.",
+    secrets: ["Emma", "Liam", "Sara", "Per", "Jonas", "emma.lind"],
+    keeps: ["Elevens lärare", "Elevens mamma", "Rektorn"],
+  },
 ];

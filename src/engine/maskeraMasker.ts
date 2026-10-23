@@ -14,6 +14,7 @@ import {
   withoutCommonWords,
   withoutCompoundForms,
   withoutDoseAddresses,
+  withoutStrayHits,
   withoutTitles,
 } from "./spans.ts";
 import { tolerantRestore } from "./tolerantRestore.ts";
@@ -128,7 +129,7 @@ export class MaskeraMasker implements Masker {
   }
 
   private entities(text: string, input: MaskInput, modelSpans: Span[]): Entity[] {
-    const found = retypeOrganisations(text, [
+    const found = withoutStrayHits(text, retypeOrganisations(text, [
       ...findTerms(text, input.manual, "manual"),
       ...findTerms(text, input.wordList, "wordlist"),
       ...ruleSpans(text),
@@ -143,7 +144,7 @@ export class MaskeraMasker implements Masker {
           trimEdgeWords(text, resolveSpans(text, withoutTitles(text, trimEdgeWords(text, splitAtLineBreaks(text, modelSpans))))),
         ),
       ),
-    ]);
+    ]));
     const spans = [...found, ...birthDatesAfterNames(text, found)];
     const spread = spreadModelValues(text, resolveSpans(text, spans));
     // Filtered once more: a spread value can claim the start of a model span
