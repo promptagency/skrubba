@@ -4,9 +4,11 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-10-23
+
 ### Changed
 
-- **The feedback link invites every kind of error, and the email names the version.** The link under the text now reads *Blev något fel? Berätta.* and the email asks for an invented sentence that shows a miss or something hidden that should have stayed, with a line on why the real text must not be sent. The subject reads *Fel i Skrubba 1.7.0*, so a report can be tied to the release it came from.
+- **The feedback link invites every kind of error, and the email names the version.** The link under the text now reads *Blev något fel? Berätta.* and the email asks for an invented sentence that shows a miss or something hidden that should have stayed, with a line on why the real text must not be sent. The subject reads *Fel i Skrubba 1.8.0*, so a report can be tied to the release it came from.
 
 ### Fixed
 
@@ -226,7 +228,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/promptagency/skrubba/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/promptagency/skrubba/compare/v1.6.9...v1.7.0
 [1.6.9]: https://github.com/promptagency/skrubba/compare/v1.6.8...v1.6.9
 [1.6.8]: https://github.com/promptagency/skrubba/compare/v1.6.7...v1.6.8
