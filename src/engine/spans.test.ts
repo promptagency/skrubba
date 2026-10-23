@@ -110,7 +110,7 @@ describe("resolveSpans joining", () => {
 
 describe("withoutDoseAddresses", () => {
   it("drops a part of a document, a span cut inside a number, and a label whose number a rule claimed", () => {
-    const t = "Bilaga 3 och sid 1. Signerade 2026-10-22. Dokument-ID 0922211555 och Storgatan 5 3 tr. Bor på Storgatan.";
+    const t = "Bilaga 3 och sid 1. Signerade 2026-10-22. Dokument-ID 0922211555 och Storgatan 5 3 tr. Bor på Storgatan. Kungsgatan 12 också.";
     const spans = [
       at(t, "Bilaga 3", "ADRESS", "model"),
       at(t, "sid 1", "ADRESS", "model"),
@@ -118,8 +118,9 @@ describe("withoutDoseAddresses", () => {
       at(t, "Dokument-ID", "ADRESS", "model"),
       at(t, "Storgatan 5", "ADRESS", "model"),
       at(t, "Storgatan", "ADRESS", "model", t.indexOf("Bor")),
+      at(t, "Kungsgatan", "ADRESS", "model"),
     ];
-    expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["Storgatan 5:ADRESS:model", "Storgatan:ADRESS:model"]);
+    expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["Storgatan 5:ADRESS:model", "Storgatan:ADRESS:model", "Kungsgatan:ADRESS:model"]);
   });
 
   it("drops a model address that is a dose, keeps a street with a number", () => {
@@ -169,6 +170,12 @@ describe("trimEdgeWords", () => {
       at(t, "call anna berg", "NAMN", "rule"),
     ];
     expect(trimEdgeWords(t, spans)).toEqual(spans);
+  });
+
+  it("keeps a lowercase company in a chat whole, where only the company form is capitalised", () => {
+    const t = "ring fjällbris konsult AB om fakturan, och arla Foods";
+    const spans = [at(t, "fjällbris konsult AB", "ORGANISATION", "model"), at(t, "arla Foods", "ORGANISATION", "model")];
+    expect(show(t, trimEdgeWords(t, spans))).toEqual(show(t, spans));
   });
 
   it("leaves Swedish text alone, where a lowercase word after a name is often a surname", () => {
@@ -263,6 +270,11 @@ describe("spreadModelValues stray hits", () => {
 describe("birthDatesAfterNames", () => {
   const dates = (t: string, spans: Span[]) => birthDatesAfterNames(t, spans).map((s) => `${t.slice(s.start, s.end)}:${s.type}:${s.source}`);
 
+  it("leaves a date after a handle or a mail header name alone", () => {
+    const t = "@erik, 12 maj funkar? Från: Anna Berg 2024-05-12";
+    expect(dates(t, [at(t, "erik", "NAMN", "rule"), at(t, "Anna Berg", "NAMN", "rule")])).toEqual([]);
+  });
+
   it("takes a date right after a name, with a comma, a parenthesis or a birth asterisk", () => {
     const t = "Anna Berg, 1987-03-14, chef. Erik Ek (*14/3-87). Siv Lund 19870314 och Bo Alm (1987-03-14).";
     const spans = [at(t, "Anna Berg", "NAMN", "model"), at(t, "Erik Ek", "NAMN", "model"), at(t, "Siv Lund", "NAMN", "model"), at(t, "Bo Alm", "NAMN", "model")];
@@ -295,6 +307,12 @@ describe("looksFormal", () => {
 });
 
 describe("withoutCommonWords", () => {
+  it("keeps a name made of the letters i, v and x, since a roman numeral is all lowercase or all uppercase", () => {
+    const t = "Ring Vivi och Xi. Se punkt II och iv.";
+    const spans = [at(t, "Vivi", "NAMN", "model"), at(t, "Xi", "NAMN", "model"), at(t, "II", "NAMN", "model"), at(t, "iv", "NAMN", "model")];
+    expect(show(t, withoutCommonWords(t, spans))).toEqual(["Vivi:NAMN:model", "Xi:NAMN:model"]);
+  });
+
   it("drops list markers everywhere, and lowercase model names, organisations and places in a formal document", () => {
     const t = `${FORMAL} Volvo Cars, penningtvätt, relevanta nationella myndigheter, ii, iii och Umeå.`;
     const spans = [
@@ -317,7 +335,7 @@ describe("withoutCommonWords", () => {
 
 describe("trimEdgeWords on organisations and places", () => {
   it("cuts a lowercase word at the start but keeps one at the end, as Swedish names capitalise only the first word", () => {
-    const t = "Enligt lånevillkor InvestEU-garanti och Europeiska investeringsbanken samt EU:s ekonomi.";
+    const t = `${FORMAL} Enligt lånevillkor InvestEU-garanti och Europeiska investeringsbanken samt EU:s ekonomi.`;
     const spans = [
       at(t, "lånevillkor InvestEU-garanti", "ORGANISATION", "model"),
       at(t, "Europeiska investeringsbanken", "ORGANISATION", "model"),

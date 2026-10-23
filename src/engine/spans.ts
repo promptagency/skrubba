@@ -178,7 +178,7 @@ const DATE_AFTER_NAME = new RegExp(String.raw`^[ \t]*[,(]?[ \t]*\*?[ \t]*(${DATE
 export function birthDatesAfterNames(text: string, spans: Span[]): Span[] {
   const out: Span[] = [];
   for (const s of spans) {
-    if (s.type !== "NAMN") continue;
+    if (s.type !== "NAMN" || s.source === "rule") continue;
     const m = DATE_AFTER_NAME.exec(text.slice(s.end, s.end + 40));
     if (!m) continue;
     const start = s.end + m[0].length - m[1].length;
@@ -192,7 +192,10 @@ const DOSE = /\d\s?(?:mg|g|ml|mikrog|µg|mcg|st|tabl|x\s?\d)(?![\p{L}\p{N}])/iu;
 // A part of a document, not a street: "Bilaga 3", "sid 1", "Version 2".
 const STRUCTURE =
   /^(?:bilaga|bilagan|version|sida|sid|punkt|kapitel|kap|avsnitt|steg|del|fas|nivå|artikel|art|paragraf|stycke|tabell|figur|bild|rad|kolumn|not|fotnot|exempel|fråga|uppgift|moment|lektion|övning|vecka|dag|år|månad|kvartal|etapp|sprint|utgåva|upplaga|omgång|runda|appendix|annex|section|page|chapter|step|phase|level|table|figure|item)\.?\s?\d/iu;
-const STREET = /(?:gata|gatan|väg|vägen|gränd|gränden|torg|torget|plan|allé|allén|stig|stigen|backe|backen|led|leden|ring|ringen|plats|platsen|kaj|kajen|esplanaden|promenaden|strand|stranden|väg\.|v\.|g\.)\s?\d/iu;
+const STREET_ENDING = String.raw`(?:gata|gatan|väg|vägen|gränd|gränden|torg|torget|plan|allé|allén|stig|stigen|backe|backen|led|leden|ring|ringen|plats|platsen|kaj|kajen|esplanaden|promenaden|strand|stranden|väg\.|v\.|g\.)`;
+const STREET = new RegExp(`${STREET_ENDING}\\s?\\d`, "iu");
+// A street the model found without its number ("Kungsgatan" of "Kungsgatan 12").
+const STREET_NAME = new RegExp(`${STREET_ENDING}$`, "iu");
 
 /**
  * The model's address detector fires on "word + number", so a medication
@@ -206,7 +209,7 @@ export function withoutDoseAddresses(text: string, spans: Span[]): Span[] {
   return spans.filter((s) => {
     if (s.source !== "model" || s.type !== "ADRESS") return true;
     const value = text.slice(s.start, s.end);
-    if (STREET.test(value)) return true;
+    if (STREET.test(value) || STREET_NAME.test(value)) return true;
     if (DOSE.test(value) || STRUCTURE.test(value)) return false;
     if (/\d/.test(text[s.end] ?? "")) return false;
     return /\d/.test(value) || !/^\s*\d/.test(text.slice(s.end));
@@ -252,7 +255,7 @@ export function looksFormal(text: string): boolean {
 }
 
 /** Only a list marker, a single letter or digits ("ii", "iii", "b", "12"). */
-const MARKER = /^(?:[ivxIVX]{1,5}|\p{L}|\d+)$/u;
+const MARKER = /^(?:[ivx]{1,5}|[IVX]{1,5}|\p{L}|\d+)$/u;
 
 /**
  * Model name, organisation and place spans that are only a list marker, and,
@@ -289,12 +292,15 @@ export function withoutCommonWords(text: string, spans: Span[]): Span[] {
  */
 export function trimEdgeWords(text: string, spans: Span[]): Span[] {
   const english = looksEnglish(text);
+  // In a chat a company is often written in lowercase ("fjällbris konsult AB"), so
+  // a leading lowercase word is cut off a company or place only in formal text.
+  const formal = english || looksFormal(text);
   return spans.flatMap((s) => {
     if (s.source !== "model" || !EDGE_TYPES.has(s.type) || !CAPITAL_WORD.test(text.slice(s.start, s.end))) return [s];
     const words = text.slice(s.start, s.end).split(/(\s+)/);
     const lowercase = (w: string) => /^\p{Ll}+$/u.test(w) && !PARTICLE.test(w);
     const plain = (w: string) => NEVER_NAME.test(w) || (english && (lowercase(w) || OPENER.test(w)));
-    const plainFirst = (w: string) => plain(w) || (s.type !== "NAMN" && lowercase(w));
+    const plainFirst = (w: string) => plain(w) || (formal && s.type !== "NAMN" && lowercase(w));
     let first = 0;
     let last = words.length - 1;
     while (first <= last && plainFirst(words[first])) first += 2;

@@ -116,8 +116,8 @@ export const headerName: Detector = {
 // except the kinds maskera types on its own, a version and a page. A space
 // before "nr" counts only with a dot or colon ("Ärende nr."), so "barnen nr 1" stays.
 const OWN_TYPE = String.raw`(?:tele?fon|tel|mobil|person|p|samordnings|organisations|org|moms|vat|konto|bankkonto|post|bankgiro|plusgiro|lägenhets|journal|registrerings|reg|versions?|sid)`;
-// The word before the suffix has two letters or more: "sid" and "vid" are not "s-id" and "v-id".
-const NUMBER_LABEL = String.raw`(?:(?!${OWN_TYPE}[-.\s]?(?:nummer|nr|id|kod))\p{L}{2,}(?:-?(?:nummer|id|kod)|[-.]?nr\.?|\snr(?:\.|(?=\s*:)))|referens|ref(?:\.?\s?nr)?\.?)`;
+// The word before "id" has two letters or more: "sid" and "vid" are not "s-id" and "v-id". "Knr" and "Dnr" still count.
+const NUMBER_LABEL = String.raw`(?:(?!${OWN_TYPE}[-.\s]?(?:nummer|nr|id|kod))(?:\p{L}+(?:-?(?:nummer|kod)|[-.]?nr\.?|\snr(?:\.|(?=\s*:)))|\p{L}{2,}-?id)|referens|ref(?:\.?\s?nr)?\.?)`;
 const NUMBER_FILLER = String.raw`(?:\s*[:#]\s*|\s+(?:är\s+)?#?)`;
 const NUMBER_VALUE = String.raw`[\p{L}\p{N}](?:[\p{L}\p{N}/.\-]*[\p{L}\p{N}])?(?: \d(?:[\p{N}/.\-]*\p{N})?(?![\p{L}\p{N}]))*`;
 const LABELLED = new RegExp(String.raw`(?<![\p{L}\p{N}])${NUMBER_LABEL}(?![\p{L}])${NUMBER_FILLER}(${NUMBER_VALUE})`, "giu");
@@ -147,7 +147,7 @@ const BARE_LABEL = String.raw`(?:ordern?|fakturan?|ärendet?|kolli|pass|mål(?:e
 // letter prefix ("T 4455-23") and letter groups between separators ("2024/VGR/5567").
 const BARE_VALUE = String.raw`(?:[A-ZÅÄÖ]{1,2}\s?)?\d(?:[\d/.\-]|\s(?=\d)|[A-ZÅÄÖ]{1,4}(?=[/.\-]))*\d`;
 const BARE_LABELLED = new RegExp(
-  String.raw`(?<![\p{L}\p{N}])${BARE_LABEL}(?:\s?nr\.?)?(?![\p{L}])\s*[:#]?\s*(${BARE_VALUE})(?![\p{L}\p{N}])(?!\s?(?:kr|sek|:-|€|%))`,
+  String.raw`(?<![\p{L}\p{N}])${BARE_LABEL}((?:\s?nr\.?)?)(?![\p{L}])\s*([:#]?)\s*(${BARE_VALUE})(?![\p{L}\p{N}])(?!\s\d)(?!\s?(?:kr|sek|:-|€|%))`,
   "giu",
 );
 
@@ -156,9 +156,13 @@ export const bareLabelNumber: Detector = {
   detect(input) {
     const out: Found[] = [];
     for (const m of input.matchAll(BARE_LABELLED)) {
-      const value = m[1];
+      const [, nr, hash, value] = m;
       const digits = (value.match(/\d/g) ?? []).length;
       if (digits < 4 && !(digits >= 3 && /[-/]/.test(value))) continue;
+      // The letter prefix is uppercase ("T 4455-23"): the i flag would take "är 2030".
+      if (/^\p{Ll}/u.test(value)) continue;
+      // A year after the bare word is a year ("Målet 2030"), not without "nr" or "#".
+      if (!nr && !hash && /^(?:19|20)\d\d$/.test(value)) continue;
       const start = m.index + m[0].length - value.length;
       out.push({ start, end: start + value.length, value });
     }
@@ -169,7 +173,7 @@ export const bareLabelNumber: Detector = {
 // A chat or social handle ("@mona_sjolin", "@anna.berg", "@fjallbris_official")
 // names a person or an account. The broadcast words of chat tools are not
 // handles, and an email address is claimed by the email rule first.
-const HANDLE = /(?<![\p{L}\p{N}])@([\p{L}\p{N}_]+(?:\.[\p{L}\p{N}_]+)*)(?![\p{L}\p{N}])/gu;
+const HANDLE = /(?<![\p{L}\p{N}])@(\p{L}[\p{L}\p{N}_]*(?:\.[\p{L}\p{N}_]+)*)(?![\p{L}\p{N}])/gu;
 const BROADCAST = /^(?:channel|here|everyone|all|alla|kanal)$/iu;
 
 export const handle: Detector = {

@@ -244,6 +244,8 @@ describe("domainName", () => {
 describe("labelledNumber", () => {
   it.each([
     ["Kundnummer: 48213377", "48213377"],
+    ["Knr: 4481236", "4481236"],
+    ["Dnr 45 avser ärendet", "45"],
     ["kundnr 48213377.", "48213377"],
     ["Avtalsnummer AB-1234-567 gäller", "AB-1234-567"],
     ["Fakturanr: 2026-00412", "2026-00412"],
@@ -370,11 +372,12 @@ describe("bareLabelNumber", () => {
     ["Kolli 00370724850012345678 till Luleå.", "00370724850012345678"],
     ["FAKTURA 2024-0912 KUND: X", "2024-0912"],
     ["Dnr 2024/VGR/5567 bifogas.", "2024/VGR/5567"],
+    ["Faktura nr 2024 är betald.", "2024"],
   ])("masks the identifier after a bare label: %s", (text, value) => {
     expect(found(bareLabelNumber, text)).toEqual([value]);
   });
 
-  it.each(["Mål 3 i planen.", "Vi tog order 12 i dag.", "Matchen slutade med mål 3-2.", "Faktura 12 500 kr skickad.", "Pass 2 börjar kl 14.", "Ordern är klar."])(
+  it.each(["Mål 3 i planen.", "Vi tog order 12 i dag.", "Matchen slutade med mål 3-2.", "Faktura 12 500 kr skickad.", "Pass 2 börjar kl 14.", "Ordern är klar.", "Faktura 1 250 000 kr betald.", "Målet är 2030 klimatneutralitet.", "Målet 2030 nås om tio år.", "Faktura 2024 skickades."])(
     "leaves a count, a score or an amount alone: %s",
     (text) => {
       expect(found(bareLabelNumber, text)).toEqual([]);
@@ -395,8 +398,8 @@ describe("handle", () => {
     ]);
   });
 
-  it("leaves a lone @ and a handle glued to a word alone", () => {
-    expect(found(handle, "kl 10 @ kontoret, mejl@ och x@y")).toEqual([]);
+  it("leaves a lone @, a handle glued to a word and a time after @ alone", () => {
+    expect(found(handle, "kl 10 @ kontoret, mejl@ och x@y, lunch @12 eller @14.30")).toEqual([]);
   });
 
   it("is typed as a name", () => {
