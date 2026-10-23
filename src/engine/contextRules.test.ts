@@ -403,3 +403,9 @@ describe("handle", () => {
     expect(handle.label).toBe("NAMN");
   });
 });
+
+describe("labelledNumber, short words that end in id", () => {
+  it.each(["Se informationen på sid 1 i dokumentet.", "Vi sågs vid 3 tillfällen."])("leaves %s alone", (text) => {
+    expect(found(labelledNumber, text)).toEqual([]);
+  });
+});

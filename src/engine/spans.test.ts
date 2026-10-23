@@ -5,6 +5,7 @@ import {
   looksFormal,
   resolveSpans,
   retypeOrganisations,
+  splitAtLineBreaks,
   trimEdgeWords,
   withoutCommonWords,
   withoutDoseAddresses,
@@ -107,6 +108,19 @@ describe("resolveSpans joining", () => {
 });
 
 describe("withoutDoseAddresses", () => {
+  it("drops a part of a document, a span cut inside a number, and a label whose number a rule claimed", () => {
+    const t = "Bilaga 3 och sid 1. Signerade 2026-10-22. Dokument-ID 0922211555 och Storgatan 5 3 tr. Bor på Storgatan.";
+    const spans = [
+      at(t, "Bilaga 3", "ADRESS", "model"),
+      at(t, "sid 1", "ADRESS", "model"),
+      at(t, "Signerade 20", "ADRESS", "model"),
+      at(t, "Dokument-ID", "ADRESS", "model"),
+      at(t, "Storgatan 5", "ADRESS", "model"),
+      at(t, "Storgatan", "ADRESS", "model", t.indexOf("Bor")),
+    ];
+    expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["Storgatan 5:ADRESS:model", "Storgatan:ADRESS:model"]);
+  });
+
   it("drops a model address that is a dose, keeps a street with a number", () => {
     const t = "Sertralin 50 mg, Alvedon 500 mg x 3, Storgatan 5 g, Vintergatan 12, 2 st";
     const spans = [
@@ -181,9 +195,10 @@ describe("trimEdgeWords", () => {
 
 describe("withoutTitles", () => {
   it("drops a model span that is only a job title and cuts a title off a name", () => {
-    const t = "Lisa Berg (CFO), Erik Ek (vice ordf.), Controller: Sara Lind. ÖL Per Holm. KTH. Konsult AB";
+    const t = "Lisa Berg (CFO), Erik Ek (vice ordf.), Controller: Sara Lind. ÖL Per Holm. KTH. Konsult AB. Initierare";
     const spans = [
       at(t, "Lisa Berg", "NAMN", "model"),
+      at(t, "Initierare", "NAMN", "model"),
       at(t, "CFO", "ORGANISATION", "model"),
       at(t, "vice ordf.", "ORGANISATION", "model"),
       at(t, "Controller", "ORGANISATION", "model"),
@@ -295,6 +310,20 @@ describe("trimEdgeWords on organisations and places", () => {
       "InvestEU-garanti:ORGANISATION:model",
       "Europeiska investeringsbanken:ORGANISATION:model",
       "EU:s ekonomi:ORGANISATION:model",
+    ]);
+  });
+});
+
+describe("splitAtLineBreaks", () => {
+  it("cuts a model span at every line break and leaves rule spans alone", () => {
+    const t = "Stödet avser: Sikta Högre\nOvanstående tjänst. Almi\nFöretagspartners rådgivning.\nAnna Berg";
+    const spans = [at(t, "Sikta Högre\nOvanstående", "ORGANISATION", "model"), at(t, "Almi\nFöretagspartners", "ORGANISATION", "model"), at(t, "Anna Berg", "NAMN", "rule")];
+    expect(show(t, splitAtLineBreaks(t, spans))).toEqual([
+      "Sikta Högre:ORGANISATION:model",
+      "Ovanstående:ORGANISATION:model",
+      "Almi:ORGANISATION:model",
+      "Företagspartners:ORGANISATION:model",
+      "Anna Berg:NAMN:rule",
     ]);
   });
 });

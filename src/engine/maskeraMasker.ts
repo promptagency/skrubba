@@ -8,6 +8,7 @@ import {
   birthDatesAfterNames,
   resolveSpans,
   retypeOrganisations,
+  splitAtLineBreaks,
   spreadModelValues,
   trimEdgeWords,
   withoutCommonWords,
@@ -139,7 +140,7 @@ export class MaskeraMasker implements Masker {
         text,
         withoutDoseAddresses(
           text,
-          trimEdgeWords(text, resolveSpans(text, withoutTitles(text, trimEdgeWords(text, modelSpans)))),
+          trimEdgeWords(text, resolveSpans(text, withoutTitles(text, trimEdgeWords(text, splitAtLineBreaks(text, modelSpans))))),
         ),
       ),
     ]);

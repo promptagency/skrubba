@@ -116,7 +116,8 @@ export const headerName: Detector = {
 // except the kinds maskera types on its own, a version and a page. A space
 // before "nr" counts only with a dot or colon ("Ärende nr."), so "barnen nr 1" stays.
 const OWN_TYPE = String.raw`(?:tele?fon|tel|mobil|person|p|samordnings|organisations|org|moms|vat|konto|bankkonto|post|bankgiro|plusgiro|lägenhets|journal|registrerings|reg|versions?|sid)`;
-const NUMBER_LABEL = String.raw`(?:(?!${OWN_TYPE}[-.\s]?(?:nummer|nr|id|kod))\p{L}+(?:-?(?:nummer|id|kod)|[-.]?nr\.?|\snr(?:\.|(?=\s*:)))|referens|ref(?:\.?\s?nr)?\.?)`;
+// The word before the suffix has two letters or more: "sid" and "vid" are not "s-id" and "v-id".
+const NUMBER_LABEL = String.raw`(?:(?!${OWN_TYPE}[-.\s]?(?:nummer|nr|id|kod))\p{L}{2,}(?:-?(?:nummer|id|kod)|[-.]?nr\.?|\snr(?:\.|(?=\s*:)))|referens|ref(?:\.?\s?nr)?\.?)`;
 const NUMBER_FILLER = String.raw`(?:\s*[:#]\s*|\s+(?:är\s+)?#?)`;
 const NUMBER_VALUE = String.raw`[\p{L}\p{N}](?:[\p{L}\p{N}/.\-]*[\p{L}\p{N}])?(?: \d(?:[\p{N}/.\-]*\p{N})?(?![\p{L}\p{N}]))*`;
 const LABELLED = new RegExp(String.raw`(?<![\p{L}\p{N}])${NUMBER_LABEL}(?![\p{L}])${NUMBER_FILLER}(${NUMBER_VALUE})`, "giu");

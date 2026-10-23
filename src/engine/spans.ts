@@ -180,18 +180,27 @@ export function birthDatesAfterNames(text: string, spans: Span[]): Span[] {
 
 // A dose or a quantity: "50 mg", "500 mg x 3", "2 st".
 const DOSE = /\d\s?(?:mg|g|ml|mikrog|µg|mcg|st|tabl|x\s?\d)(?![\p{L}\p{N}])/iu;
+// A part of a document, not a street: "Bilaga 3", "sid 1", "Version 2".
+const STRUCTURE =
+  /^(?:bilaga|bilagan|version|sida|sid|punkt|kapitel|kap|avsnitt|steg|del|fas|nivå|artikel|art|paragraf|stycke|tabell|figur|bild|rad|kolumn|not|fotnot|exempel|fråga|uppgift|moment|lektion|övning|vecka|dag|år|månad|kvartal|etapp|sprint|utgåva|upplaga|omgång|runda|appendix|annex|section|page|chapter|step|phase|level|table|figure|item)\.?\s?\d/iu;
 const STREET = /(?:gata|gatan|väg|vägen|gränd|gränden|torg|torget|plan|allé|allén|stig|stigen|backe|backen|led|leden|ring|ringen|plats|platsen|kaj|kajen|esplanaden|promenaden|strand|stranden|väg\.|v\.|g\.)\s?\d/iu;
 
 /**
- * The model's address detector fires on "word + number + unit", so a
- * medication ("Sertralin 50 mg") comes out as an address. Such a span is
- * dropped unless it has a street name's ending before the number.
+ * The model's address detector fires on "word + number", so a medication
+ * ("Sertralin 50 mg") and a part of a document ("Bilaga 3", "sid 1") come
+ * out as addresses. Such a span is dropped unless it has a street name's
+ * ending before the number. So is one cut inside a number ("Signerade 20"
+ * of "Signerade 2026-10-22") and a label whose number a rule has claimed
+ * ("Dokument-ID" of "Dokument-ID 0922…").
  */
 export function withoutDoseAddresses(text: string, spans: Span[]): Span[] {
   return spans.filter((s) => {
     if (s.source !== "model" || s.type !== "ADRESS") return true;
     const value = text.slice(s.start, s.end);
-    return !DOSE.test(value) || STREET.test(value);
+    if (STREET.test(value)) return true;
+    if (DOSE.test(value) || STRUCTURE.test(value)) return false;
+    if (/\d/.test(text[s.end] ?? "")) return false;
+    return /\d/.test(value) || !/^\s*\d/.test(text.slice(s.end));
   });
 }
 
@@ -288,8 +297,29 @@ export function trimEdgeWords(text: string, spans: Span[]): Span[] {
   });
 }
 
-// Job titles and roles the model takes for a company or a name.
-const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|chef|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist)`;
+// Job titles and roles the model takes for a company or a name, including
+// the roles in a signing log ("Initierare", "Signerare").
+const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|chef|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist|initierare|signerare|undertecknare|firmatecknare|mottagare|avsändare|handläggare|kontaktperson|granskare|attestant|vittne)`;
+
+/**
+ * Model spans cut at line breaks: a name never continues on the next line,
+ * but the model reads across one ("Sikta Högre\nOvanstående", "Almi\n
+ * Företagspartners"). Each piece is a span of its own.
+ */
+export function splitAtLineBreaks(text: string, spans: Span[]): Span[] {
+  return spans.flatMap((s) => {
+    if (s.source !== "model") return [s];
+    const out: Span[] = [];
+    let start = s.start;
+    for (let i = s.start; i <= s.end; i++) {
+      if (i === s.end || text[i] === "\n") {
+        if (i > start) out.push({ ...s, start, end: i });
+        start = i + 1;
+      }
+    }
+    return out;
+  });
+}
 const ONLY_TITLE = new RegExp(`^(?:vice )?${TITLE}$`, "iu");
 const LEADING_TITLE = new RegExp(`^(?:vice )?${TITLE} (?=\\p{Lu})`, "iu");
 
