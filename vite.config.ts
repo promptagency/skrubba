@@ -36,6 +36,20 @@ function cspMeta(): Plugin {
   };
 }
 
+// Build only: preload the fonts, so the page is first painted in them. With
+// font-display: swap alone a slow machine paints the fallback font first and
+// the text reflows when the fonts arrive (a layout shift CI saw at phone width).
+function preloadFonts(): Plugin {
+  return {
+    name: "preload-fonts",
+    apply: "build",
+    transformIndexHtml: (_html, ctx) =>
+      Object.keys(ctx.bundle ?? {})
+        .filter((file) => file.endsWith(".woff2"))
+        .map((file) => ({ tag: "link", attrs: { rel: "preload", href: `/${file}`, as: "font", type: "font/woff2", crossorigin: "" }, injectTo: "head" as const })),
+  };
+}
+
 // Link previews (Open Graph, X): title and description are the approved
 // app.title and app.tagline, the image is public/og-image.png
 // (scripts/make-og-image.ts), and the address comes from config.ts.
@@ -146,7 +160,7 @@ const ISOLATION_HEADERS = {
 const APP_VERSION = (JSON.parse(readFileSync(fileURLToPath(new URL("./package.json", import.meta.url)), "utf8")) as { version: string }).version;
 
 export default defineConfig({
-  plugins: [react(), cspMeta(), shareMeta(), serveRuntimeInDev(), serviceWorker()],
+  plugins: [react(), cspMeta(), preloadFonts(), shareMeta(), serveRuntimeInDev(), serviceWorker()],
   define: { __SW_KILL__: JSON.stringify(SW_KILL), __APP_VERSION__: JSON.stringify(APP_VERSION) },
   server: { headers: ISOLATION_HEADERS },
   preview: { headers: ISOLATION_HEADERS },

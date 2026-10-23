@@ -18,6 +18,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 - **The roles in a signing log are not names.** *Initierare* and *Signerare* stay readable; the people next to them are hidden as before.
 - **Only a capitalised word is linked as part of a longer name.** A lowercase word at the start of a phrase the model took for a company is an ordinary word and keeps its own placeholder.
 - **A word the model mistakes once is no longer marked everywhere.** In a transcript with the speaker label *Elevens lärare (Emma)* repeated, the model took *Elevens* for a name in one place and every *Elevens* became *[NAMN_1]*. A single word found once, in a text where it occurs four times or more, is now marked in that one place only. Reported by a user.
+- **The page is painted in its own fonts from the start.** On a slow connection the text used to appear in a stand-in font and move when the real fonts arrived.
 - **Chat and social handles are masked.** *@karin*, *@anna.berg* and *@fjallbris_official* now become *[NAMN_1]*; *@channel* and *@here* do not.
 
 ## [1.7.0] - 2026-10-22
