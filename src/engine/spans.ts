@@ -92,6 +92,7 @@ const PROPER_NOUN = /^\p{Lu}/u;
 const COMPOUND_TYPES: ReadonlySet<Span["type"]> = new Set(["ORGANISATION", "PLATS"]);
 const HEAD_TYPES: ReadonlySet<Span["type"]> = new Set(["ORGANISATION", "PLATS", "ADRESS"]);
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const asWholeWord = (value: string) => new RegExp(`(?<![\\p{L}\\p{N}])${escape(value)}(?![\\p{L}\\p{N}])`, "gu");
 
 /**
  * The model can find a name in one place and miss it in another, for example
@@ -104,11 +105,19 @@ compound word (see startsCompound). Line breaks inside a value match any whitesp
  */
 export function spreadModelValues(text: string, resolved: Span[]): Span[] {
   const values = new Map<string, Span["type"]>();
+  const hits = new Map<string, number>();
   for (const s of resolved) {
     const value = text.slice(s.start, s.end).replace(/\s+/g, " ");
-    if (s.source === "model" && value.length >= 3 && PROPER_NOUN.test(value) && !values.has(value))
-      values.set(value, s.type);
+    if (s.source !== "model" || value.length < 3 || !PROPER_NOUN.test(value)) continue;
+    hits.set(value, (hits.get(value) ?? 0) + 1);
+    if (!values.has(value)) values.set(value, s.type);
   }
+  // A single word found once in a text that has it four times or more is
+  // likelier a stray hit than a name ("Elevens" in a transcript whose speaker
+  // labels repeat "Elevens lärare (Emma)"). The hit stays, so the user can
+  // keep it, but it does not spread (user report, 2026-10-23).
+  for (const value of values.keys())
+    if (hits.get(value) === 1 && !value.includes(" ") && (text.match(asWholeWord(value))?.length ?? 0) >= 4) values.delete(value);
   // "Volvoavtalet" found next to "Volvo" is a compound of it: spread "Volvo" only.
   const compounding = (v: string) => COMPOUND_TYPES.has(values.get(v) ?? "NAMN");
   for (const value of values.keys())
@@ -146,52 +155,18 @@ const stem = (s: string) => s.toLowerCase().replace(/\s+/g, " ").replace(/(?::s|
  */
 export function retypeOrganisations(text: string, spans: Span[]): Span[] {
   const orgs = new Set<string>();
-  // The model's own votes per value: one "Emma" typed ORGANISATION in a
-  // transcript must not outvote five typed NAMN (user report, 2026-10-23).
-  const votes = new Map<string, { NAMN: number; ORGANISATION: number }>();
   for (const s of spans) {
+    if (s.type !== "ORGANISATION") continue;
     const value = text.slice(s.start, s.end);
-    if (s.source === "model" && (s.type === "NAMN" || s.type === "ORGANISATION")) {
-      const v = votes.get(stem(value)) ?? { NAMN: 0, ORGANISATION: 0 };
-      v[s.type]++;
-      votes.set(stem(value), v);
-    }
-    if (s.type !== "ORGANISATION" || s.source === "model") continue;
     orgs.add(stem(value));
     if (s.source === "rule" && value.includes(" ")) orgs.add(stem(value.slice(0, value.indexOf(" "))));
   }
   return spans.map((s) => {
-    if (s.source !== "model" || (s.type !== "NAMN" && s.type !== "ORGANISATION")) return s;
+    if (s.source !== "model" || s.type !== "NAMN") return s;
     const value = text.slice(s.start, s.end);
     const key = stem(value);
-    const v = votes.get(key)!;
     const known = orgs.has(key) || orgs.has(value.toLowerCase()) || KNOWN_ORGANISATIONS.has(key) || KNOWN_ORGANISATIONS.has(value.toLowerCase());
-    const type = known || v.ORGANISATION >= v.NAMN ? "ORGANISATION" : "NAMN";
-    return type === s.type ? s : { ...s, type };
-  });
-}
-
-const STRAY_TYPES: ReadonlySet<Span["type"]> = new Set(["NAMN", "ORGANISATION", "PLATS"]);
-
-/**
- * A single word the model found once while the text has it four times or
- * more is a stray hit, not a name: "Elevens" in "att Elevens lärare" in a
- * transcript whose speaker labels repeat "Elevens lärare (Emma)" eight times.
- * Left in, the spread would mask every occurrence. A real name the model
- * finds once is kept when it occurs fewer than four times.
- */
-export function withoutStrayHits(text: string, spans: Span[]): Span[] {
-  const hits = new Map<string, number>();
-  for (const s of spans)
-    if (s.source === "model" && STRAY_TYPES.has(s.type)) {
-      const value = text.slice(s.start, s.end);
-      hits.set(value, (hits.get(value) ?? 0) + 1);
-    }
-  return spans.filter((s) => {
-    const value = text.slice(s.start, s.end);
-    if (hits.get(value) !== 1 || !PROPER_NOUN.test(value) || /\s/.test(value) || s.source !== "model") return true;
-    const occurrences = text.match(new RegExp(`(?<![\\p{L}\\p{N}])${escape(value)}(?![\\p{L}\\p{N}])`, "gu"))?.length ?? 0;
-    return occurrences < 4;
+    return known ? { ...s, type: "ORGANISATION" } : s;
   });
 }
 

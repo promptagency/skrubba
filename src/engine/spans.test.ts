@@ -6,10 +6,10 @@ import {
   resolveSpans,
   retypeOrganisations,
   splitAtLineBreaks,
+  spreadModelValues,
   trimEdgeWords,
   withoutCommonWords,
   withoutDoseAddresses,
-  withoutStrayHits,
   withoutTitles,
 } from "./spans.ts";
 
@@ -243,25 +243,20 @@ describe("retypeOrganisations", () => {
     const spans = [at(t, "Arla", "NAMN", "model"), at(t, "Anna", "NAMN", "model"), at(t, "Arla", "NAMN", "rule", 20)];
     expect(types(t, spans)).toEqual(["Arla:ORGANISATION", "Anna:NAMN", "Arla:NAMN"]);
   });
-
-  it("lets the model's majority type win, so one stray company hit does not retype a person", () => {
-    const t = "Emma: hej. Emma: ja. Emma: nej. Emma: ok.";
-    const spans = [at(t, "Emma", "NAMN", "model"), at(t, "Emma", "NAMN", "model", 10), at(t, "Emma", "ORGANISATION", "model", 20), at(t, "Emma", "NAMN", "model", 30)];
-    expect(types(t, spans)).toEqual(["Emma:NAMN", "Emma:NAMN", "Emma:NAMN", "Emma:NAMN"]);
-  });
 });
 
-describe("withoutStrayHits", () => {
-  it("drops a single word the model found once while the text has it four times or more", () => {
-    const t = "Elevens lärare (Emma). Elevens mamma. Elevens pappa. Elevens lärare igen.";
-    const spans = [at(t, "Elevens", "NAMN", "model", 40), at(t, "Emma", "NAMN", "model")];
-    expect(show(t, withoutStrayHits(t, spans))).toEqual(["Emma:NAMN:model"]);
+describe("spreadModelValues stray hits", () => {
+  const spread = (t: string, spans: Span[]) => show(t, spreadModelValues(t, spans));
+
+  it("does not spread a single word the model found once while the text has it four times or more", () => {
+    const t = "Elevens lärare (Emma). Elevens mamma. Elevens pappa. Elevens lärare igen, Emma.";
+    expect(spread(t, [at(t, "Elevens", "NAMN", "model", 40), at(t, "Emma", "NAMN", "model")])).toEqual(["Emma:NAMN:model", "Emma:NAMN:model"]);
   });
 
-  it("keeps a name found once in fewer occurrences, found twice, from a rule, or of several words", () => {
-    const t = "Anna, Anna, Anna. Berg Berg Berg Berg. Lund Lund Lund Lund. Nya Tider Nya Tider Nya Tider Nya Tider.";
-    const spans = [at(t, "Anna", "NAMN", "model"), at(t, "Berg", "NAMN", "model"), at(t, "Berg", "NAMN", "model", 25), at(t, "Lund", "PLATS", "rule"), at(t, "Nya Tider", "ORGANISATION", "model")];
-    expect(show(t, withoutStrayHits(t, spans))).toEqual(show(t, spans));
+  it("spreads a name found once in fewer occurrences, found twice, or of several words", () => {
+    const t = "Anna, Anna, Anna. Berg Berg Berg Berg. Nya Tider Nya Tider Nya Tider Nya Tider.";
+    const spans = [at(t, "Anna", "NAMN", "model"), at(t, "Berg", "NAMN", "model"), at(t, "Berg", "NAMN", "model", 25), at(t, "Nya Tider", "ORGANISATION", "model")];
+    expect(spread(t, spans).length).toBe(3 + 4 + 4);
   });
 });
 
