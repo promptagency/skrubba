@@ -146,6 +146,20 @@ export const HARD_CASES: HardCase[] = [
     keeps: ["Our contact", "will present", "Hi team", "sent it"],
   },
 
+  // Identifiers after a bare label, and chat handles (probe 2026-10-23).
+  {
+    text: "[10:02] Kund: Hej, jag heter Mona Sjölin och mitt kundnummer är 48812-7.\n[10:03] Agent: Hej Mona! Jag ser din order 2024-559871.",
+    secrets: ["Mona Sjölin", "48812-7", "2024-559871", "Mona"],
+  },
+  { text: "Ärende #771203: kunden (Sven-Erik Lund) vill byta leveransadress.", secrets: ["771203", "Sven-Erik Lund"] },
+  {
+    text: "Mål nr T 4455-23, Göteborgs tingsrätt. Kärande: Anna Berg. Svarande: Fjällbris Konsult AB (556123-4567).",
+    secrets: ["T 4455-23", "Anna Berg", "Fjällbris", "556123-4567"],
+  },
+  { text: "Pass nr 87654321 (utfärdat 2019), körkort 19850312-4471, anställnings-ID EMP-00912.", secrets: ["87654321", "19850312-4471", "EMP-00912"] },
+  { text: "Kolli 00370724850012345678 till Johan Ek, Hamngatan 2, 972 31 Luleå.", secrets: ["00370724850012345678", "Johan Ek", "Hamngatan 2", "Luleå"] },
+  { text: "ping @karin: offerten till Grönqvist ligger i mappen 'Kunder/Grönqvist Fastigheter'. cc @erik", secrets: ["karin", "Grönqvist", "erik"] },
+
   // Job titles the model takes for companies.
   {
     text: "Lisa Berg (CFO) och Per Holm (VD) deltog. Controller: Anna Ek. Styrelsen: Erik Ek (ordf.), Sara Lind (ledamot).",

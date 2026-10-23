@@ -7,6 +7,8 @@ import {
   domainName,
   headerName,
   intlPhone,
+  bareLabelNumber,
+  handle,
   labelledNumber,
   momsnummer,
   orgnrInContext,
@@ -356,5 +358,48 @@ describe("ampersandName", () => {
 
   it("leaves business shorthand and longer names alone", () => {
     expect(found("Budget för R&D och en Q&A efter M&A-affären. Kvist & Lönn.")).toEqual([]);
+  });
+});
+
+describe("bareLabelNumber", () => {
+  it.each([
+    ["Jag ser din order 2024-559871.", "2024-559871"],
+    ["Ärende #771203: kunden vill byta adress.", "771203"],
+    ["Mål nr T 4455-23, Göteborgs tingsrätt.", "T 4455-23"],
+    ["Pass nr 87654321 (utfärdat 2019)", "87654321"],
+    ["Kolli 00370724850012345678 till Luleå.", "00370724850012345678"],
+    ["FAKTURA 2024-0912 KUND: X", "2024-0912"],
+    ["Dnr 2024/VGR/5567 bifogas.", "2024/VGR/5567"],
+  ])("masks the identifier after a bare label: %s", (text, value) => {
+    expect(found(bareLabelNumber, text)).toEqual([value]);
+  });
+
+  it.each(["Mål 3 i planen.", "Vi tog order 12 i dag.", "Matchen slutade med mål 3-2.", "Faktura 12 500 kr skickad.", "Pass 2 börjar kl 14.", "Ordern är klar."])(
+    "leaves a count, a score or an amount alone: %s",
+    (text) => {
+      expect(found(bareLabelNumber, text)).toEqual([]);
+    },
+  );
+
+  it("is typed as a reference number", () => {
+    expect(bareLabelNumber.label).toBe("REFERENSNUMMER");
+  });
+});
+
+describe("handle", () => {
+  it("masks chat and social handles, not broadcast words", () => {
+    expect(found(handle, "ping @karin: se @anna.berg och @fjallbris_official, cc @channel och @here.")).toEqual([
+      "karin",
+      "anna.berg",
+      "fjallbris_official",
+    ]);
+  });
+
+  it("leaves a lone @ and a handle glued to a word alone", () => {
+    expect(found(handle, "kl 10 @ kontoret, mejl@ och x@y")).toEqual([]);
+  });
+
+  it("is typed as a name", () => {
+    expect(handle.label).toBe("NAMN");
   });
 });

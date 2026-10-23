@@ -4,6 +4,11 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Case, order, invoice, passport and parcel numbers without the word "nummer" are masked.** *Mål nr T 4455-23*, *order 2024-559871*, *Ärende #771203*, *Pass nr 87654321* and *Kolli 0037…* used to stay in the text. They now become *[REFERENSNUMMER_1]*. A count, a score or an amount after the same words, as in *mål 3* or *faktura 12 500 kr*, is left alone.
+- **Chat and social handles are masked.** *@karin*, *@anna.berg* and *@fjallbris_official* now become *[NAMN_1]*; *@channel* and *@here* do not.
+
 ## [1.7.0] - 2026-10-22
 
 ### Changed

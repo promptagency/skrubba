@@ -135,6 +135,55 @@ export const labelledNumber: Detector = {
   },
 };
 
+// An identifier after a word that is always followed by one, with no
+// "nummer" needed: "order 2024-559871", "Ärende #771203", "Mål nr T 4455-23",
+// "Pass nr 87654321", "Kolli 00370724850012345678", "Faktura 2024-0912". The
+// value must look like an identifier (four digits, or three with a dash or
+// slash), so "mål 3", "order 12" and a score stay, and an amount ("faktura
+// 12 500 kr") is not taken.
+const BARE_LABEL = String.raw`(?:ordern?|fakturan?|ärendet?|kolli|pass|mål(?:et)?|dnr|diarienr)`;
+// Digits with "-", "/" and ".", single spaces between digit groups, a short
+// letter prefix ("T 4455-23") and letter groups between separators ("2024/VGR/5567").
+const BARE_VALUE = String.raw`(?:[A-ZÅÄÖ]{1,2}\s?)?\d(?:[\d/.\-]|\s(?=\d)|[A-ZÅÄÖ]{1,4}(?=[/.\-]))*\d`;
+const BARE_LABELLED = new RegExp(
+  String.raw`(?<![\p{L}\p{N}])${BARE_LABEL}(?:\s?nr\.?)?(?![\p{L}])\s*[:#]?\s*(${BARE_VALUE})(?![\p{L}\p{N}])(?!\s?(?:kr|sek|:-|€|%))`,
+  "giu",
+);
+
+export const bareLabelNumber: Detector = {
+  label: "REFERENSNUMMER",
+  detect(input) {
+    const out: Found[] = [];
+    for (const m of input.matchAll(BARE_LABELLED)) {
+      const value = m[1];
+      const digits = (value.match(/\d/g) ?? []).length;
+      if (digits < 4 && !(digits >= 3 && /[-/]/.test(value))) continue;
+      const start = m.index + m[0].length - value.length;
+      out.push({ start, end: start + value.length, value });
+    }
+    return out;
+  },
+};
+
+// A chat or social handle ("@mona_sjolin", "@anna.berg", "@fjallbris_official")
+// names a person or an account. The broadcast words of chat tools are not
+// handles, and an email address is claimed by the email rule first.
+const HANDLE = /(?<![\p{L}\p{N}])@([\p{L}\p{N}_]+(?:\.[\p{L}\p{N}_]+)*)(?![\p{L}\p{N}])/gu;
+const BROADCAST = /^(?:channel|here|everyone|all|alla|kanal)$/iu;
+
+export const handle: Detector = {
+  label: "NAMN",
+  detect(input) {
+    const out: Found[] = [];
+    for (const m of input.matchAll(HANDLE)) {
+      const value = m[1];
+      if (value.length < 2 || BROADCAST.test(value)) continue;
+      out.push({ start: m.index + 1, end: m.index + 1 + value.length, value });
+    }
+    return out;
+  },
+};
+
 // A date right after a word that says it is a birth date ("född 1987-03-14",
 // "Född: 14 mars 1987", "Berg, f. 14/3-87"). Other dates stay: the AI often
 // needs them to answer. The year alone ("född 1987") stays too.
