@@ -3,7 +3,7 @@ export const APP_SLUG = "skrubba";
 export const APP_URL = "https://skrubba.app";
 /** Public repository, linked from "Github" in the footer credits. Leave empty to show the word without a link. */
 export const REPO_URL = "https://github.com/promptagency/skrubba";
-/** Where "Missade Skrubba något? Berätta." sends its email. */
+/** Where "Blev något fel? Berätta." sends its email. */
 export const FEEDBACK_EMAIL = "micke@promptagency.se";
 /** Linked from the footer byline. */
 export const AUTHOR_URL = "https://mickequick.se";

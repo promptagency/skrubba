@@ -6,7 +6,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ### Changed
 
-- **The feedback email names the version.** The subject line now reads *Skrubba 1.7.0 missade något*, so a report can be tied to the release it came from.
+- **The feedback link invites every kind of error, and the email names the version.** The link under the text now reads *Blev något fel? Berätta.* and the email asks for an invented sentence that shows a miss or something hidden that should have stayed, with a line on why the real text must not be sent. The subject reads *Fel i Skrubba 1.7.0*, so a report can be tied to the release it came from.
 
 ### Fixed
 

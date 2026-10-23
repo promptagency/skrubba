@@ -125,10 +125,10 @@ export const COPY = {
   "key.explainer": "Visar vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg.",
   "faq.open": "Vanliga frågor",
   "howto.open": "Så här funkar det",
-  "feedback.link": "Missade Skrubba något? Berätta.",
-  "feedback.subject": "Skrubba {version} missade något",
+  "feedback.link": "Blev något fel? Berätta.",
+  "feedback.subject": "Fel i Skrubba {version}",
   "feedback.body":
-    "Skriv en påhittad mening där Skrubba missar på samma sätt, med påhittade namn och nummer i samma form som de riktiga. Till exempel \"Ring Kalle Persson om kundnummer AB-1234-567.\" Testa gärna meningen i Skrubba först, så vet du att den visar missen. Berätta också vilken sorts text det var, som ett mejl eller ett protokoll. Skicka inte den riktiga uppgiften eller din text.",
+    "Skriv en påhittad mening där Skrubba gör samma fel, missar en uppgift eller döljer något som borde stå kvar. Använd påhittade namn och nummer i samma form som de riktiga, till exempel \"Ring Kalle Persson om kundnummer AB-1234-567.\" Testa gärna meningen i Skrubba först, så vet du att den visar felet. Berätta också vilken sorts text det var, som ett mejl eller ett protokoll. Skicka inte den riktiga texten: den innehåller andras uppgifter, och en påhittad mening visar felet lika bra.",
   "caveat.short": "Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Kontrollera dina val innan du kopierar.",
   "mode.switch": "Vad vill du göra?",
   "pane.scrubIn": "Din text",
