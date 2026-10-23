@@ -159,6 +159,22 @@ describe("trimEdgeWords", () => {
     const spans = [at(t, "Kim. kjell-olov bäckman", "NAMN", "model")];
     expect(trimEdgeWords(t, spans)).toEqual(spans);
   });
+
+  it("cuts function words and single letters off in Swedish too", () => {
+    const t = "Låntagaren i detta avtal och Anna Berg samt Volvo Cars är parter. Hon bor i Umeå nu.";
+    const spans = [
+      at(t, "Låntagaren i", "ORGANISATION", "model"),
+      at(t, "och Anna Berg", "NAMN", "model"),
+      at(t, "Volvo Cars är", "ORGANISATION", "model"),
+      at(t, "i Umeå nu", "PLATS", "model"),
+    ];
+    expect(show(t, trimEdgeWords(t, spans))).toEqual([
+      "Låntagaren:ORGANISATION:model",
+      "Anna Berg:NAMN:model",
+      "Volvo Cars:ORGANISATION:model",
+      "Umeå nu:PLATS:model",
+    ]);
+  });
 });
 
 describe("withoutTitles", () => {

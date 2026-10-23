@@ -314,3 +314,12 @@ describe("buildEntities part linking ([DEL_<type>_n])", () => {
     expect(e.occurrences[0].firstName).toBe(true);
   });
 });
+
+describe("buildEntities part linking, lowercase words", () => {
+  it("does not link a lowercase word of a phrase the model took for a company", () => {
+    const text = "tillämpliga InvestEU-villkor gäller. De tillämpliga reglerna och tillämpliga krav.";
+    const out = build(text, [["tillämpliga InvestEU-villkor", "ORGANISATION"], ["tillämpliga", "ORGANISATION"]]);
+    expect(summary(out)).toEqual(["[ORGANISATION_1]=tillämpliga InvestEU-villkor×1", "[ORGANISATION_2]=tillämpliga×2"]);
+    expect(out[1].occurrences.some((o) => o.firstName || o.lastName)).toBe(false);
+  });
+});

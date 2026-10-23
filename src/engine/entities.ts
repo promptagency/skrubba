@@ -206,9 +206,16 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
     const candidates = fullValues.get(`${r.span.type}|${r.key}`);
     if (candidates?.size === 1) {
       const [[fullKey, fullValue]] = candidates;
-      // A non-name value has one linked word; a second stays an entity of its own.
       if (r.span.type === "NAMN") registry.link(r.key, fullKey);
-      else if (!registry.claimPart(fullKey, r.key)) continue;
+      else {
+        // Only a capitalised word is a name's part ("Volvo" of "Volvo Cars"); a
+        // lowercase one ("tillämpliga" of a phrase the model took for a company)
+        // is an ordinary word. A value has one linked word; a second stays an
+        // entity of its own.
+        const inValue = fullValue.trim().split(/\s+/);
+        const word = firstWord(fullKey) === r.key ? inValue[0] : inValue.at(-1)!;
+        if (!/^[\p{Lu}\p{N}]/u.test(word) || !registry.claimPart(fullKey, r.key)) continue;
+      }
       linkTo(r, fullKey, fullValue);
     } else if (!candidates) {
       const linked = registry.linkedTo(r.key);
