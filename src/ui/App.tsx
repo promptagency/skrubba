@@ -650,7 +650,7 @@ export function App() {
 /** A copy string with {name} slots filled by elements. */
 // The email only describes what was missed: the user's text never goes into it.
 function feedbackMailto(): string {
-  const subject = encodeURIComponent(t("feedback.subject"));
+  const subject = encodeURIComponent(t("feedback.subject", { version: APP_VERSION }));
   const body = encodeURIComponent(t("feedback.body"));
   return `mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`;
 }

@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Changed
+
+- **The feedback email names the version.** The subject line now reads *Skrubba 1.7.0 missade något*, so a report can be tied to the release it came from.
+
 ### Fixed
 
 - **Case, order, invoice, passport and parcel numbers without the word "nummer" are masked.** *Mål nr T 4455-23*, *order 2024-559871*, *Ärende #771203*, *Pass nr 87654321* and *Kolli 0037…* used to stay in the text. They now become *[REFERENSNUMMER_1]*. A count, a score or an amount after the same words, as in *mål 3* or *faktura 12 500 kr*, is left alone.

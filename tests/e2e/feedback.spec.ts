@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import { editor, openReady } from "./helpers.ts";
 
@@ -12,7 +13,9 @@ test("the warning under the text ends with a link to report a miss by email, nev
   const mail = new URL(href!);
   expect(mail.protocol).toBe("mailto:");
   expect(mail.pathname).toBe("micke@promptagency.se");
-  expect(mail.searchParams.get("subject")).toBe("Skrubba missade något");
+  // The version is in the subject, so a report can be tied to a release.
+  const { version } = JSON.parse(readFileSync("package.json", "utf8")) as { version: string };
+  expect(mail.searchParams.get("subject")).toBe(`Skrubba ${version} missade något`);
   expect(mail.searchParams.get("body")).toBe(
     "Skriv en påhittad mening där Skrubba missar på samma sätt, med påhittade namn och nummer i samma form som de riktiga. Till exempel \"Ring Kalle Persson om kundnummer AB-1234-567.\" Testa gärna meningen i Skrubba först, så vet du att den visar missen. Berätta också vilken sorts text det var, som ett mejl eller ett protokoll. Skicka inte den riktiga uppgiften eller din text.",
   );

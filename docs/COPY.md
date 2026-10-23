@@ -135,7 +135,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | faq.open | Vanliga frågor |
 | howto.open | Så här funkar det |
 | feedback.link | Missade Skrubba något? Berätta. |
-| feedback.subject | Skrubba missade något |
+| feedback.subject | Skrubba {version} missade något |
 | feedback.body | Skriv en påhittad mening där Skrubba missar på samma sätt, med påhittade namn och nummer i samma form som de riktiga. Till exempel "Ring Kalle Persson om kundnummer AB-1234-567." Testa gärna meningen i Skrubba först, så vet du att den visar missen. Berätta också vilken sorts text det var, som ett mejl eller ett protokoll. Skicka inte den riktiga uppgiften eller din text. |
 | caveat.short | Skrubba hittar inte allt och gör inte texten anonym i lagens mening. Kontrollera dina val innan du kopierar. |
 | mode.switch | Vad vill du göra? |
@@ -242,7 +242,7 @@ Nytt 2026-10-12, ägarens godkännande av utkasten.
 - Vanliga frågor är ett dragspel. Alla frågor är stängda från början, och en öppnad fråga stänger den som var öppen.
 - Vanliga frågor har fem nya frågor (vilka uppgifter, hur man döljer något som missades, ändrade platshållare, vilka AI-tjänster, kostnad) och en ny ordning. "Byta tillbaka" heter "avskrubba" i svaren, och Github stavas som i sidfoten. Godkänt av ägaren.
 - Vanliga frågor: ny fråga "Räknar ni besökare?" om den anonyma besöksräkningen med Plausible. "Kostar Skrubba något?" säger inte längre "ingen statistik", och "Hur kan jag kontrollera att inget skickas?" nämner besöksräkningen. Godkänt av ägaren 2026-10-12.
-- `feedback.link`, `feedback.subject`, `feedback.body`: länken sist i varningen under Din text öppnar ett mejl till micke@promptagency.se (`FEEDBACK_EMAIL` i `src/config.ts`) med ämne och en kort guide ifyllda. Användarens text läggs aldrig in i mejlet. Godkänt av ägaren 2026-10-12.
+- `feedback.link`, `feedback.subject`, `feedback.body`: länken sist i varningen under Din text öppnar ett mejl till micke@promptagency.se (`FEEDBACK_EMAIL` i `src/config.ts`) med ämne och en kort guide ifyllda. Användarens text läggs aldrig in i mejlet. Godkänt av ägaren 2026-10-12. Sedan 2026-10-23 står versionen i ämnet ("Skrubba 1.7.0 missade något"), så att en rapport kan knytas till en utgåva.
 
 Nytt 2026-10-14, godkänt av ägaren 2026-10-15. Dokument kan släppas in eller väljas med Välj fil, och läses i fönstret Läs in dokument. Allt nedan är nytt eller ändrat i den omgången.
 
