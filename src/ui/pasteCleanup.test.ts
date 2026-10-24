@@ -23,6 +23,7 @@ describe("cleanPaste: line breaks", () => {
   it("joins lines broken mid-sentence and keeps headings and numbered items on their own lines", () => {
     expect(cleanPaste(AGREEMENT)).toEqual({
       joined: true,
+      unjoined: AGREEMENT,
       text: [
         "1. Parter:",
         "Arbetsgivare, Norrström Media AB, Org.nr. 556677-8899, Storgatan 5, Uppsala.",
@@ -33,6 +34,11 @@ describe("cleanPaste: line breaks", () => {
         "1. Anna Berg sägs upp på grund av arbetsbrist den 20. december 2024.",
       ].join("\n"),
     });
+  });
+
+  it("gives the unjoined text back without Windows line breaks or hidden characters, for Ångra", () => {
+    const text = AGREEMENT.replace(/\n/g, "\r\n").replace("Anna Berg", "Anna Be­rg");
+    expect(cleanPaste(text).unjoined).toBe(AGREEMENT);
   });
 
   it("removes the hyphen of a word split across lines", () => {

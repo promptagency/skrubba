@@ -4,6 +4,11 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **The visit count can no longer carry anything but the page's own address.** The function behind `/api/event` now cuts the page address down to its path and `utm_*` tags and the referrer to its origin and path itself, instead of trusting that the page already did; a tampered request could pass a search string on to the statistics.
+- **Ångra after joined line breaks puts the text back cleanly.** It restored the raw paste, with Windows line breaks the text box silently drops, so the highlights sat one character off per line.
+
 ## [1.8.2] - 2026-10-24
 
 ### Fixed

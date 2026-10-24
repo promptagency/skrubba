@@ -40,8 +40,30 @@ describe("/api/event", () => {
     expect(JSON.parse(forwarded.mock.calls[0][1].body)).toEqual(PAGEVIEW);
   });
 
+  it("keeps only utm_* tags of the page address, and only origin and path of the referrer", async () => {
+    await post({
+      ...PAGEVIEW,
+      u: "https://skrubba.app/?utm_source=nyhetsbrev&text=Johan%20Lindqvist#850412-1234",
+      r: "https://www.google.com/search?q=Johan+Lindqvist#x",
+    });
+    expect(JSON.parse(forwarded.mock.calls[0][1].body)).toEqual({
+      ...PAGEVIEW,
+      u: "https://skrubba.app/?utm_source=nyhetsbrev",
+      r: "https://www.google.com/search",
+    });
+  });
+
+  it.each([
+    ["is not an address", "Johan Lindqvist"],
+    ["is not a web address", "javascript:Johan"],
+  ])("forwards no referrer when it %s", async (_, r) => {
+    await post({ ...PAGEVIEW, r });
+    expect(JSON.parse(forwarded.mock.calls[0][1].body)).toEqual(PAGEVIEW);
+  });
+
   it.each([
     ["another site", { ...PAGEVIEW, d: "example.com" }],
+    ["an address that is no address", { ...PAGEVIEW, u: "skrubba.app/" }],
     ["an address on another site", { ...PAGEVIEW, u: "https://example.com/" }],
     ["another event than a page view", { ...PAGEVIEW, n: "signup" }],
     ["a referrer that is not a string", { ...PAGEVIEW, r: { a: 1 } }],

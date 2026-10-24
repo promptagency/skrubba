@@ -40,9 +40,11 @@ function joinOf(a: string, b: string, long: number): Join {
  * Clean pasted text. Hidden characters are always fixed. Lines are joined only
  * when the text looks wrapped: at least two breaks fall mid-sentence, and they
  * are at least a third of all single line breaks. Blank lines, headings and
- * list items stay as they are.
+ * list items stay as they are. `unjoined` is the cleaned text with its line
+ * breaks still in, for Ångra: the raw paste may have Windows line breaks,
+ * which the textarea drops, so the highlights would sit off by one per line.
  */
-export function cleanPaste(raw: string): { text: string; joined: boolean } {
+export function cleanPaste(raw: string): { text: string; joined: boolean; unjoined?: string } {
   const text = normalise(raw);
   const lines = text.split("\n");
   const long = Math.max(LONG_LINE.min, LONG_LINE.ofLongest * lines.reduce((m, l) => Math.max(m, l.length), 0));
@@ -59,5 +61,5 @@ export function cleanPaste(raw: string): { text: string; joined: boolean } {
     else if (join === "-") out += next;
     else out += " " + next.trimStart();
   });
-  return { text: out, joined: true };
+  return { text: out, joined: true, unjoined: text };
 }

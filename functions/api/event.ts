@@ -3,8 +3,8 @@
 // the browser itself only ever talks to Skrubba's own address.
 //
 // Only a page view for skrubba.app gets through, and only the four
-// known fields: anything else is refused or dropped, so this can never carry
-// text on. The visitor's IP and browser string go along because Plausible
+// known fields, with the addresses cut down to origin, path and utm_* tags:
+// anything else is refused or dropped, so this can never carry text on. The visitor's IP and browser string go along because Plausible
 // needs them to count unique visitors; Plausible stores neither, only a hash
 // that changes every day. Do Not Track and Global Privacy Control are
 // honoured here too.
@@ -20,6 +20,26 @@ interface PageView {
   r: string | null;
 }
 
+/**
+ * An address cut down to what the page is meant to send (src/ui/analytics.ts):
+ * origin and path, plus the utm_* tags of the page address. A tampered body
+ * can then carry nothing else on. Null for anything that is not a web address.
+ */
+function trimmed(address: unknown, keepUtm: boolean): string | null {
+  if (typeof address !== "string") return null;
+  let url: URL;
+  try {
+    url = new URL(address);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+  const kept = new URLSearchParams();
+  if (keepUtm) for (const [key, value] of url.searchParams) if (key.startsWith("utm_")) kept.append(key, value);
+  const query = kept.toString();
+  return `${url.origin}${url.pathname}${query ? `?${query}` : ""}`;
+}
+
 function pageView(raw: string): PageView | null {
   if (raw.length > MAX_BODY) return null;
   let data: unknown;
@@ -30,9 +50,10 @@ function pageView(raw: string): PageView | null {
   }
   if (typeof data !== "object" || data === null) return null;
   const { n, u, d, r } = data as Record<string, unknown>;
-  if (n !== "pageview" || d !== SITE || typeof u !== "string" || !u.startsWith(`https://${SITE}/`)) return null;
+  const page = trimmed(u, true);
+  if (n !== "pageview" || d !== SITE || !page?.startsWith(`https://${SITE}/`)) return null;
   if (r !== null && r !== undefined && typeof r !== "string") return null;
-  return { n, u, d, r: r ?? null };
+  return { n, u: page, d, r: trimmed(r, false) };
 }
 
 export async function onRequestPost({ request }: { request: Request }): Promise<Response> {

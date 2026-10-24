@@ -185,7 +185,7 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
           if (!raw) return;
           e.preventDefault();
           const el = e.currentTarget;
-          const { text: clean, joined } = cleanPaste(raw);
+          const { text: clean, joined, unjoined } = cleanPaste(raw);
           const before = el.value.slice(0, el.selectionStart);
           const after = el.value.slice(el.selectionEnd);
           // insertText keeps the browser's own undo; it fires onChange.
@@ -195,7 +195,7 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
             const caret = before.length + clean.length;
             requestAnimationFrame(() => el.setSelectionRange(caret, caret));
           }
-          onPasteJoined(joined ? { cleaned: before + clean + after, original: before + raw + after } : null);
+          onPasteJoined(joined ? { cleaned: before + clean + after, original: before + unjoined + after } : null);
         }}
         onScroll={syncScroll}
         onKeyDown={onKeyDown}
