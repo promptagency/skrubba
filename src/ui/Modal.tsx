@@ -20,8 +20,15 @@ export function Modal({ open, onClose, title, children }: Props) {
     if (!open && d.open) d.close();
   }, [open]);
 
+  // The dialog's close event is fired in a later task. When the window has
+  // been reopened in between (a second file dropped right after Använd
+  // texten), that stale event must not close the new one.
+  const closed = () => {
+    if (!dialog.current?.open) onClose();
+  };
+
   return (
-    <dialog ref={dialog} className="modal" aria-labelledby={titleId} onClose={onClose}>
+    <dialog ref={dialog} className="modal" aria-labelledby={titleId} onClose={closed}>
       <div className="modal-head">
         <h2 id={titleId}>{title}</h2>
         <button type="button" onClick={onClose}>

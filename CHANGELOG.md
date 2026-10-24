@@ -10,6 +10,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 - **A slow first visit no longer leaves two copies of the model on the device.** When the offline cache took more than five seconds to take over, the model library kept its own unpacked copy beside the packed one. The next visit now removes it.
 - **Moving the mouse over a long text no longer rebuilds every highlight.** The highlights are rebuilt only when the text, the items or a flash change, not on each pointer move, scan tick or message.
 - **"Kopierat. N uppgifter skrubbade" counts like Uppgifter does.** A first name or a surname standing alone counted as an item of its own.
+- **A second document dropped right after "Använd texten" keeps its window open.** The first window's closing event arrived late and shut the new one.
 
 ## [1.8.3] - 2026-10-24
 
