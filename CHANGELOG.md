@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.8.3] - 2026-10-24
+
 ### Fixed
 
 - **The visit count can no longer carry anything but the page's own address.** The function behind `/api/event` now cuts the page address down to its path and `utm_*` tags and the referrer to its origin and path itself, instead of trusting that the page already did; a tampered request could pass a search string on to the statistics.
@@ -250,7 +252,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.2...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.3...HEAD
+[1.8.3]: https://github.com/promptagency/skrubba/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/promptagency/skrubba/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/promptagency/skrubba/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/promptagency/skrubba/compare/v1.7.0...v1.8.0
