@@ -233,7 +233,7 @@ worker → main: { type: "ner-result", id, spans: [{start,end,type,source:"model
 worker → main: { type: "error", id?, message }
 ```
 
-If the worker fails to initialise (old browser, blocked WASM), the app continues in rules-only mode and says so in the status bar. It never silently degrades. A `ner` request the worker has not answered after 60 seconds (`DETECT_TIMEOUT_MS`; a part is at most 1 200 characters, which takes seconds even on a slow phone) rejects, so a hung worker leaves the rule entities on screen instead of "Skrubbar …" for good (audit 2026-10-24). The worker is not restarted: the next Skrubba asks it again.
+If the worker fails to initialise (old browser, blocked WASM), the app continues in rules-only mode and says so in the status bar. It never silently degrades. A `ner` request the worker has not answered after 60 seconds (`DETECT_TIMEOUT_MS`; a part is at most 1 200 characters, which takes seconds even on a slow phone) rejects, so a hung worker leaves the rule entities on screen instead of "Skrubbar …" for good (audit 2026-10-24). The hung worker is terminated and a fresh one gets `init` again, without showing progress (the model comes from the cache), so the next Skrubba works; a press of Skrubba that fails this way shows `toast.modelFailed`, a background run fails quietly.
 
 ## Routing
 

@@ -45,6 +45,7 @@ export const COPY = {
   "status.scanningStart": "Letar efter namn och platser",
   "action.scrubbing": "Skrubbar … {pct} %",
   "toast.pressCopy": "Texten är skrubbad. Tryck Kopiera för att kopiera den.",
+  "toast.modelFailed": "Modellen svarade inte. Försök igen, eller ladda om sidan.",
   "restore.empty": "Klistra in svaret från AI här eller släpp ett dokument med svaret.",
   "restore.unmatched": "Hittade {found} i svaret. Menade du {placeholder}, alltså {value}?",
   "restore.accept": "Ja",

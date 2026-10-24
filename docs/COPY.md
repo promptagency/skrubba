@@ -57,6 +57,7 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | status.scanningStart | Letar efter namn och platser |
 | action.scrubbing | Skrubbar … {pct} % |
 | toast.pressCopy | Texten är skrubbad. Tryck Kopiera för att kopiera den. |
+| toast.modelFailed | Modellen svarade inte. Försök igen, eller ladda om sidan. |
 | restore.empty | Klistra in svaret från AI här eller släpp ett dokument med svaret. |
 | restore.unmatched | Hittade {found} i svaret. Menade du {placeholder}, alltså {value}? |
 | restore.accept | Ja |
@@ -404,3 +405,5 @@ Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som s
 ### Kan jag släppa in PDF och Word?
 
 Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder. En skannad PDF utan text går inte att läsa.
+
+Nytt 2026-10-24, ej godkänt av ägaren ännu. `toast.modelFailed`: när Skrubba-knappen trycks och modellen inte svarar inom en minut, eller går sönder. Modellen startas om i bakgrunden, så Försök igen fungerar oftast; annars hjälper en omladdning. Reglernas markeringar står kvar på skärmen.

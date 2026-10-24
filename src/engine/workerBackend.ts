@@ -14,6 +14,7 @@ export function createWorkerBackend(): NerBackend {
   const pending = new Map<number, { resolve: (s: Span[]) => void; reject: (e: Error) => void }>();
   let nextId = 1;
   let initPromise: Promise<void> | null = null;
+  let browserCache = true;
   let onInit: { resolve: () => void; reject: (e: Error) => void; progress: (p: Progress) => void } | null = null;
 
   function start(): Worker {
@@ -58,17 +59,27 @@ export function createWorkerBackend(): NerBackend {
       // Idempotent: React StrictMode runs effects twice in dev.
       initPromise ??= new Promise<void>((resolve, reject) => {
         onInit = { resolve, reject, progress: (p) => onProgress(p) };
-        send({ type: "init", browserCache: options.browserCache });
+        browserCache = options.browserCache;
+        send({ type: "init", browserCache });
       });
       return initPromise;
     },
     detect(text) {
       const id = nextId++;
       return new Promise<Span[]>((resolve, reject) => {
-        // A worker that hangs would otherwise leave the app on "Skrubbar …" for good.
+        // A worker that hangs would otherwise leave the app on "Skrubbar …" for
+        // good, and a retry would hang with it: a fresh worker loads the model
+        // again from the cache and answers the next request. Its progress and
+        // ready messages are not shown, the model was already loaded once.
         const timer = setTimeout(() => {
-          pending.delete(id);
-          reject(new Error("the model did not answer in time"));
+          const err = new Error("the model did not answer in time");
+          for (const p of pending.values()) p.reject(err);
+          pending.clear();
+          worker?.terminate();
+          worker = null;
+          onInit = null;
+          send({ type: "init", browserCache });
+          reject(err);
         }, DETECT_TIMEOUT_MS);
         const settle = <T,>(f: (x: T) => void) => (x: T) => {
           clearTimeout(timer);

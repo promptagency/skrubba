@@ -168,8 +168,10 @@ export function App() {
       scrubbingNow.current = true;
       try {
         entities = await masker.mask(s.text, input, { onProgress: trackScan(s.text) });
-      } catch {
-        return null; // the text changed and its run was stopped, or the model failed
+      } catch (e) {
+        // A run stopped by a newer text is nothing to tell; a model that failed or hung is.
+        if (!(e instanceof DOMException && e.name === "AbortError")) dispatch({ type: "toast", message: t("toast.modelFailed") });
+        return null;
       } finally {
         setScrubbing(false);
         scrubbingNow.current = false;
