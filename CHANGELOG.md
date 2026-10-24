@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.8.2] - 2026-10-24
+
 ### Fixed
 
 - **A hung model no longer leaves the app on "Skrubbar …" for good.** A part the model has not answered in 60 seconds is given up, the items the rules found stay on screen, a message says *Modellen svarade inte. Försök igen, eller ladda om sidan.* and the model is restarted in the background so the next press works.
@@ -243,7 +245,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.1...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.2...HEAD
+[1.8.2]: https://github.com/promptagency/skrubba/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/promptagency/skrubba/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/promptagency/skrubba/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/promptagency/skrubba/compare/v1.6.9...v1.7.0
