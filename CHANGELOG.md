@@ -4,6 +4,13 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **A hung model no longer leaves the app on "Skrubbar …" for good.** A part the model has not answered in 60 seconds is given up, and the items the rules found stay on screen.
+- **A document that says `\constructor` or `&constructor;` reads cleanly.** An RTF control word, an HTML entity name or a file extension that happens to be a property every object has is no longer looked up as one, which put a function's source text into the document.
+- **A line with a very long run of trailing spaces no longer stalls the reader.** A hundred thousand spaces at the end of a line took over 20 seconds to tidy, in documents and in pasted text; it is now one pass.
+- **Pasting a text of more than about 150 000 lines no longer fails.** The paste cleanup computed the longest line in a way that overflowed the call stack.
+
 ## [1.8.1] - 2026-10-24
 
 ### Fixed

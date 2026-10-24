@@ -32,6 +32,13 @@ describe("extract", () => {
     expect(result).toMatchObject({ text: "Rad ett\n\nRad två", format: "md" });
   });
 
+  it("tidies a line with a hundred thousand trailing spaces in one pass", async () => {
+    const started = performance.now();
+    const result = await extract(utf8(`Rad ett${" ".repeat(100_000)}\nRad två`), "brev.md");
+    expect(result).toMatchObject({ text: "Rad ett\nRad två" });
+    expect(performance.now() - started).toBeLessThan(1000); // quadratic took over 20 s
+  });
+
   it("says a file with only whitespace is empty", async () => {
     expect(await extract(utf8(" \n\t\n"), "tom.txt")).toEqual({ kind: "error", reason: "empty" });
   });

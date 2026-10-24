@@ -4,6 +4,7 @@
 // Open questions): deleted revisions, which need the formatting tables, and
 // table rows, which come out on one line with cells by tab.
 import type { Cfb } from "../cfb.ts";
+import { TRAILING_BLANKS } from "../textBuilder.ts";
 import { type Extracted, ReadError } from "../types.ts";
 
 const fail = () => new ReadError("failed");
@@ -33,7 +34,7 @@ export function cleanWordText(s: string): string {
     else if (c === 0x09 || c >= 0x20) out += ch;
   }
   return out
-    .replace(/[ \t]+$/gm, "")
+    .replace(TRAILING_BLANKS, "")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }

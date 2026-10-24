@@ -21,7 +21,7 @@ function normalise(raw: string): string {
     .replace(/[ﬀ-ﬆ]/g, (c) => LIGATURES[c] ?? c)
     .replace(/[\u00AD\u200B-\u200D\u2060\uFEFF]/g, "")
     .replace(/[\u00A0\u2000-\u200A\u202F\u205F\u3000]/g, " ")
-    .replace(/[ \t]+$/gm, "");
+    .replace(/(?<![ \t])[ \t]+$/gm, ""); // the lookbehind keeps a long run of spaces linear
 }
 
 type Join = " " | "" | "-" | null;
@@ -45,7 +45,7 @@ function joinOf(a: string, b: string, long: number): Join {
 export function cleanPaste(raw: string): { text: string; joined: boolean } {
   const text = normalise(raw);
   const lines = text.split("\n");
-  const long = Math.max(LONG_LINE.min, LONG_LINE.ofLongest * Math.max(...lines.map((l) => l.length)));
+  const long = Math.max(LONG_LINE.min, LONG_LINE.ofLongest * lines.reduce((m, l) => Math.max(m, l.length), 0));
   const joins = lines.slice(1).map((b, i) => joinOf(lines[i], b, long));
   const breaks = lines.slice(1).filter((b, i) => lines[i].trim() && b.trim()).length;
   const count = joins.filter((j) => j !== null).length;

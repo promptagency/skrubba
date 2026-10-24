@@ -41,7 +41,7 @@ export function detect(bytes: Uint8Array, name: string): Detected {
   const head = asciiHead(startsWith(bytes, [0xef, 0xbb, 0xbf]) ? bytes.subarray(3) : bytes, 5);
   if (head === "{\\rtf") return { family: "rtf" };
   const ext = /\.([a-z0-9]+)$/i.exec(name)?.[1]?.toLowerCase() ?? "";
-  const format = TEXT_EXTENSIONS[ext];
+  const format = Object.hasOwn(TEXT_EXTENSIONS, ext) ? TEXT_EXTENSIONS[ext] : undefined; // not "constructor"
   if (!format) return { family: "unknown" };
   if (!hasBom(bytes) && bytes.subarray(0, 8192).includes(0)) return { family: "unknown" };
   return { family: "text", format };

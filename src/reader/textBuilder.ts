@@ -1,6 +1,9 @@
 // Collects a document's text: paragraphs as lines, table cells separated by
 // tabs, one table row per line. A cell's own paragraphs are joined by spaces
 // so a row stays on one line.
+/** Spaces and tabs at the end of a line. The lookbehind starts a match only at the run's first blank, so a line of 100 000 spaces is one pass, not a quadratic one. */
+export const TRAILING_BLANKS = /(?<![ \t])[ \t]+$/gm;
+
 export class TextBuilder {
   private parts: string[] = [""];
 
@@ -29,7 +32,7 @@ export class TextBuilder {
   toString(): string {
     return this.parts
       .join("")
-      .replace(/[ \t]+$/gm, "")
+      .replace(TRAILING_BLANKS, "")
       .replace(/\n{3,}/g, "\n\n")
       .trim();
   }

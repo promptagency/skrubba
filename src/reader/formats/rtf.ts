@@ -3,6 +3,7 @@
 // and field instructions are skipped. Annotations, hidden text (\v) and
 // deleted text are left out, and we say so.
 import { binaryString, decodeText, labelForCodepage } from "../decode.ts";
+import { TRAILING_BLANKS } from "../textBuilder.ts";
 import type { Extracted } from "../types.ts";
 
 /** Destinations skipped without a word: nobody reads them as text. */
@@ -159,8 +160,8 @@ export function readRtf(bytes: Uint8Array): Extracted {
     else if (word === "plain") group.hiddenText = false;
     else if (word === "row") {
       if (group.skip === "no" && !group.hiddenText) out = `${out.replace(/\t$/, "")}\n`;
-    } else if (SYMBOLS[word]) emit(SYMBOLS[word]);
+    } else if (Object.hasOwn(SYMBOLS, word)) emit(SYMBOLS[word]); // a file can say \constructor
   }
   flush();
-  return { text: out.replace(/[ \t]+$/gm, "").trim(), hidden, images };
+  return { text: out.replace(TRAILING_BLANKS, "").trim(), hidden, images };
 }

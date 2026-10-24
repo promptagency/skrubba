@@ -38,6 +38,10 @@ describe("htmlToText", () => {
 });
 
 describe("readHtml", () => {
+  it("leaves an entity named like a property every object has", () => {
+    expect(htmlToText("<p>a &constructor; &amp; b</p>").text).toBe("a &constructor; & b");
+  });
+
   it("uses the charset in a meta tag", () => {
     expect(readHtml(latin1('<meta charset="iso-8859-1"><p>Räksmörgås</p>')).text).toBe("Räksmörgås");
   });

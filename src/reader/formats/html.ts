@@ -52,7 +52,7 @@ const HIDDEN_ATTR = /(^|\s)hidden(\s|=|$)/i;
 export function htmlEntities(s: string): string {
   if (!s.includes("&")) return s;
   return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, body: string) => {
-    if (body[0] !== "#") return NAMED[body] ?? whole;
+    if (body[0] !== "#") return Object.hasOwn(NAMED, body) ? NAMED[body] : whole; // "&constructor;" is not an entity
     const code = body[1] === "x" || body[1] === "X" ? Number.parseInt(body.slice(2), 16) : Number.parseInt(body.slice(1), 10);
     return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : whole;
   });

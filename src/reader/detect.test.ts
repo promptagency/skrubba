@@ -29,6 +29,7 @@ describe("detect", () => {
     ["text named .docx", ascii("hej"), "avtal.docx"],
     ["a binary file named .txt", bytes(0x68, 0x00, 0x65, 0x00), "brev.txt"],
     ["a file without an extension", ascii("hej"), "README"],
+    ["a file whose extension is a property every object has", ascii("hej"), "x.constructor"],
   ])("refuses %s", (_label, data, name) => {
     expect(detect(data, name)).toEqual({ family: "unknown" });
   });

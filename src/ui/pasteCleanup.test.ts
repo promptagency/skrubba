@@ -70,4 +70,11 @@ describe("cleanPaste: hidden characters", () => {
   it("drops spaces at the end of a line", () => {
     expect(cleanPaste("Hej  \nAnna").text).toBe("Hej\nAnna");
   });
+
+  it("copes with a hundred thousand trailing spaces and two hundred thousand lines", () => {
+    const started = performance.now();
+    expect(cleanPaste(`Hej${" ".repeat(100_000)}\nAnna`).text).toBe("Hej\nAnna");
+    expect(cleanPaste("x\n".repeat(200_000)).text.length).toBe(400_000); // Math.max(...lines) threw here
+    expect(performance.now() - started).toBeLessThan(2000);
+  });
 });

@@ -37,6 +37,10 @@ describe("readRtf", () => {
     expect(read(String.raw`{\rtf1 a\{b\}c\\d{\*\unknownthing Lisa}}`).text).toBe("a{b}c\\d");
   });
 
+  it("ignores a control word that is a property every object has", () => {
+    expect(read(String.raw`{\rtf1 Anna \constructor Berg}`).text).toBe("Anna Berg");
+  });
+
   it("skips binary data", () => {
     // Four bytes of data ("}}}}"), then the picture group's own closing brace.
     expect(read(String.raw`{\rtf1 Anna{\pict\bin4 }}}}} Berg}`).text).toBe("Anna Berg");

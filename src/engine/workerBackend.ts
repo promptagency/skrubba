@@ -2,6 +2,9 @@ import type { Progress, Span } from "./Masker.ts";
 import type { NerBackend } from "./ner.ts";
 import type { FromWorker, ToWorker } from "./protocol.ts";
 
+/** A part is at most 1 200 characters; a slow phone needs seconds, not a minute. */
+export const DETECT_TIMEOUT_MS = 60_000;
+
 /** NER in a Web Worker. See the worker protocol in docs/ARCHITECTURE.md. */
 export function createWorkerBackend(): NerBackend {
   // Created on first use, not here: a worker started before the service
@@ -62,7 +65,16 @@ export function createWorkerBackend(): NerBackend {
     detect(text) {
       const id = nextId++;
       return new Promise<Span[]>((resolve, reject) => {
-        pending.set(id, { resolve, reject });
+        // A worker that hangs would otherwise leave the app on "Skrubbar …" for good.
+        const timer = setTimeout(() => {
+          pending.delete(id);
+          reject(new Error("the model did not answer in time"));
+        }, DETECT_TIMEOUT_MS);
+        const settle = <T,>(f: (x: T) => void) => (x: T) => {
+          clearTimeout(timer);
+          f(x);
+        };
+        pending.set(id, { resolve: settle(resolve), reject: settle(reject) });
         send({ type: "ner", id, text });
       });
     },
