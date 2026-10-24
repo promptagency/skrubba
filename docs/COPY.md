@@ -406,4 +406,4 @@ Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som s
 
 Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder. En skannad PDF utan text går inte att läsa.
 
-Nytt 2026-10-24, ej godkänt av ägaren ännu. `toast.modelFailed`: när Skrubba-knappen trycks och modellen inte svarar inom en minut, eller går sönder. Modellen startas om i bakgrunden, så Försök igen fungerar oftast; annars hjälper en omladdning. Reglernas markeringar står kvar på skärmen.
+Nytt 2026-10-24, godkänt av ägaren 2026-10-24. `toast.modelFailed`: när Skrubba-knappen trycks och modellen inte svarar inom en minut, eller går sönder. Modellen startas om i bakgrunden, så Försök igen fungerar oftast; annars hjälper en omladdning. Reglernas markeringar står kvar på skärmen.
