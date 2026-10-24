@@ -141,6 +141,11 @@ export function lastNamePlaceholder(placeholder: string): string {
   return placeholder.replace(/^\[NAMN_/, "[EFTERNAMN_");
 }
 
+/** "[FÖRNAMN_3]", "[EFTERNAMN_3]" → "[NAMN_3]"; "[DEL_ORGANISATION_3]" → "[ORGANISATION_3]": the placeholder a part belongs to. */
+export function wholePlaceholder(placeholder: string): string {
+  return placeholder.replace(/^\[(?:FÖR|EFTER|DEL_)/, "[");
+}
+
 /** The placeholder an occurrence is written as. */
 export function placeholderOf(entity: Entity, occurrence: Occurrence): string {
   if (!occurrence.firstName && !occurrence.lastName) return entity.placeholder;

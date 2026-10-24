@@ -13,6 +13,21 @@ export type PackedManifest = Record<string, PackedInfo>;
 
 export const partUrl = (path: string, i: number) => `${path}.gzpart${i}`;
 
+/** SHA-256 of the bytes, as lowercase hex. */
+export async function sha256(buf: ArrayBuffer): Promise<string> {
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", buf));
+  return Array.from(digest, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * The response with its body intact, and the hash of that body once it has
+ * been read: one read serves both, so a checksum needs no second download.
+ */
+export function hashed(res: Response): { res: Response; hash: Promise<string> } {
+  const [body, copy] = (res.body ?? new Response("").body!).tee();
+  return { res: new Response(body), hash: new Response(copy).arrayBuffer().then(sha256) };
+}
+
 /**
  * Fetch the parts in order, join and gunzip them. `onBytes` gets the running
  * count of compressed bytes, which is what the download costs.

@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { type Entity, type EntityType, firstNamePlaceholder, lastNamePlaceholder, partPlaceholder, partType } from "../engine/index.ts";
 import { t, TYPE_LABEL, typeGroup } from "./copy.ts";
 import { cleanPaste } from "./pasteCleanup.ts";
@@ -141,29 +141,37 @@ export const Editor = forwardRef<EditorHandle, Props>(function Editor(
     setTip({ label, x: e.clientX - box.left, y: e.clientY - box.top });
   }
 
+  // The highlight layer is one element per run of text. Built only when its
+  // inputs change, not on every mouse move (the tip is state of this component).
+  const highlights = useMemo(
+    () =>
+      segments(text, entityMarks(entities)).map((s) =>
+        s.data ? (
+          <mark
+            key={s.start}
+            data-ph={s.data.placeholder}
+            data-first={s.data.occurrences.some((o) => o.start === s.start && o.firstName) ? "" : undefined}
+            data-last={s.data.occurrences.some((o) => o.start === s.start && o.lastName) ? "" : undefined}
+            className={[
+              "hl",
+              `hl-${typeGroup(s.data.type)}`,
+              s.data.active ? "" : "hl-kept",
+              flash === s.data.placeholder ? "hl-flash" : "",
+            ].join(" ")}
+          >
+            {s.text}
+          </mark>
+        ) : (
+          <span key={s.start}>{s.text}</span>
+        ),
+      ),
+    [text, entities, flash],
+  );
+
   return (
     <div className="editor" onMouseMove={onMouseMove} onMouseLeave={() => setTip(null)} onClick={onClick}>
       <div className="editor-overlay" ref={overlay} aria-hidden="true">
-        {segments(text, entityMarks(entities)).map((s) =>
-          s.data ? (
-            <mark
-              key={s.start}
-              data-ph={s.data.placeholder}
-              data-first={s.data.occurrences.some((o) => o.start === s.start && o.firstName) ? "" : undefined}
-              data-last={s.data.occurrences.some((o) => o.start === s.start && o.lastName) ? "" : undefined}
-              className={[
-                "hl",
-                `hl-${typeGroup(s.data.type)}`,
-                s.data.active ? "" : "hl-kept",
-                flash === s.data.placeholder ? "hl-flash" : "",
-              ].join(" ")}
-            >
-              {s.text}
-            </mark>
-          ) : (
-            <span key={s.start}>{s.text}</span>
-          ),
-        )}
+        {highlights}
         {/* A trailing newline needs a character after it to take up a line. */}
         {text.endsWith("\n") ? " " : null}
       </div>

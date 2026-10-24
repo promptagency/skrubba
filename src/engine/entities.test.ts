@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
-import { buildEntities, EntityRegistry } from "./entities.ts";
+import { buildEntities, EntityRegistry, wholePlaceholder } from "./entities.ts";
 
 type Mark = [needle: string, type: EntityType, source?: Source];
 
@@ -26,6 +26,13 @@ function build(text: string, marks: Mark[], registry = new EntityRegistry()) {
 
 const summary = (entities: ReturnType<typeof build>) =>
   entities.map((e) => `${e.placeholder}=${e.value}×${e.occurrences.length}`);
+
+describe("wholePlaceholder", () => {
+  it("maps a part's placeholder to the whole value's, and leaves others alone", () => {
+    expect(["[FÖRNAMN_2]", "[EFTERNAMN_2]", "[NAMN_2]"].map(wholePlaceholder)).toEqual(["[NAMN_2]", "[NAMN_2]", "[NAMN_2]"]);
+    expect(["[DEL_ORGANISATION_1]", "[DEL_ORD_3]", "[ORD_3]"].map(wholePlaceholder)).toEqual(["[ORGANISATION_1]", "[ORD_3]", "[ORD_3]"]);
+  });
+});
 
 describe("buildEntities numbering", () => {
   it("gives the same value the same placeholder and numbers per type in order", () => {

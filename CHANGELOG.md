@@ -4,6 +4,13 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **The loading bar no longer runs from 100 back to 0 on a return visit.** The model's checksum was verified by reading the weights a second time through the same counted download, which also unpacked them twice. They are now checked as they arrive.
+- **A slow first visit no longer leaves two copies of the model on the device.** When the offline cache took more than five seconds to take over, the model library kept its own unpacked copy beside the packed one. The next visit now removes it.
+- **Moving the mouse over a long text no longer rebuilds every highlight.** The highlights are rebuilt only when the text, the items or a flash change, not on each pointer move, scan tick or message.
+- **"Kopierat. N uppgifter skrubbade" counts like Uppgifter does.** A first name or a surname standing alone counted as an item of its own.
+
 ## [1.8.3] - 2026-10-24
 
 ### Fixed

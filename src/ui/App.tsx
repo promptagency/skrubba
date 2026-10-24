@@ -1,7 +1,7 @@
-import { Fragment, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import logoDark from "../../design/logo/skrubba-logotyp-negativ.svg";
 import logoLight from "../../design/logo/skrubba-logotyp-positiv.svg";
-import { type Entity, type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, type RestoreResult } from "../engine/index.ts";
+import { type Entity, type EntityType, keyFileName, type MaskInput, parseKey, parseWordList, type RestoreResult, wholePlaceholder } from "../engine/index.ts";
 import { currentKey, freshEntities, panelEntities } from "../state/session.ts";
 import { useSession } from "../state/SessionContext.tsx";
 import { copyText } from "./clipboard.ts";
@@ -240,7 +240,8 @@ export function App() {
         dispatch({ type: "toast", message: t("toast.pressCopy") });
         return;
       }
-      const n = new Set(placeholderMarks(masked).map((m) => masked.slice(m.start, m.end))).size;
+      // One per value, as the Uppgifter line counts: [FÖRNAMN_1] belongs to [NAMN_1].
+      const n = new Set(placeholderMarks(masked).map((m) => wholePlaceholder(masked.slice(m.start, m.end)))).size;
       await copy(masked, t("toast.copied", { n }));
     } else {
       const result = s.restore?.result ?? restore();
@@ -343,7 +344,10 @@ export function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [copyResult, run, closeToast]);
 
-  const entities = panelEntities(state);
+  // Same arrays across renders (a toast, a scan tick), so the panel and the
+  // Editor's highlight layer are not rebuilt for them.
+  const entities = useMemo(() => panelEntities(state), [state.entities, state.kept]);
+  const fresh = useMemo(() => freshEntities(state), [state.entities, state.entitiesText, state.text, state.kept]);
   const wrongMode = firstPlaceholder(state.text);
   const restoredMarks: Mark<EntityType>[] = (state.restore?.result.restored ?? []).map((r) => ({
     start: r.start,
@@ -430,7 +434,7 @@ export function App() {
               <Editor
                 ref={editor}
                 text={state.text}
-                entities={freshEntities(state)}
+                entities={fresh}
                 flash={flash}
                 onChange={(text, wasPaste) => {
                   pasted.current = wasPaste;
