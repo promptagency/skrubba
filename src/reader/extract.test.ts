@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDocx, buildPptx, buildZip, latin1, SAMPLE, wp } from "../../tests/fixtures/documents/build.ts";
+import { buildDocx, buildOdt, buildPptx, buildXlsx, buildZip, latin1, SAMPLE, tp, wp } from "../../tests/fixtures/documents/build.ts";
 import { extract } from "./extract.ts";
 import { openZip } from "./zip.ts";
 
@@ -78,6 +78,16 @@ describe("extract", () => {
     const slide = new TextDecoder().decode(files["ppt/slides/slide1.xml"]).replace("</p:spTree>", "<p:pic><p:blipFill/></p:pic></p:spTree>");
     const withPicture = buildZip({ ...files, "ppt/slides/slide1.xml": slide });
     expect(await extract(withPicture, "bilder.pptx")).toMatchObject({ kind: "text", notes: ["imagesLeftOut"] });
+  });
+
+  it("says when a sheet has a picture in its drawing, and when an OpenDocument body has one, but not its header", async () => {
+    const sheet = await unzipped(buildXlsx([{ name: "Blad1", rows: [["Anna Berg"]] }]));
+    expect(await extract(buildZip(sheet), "lista.xlsx")).toMatchObject({ kind: "text", notes: [] });
+    const drawing = { "xl/drawings/drawing1.xml": new TextEncoder().encode("<xdr:wsDr><xdr:pic><xdr:blipFill/></xdr:pic></xdr:wsDr>") };
+    expect(await extract(buildZip({ ...sheet, ...drawing }), "lista.xlsx")).toMatchObject({ kind: "text", notes: ["imagesLeftOut"] });
+    const image = '<draw:frame><draw:image xlink:href="Pictures/1.png"/></draw:frame>';
+    expect(await extract(buildOdt(tp("Anna Berg") + image), "avtal.odt")).toMatchObject({ kind: "text", notes: ["imagesLeftOut"] });
+    expect(await extract(buildOdt(tp("Anna Berg"), { header: image }), "avtal.odt")).toMatchObject({ kind: "text", notes: [] });
   });
 
   it("refuses a zip that is no office file", async () => {

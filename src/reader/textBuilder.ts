@@ -6,6 +6,8 @@ export const TRAILING_BLANKS = /(?<![ \t])[ \t]+$/gm;
 
 export class TextBuilder {
   private parts: string[] = [""];
+  /** Cells closed so far in the current row, per nesting level of `parts`. */
+  private cells: number[] = [0];
 
   add(s: string): void {
     this.parts[this.parts.length - 1] += s;
@@ -13,20 +15,22 @@ export class TextBuilder {
 
   openCell(): void {
     this.parts.push("");
+    this.cells.push(0);
   }
 
   closeCell(): void {
-    if (this.parts.length === 1) {
-      this.add("\t");
-      return;
-    }
+    if (this.parts.length === 1) return;
     const cell = this.parts.pop() ?? "";
-    this.add(`${cell.trim().replace(/\s*\n\s*/g, " ")}\t`);
+    this.cells.pop();
+    // The tab goes before every cell but the row's first, so a row never ends
+    // in a tab to strip: rescanning the text at every row was quadratic.
+    const top = this.cells.length - 1;
+    this.add(`${this.cells[top]++ ? "\t" : ""}${cell.trim().replace(/\s*\n\s*/g, " ")}`);
   }
 
   closeRow(): void {
-    const last = this.parts.length - 1;
-    this.parts[last] = `${this.parts[last].replace(/\t$/, "")}\n`;
+    this.add("\n");
+    this.cells[this.cells.length - 1] = 0;
   }
 
   toString(): string {

@@ -356,9 +356,18 @@ export function buildCfb(streams: Record<string, Uint8Array>): Uint8Array {
 /**
  * A minimal Word 97 file: a FIB with the story lengths, the text after it,
  * and a table stream whose piece table has one piece covering all text, as
- * UTF-16 or (with `compressed`) as 8-bit windows-1252.
+ * UTF-16 or (with `compressed`) as 8-bit windows-1252. `pieces` repeats that
+ * piece, as a crafted file could, so the text is built that many times over.
  */
-export function buildDoc(o: { main: string; footnotes?: string; comments?: string; encrypted?: boolean; nFib?: number; compressed?: boolean }): Uint8Array {
+export function buildDoc(o: {
+  main: string;
+  footnotes?: string;
+  comments?: string;
+  encrypted?: boolean;
+  nFib?: number;
+  compressed?: boolean;
+  pieces?: number;
+}): Uint8Array {
   const footnotes = o.footnotes ?? "";
   const comments = o.comments ?? "";
   const text = o.main + footnotes + comments;
@@ -376,13 +385,14 @@ export function buildDoc(o: { main: string; footnotes?: string; comments?: strin
   dv.setUint16(152, 0x5d, true); // cbRgFcLcb
   if (o.compressed) word.set(latin1(text), textAt);
   else for (let i = 0; i < text.length; i++) dv.setUint16(textAt + i * 2, text.charCodeAt(i), true);
-  const table = new Uint8Array(21);
+  const n = o.pieces ?? 1;
+  const lcb = 4 * (n + 1) + 8 * n; // the PlcPcd: n + 1 CPs and n PCDs
+  const table = new Uint8Array(5 + lcb);
   const tv = new DataView(table.buffer);
   table[0] = 0x02; // Pcdt
-  tv.setUint32(1, 16, true); // lcb of the PlcPcd: two CPs and one PCD
-  tv.setUint32(5, 0, true);
-  tv.setUint32(9, text.length, true);
-  tv.setUint32(15, o.compressed ? (textAt * 2) | 0x40000000 : textAt, true);
+  tv.setUint32(1, lcb, true);
+  for (let i = 0; i <= n; i++) tv.setUint32(5 + i * 4, i * text.length, true);
+  for (let i = 0; i < n; i++) tv.setUint32(5 + (n + 1) * 4 + i * 8 + 2, o.compressed ? (textAt * 2) | 0x40000000 : textAt, true);
   dv.setUint32(418, 0, true); // fcClx
   dv.setUint32(422, table.length, true); // lcbClx
   return buildCfb({ WordDocument: word, "1Table": table });

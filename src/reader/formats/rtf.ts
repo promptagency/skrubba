@@ -23,7 +23,6 @@ const SYMBOLS: Record<string, string> = {
   sect: "\n",
   page: "\n",
   tab: "\t",
-  cell: "\t",
   emdash: "—",
   endash: "–",
   bullet: "•",
@@ -55,12 +54,15 @@ export function readRtf(bytes: Uint8Array): Extracted {
   let skipChars = 0;
   let atGroupStart = false;
   let starred = false;
+  let tabOwed = false; // a cell ended, the next cell's text gets a tab first
 
   const emit = (s: string) => {
     if (group.skip !== "no" || group.hiddenText) {
       if (group.skip !== "silent" && s.trim()) hidden = true;
       return;
     }
+    if (tabOwed) out += "\t";
+    tabOwed = false;
     out += s;
   };
   const flush = () => {
@@ -158,8 +160,14 @@ export function readRtf(bytes: Uint8Array): Extracted {
       skipChars = group.uc;
     } else if (word === "v" || word === "deleted") group.hiddenText = param !== 0;
     else if (word === "plain") group.hiddenText = false;
-    else if (word === "row") {
-      if (group.skip === "no" && !group.hiddenText) out = `${out.replace(/\t$/, "")}\n`;
+    else if (word === "cell" || word === "row") {
+      // The tab between cells is written before the next cell's text, so a row
+      // never ends in a tab to strip: rescanning the text at every row was quadratic.
+      if (group.skip === "no" && !group.hiddenText) {
+        if (tabOwed) out += "\t";
+        tabOwed = word === "cell";
+        if (word === "row") out += "\n";
+      }
     } else if (Object.hasOwn(SYMBOLS, word)) emit(SYMBOLS[word]); // a file can say \constructor
   }
   flush();

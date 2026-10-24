@@ -31,6 +31,14 @@ describe("readRtf", () => {
 
   it("reads a table row with cells by tab", () => {
     expect(read(String.raw`{\rtf1\trowd\cellx1000\cellx2000 Namn\cell Anna Berg\cell\row}`).text).toBe("Namn\tAnna Berg");
+    expect(read(String.raw`{\rtf1 Namn\cell\cell Anna\cell\row Ort\cell Ume\u229?\cell\cell\row}`).text).toBe("Namn\t\tAnna\nOrt\tUmeå");
+  });
+
+  it("reads a hundred thousand table rows in linear time", () => {
+    const rows = String.raw`Anna Berg\cell 850412-1234\cell Ume\u229?\cell\row `.repeat(100_000);
+    const started = performance.now();
+    expect(read(`{\\rtf1 ${rows}}`).text.split("\n")).toHaveLength(100_000);
+    expect(performance.now() - started).toBeLessThan(3000); // stripping the row's last tab rescanned the text: 20 000 rows took 3 s
   });
 
   it("reads escaped braces and backslashes, and skips unknown starred groups", () => {

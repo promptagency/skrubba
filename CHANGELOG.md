@@ -4,6 +4,12 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **A crafted Word 97 file can no longer exhaust memory.** Its text pieces may overlap and repeat; the size cap is now checked piece by piece instead of after the whole text is built.
+- **Large tables read in linear time.** Word, PowerPoint, OpenDocument, HTML and RTF tables of a hundred thousand rows took about 19 seconds, since the end of each row rescanned the whole text so far; now under a second.
+- Reader failure paths have tests: repeated pieces, big tables, and pictures in a sheet or an OpenDocument body.
+
 ## [1.8.4] - 2026-10-24
 
 ### Fixed

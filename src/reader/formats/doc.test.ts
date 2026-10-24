@@ -25,6 +25,13 @@ describe("readDoc", () => {
     expect(read(buildDoc({ main: "Namn\x07Anna Berg\x07\x07" })).text).toBe("Namn\tAnna Berg");
   });
 
+  it("gives up on a piece table whose pieces repeat past the text cap, before building the text", async () => {
+    // 1 001 pieces of 2 000 characters each: just over the 2 000 000 cap, from a 4 KB file.
+    const doc = buildDoc({ main: `${"Anna Berg bor i Umeå. ".repeat(100)}\r`.padEnd(2000, "x"), pieces: 1001 });
+    expect(await errorReason(() => read(doc))).toBe("tooLarge");
+    expect(read(buildDoc({ main: "Anna Berg\r", pieces: 3 })).text).toBe("Anna Berg"); // the stories' lengths, not the pieces, say what is text
+  });
+
   it("says a password-protected file is protected, and refuses Word 6 and 95", async () => {
     expect(await errorReason(() => read(buildDoc({ main: "x\r", encrypted: true })))).toBe("encrypted");
     expect(await errorReason(() => read(buildDoc({ main: "x\r", nFib: 0x0065 })))).toBe("unsupported");

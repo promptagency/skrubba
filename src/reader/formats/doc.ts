@@ -4,6 +4,7 @@
 // Open questions): deleted revisions, which need the formatting tables, and
 // table rows, which come out on one line with cells by tab.
 import type { Cfb } from "../cfb.ts";
+import { LIMITS } from "../limits.ts";
 import { TRAILING_BLANKS } from "../textBuilder.ts";
 import { type Extracted, ReadError } from "../types.ts";
 
@@ -59,6 +60,8 @@ function pieceText(word: Uint8Array, clx: Uint8Array): string {
     const end = dv.getUint32(plc + (i + 1) * 4, true);
     if (end < start) throw fail();
     const length = end - start;
+    // Pieces may overlap and repeat: a crafted file could build gigabytes before the cap at the end.
+    if (text.length + length > LIMITS.textChars) throw new ReadError("tooLarge");
     const fcValue = dv.getUint32(plc + (n + 1) * 4 + i * 8 + 2, true);
     const fc = fcValue & 0x3fffffff;
     if (fcValue & 0x40000000) {
