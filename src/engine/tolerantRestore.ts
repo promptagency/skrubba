@@ -47,9 +47,11 @@ const typeWords = [...TYPES, ...Object.keys(ALIASES)].sort((a, b) => b.length - 
 // Brackets and backticks are consumed; quotes are not (they belong to the prose).
 // A bracketed placeholder may follow a letter or digit, as when the model masked
 // a word that starts mid-token ("18[ADRESS_2]" for "18e våningen"); a bare one
-// may not, so "XNAMN_1" in prose is left alone.
+// may not, so "XNAMN_1" in prose is left alone. Skrubba itself writes a
+// genitive as "[NAMN_1]s", so that s is part of the match and restored with
+// the value ("Anders", not "Anderss").
 const CANDIDATE = new RegExp(
-  `(?:([\\[\`]+)|(?<![\\p{L}\\p{N}_]))(${typeWords.join("|")})([_ -]?)(\\d+)(:?s)?(?![\\p{L}\\p{N}_])([\\]\`]*)`,
+  `(?:([\\[\`]+)|(?<![\\p{L}\\p{N}_]))(${typeWords.join("|")})([_ -]?)(\\d+)(:?s)?(?![\\p{L}\\p{N}_])([\\]\`]*)(s(?![\\p{L}\\p{N}_]))?`,
   "giu",
 );
 
@@ -73,7 +75,7 @@ export function tolerantRestore(text: string, key: Key, accepted: ReadonlySet<st
   let cursor = 0;
 
   for (const m of text.matchAll(CANDIDATE)) {
-    const [found, , rawType, sep, digits, suffix] = m;
+    const [found, , rawType, sep, digits, suffix, , afterBracket] = m;
     const start = m.index;
     const end = start + found.length;
     const upper = rawType.toUpperCase();
@@ -91,7 +93,7 @@ export function tolerantRestore(text: string, key: Key, accepted: ReadonlySet<st
       suggestions.push({ start, end, found, placeholder, value });
       continue;
     }
-    const replacement = suffix ? genitive(value) : value;
+    const replacement = suffix || afterBracket ? genitive(value) : value;
     out += text.slice(cursor, start);
     restored.push({ start: out.length, end: out.length + replacement.length, placeholder, value });
     out += replacement;

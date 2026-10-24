@@ -29,6 +29,7 @@ describe("tolerantRestore silent matches", () => {
     ["Hej [Namn_1].", "Hej Anna Berg."],
     ['Hon skrev "[NAMN_1]".', 'Hon skrev "Anna Berg".'],
     ["[NAMN_1]s lön", "Anna Bergs lön"],
+    ["[NAMN_2]s cykel och [ORGANISATION_1]s avtal", "Anders cykel och Ateas avtal"],
     ["Hej [FÖRNAMN_1], [NAMN_1] ska få [FÖRNAMN_1]s lön.", "Hej Anna, Anna Berg ska få Annas lön."],
     ["Hej [förnamn_1].", "Hej Anna."],
     ["Fru [EFTERNAMN_1] och [EFTERNAMN_1]s chef.", "Fru Berg och Bergs chef."],

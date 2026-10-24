@@ -1,9 +1,10 @@
 // Long texts go to the model in parts, so the masker can say how far it has
 // come. Parts stay below the length at which maskera splits on its own (480
 // KB-BERT tokens), so the model sees the same kind of chunks as before. A
-// part ends at a paragraph break, else a sentence end, else between words;
-// a cut between words could split a name, so the next part then starts a
-// little earlier and the overlap is read twice.
+// part ends at a paragraph break, else a sentence end, else between words.
+// A cut that is not a paragraph break could split a name ("Anna B. Karlsson"
+// looks like a sentence end), so the next part then starts a little earlier
+// and the overlap is read twice.
 
 export const PART_CHARS = 1200;
 export const OVERLAP_CHARS = 200;
@@ -35,12 +36,9 @@ export function splitForModel(text: string): Part[] {
     }
     const window = text.slice(start, start + PART_CHARS);
     let cut = lastEnd(window, /\n\s*\n/g, SEARCH_FROM);
+    const overlap = cut < 0;
     if (cut < 0) cut = lastEnd(window, /[.!?]\s+/g, SEARCH_FROM);
-    let overlap = false;
-    if (cut < 0) {
-      cut = lastEnd(window, /\s+/g, 1);
-      overlap = cut > 0;
-    }
+    if (cut < 0) cut = lastEnd(window, /\s+/g, 1);
     if (cut <= 0) cut = PART_CHARS;
     const end = start + cut;
     parts.push({ start, end });

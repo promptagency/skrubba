@@ -31,7 +31,16 @@ describe("splitForModel", () => {
     const sentences = "Anna Berg ringde om avtalet igen. ".repeat(80);
     const cut = splitForModel(sentences)[0].end;
     expect(sentences.slice(cut - 2, cut)).toBe(". ");
-    expect(splitForModel(sentences)[1].start).toBe(cut);
+  });
+
+  it("overlaps after a sentence end too, since a full stop may be an abbreviation", () => {
+    // "Anna B. " is the only sentence end in the search window of the first part.
+    const text = `${words(200)}Anna B. Karlsson ${words(400)}`;
+    const [first, second] = splitForModel(text);
+    expect(text.slice(first.end - 8, first.end)).toBe("Anna B. ");
+    expect(second.start).toBeLessThan(first.end);
+    expect(first.end - second.start).toBeLessThanOrEqual(OVERLAP_CHARS);
+    expect(text.slice(second.start, text.indexOf("Karlsson") + 8)).toContain("Anna B. Karlsson");
   });
 
   it("cuts a run without full stops between words, and overlaps the next part", () => {

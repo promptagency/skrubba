@@ -106,6 +106,7 @@ function norm(s: string): string {
   return s.toLowerCase().replace(/\s+/g, " ").trim();
 }
 
+const genitiveGroup = (type: EntityType) => (type === "NAMN" ? "NAMN" : "OTHER");
 const firstWord = (key: string) => key.slice(0, key.indexOf(" "));
 const lastWord = (key: string) => key.slice(key.lastIndexOf(" ") + 1);
 /** The first and last word of a multi-word key, else nothing. */
@@ -162,21 +163,32 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
   const sorted = [...spans].sort((a, b) => a.start - b.start);
   const surfaces = sorted.map((s) => text.slice(s.start, s.end));
 
-  // Every form a genitive could be the genitive of.
-  const known = new Set<string>(registry.linkedNames());
+  // Every form a genitive could be the genitive of, people apart from the
+  // rest: "Philips" (a company) is not the genitive of "Philip" (a person).
+  const known = new Set<string>();
+  const add = (type: EntityType, key: string) => known.add(`${genitiveGroup(type)}|${key}`);
+  for (const part of registry.linkedNames()) {
+    const full = registry.get(registry.linkedTo(part)!);
+    if (full) add(full.type, part);
+  }
   sorted.forEach((s, i) => {
     const key = norm(surfaces[i]);
-    known.add(key);
-    if (LINK_TYPES.has(s.type)) for (const w of edgeWords(key)) known.add(w);
+    add(s.type, key);
+    if (LINK_TYPES.has(s.type)) for (const w of edgeWords(key)) add(s.type, w);
   });
+  const baseOf = (type: EntityType, key: string) => {
+    const base = key.slice(0, -1);
+    const registered = registry.get(base);
+    return known.has(`${genitiveGroup(type)}|${base}`) || (registered && genitiveGroup(registered.type) === genitiveGroup(type));
+  };
 
   const resolved: Resolved[] = sorted.map((span, i) => {
     const surface = surfaces[i];
     const key = norm(surface);
     if (GENITIVE_TYPES.has(span.type)) {
       if (key.endsWith(":s")) return stripSuffix(span, surface, key, 2);
-      if (key.endsWith("s") && (known.has(key.slice(0, -1)) || registry.has(key.slice(0, -1))))
-        return stripSuffix(span, surface, key, 1);
+      // shortcut: "Andreas" next to "Andrea" merges as a genitive too, a names list would be needed to tell them apart
+      if (key.endsWith("s") && baseOf(span.type, key)) return stripSuffix(span, surface, key, 1);
     }
     return { span, surface, key, value: surface };
   });

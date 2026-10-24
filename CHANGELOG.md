@@ -4,6 +4,12 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **A company is no longer filed as a person's genitive.** "Philips" found as a company next to a person called "Philip" kept its own placeholder instead of being merged into the person, which gave the AI the company as a person and restored it as "Philip".
+- **Restoring `[NAMN_2]s` for a name that already ends in s.** The answer read "Anderss"; it now reads "Anders", as the genitive is written in Swedish.
+- **A name across a sentence-end cut in a long text.** The model reads a long text in parts, and a part ending after "Anna B. " was taken for a sentence end, so "Anna B. Karlsson" was read in two halves. Every cut but a paragraph break now overlaps the next part.
+
 ## [1.8.0] - 2026-10-23
 
 ### Changed

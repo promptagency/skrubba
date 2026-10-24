@@ -91,6 +91,24 @@ describe("buildEntities genitive", () => {
   it("keeps a name that ends in s when no base form exists", () => {
     expect(summary(build("Anders ringde", [["Anders", "NAMN"]]))).toEqual(["[NAMN_1]=Anders×1"]);
   });
+
+  it("does not take a company for the genitive of a person, nor the other way round", () => {
+    const text = "Philip ringde. Philips levererade. Volvo och Volvos chef";
+    expect(summary(build(text, [["Philip", "NAMN"], ["Philips", "ORGANISATION"], ["Volvo", "ORGANISATION"], ["Volvos", "NAMN"]]))).toEqual([
+      "[NAMN_1]=Philip×1",
+      "[ORGANISATION_1]=Philips×1",
+      "[ORGANISATION_2]=Volvo×1",
+      "[NAMN_2]=Volvos×1",
+    ]);
+    const registry = new EntityRegistry();
+    build("Philip ringde", [["Philip", "NAMN"]], registry);
+    expect(summary(build("Philips levererade", [["Philips", "ORGANISATION"]], registry))).toEqual(["[ORGANISATION_1]=Philips×1"]);
+  });
+
+  it("merges a genitive across the other types, as the base forms are merged", () => {
+    const text = "Göteborgs hamn. Stena i Göteborg";
+    expect(summary(build(text, [["Göteborgs", "PLATS"], ["Göteborg", "ORGANISATION"]]))).toEqual(["[PLATS_1]=Göteborg×2"]);
+  });
 });
 
 describe("buildEntities across types", () => {
