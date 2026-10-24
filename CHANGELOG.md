@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-10-24
+
 ### Fixed
 
 - **A company is no longer filed as a person's genitive.** "Philips" found as a company next to a person called "Philip" kept its own placeholder instead of being merged into the person, which gave the AI the company as a person and restored it as "Philip".
@@ -234,7 +236,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.1...HEAD
+[1.8.1]: https://github.com/promptagency/skrubba/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/promptagency/skrubba/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/promptagency/skrubba/compare/v1.6.9...v1.7.0
 [1.6.9]: https://github.com/promptagency/skrubba/compare/v1.6.8...v1.6.9
