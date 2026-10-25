@@ -7,6 +7,8 @@ export type ModelState = { status: "loading"; pct: number } | { status: "ready" 
 export interface SessionState {
   text: string;
   wordListRaw: string;
+  /** True while Egna ord holds what Visa exempel put there, not the user's own words. */
+  wordListFromExample: boolean;
   manual: string[];
   /** Placeholders the user set to Behåll. Survives recomputation. */
   kept: ReadonlySet<string>;
@@ -59,6 +61,7 @@ export type SessionAction =
 export const initialSession: SessionState = {
   text: "",
   wordListRaw: "",
+  wordListFromExample: false,
   manual: [],
   kept: new Set(),
   entities: [],
@@ -96,7 +99,7 @@ function reduce(state: SessionState, action: SessionAction): SessionState {
     case "setText":
       return action.text === state.text ? state : { ...state, text: action.text };
     case "setWordList":
-      return { ...state, wordListRaw: action.raw };
+      return { ...state, wordListRaw: action.raw, wordListFromExample: false };
     case "addManual": {
       const term = action.term.trim();
       if (!term || state.manual.some((m) => m.toLowerCase() === term.toLowerCase())) return state;
@@ -120,7 +123,7 @@ function reduce(state: SessionState, action: SessionAction): SessionState {
       return { ...state, kept: new Set([...state.kept].filter((p) => !current.has(p))) };
     }
     case "loadExample":
-      return { ...state, text: action.text, wordListRaw: action.wordList.join("\n") };
+      return { ...state, text: action.text, wordListRaw: action.wordList.join("\n"), wordListFromExample: true };
     case "model":
       return { ...state, model: action.model };
     case "toast":
@@ -145,6 +148,7 @@ function reduce(state: SessionState, action: SessionAction): SessionState {
         model: state.model,
         answer: state.answer,
         wordListRaw: action.key.wordList.join("\n"),
+        wordListFromExample: false,
         keyEntries: action.key.entries,
         keyCreatedAt: action.key.createdAt,
       };
@@ -152,9 +156,10 @@ function reduce(state: SessionState, action: SessionAction): SessionState {
       return { ...initialSession, model: state.model };
     case "newText":
       // In Skrubba a new text gets a new kodnyckel, so one key never mixes
-      // unrelated texts. Only Egna ord stay: they are reused across texts.
+      // unrelated texts. Only the user's own Egna ord stay: they are reused
+      // across texts. The example's words go with the example.
       return action.mode === "scrub"
-        ? { ...initialSession, model: state.model, wordListRaw: state.wordListRaw }
+        ? { ...initialSession, model: state.model, wordListRaw: state.wordListFromExample ? "" : state.wordListRaw }
         : { ...state, answer: "", restore: null };
     case "setAnswer":
       return action.text === state.answer ? state : { ...state, answer: action.text, restore: null };

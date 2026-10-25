@@ -78,6 +78,15 @@ describe("sessionReducer", () => {
     expect(s.wordListRaw).toBe("Projekt Havsvind");
   });
 
+  it("keeps the user's own Egna ord on Ny text but drops the example's", () => {
+    const own = reduce(withEntities, { type: "setWordList", raw: "Projekt Havsvind" });
+    expect(reduce(own, { type: "newText", mode: "scrub" }).wordListRaw).toBe("Projekt Havsvind");
+    const example = reduce(withEntities, { type: "loadExample", text: "Hej", wordList: ["Projekt Havsvind"] });
+    expect(reduce(example, { type: "newText", mode: "scrub" }).wordListRaw).toBe("");
+    const edited = reduce(example, { type: "setWordList", raw: "Projekt Havsvind\nPolaris" });
+    expect(reduce(edited, { type: "newText", mode: "scrub" }).wordListRaw).toBe("Projekt Havsvind\nPolaris");
+  });
+
   it("tracks model state", () => {
     expect(reduce(initialSession, { type: "model", model: { status: "ready" } }).model).toEqual({ status: "ready" });
   });
