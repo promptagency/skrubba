@@ -10,9 +10,11 @@ import {
   bareLabelNumber,
   handle,
   labelledNumber,
+  bankgiroInContext,
   momsnummer,
   orgnrInContext,
   placeCompound,
+  plusgiroInContext,
   postbox,
   splitPersonnummer,
   spokenEmail,
@@ -46,6 +48,15 @@ describe("orgnrInContext", () => {
 
 const found = (detector: { detect(t: string): Array<{ value: string }> }, text: string) =>
   detector.detect(text).map((d) => d.value);
+
+describe("bankgiroInContext and plusgiroInContext", () => {
+  it("mask a labelled giro number whatever its check digit, and nothing unlabelled", () => {
+    expect(found(bankgiroInContext, "Bankgiro: 5050-1234, bg 123-4567, kolli 5050-1234")).toEqual(["5050-1234", "123-4567"]);
+    expect(found(plusgiroInContext, "plusgiro 12 34 56-7 eller pg 1234567-8; sid 12-3")).toEqual(["12 34 56-7", "1234567-8"]);
+    expect(bankgiroInContext.label).toBe("BANKGIRO");
+    expect(plusgiroInContext.label).toBe("PLUSGIRO");
+  });
+});
 
 describe("momsnummer", () => {
   it("masks a Swedish VAT number, with or without spaces and dash", () => {

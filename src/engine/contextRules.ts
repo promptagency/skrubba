@@ -24,6 +24,26 @@ export const orgnrInContext: Detector = {
   },
 };
 
+// The same for giro numbers: maskera masks a bankgiro or plusgiro only with a
+// valid check digit, which an OCR error or a typo breaks. "bg"/"pg" count only
+// with a number of the right shape right after.
+const BANKGIRO_LABELLED = /(?:bankgiro(?:nr|nummer)?|bg(?:\.|nr)?)\s*:?\s*(\d{3,4}-\d{4})(?![\d-])/giu;
+const PLUSGIRO_LABELLED = /(?:plusgiro(?:nr|nummer)?|postgiro|pg(?:\.|nr)?)\s*:?\s*(\d(?:[\d ]{0,7}\d)?-\d)(?![\d-])/giu;
+const labelled = (label: "BANKGIRO" | "PLUSGIRO", re: RegExp): Detector => ({
+  label,
+  detect(input) {
+    const out: Found[] = [];
+    for (const m of input.matchAll(re)) {
+      const value = m[1];
+      const start = m.index + m[0].length - value.length;
+      out.push({ start, end: start + value.length, value });
+    }
+    return out;
+  },
+});
+export const bankgiroInContext = labelled("BANKGIRO", BANKGIRO_LABELLED);
+export const plusgiroInContext = labelled("PLUSGIRO", PLUSGIRO_LABELLED);
+
 // A Swedish VAT number is SE + the organisationsnummer (or a sole trader's
 // personnummer) + 01. maskera misses it because the digits touch the letters.
 const MOMSNUMMER = /(?<![\p{L}\p{N}])SE\s?\d{6}-?\d{4}\s?01(?![\p{L}\p{N}])/gu;

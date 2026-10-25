@@ -210,13 +210,19 @@ export const HARD_CASES: HardCase[] = [
   { text: "Samtal 4 med Linnea R. Pat. beskriver ångest inför möten med exmaken Robert. Nästa besök 14/11 kl 09.", secrets: ["Linnea R", "Robert"] },
   { text: "Hej! Jag heter Fredrik Åström och hyr lägenheten på Kvarngatan 3, lgh 1101. Hyresavin för november saknas. Mitt kundnummer är 884412.", secrets: ["Fredrik Åström", "Kvarngatan 3", "884412"] },
   { text: "Störningsanmälan mot grannen i 1203 (familjen Nilsson). Anmälare: Carina Sjö, 1202.", secrets: ["Nilsson", "Carina Sjö"] },
-  { text: "Bil: Volvo XC60, reg.nr WNR 229, mätarställning 84 120 km. Ägare Lisa Brandt, tel 0733-123456. Nästa service bokad hos Bilia Sisjön.", secrets: ["WNR 229", "Lisa Brandt", "0733-123456", "Bilia"] },
+  {
+    text: "Bil: Volvo XC60, reg.nr WNR 229, mätarställning 84 120 km. Ägare Lisa Brandt, tel 0733-123456. Nästa service bokad hos Bilia Sisjön.",
+    secrets: ["WNR 229", "Lisa Brandt", "0733-123456", "Bilia"],
+    keeps: ["reg.nr", "Ägare"],
+  },
+  { text: "Bankgiro 5050-1234 (fel kontrollsiffra efter OCR) och pg 12 34 56-7 står på fakturan.", secrets: ["5050-1234", "12 34 56-7"] },
   { text: "Bokning QX7T2P: Eva och Mats Holmgren, SK1423 ARN–CPH 12 dec. Passnummer 98765432 (Eva). Specialkost: gluten.", secrets: ["Eva", "Mats Holmgren", "98765432"] },
   { text: "Vittnet, Ahmed Yusuf (född 870315-2391), såg en vit skåpbil (reg. KLM 456) lämna Torggatan 5 ca 23.40.", secrets: ["Ahmed Yusuf", "870315-2391", "KLM 456", "Torggatan 5"] },
   {
     text: "Projekt Nattugglan lanseras i Q2 om Styrelsen godkänner. Term sheet från Bergvik Ventures: 12 MSEK för 15 %. Kontakt: Johanna Ferm.",
     secrets: ["Nattugglan", "Bergvik Ventures", "Johanna Ferm"],
     wordList: ["Projekt Nattugglan"],
+    keeps: ["12 MSEK"],
   },
   { text: "Kunden Lindex vill inte att kampanjen Vårkänsla nämns utanför byrån. Creative director: Nils Åberg.", secrets: ["Lindex", "Vårkänsla", "Nils Åberg"], wordList: ["Vårkänsla", "Lindex"] },
   { text: "Möte med Ulf på Sandvik: budget ca 2 MSEK, beslut i december. Konkurrent: Hexagon. Nästa steg: demo för Ulf och hans chef Karin.", secrets: ["Ulf", "Sandvik", "Hexagon", "Karin"] },
@@ -239,6 +245,7 @@ export const HARD_CASES: HardCase[] = [
     secrets: ["Anna", "Erik Sundin", "Prompt Agency", "070-123 45 67", "erik@promptagency.se", "Sveavägen 10", "111 57"],
     fails: true,
   },
+  { text: "Senior konsult Erik Sundin och junior utvecklare Anna Berg. Ägare: Lisa Brandt.", secrets: ["Erik Sundin", "Anna Berg", "Lisa Brandt"], keeps: ["Senior", "junior", "Ägare"] },
   { text: "Närvarande: Anna Berg (ordf), Bo Lind, Cecilia Ahl, Dan Öst. Frånvarande: Eva Falk. §3 Beslut: Bo kontaktar Telia om avtalet.", secrets: ["Anna Berg", "Bo Lind", "Cecilia Ahl", "Dan Öst", "Eva Falk", "Telia"] },
   { text: "Anbud dnr KS 2024/118 från Hela Hem Fastigheter AB. Anbudssumma 4 320 000 kr. Kontaktperson: Ingrid Malm, ingrid@helahem.se.", secrets: ["Hela Hem", "Ingrid Malm", "ingrid@helahem.se"] },
   {

@@ -211,6 +211,8 @@ export function withoutDoseAddresses(text: string, spans: Span[]): Span[] {
     const value = text.slice(s.start, s.end);
     if (STREET.test(value) || STREET_NAME.test(value)) return true;
     if (DOSE.test(value) || STRUCTURE.test(value)) return false;
+    // A lowercase word with no number ("nr" of "reg.nr WNR 229") is a label, not a street.
+    if (!/\d/.test(value) && /^\p{Ll}/u.test(value)) return false;
     if (/\d/.test(text[s.end] ?? "")) return false;
     return /\d/.test(value) || !/^\s*\d/.test(text.slice(s.end));
   });
@@ -314,12 +316,14 @@ export function trimEdgeWords(text: string, spans: Span[]): Span[] {
 
 // Job titles and roles the model takes for a company or a name, including
 // the roles in a signing log ("Initierare", "Signerare").
-const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|chef|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist|initierare|signerare|undertecknare|firmatecknare|mottagare|avsändare|handläggare|kontaktperson|granskare|attestant|vittne|id)`;
+const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|senior|junior|chef|ägare|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist|initierare|signerare|undertecknare|firmatecknare|mottagare|avsändare|handläggare|kontaktperson|granskare|attestant|vittne|id)`;
 
 /**
  * Model spans cut at line breaks: a name never continues on the next line,
  * but the model reads across one ("Sikta Högre\nOvanstående", "Almi\n
- * Företagspartners"). Each piece is a span of its own.
+ * Företagspartners"). Each piece is a span of its own. A colon followed by a
+ * space cuts too ("Bergvik Ventures: 12"), and a piece with no letter in it
+ * ("12") is no name, company or place.
  */
 export function splitAtLineBreaks(text: string, spans: Span[]): Span[] {
   return spans.flatMap((s) => {
@@ -327,8 +331,9 @@ export function splitAtLineBreaks(text: string, spans: Span[]): Span[] {
     const out: Span[] = [];
     let start = s.start;
     for (let i = s.start; i <= s.end; i++) {
-      if (i === s.end || text[i] === "\n") {
-        if (i > start) out.push({ ...s, start, end: i });
+      if (i === s.end || text[i] === "\n" || (text[i] === ":" && /\s/.test(text[i + 1] ?? ""))) {
+        while (start < i && /\s/.test(text[start])) start++;
+        if (i > start && /\p{L}/u.test(text.slice(start, i))) out.push({ ...s, start, end: i });
         start = i + 1;
       }
     }

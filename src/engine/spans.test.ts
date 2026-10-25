@@ -123,6 +123,12 @@ describe("withoutDoseAddresses", () => {
     expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["Storgatan 5:ADRESS:model", "Storgatan:ADRESS:model", "Kungsgatan:ADRESS:model"]);
   });
 
+  it("drops a lowercase label with no number, keeps a lowercase street with one", () => {
+    const t = "reg.nr WNR 229, bor på storgatan 5, mätarställning 84 120 km";
+    const spans = [at(t, "nr", "ADRESS", "model"), at(t, "storgatan 5", "ADRESS", "model"), at(t, "mätarställning 84 120", "ADRESS", "model")];
+    expect(show(t, withoutDoseAddresses(t, spans))).toEqual(["storgatan 5:ADRESS:model", "mätarställning 84 120:ADRESS:model"]);
+  });
+
   it("drops a model address that is a dose, keeps a street with a number", () => {
     const t = "Sertralin 50 mg, Alvedon 500 mg x 3, Storgatan 5 g, Vintergatan 12, 2 st";
     const spans = [
@@ -359,6 +365,23 @@ describe("splitAtLineBreaks", () => {
       "Almi:ORGANISATION:model",
       "Företagspartners:ORGANISATION:model",
       "Anna Berg:NAMN:rule",
+    ]);
+  });
+
+  it("cuts at a colon with a space after it and drops a piece without letters, but not a genitive or a property unit", () => {
+    const t = "Term sheet från Bergvik Ventures: 12 MSEK. Kontakt: Johanna Ferm. Zephyr:s team. Majorna 12:4.";
+    const spans = [
+      at(t, "Bergvik Ventures: 12", "ORGANISATION", "model"),
+      at(t, "Kontakt: Johanna Ferm", "NAMN", "model"),
+      at(t, "Zephyr:s", "ORGANISATION", "model"),
+      at(t, "Majorna 12:4", "PLATS", "model"),
+    ];
+    expect(show(t, splitAtLineBreaks(t, spans))).toEqual([
+      "Bergvik Ventures:ORGANISATION:model",
+      "Kontakt:NAMN:model",
+      "Johanna Ferm:NAMN:model",
+      "Zephyr:s:ORGANISATION:model",
+      "Majorna 12:4:PLATS:model",
     ]);
   });
 });

@@ -4,6 +4,11 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **A bankgiro or plusgiro number with a wrong check digit is masked when labelled.** After an OCR error or a typo the number is still the account; "bankgiro 5050-1234" and "pg 12 34 56-7" are now hidden as the org.nr already was.
+- **Less over-masking from the third probe round.** "nr" in "reg.nr WNR 229" is no longer an address, a company name no longer swallows ": 12 MSEK" after it, and "Senior", "Junior" and "Ägare" are titles, not names.
+
 ## [1.8.6] - 2026-10-25
 
 ### Fixed
