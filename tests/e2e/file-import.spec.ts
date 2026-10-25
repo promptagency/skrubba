@@ -22,10 +22,10 @@ const NEW_KEY_CONFIRM =
 
 // Owner's decision, 2026-10-14: a document read into Din text is a new case, like Ny text.
 test.describe("a new kodnyckel for a new document", () => {
-  test("with a kodnyckel, Använd texten asks first, then starts a new one and keeps Egna ord", async ({ page }) => {
+  test("with a kodnyckel, Använd texten asks first, then starts a new one and drops the example's Egna ord", async ({ page }) => {
     await openReady(page);
     await page.getByRole("button", { name: "Visa exempel" }).click();
-    const words = await page.locator(".words summary").textContent();
+    await expect(page.locator(".words summary")).toHaveText("Egna ord (1)");
     await scrub(page);
     const asked: string[] = [];
     page.on("dialog", (d) => {
@@ -38,7 +38,7 @@ test.describe("a new kodnyckel for a new document", () => {
     await expect(fileWindow(page)).toBeHidden();
     await expect(editor(page)).toHaveValue(SAMPLE_TEXT);
     await expect(scrubbedBox(page)).toHaveValue("");
-    await expect(page.locator(".words summary")).toHaveText(words!);
+    await expect(page.locator(".words summary")).toHaveText("Egna ord (0)");
     await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveCount(0);
     await scrub(page);
     await expect(scrubbedBox(page)).toHaveValue(/och \[NAMN_1\]/);

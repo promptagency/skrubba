@@ -2,7 +2,8 @@ import { expect, test } from "@playwright/test";
 import { answerBox, editor, openReady, restoredBox, runButton, scrub, scrubbedBox } from "./helpers.ts";
 
 // "Ny text" under the button between the panes starts over with a new text.
-// In Skrubba it also starts a new kodnyckel, after asking; Egna ord stay.
+// In Skrubba it also starts a new kodnyckel, after asking; the user's own
+// Egna ord stay, the example's go with the example.
 const newText = (page: import("@playwright/test").Page) => page.getByRole("button", { name: "Ny text", exact: true });
 
 test("Ny text shows under the middle button only once there is text", async ({ page }) => {
@@ -32,10 +33,10 @@ test("in Skrubba, Ny text with no kodnyckel yet empties the text without asking"
   expect(asked).toBe(false);
 });
 
-test("in Skrubba, Ny text asks first, then starts a new kodnyckel and keeps Egna ord", async ({ page }) => {
+test("in Skrubba, Ny text asks first, then starts a new kodnyckel and drops the example's Egna ord", async ({ page }) => {
   await openReady(page);
   await page.getByRole("button", { name: "Visa exempel" }).click();
-  const words = await page.locator(".words summary").textContent();
+  await expect(page.locator(".words summary")).toHaveText("Egna ord (1)");
   await scrub(page);
   const asked: string[] = [];
   page.on("dialog", (d) => {
@@ -49,13 +50,26 @@ test("in Skrubba, Ny text asks first, then starts a new kodnyckel and keeps Egna
   await expect(editor(page)).toHaveValue("");
   await expect(editor(page)).toBeFocused();
   await expect(scrubbedBox(page)).toHaveValue("");
-  await expect(page.locator(".words summary")).toHaveText(words!);
+  await expect(page.locator(".words summary")).toHaveText("Egna ord (0)");
   await expect(page.getByRole("button", { name: /^Kodnyckel/ })).toHaveCount(0);
 
   // Numbering starts again.
   await editor(page).fill("Igår ringde Johan Lindqvist.");
   await scrub(page);
   await expect(scrubbedBox(page)).toHaveValue("Igår ringde [NAMN_1].");
+});
+
+test("in Skrubba, Ny text keeps the user's own Egna ord", async ({ page }) => {
+  await openReady(page);
+  await editor(page).fill("Igår ringde Johan Lindqvist om Polaris.");
+  await page.locator(".words summary").click();
+  await page.locator(".words textarea").fill("Polaris");
+  await scrub(page);
+  await expect(scrubbedBox(page)).toHaveValue("Igår ringde [NAMN_1] om [ORD_1].");
+  page.on("dialog", (d) => void d.accept());
+  await newText(page).click();
+  await expect(editor(page)).toHaveValue("");
+  await expect(page.locator(".words summary")).toHaveText("Egna ord (1)");
 });
 
 test("in Skrubba, saying no to Ny text leaves everything as it was", async ({ page }) => {
