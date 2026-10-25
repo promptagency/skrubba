@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.8.6] - 2026-10-25
+
 ### Fixed
 
 - **The downloaded kodnyckel spells a value as Uppgifter does.** When a later text wrote a name with a capital, the panel showed "Anna" but the key file and Avskrubba kept the first spelling, "anna".
@@ -279,7 +281,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.5...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.6...HEAD
+[1.8.6]: https://github.com/promptagency/skrubba/compare/v1.8.5...v1.8.6
 [1.8.5]: https://github.com/promptagency/skrubba/compare/v1.8.4...v1.8.5
 [1.8.4]: https://github.com/promptagency/skrubba/compare/v1.8.3...v1.8.4
 [1.8.3]: https://github.com/promptagency/skrubba/compare/v1.8.2...v1.8.3
