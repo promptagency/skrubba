@@ -7,6 +7,7 @@ import {
   type Suggestion,
   type UnknownPlaceholder,
 } from "./Masker.ts";
+import { escapeRegExp } from "./wordList.ts";
 
 const TYPES: readonly EntityType[] = ENTITY_TYPES;
 
@@ -41,7 +42,6 @@ const ALIASES: Record<string, EntityType> = {
   WORD: "ORD",
 };
 
-const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const typeWords = [...TYPES, ...Object.keys(ALIASES)].sort((a, b) => b.length - a.length).map(escapeRegExp);
 
 // Brackets and backticks are consumed; quotes are not (they belong to the prose).

@@ -9,7 +9,7 @@
 // The FAQ and README describe this; keep them in step with any change here.
 
 /** The site's name in Plausible, and the only address that is counted. */
-export const PLAUSIBLE_SITE = "skrubba.app";
+const PLAUSIBLE_SITE = "skrubba.app";
 
 /** The visitor has asked not to be tracked (Global Privacy Control or Do Not Track). */
 function optedOut(): boolean {

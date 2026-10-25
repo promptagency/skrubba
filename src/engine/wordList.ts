@@ -26,7 +26,7 @@ export function startsCompound(text: string, start: number, end: number): boolea
   return end - start >= COMPOUND_MIN && /^\p{Lu}/u.test(text[start] ?? "") && /^\p{Ll}/u.test(text[end] ?? "");
 }
 
-function escapeRegExp(s: string): string {
+export function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 

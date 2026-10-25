@@ -13,7 +13,7 @@ const SKIP_HIDDEN = new Set(["w:del", "w:moveFrom"]);
 const OFF = new Set(["0", "false", "off"]);
 
 /** The text of one WordprocessingML part, and whether it had hidden content. */
-export function wordPartText(xml: string): { text: string; hidden: boolean } {
+function wordPartText(xml: string): { text: string; hidden: boolean } {
   const out = new TextBuilder();
   let skip = 0;
   let skipIsHidden = false;

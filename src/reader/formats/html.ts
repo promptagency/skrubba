@@ -49,7 +49,7 @@ const NAMED: Record<string, string> = {
 const TOKEN = /<!--[\s\S]*?(?:-->|$)|<![^>]*>|<\?[\s\S]*?(?:\?>|$)|<(\/?)([a-zA-Z][\w:-]*)((?:[^>"']|"[^"]*"|'[^']*')*)>|[^<]+|</g;
 const HIDDEN_ATTR = /(^|\s)hidden(\s|=|$)/i;
 
-export function htmlEntities(s: string): string {
+function htmlEntities(s: string): string {
   if (!s.includes("&")) return s;
   return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, body: string) => {
     if (body[0] !== "#") return Object.hasOwn(NAMED, body) ? NAMED[body] : whole; // "&constructor;" is not an entity

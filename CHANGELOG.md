@@ -4,6 +4,15 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **The downloaded kodnyckel spells a value as Uppgifter does.** When a later text wrote a name with a capital, the panel showed "Anna" but the key file and Avskrubba kept the first spelling, "anna".
+- **A word-list term written in lowercase in the text keeps its linked parts.** "aurora x" and "Aurora-lanseringen" became two unrelated items; they are one, [ORD_1], as with the term written as typed.
+
+### Changed
+
+- Smaller code: one regex-escaping helper, one text tidy-up pass for every document format, five exports nothing imported, two pass-through window components folded into the page, and a tooltip on a hidden layer that could never show.
+
 ## [1.8.5] - 2026-10-24
 
 ### Fixed

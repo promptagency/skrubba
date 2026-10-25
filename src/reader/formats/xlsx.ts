@@ -68,7 +68,7 @@ function cellText(cell: Cell, strings: string[]): string {
   return cell.value;
 }
 
-export function sheetText(xml: string, strings: string[]): string {
+function sheetText(xml: string, strings: string[]): string {
   const rows: string[] = [];
   let row: string[] | null = null;
   let cell: Cell | null = null;

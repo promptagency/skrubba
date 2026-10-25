@@ -39,12 +39,12 @@ describe("parseKey", () => {
 });
 
 describe("mergeEntries", () => {
-  it("adds new placeholders and keeps existing ones", () => {
+  it("adds new placeholders, and gives an existing one its latest value in its old place", () => {
     const merged = mergeEntries(valid.entries, [
-      { placeholder: "[NAMN_1]", value: "Anna Berg", type: "NAMN" },
+      { placeholder: "[NAMN_1]", value: "anna berg", type: "NAMN" },
       { placeholder: "[NAMN_2]", value: "Erik Ek", type: "NAMN" },
     ]);
-    expect(merged.map((e) => e.placeholder)).toEqual(["[NAMN_1]", "[ORD_2]", "[NAMN_2]"]);
+    expect(merged.map((e) => `${e.placeholder}=${e.value}`)).toEqual(["[NAMN_1]=anna berg", "[ORD_2]=Havsvind", "[NAMN_2]=Erik Ek"]);
   });
 });
 

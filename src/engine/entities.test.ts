@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { EntityType, Source, Span } from "./Masker.ts";
 import { buildEntities, EntityRegistry, wholePlaceholder } from "./entities.ts";
+import { findTerms } from "./wordList.ts";
 
 type Mark = [needle: string, type: EntityType, source?: Source];
 
@@ -329,6 +330,12 @@ describe("buildEntities part linking ([DEL_<type>_n])", () => {
       ["Cars", "ORGANISATION"],
     ]);
     expect(summary(out)).toEqual(["[ORGANISATION_1]=Volvo Cars×2", "[ORD_1]=Aurora X×2", "[ORGANISATION_2]=Cars×1"]);
+  });
+
+  it("links a hyphenated head word to a word-list term the text wrote in lowercase", () => {
+    const text = "aurora x på listan. Aurora-lanseringen i maj.";
+    const out = buildEntities(text, findTerms(text, ["Aurora X"], "wordlist"), new EntityRegistry());
+    expect(summary(out)).toEqual(["[ORD_1]=Aurora X×2"]);
   });
 
   it("keeps the link for the rest of the session", () => {

@@ -195,7 +195,9 @@ export function buildEntities(text: string, spans: Span[], registry: EntityRegis
       // shortcut: "Andreas" next to "Andrea" merges as a genitive too, a names list would be needed to tell them apart
       if (key.endsWith("s") && baseOf(span.type, key)) return stripSuffix(span, surface, key, 1);
     }
-    return { span, surface, key, value: surface };
+    // A word-list or manual hit is worth the term as typed: "aurora x" in the
+    // text is still "Aurora X", whose head word a hyphenated part can link to.
+    return { span, surface, key, value: span.term ?? surface };
   });
 
   // First or last word → multi-word values of the same type in this text that

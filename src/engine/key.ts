@@ -34,14 +34,18 @@ export function parseKey(raw: string): Key | null {
   return { entries, wordList: [...k.wordList], createdAt: k.createdAt, app: "skrubba", version: 1 };
 }
 
-/** Entries of a key built up over several copies. A placeholder keeps its first value. */
+/**
+ * Entries of a key built up over several copies. A placeholder keeps its place
+ * but takes the latest value: the registry may since have replaced "anna" with
+ * "Anna", and the key must say what the panel says.
+ */
 export function mergeEntries(existing: KeyEntry[], add: KeyEntry[]): KeyEntry[] {
   const out = [...existing];
-  const have = new Set(existing.map((e) => e.placeholder));
+  const at = new Map(existing.map((e, i) => [e.placeholder, i]));
   for (const e of add) {
-    if (have.has(e.placeholder)) continue;
-    have.add(e.placeholder);
-    out.push(e);
+    const i = at.get(e.placeholder);
+    if (i === undefined) at.set(e.placeholder, out.push(e) - 1);
+    else out[i] = e;
   }
   return out;
 }

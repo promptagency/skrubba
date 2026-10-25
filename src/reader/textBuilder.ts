@@ -4,6 +4,9 @@
 /** Spaces and tabs at the end of a line. The lookbehind starts a match only at the run's first blank, so a line of 100 000 spaces is one pass, not a quadratic one. */
 export const TRAILING_BLANKS = /(?<![ \t])[ \t]+$/gm;
 
+/** A text with no blanks at line ends, at most one blank line in a row, and none at either end. */
+export const tidy = (s: string) => s.replace(TRAILING_BLANKS, "").replace(/\n{3,}/g, "\n\n").trim();
+
 export class TextBuilder {
   private parts: string[] = [""];
   /** Cells closed so far in the current row, per nesting level of `parts`. */
@@ -34,10 +37,6 @@ export class TextBuilder {
   }
 
   toString(): string {
-    return this.parts
-      .join("")
-      .replace(TRAILING_BLANKS, "")
-      .replace(/\n{3,}/g, "\n\n")
-      .trim();
+    return tidy(this.parts.join(""));
   }
 }

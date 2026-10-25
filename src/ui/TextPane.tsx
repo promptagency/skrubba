@@ -1,6 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import type { EntityType } from "../engine/index.ts";
-import { TYPE_LABEL, typeGroup } from "./copy.ts";
+import { typeGroup } from "./copy.ts";
 import { type Mark, segments } from "./segments.ts";
 
 export interface TextPaneHandle {
@@ -37,7 +37,7 @@ export const TextPane = forwardRef<TextPaneHandle, Props>(function TextPane(
       <div className="editor-overlay" ref={overlay} aria-hidden="true">
         {segments(value, marks).map((s) =>
           s.data ? (
-            <mark key={s.start} className={`hl hl-${typeGroup(s.data)}`} title={TYPE_LABEL[s.data]}>
+            <mark key={s.start} className={`hl hl-${typeGroup(s.data)}`}>
               {s.text}
             </mark>
           ) : (

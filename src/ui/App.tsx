@@ -15,9 +15,10 @@ import { Editor, type EditorHandle, type PasteUndo } from "./Editor.tsx";
 import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
 import { HowtoDialog } from "./HowtoDialog.tsx";
-import { ItemsDialog } from "./ItemsDialog.tsx";
-import { KeyDialog } from "./KeyDialog.tsx";
+import { EntityPanel } from "./EntityPanel.tsx";
 import { KeyUpload } from "./KeyUpload.tsx";
+import { KeyView } from "./KeyView.tsx";
+import { Modal } from "./Modal.tsx";
 import { ModelStatus } from "./ModelStatus.tsx";
 import { RestoreNotes } from "./RestoreNotes.tsx";
 import { firstPlaceholder, type Mark, placeholderMarks } from "./segments.ts";
@@ -621,30 +622,26 @@ export function App() {
         </p>
       </footer>
 
-      <ItemsDialog
-        open={itemsOpen}
-        onClose={() => setItemsOpen(false)}
-        entities={entities}
-        onReveal={(placeholder) => {
-          // Close the window first: the text behind it is inert while it is open.
-          setItemsOpen(false);
-          setTimeout(() => reveal(placeholder));
-        }}
-        onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
-        onKeep={(placeholder) => dispatch({ type: "keep", placeholder })}
-        onScrubAll={() => dispatch({ type: "scrubAll" })}
-        onKeepAll={() => dispatch({ type: "keepAll" })}
-      />
-      <KeyDialog
-        open={keyOpen}
-        onClose={() => setKeyOpen(false)}
-        entries={state.keyEntries}
-        wordList={wordList}
-        entities={entities}
-        onDownload={downloadKey}
-        onUpload={uploadKey}
-        onClear={clearAll}
-      />
+      {/* The items found, opened from the count under the pane. */}
+      <Modal open={itemsOpen} onClose={() => setItemsOpen(false)} title={t("items.title")}>
+        <EntityPanel
+          entities={entities}
+          onReveal={(placeholder) => {
+            // Close the window first: the text behind it is inert while it is open.
+            setItemsOpen(false);
+            setTimeout(() => reveal(placeholder));
+          }}
+          onToggleKeep={(placeholder) => dispatch({ type: "toggleKeep", placeholder })}
+          onKeep={(placeholder) => dispatch({ type: "keep", placeholder })}
+          onScrubAll={() => dispatch({ type: "scrubAll" })}
+          onKeepAll={() => dispatch({ type: "keepAll" })}
+        />
+      </Modal>
+      {/* The kodnyckel, opened from the link beside Kopiera. */}
+      <Modal open={keyOpen} onClose={() => setKeyOpen(false)} title={t("mode.key")}>
+        <p className="modal-lead">{t("key.explainer")}</p>
+        <KeyView entries={state.keyEntries} wordList={wordList} entities={entities} onDownload={downloadKey} onUpload={uploadKey} onClear={clearAll} />
+      </Modal>
       <FaqDialog open={faqOpen} onClose={() => setFaqOpen(false)} />
       <FileWindow job={fileJob} onUse={applyFileText} onClose={() => setFileJob(null)} />
       <HowtoDialog open={howtoOpen} onClose={() => setHowtoOpen(false)} />

@@ -15,7 +15,7 @@ import { readRtf } from "./formats/rtf.ts";
 import { readText } from "./formats/text.ts";
 import { readXlsx } from "./formats/xlsx.ts";
 import { LIMITS } from "./limits.ts";
-import { TRAILING_BLANKS } from "./textBuilder.ts";
+import { tidy } from "./textBuilder.ts";
 import { type Extracted, type Format, type Note, type Progress, ReadError, type ReadResult, type Stats } from "./types.ts";
 import { openZip, type Zip, zipFormat } from "./zip.ts";
 
@@ -78,11 +78,7 @@ async function dispatch(bytes: Uint8Array, name: string, onProgress?: Progress):
 }
 
 function finish(format: Format, x: Extracted): ReadResult {
-  const text = x.text
-    .replace(/\r\n?/g, "\n")
-    .replace(TRAILING_BLANKS, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  const text = tidy(x.text.replace(/\r\n?/g, "\n"));
   if (!text) return { kind: "error", reason: "empty" };
   if (text.length > LIMITS.textChars) return { kind: "error", reason: "tooLarge" };
   const notes: Note[] = [];

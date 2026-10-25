@@ -5,13 +5,13 @@
 // table rows, which come out on one line with cells by tab.
 import type { Cfb } from "../cfb.ts";
 import { LIMITS } from "../limits.ts";
-import { TRAILING_BLANKS } from "../textBuilder.ts";
+import { tidy } from "../textBuilder.ts";
 import { type Extracted, ReadError } from "../types.ts";
 
 const fail = () => new ReadError("failed");
 
 /** Word's special characters: paragraph, cell and page marks, fields, hyphens. */
-export function cleanWordText(s: string): string {
+function cleanWordText(s: string): string {
   let out = "";
   const fields: Array<"code" | "result"> = [];
   for (const ch of s) {
@@ -34,10 +34,7 @@ export function cleanWordText(s: string): string {
     else if (c === 0x1e) out += "-";
     else if (c === 0x09 || c >= 0x20) out += ch;
   }
-  return out
-    .replace(TRAILING_BLANKS, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  return tidy(out);
 }
 
 function pieceText(word: Uint8Array, clx: Uint8Array): string {
