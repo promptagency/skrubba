@@ -189,4 +189,67 @@ export const HARD_CASES: HardCase[] = [
     secrets: ["Emma", "Liam", "Sara", "Per", "Jonas", "emma.lind"],
     keeps: ["Elevens lärare", "Elevens mamma", "Rektorn"],
   },
+
+  // Probe round 3 (2026-10-25): recruitment, finance, care, legal, sales,
+  // signatures, minutes, Nordic names, SMS, OCR noise and English. Card and
+  // giro numbers are masked only with a valid check digit, as issued ones have.
+  {
+    text: "CV: Samira Hosseini, född 1991-06-14, Fjällgatan 7, 116 28 Stockholm, samira.h@gmail.com. Senast: Key Account Manager på Nordic Retail AB 2019–2024.",
+    secrets: ["Samira Hosseini", "1991-06-14", "Fjällgatan 7", "116 28", "samira.h@gmail.com", "Nordic Retail"],
+  },
+  { text: "Referens: Tomas Lindgren (f.d. chef, Scania), 070-555 12 12. Kandidaten Oskar Nyman begärde 48 000 kr i månadslön.", secrets: ["Tomas Lindgren", "Scania", "070-555 12 12", "Oskar Nyman"] },
+  { text: "Intervjuanteckning: K. Bergström är stark på SQL men svag på presentation. Rekommenderas till andra intervju med Petra.", secrets: ["Bergström", "Petra"] },
+  {
+    text: "Faktura 2024-1187 från Grönlunds Måleri AB, org.nr 559012-3456, bankgiro 5050-1055, belopp 18 750 kr inkl. moms. Referens: Åsa Lind.",
+    secrets: ["Grönlunds Måleri", "559012-3456", "5050-1055", "Åsa Lind"],
+  },
+  { text: "Utbetalning till IBAN SE45 5000 0000 0583 9825 7466 (mottagare Henrik Ödman) stoppades av banken.", secrets: ["SE45 5000 0000 0583 9825 7466", "Henrik Ödman"] },
+  { text: "Kortet 4111 1111 1111 1111 (utgång 09/27) tillhör Mikaela Strand och har använts på Systembolaget i Umeå.", secrets: ["4111 1111 1111 1111", "Mikaela Strand", "Umeå"] },
+  { text: "Hemtjänst, dagrapport 3/11: Gunnar Ek (f. 1934) i lgh 2 på Ringvägen 9 har ont i höften igen. Dottern Ulla ringde kl 14.", secrets: ["Gunnar Ek", "Ringvägen 9", "Ulla"] },
+  { text: "Brukare 55-0412 vill byta kontaktperson från Jonas till Amira. Anhörig: son Peter Ek, 072-111 22 33.", secrets: ["55-0412", "Jonas", "Amira", "Peter Ek", "072-111 22 33"] },
+  { text: "Samtal 4 med Linnea R. Pat. beskriver ångest inför möten med exmaken Robert. Nästa besök 14/11 kl 09.", secrets: ["Linnea R", "Robert"] },
+  { text: "Hej! Jag heter Fredrik Åström och hyr lägenheten på Kvarngatan 3, lgh 1101. Hyresavin för november saknas. Mitt kundnummer är 884412.", secrets: ["Fredrik Åström", "Kvarngatan 3", "884412"] },
+  { text: "Störningsanmälan mot grannen i 1203 (familjen Nilsson). Anmälare: Carina Sjö, 1202.", secrets: ["Nilsson", "Carina Sjö"] },
+  { text: "Bil: Volvo XC60, reg.nr WNR 229, mätarställning 84 120 km. Ägare Lisa Brandt, tel 0733-123456. Nästa service bokad hos Bilia Sisjön.", secrets: ["WNR 229", "Lisa Brandt", "0733-123456", "Bilia"] },
+  { text: "Bokning QX7T2P: Eva och Mats Holmgren, SK1423 ARN–CPH 12 dec. Passnummer 98765432 (Eva). Specialkost: gluten.", secrets: ["Eva", "Mats Holmgren", "98765432"] },
+  { text: "Vittnet, Ahmed Yusuf (född 870315-2391), såg en vit skåpbil (reg. KLM 456) lämna Torggatan 5 ca 23.40.", secrets: ["Ahmed Yusuf", "870315-2391", "KLM 456", "Torggatan 5"] },
+  {
+    text: "Projekt Nattugglan lanseras i Q2 om Styrelsen godkänner. Term sheet från Bergvik Ventures: 12 MSEK för 15 %. Kontakt: Johanna Ferm.",
+    secrets: ["Nattugglan", "Bergvik Ventures", "Johanna Ferm"],
+    wordList: ["Projekt Nattugglan"],
+  },
+  { text: "Kunden Lindex vill inte att kampanjen Vårkänsla nämns utanför byrån. Creative director: Nils Åberg.", secrets: ["Lindex", "Vårkänsla", "Nils Åberg"], wordList: ["Vårkänsla", "Lindex"] },
+  { text: "Möte med Ulf på Sandvik: budget ca 2 MSEK, beslut i december. Konkurrent: Hexagon. Nästa steg: demo för Ulf och hans chef Karin.", secrets: ["Ulf", "Sandvik", "Hexagon", "Karin"] },
+  {
+    text: "PRESSMEDDELANDE (EMBARGO): Fjällbris AB presenterar Fjällbris Pro den 3 mars. Kontakt: presschef Maria Vik, maria.vik@fjallbris.se.",
+    secrets: ["Fjällbris", "Maria Vik", "maria.vik@fjallbris.se"],
+    wordList: ["Fjällbris Pro"],
+  },
+  {
+    text: "Protokoll MBL §11: Arbetsgivaren (Nordqvist Bygg AB) och Byggnads region Väst. Närvarande: Lars Ek (AG), Siv Holm (Byggnads). Varsel om 14 tjänster.",
+    secrets: ["Nordqvist Bygg", "Lars Ek", "Siv Holm"],
+  },
+  { text: "Patient: hunden Bella (labrador, 6 år), ägare Sofia Lund, 070-888 99 00, Bygatan 12, 523 30 Ulricehamn. Vaccination klar.", secrets: ["Sofia Lund", "070-888 99 00", "Bygatan 12", "523 30", "Ulricehamn"] },
+  { text: "Bordsbokning fre 19:30, 6 pers, Daniel Öberg, 0709-12 34 56. Allergi: nötter (en gäst).", secrets: ["Daniel Öberg", "0709-12 34 56"] },
+  { text: "Medlem 20231104-07 (Jenny Hägg) sade upp autogirot, bankkonto 1234-5 678 901 23-4.", secrets: ["Jenny Hägg", "1234-5 678 901 23-4"] },
+  { text: "Ticket INC-20931: användare jlindqvist (Johan Lindqvist, IT-avd) kan inte logga in. IP 10.4.12.77, laptop LT-0442. Återställde lösenordet.", secrets: ["jlindqvist", "Johan Lindqvist"] },
+  // The model misses the company in a signature block and takes "Senior" for the name.
+  {
+    text: "Hej Anna,\n\nBifogar avtalet.\n\nMed vänliga hälsningar\nErik Sundin\nSenior konsult, Prompt Agency\n070-123 45 67 | erik@promptagency.se\nSveavägen 10, 111 57 Stockholm",
+    secrets: ["Anna", "Erik Sundin", "Prompt Agency", "070-123 45 67", "erik@promptagency.se", "Sveavägen 10", "111 57"],
+    fails: true,
+  },
+  { text: "Närvarande: Anna Berg (ordf), Bo Lind, Cecilia Ahl, Dan Öst. Frånvarande: Eva Falk. §3 Beslut: Bo kontaktar Telia om avtalet.", secrets: ["Anna Berg", "Bo Lind", "Cecilia Ahl", "Dan Öst", "Eva Falk", "Telia"] },
+  { text: "Anbud dnr KS 2024/118 från Hela Hem Fastigheter AB. Anbudssumma 4 320 000 kr. Kontaktperson: Ingrid Malm, ingrid@helahem.se.", secrets: ["Hela Hem", "Ingrid Malm", "ingrid@helahem.se"] },
+  {
+    text: "Läkarintyg: Pernilla Hjort, 19780523-1182, sjukskriven 50 % t.o.m. 2024-12-31. Diagnos F43.8. Läkare: Dr Amir Saleh, Vårdcentralen Kronan.",
+    secrets: ["Pernilla Hjort", "19780523-1182", "Amir Saleh", "Kronan"],
+  },
+  { text: "Vår danska kollega Søren Kjærgaard och norska Åshild Bjørnstad kommer till Malmö på måndag. Kontakt: soren@firma.dk.", secrets: ["Søren Kjærgaard", "Åshild Bjørnstad", "Malmö", "soren@firma.dk"] },
+  { text: "hej det är kalle pettersson igen ring mig på 0761234567 när du kan vi måste prata om lägenheten på drottninggatan 44", secrets: ["kalle pettersson", "0761234567", "drottninggatan 44"] },
+  { text: "Namn : Birg1tta Lundqv1st  Pers.nr : 55O412-1234  Adress : Skolgatan 8 , 44l 30 Alingsås", secrets: ["Lundqv1st", "55O412-1234", "Skolgatan 8", "Alingsås"] },
+  {
+    text: "Hi team, Fjällbris signed the contract yesterday. Per Holm will lead the onboarding together with our CFO Ingrid Malm. Call Per at +46 70 999 88 77.",
+    secrets: ["Fjällbris", "Per Holm", "Ingrid Malm", "+46 70 999 88 77", "Per"],
+  },
 ];
