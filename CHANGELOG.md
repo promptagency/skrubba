@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.8.8] - 2026-10-25
+
 ### Fixed
 
 - **A card number with a wrong check digit is masked when labelled.** "Kortet 4571 1234 5678 9010" after an OCR misread is still the card; 13 to 19 digits after "kortnummer", "kortet" or "card number" are now hidden, as giro numbers and the org.nr already are.
@@ -294,6 +296,7 @@ First tagged version, before the public launch.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
 [Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.7...HEAD
+[1.8.8]: https://github.com/promptagency/skrubba/compare/v1.8.7...v1.8.8
 [1.8.7]: https://github.com/promptagency/skrubba/compare/v1.8.6...v1.8.7
 [1.8.6]: https://github.com/promptagency/skrubba/compare/v1.8.5...v1.8.6
 [1.8.5]: https://github.com/promptagency/skrubba/compare/v1.8.4...v1.8.5
