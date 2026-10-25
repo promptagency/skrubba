@@ -11,6 +11,7 @@ import {
   handle,
   labelledNumber,
   bankgiroInContext,
+  kortnummerInContext,
   momsnummer,
   orgnrInContext,
   placeCompound,
@@ -55,6 +56,14 @@ describe("bankgiroInContext and plusgiroInContext", () => {
     expect(found(plusgiroInContext, "plusgiro 12 34 56-7 eller pg 1234567-8; sid 12-3")).toEqual(["12 34 56-7", "1234567-8"]);
     expect(bankgiroInContext.label).toBe("BANKGIRO");
     expect(plusgiroInContext.label).toBe("PLUSGIRO");
+  });
+});
+
+describe("kortnummerInContext", () => {
+  it("masks a labelled card number of 13 to 19 digits whatever its check digit, not a short code after 'kort'", () => {
+    const text = "Kortet 4571 1234 5678 9010 (utgång 09/27). Kortnr: 5555-4444-3333-1111. Card number 4111111111111111. Kort 1234 spärrat.";
+    expect(found(kortnummerInContext, text)).toEqual(["4571 1234 5678 9010", "5555-4444-3333-1111", "4111111111111111"]);
+    expect(kortnummerInContext.label).toBe("KORTNUMMER");
   });
 });
 

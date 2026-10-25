@@ -14,6 +14,7 @@ import {
   labelledNumber,
   postbox,
   bankgiroInContext,
+  kortnummerInContext,
   momsnummer,
   orgnrInContext,
   plusgiroInContext,
@@ -26,7 +27,7 @@ import { ruleDetectors, ruleSpans } from "./rules.ts";
 
 describe("ruleDetectors", () => {
   it("is maskera's hybrid default set plus regnummer and our own rules", () => {
-    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, bankgiroInContext, plusgiroInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, bareLabelNumber, handle, postbox, birthDate, birthColumn, placeCompound, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
+    expect(ruleDetectors).toEqual([...hybridDefaultDetectors, regnummer, orgnrInContext, bankgiroInContext, plusgiroInContext, kortnummerInContext, momsnummer, companyName, headerName, intlPhone, domainName, labelledNumber, bareLabelNumber, handle, postbox, birthDate, birthColumn, placeCompound, splitPersonnummer, spokenPhone, spokenEmail, ampersandName]);
   });
 });
 

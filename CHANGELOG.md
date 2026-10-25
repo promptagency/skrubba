@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **A card number with a wrong check digit is masked when labelled.** "Kortet 4571 1234 5678 9010" after an OCR misread is still the card; 13 to 19 digits after "kortnummer", "kortet" or "card number" are now hidden, as giro numbers and the org.nr already are.
+
 ## [1.8.7] - 2026-10-25
 
 ### Fixed

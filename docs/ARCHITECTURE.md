@@ -125,7 +125,7 @@ Swedish glues names into compound words ("Volvoavtalet", "Malmökontoret", "Feni
 
 maskera's `regnummer` rule (ABC 123, ABC 12D) is off by default upstream because booking codes share the shape. We turn it on: a miss is worse than an over-mask, and the user can keep a false hit with one click.
 
-Our own context rule masks NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer" as ORGANISATIONSNUMMER even when the checksum fails. maskera only masks Luhn-valid org.nr. The same holds for a giro number after "bankgiro"/"bg" or "plusgiro"/"postgiro"/"pg" (`bankgiroInContext`, `plusgiroInContext`, probe round 3, 2026-10-25): maskera masks only a valid check digit, and an OCR error or a typo breaks it while the number is still the account.
+Our own context rule masks NNNNNN-NNNN right after "org.nr", "orgnr" or "organisationsnummer" as ORGANISATIONSNUMMER even when the checksum fails. maskera only masks Luhn-valid org.nr. The same holds for a giro number after "bankgiro"/"bg" or "plusgiro"/"postgiro"/"pg" (`bankgiroInContext`, `plusgiroInContext`, probe round 3, 2026-10-25): maskera masks only a valid check digit, and an OCR error or a typo breaks it while the number is still the account. Likewise 13 to 19 digits after "kortnummer", "kortet" or "card number" (`kortnummerInContext`).
 
 More rules of our own (`contextRules.ts`) cover what the owner's real texts showed maskera and the model missing:
 

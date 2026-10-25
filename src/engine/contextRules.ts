@@ -29,12 +29,20 @@ export const orgnrInContext: Detector = {
 // with a number of the right shape right after.
 const BANKGIRO_LABELLED = /(?:bankgiro(?:nr|nummer)?|bg(?:\.|nr)?)\s*:?\s*(\d{3,4}-\d{4})(?![\d-])/giu;
 const PLUSGIRO_LABELLED = /(?:plusgiro(?:nr|nummer)?|postgiro|pg(?:\.|nr)?)\s*:?\s*(\d(?:[\d ]{0,7}\d)?-\d)(?![\d-])/giu;
-const labelled = (label: "BANKGIRO" | "PLUSGIRO", re: RegExp): Detector => ({
+// And for card numbers: 13 to 19 digits, in groups or not, after "kortnummer",
+// "kortet", "card number" and the like.
+const KORT_LABELLED = /(?:kortnummer|kortnr\.?|kort(?:et)?|card(?:\s?(?:number|no\.?))?)\s*:?\s*(\d(?:[\d -]{10,22}\d)?)(?![\d-])/giu;
+const CARD_DIGITS = (value: string) => {
+  const n = (value.match(/\d/g) ?? []).length;
+  return n >= 13 && n <= 19;
+};
+const labelled = (label: "BANKGIRO" | "PLUSGIRO" | "KORTNUMMER", re: RegExp, ok = (_value: string) => true): Detector => ({
   label,
   detect(input) {
     const out: Found[] = [];
     for (const m of input.matchAll(re)) {
       const value = m[1];
+      if (!ok(value)) continue;
       const start = m.index + m[0].length - value.length;
       out.push({ start, end: start + value.length, value });
     }
@@ -43,6 +51,7 @@ const labelled = (label: "BANKGIRO" | "PLUSGIRO", re: RegExp): Detector => ({
 });
 export const bankgiroInContext = labelled("BANKGIRO", BANKGIRO_LABELLED);
 export const plusgiroInContext = labelled("PLUSGIRO", PLUSGIRO_LABELLED);
+export const kortnummerInContext = labelled("KORTNUMMER", KORT_LABELLED, CARD_DIGITS);
 
 // A Swedish VAT number is SE + the organisationsnummer (or a sole trader's
 // personnummer) + 01. maskera misses it because the digits touch the letters.

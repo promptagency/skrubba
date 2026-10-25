@@ -216,6 +216,7 @@ export const HARD_CASES: HardCase[] = [
     keeps: ["reg.nr", "Ägare"],
   },
   { text: "Bankgiro 5050-1234 (fel kontrollsiffra efter OCR) och pg 12 34 56-7 står på fakturan.", secrets: ["5050-1234", "12 34 56-7"] },
+  { text: "Kortet 4571 1234 5678 9010 (fel kontrollsiffra efter OCR) tillhör Mikaela Strand.", secrets: ["4571 1234 5678 9010", "Mikaela Strand"] },
   { text: "Bokning QX7T2P: Eva och Mats Holmgren, SK1423 ARN–CPH 12 dec. Passnummer 98765432 (Eva). Specialkost: gluten.", secrets: ["Eva", "Mats Holmgren", "98765432"] },
   { text: "Vittnet, Ahmed Yusuf (född 870315-2391), såg en vit skåpbil (reg. KLM 456) lämna Torggatan 5 ca 23.40.", secrets: ["Ahmed Yusuf", "870315-2391", "KLM 456", "Torggatan 5"] },
   {
