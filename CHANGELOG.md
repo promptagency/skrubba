@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.8.7] - 2026-10-25
+
 ### Fixed
 
 - **A bankgiro or plusgiro number with a wrong check digit is masked when labelled.** After an OCR error or a typo the number is still the account; "bankgiro 5050-1234" and "pg 12 34 56-7" are now hidden as the org.nr already was.
@@ -286,7 +288,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.6...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.7...HEAD
+[1.8.7]: https://github.com/promptagency/skrubba/compare/v1.8.6...v1.8.7
 [1.8.6]: https://github.com/promptagency/skrubba/compare/v1.8.5...v1.8.6
 [1.8.5]: https://github.com/promptagency/skrubba/compare/v1.8.4...v1.8.5
 [1.8.4]: https://github.com/promptagency/skrubba/compare/v1.8.3...v1.8.4
