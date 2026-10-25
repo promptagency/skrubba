@@ -35,9 +35,15 @@ describe("TextBuilder", () => {
   });
 
   it("builds a hundred thousand rows in linear time", () => {
-    const rows = Array.from({ length: 100_000 }, () => ["Anna Berg", "850412-1234", "Umeå"]);
-    const started = performance.now();
-    expect(table(rows).toString().split("\n")).toHaveLength(100_000);
-    expect(performance.now() - started).toBeLessThan(2000); // stripping the row's last tab rescanned the text: 20 000 rows took 3 s
+    const timed = (n: number) => {
+      const rows = Array.from({ length: n }, () => ["Anna Berg", "850412-1234", "Umeå"]);
+      const started = performance.now();
+      expect(table(rows).toString().split("\n")).toHaveLength(n);
+      return performance.now() - started;
+    };
+    const big = timed(100_000);
+    // Ten times the rows should take about ten times as long; stripping the
+    // row's last tab once rescanned the text, which made it a hundred times.
+    expect(big / timed(10_000)).toBeLessThan(40);
   });
 });

@@ -35,10 +35,16 @@ describe("readRtf", () => {
   });
 
   it("reads a hundred thousand table rows in linear time", () => {
-    const rows = String.raw`Anna Berg\cell 850412-1234\cell Ume\u229?\cell\row `.repeat(100_000);
-    const started = performance.now();
-    expect(read(`{\\rtf1 ${rows}}`).text.split("\n")).toHaveLength(100_000);
-    expect(performance.now() - started).toBeLessThan(3000); // stripping the row's last tab rescanned the text: 20 000 rows took 3 s
+    const timed = (n: number) => {
+      const rows = String.raw`Anna Berg\cell 850412-1234\cell Ume\u229?\cell\row `.repeat(n);
+      const started = performance.now();
+      expect(read(`{\\rtf1 ${rows}}`).text.split("\n")).toHaveLength(n);
+      return performance.now() - started;
+    };
+    const big = timed(100_000);
+    // Ten times the rows should take about ten times as long; stripping the
+    // row's last tab once rescanned the text, which made it a hundred times.
+    expect(big / timed(10_000)).toBeLessThan(40);
   });
 
   it("reads escaped braces and backslashes, and skips unknown starred groups", () => {
