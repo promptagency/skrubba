@@ -295,7 +295,7 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.7...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.8.8...HEAD
 [1.8.8]: https://github.com/promptagency/skrubba/compare/v1.8.7...v1.8.8
 [1.8.7]: https://github.com/promptagency/skrubba/compare/v1.8.6...v1.8.7
 [1.8.6]: https://github.com/promptagency/skrubba/compare/v1.8.5...v1.8.6
