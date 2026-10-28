@@ -6,6 +6,7 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ### Added
 
+- **Egna ord can be saved as a file and fetched next time.** "Spara ord" under the list downloads it as a text file, one word per line, and "Hämta ord" adds the words from such a file. Nothing is stored in the browser.
 - **Kopiera asks the AI to keep the placeholders.** A line before the copied text, on by default and switched off with a checkbox beside Kopiera, so fewer answers come back with "Namn 1" instead of [NAMN_1].
 - **"Kanske missat" in the Uppgifter window.** A folded list of capitalised words that nothing covers, with "Skrubba ord" on each row, so the read-through before copying has somewhere to start. Common words, acronyms and a lone word at the start of a sentence are left out.
 

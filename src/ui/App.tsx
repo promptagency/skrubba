@@ -273,6 +273,32 @@ export function App() {
     dispatch({ type: "keyDownloaded" });
   }, [dispatch]);
 
+  // Egna ord as a text file, one per line: the only way a standing list survives the tab.
+  const saveWords = useCallback(() => {
+    const terms = parseWordList(latest.current.wordListRaw);
+    if (terms.length === 0) return;
+    const url = URL.createObjectURL(new Blob([`${terms.join("\n")}\n`], { type: "text/plain" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "skrubba-egna-ord.txt";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }, []);
+
+  const loadWords = useCallback(
+    async (file: File) => {
+      const text = file.size > 1_000_000 ? "\0" : await file.text();
+      if (/[\0\uFFFD]/.test(text)) return dispatch({ type: "toast", message: t("words.loadFailed") });
+      const raw = latest.current.wordListRaw;
+      const have = new Set(parseWordList(raw).map((w) => w.toLowerCase()));
+      const fresh = parseWordList(text).filter((w) => !have.has(w.toLowerCase()));
+      if (fresh.length === 0) return dispatch({ type: "toast", message: t("toast.wordsNone") });
+      dispatch({ type: "setWordList", raw: [...(raw.trim() ? [raw.replace(/\n+$/, "")] : []), ...fresh].join("\n") });
+      dispatch({ type: "toast", message: fresh.length === 1 ? t("toast.wordsLoaded.one") : t("toast.wordsLoaded", { n: fresh.length }) });
+    },
+    [dispatch],
+  );
+
   const uploadKey = useCallback(
     (raw: string): "loaded" | "invalid" | "cancelled" => {
       const key = parseKey(raw);
@@ -516,6 +542,8 @@ export function App() {
                 raw={state.wordListRaw}
                 count={wordList.length}
                 onChange={(raw) => dispatch({ type: "setWordList", raw })}
+                onSave={saveWords}
+                onLoad={(file) => void loadWords(file)}
               />
             </>
           )}

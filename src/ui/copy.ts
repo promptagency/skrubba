@@ -35,6 +35,13 @@ export const COPY = {
   "maybe.lead": "Ord med stor bokstav som inte döljs. Är något ett namn eller känsligt trycker du Skrubba ord.",
   "maybe.scrub": "Skrubba ord",
   "maybe.row": "{value}, {count}",
+  "words.save": "Spara ord",
+  "words.load": "Hämta ord",
+  "words.hint": "Spara listan som en textfil och hämta den nästa gång. Inget sparas i webbläsaren.",
+  "toast.wordsLoaded": "{n} ord hämtade.",
+  "toast.wordsLoaded.one": "1 ord hämtat.",
+  "toast.wordsNone": "Inga nya ord i filen.",
+  "words.loadFailed": "Filen gick inte att läsa. Välj en textfil med ett ord per rad.",
   "copy.instructionToggle": "Lägg till en rad som ber AI:n behålla platshållarna",
   "copy.instruction": "Texten nedan har platshållare som [NAMN_1]. Behåll dem exakt som de står i ditt svar.",
   "selection.scrub": "Skrubba markering",
@@ -250,7 +257,7 @@ export const FAQ = {
     },
     {
       q: "Hur döljer jag något som Skrubba missade?",
-      a: "Markera ordet i texten och tryck Skrubba markering, så döljs det överallt i texten. Ord som ska döljas varje gång, som kundnamn och projektnamn, skriver du under Egna ord, ett per rad. Vill du behålla något som Skrubba har dolt klickar du på markeringen.",
+      a: "Markera ordet i texten och tryck Skrubba markering, så döljs det överallt i texten. Ord som ska döljas varje gång, som kundnamn och projektnamn, skriver du under Egna ord, ett per rad. Vill du behålla något som Skrubba har dolt klickar du på markeringen. Listan kan du spara som en textfil med Spara ord och hämta nästa gång.",
     },
     {
       q: "Vad händer om AI:n ändrar platshållarna?",
