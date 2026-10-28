@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { Entity } from "../engine/index.ts";
 import { countLabel, rowLabel, t, TYPE_LABEL, typeGroup } from "./copy.ts";
+import type { MaybeMissed } from "./maybeMissed.ts";
 
 export interface EntityPanelProps {
   entities: Entity[];
@@ -9,11 +10,14 @@ export interface EntityPanelProps {
   onKeep(placeholder: string): void;
   onScrubAll(): void;
   onKeepAll(): void;
+  /** Capitalised words nothing covers, for the folded Kanske missat list. */
+  missed: MaybeMissed[];
+  onScrubWord(term: string): void;
 }
 
 /** One row per item found, with Skrubba alla / Behåll alla. Shown in the Uppgifter window. */
 export function EntityPanel(props: EntityPanelProps) {
-  const { entities } = props;
+  const { entities, missed } = props;
   const list = useRef<HTMLUListElement>(null);
 
   function moveFocus(from: HTMLElement, step: number) {
@@ -83,6 +87,30 @@ export function EntityPanel(props: EntityPanelProps) {
           {t("panel.keepAll")}
         </button>
       </div>
+      {missed.length > 0 && (
+        <details className="maybe">
+          <summary>{missed.length === 1 ? t("maybe.heading.one") : t("maybe.heading", { n: missed.length })}</summary>
+          <p className="maybe-lead">{t("maybe.lead")}</p>
+          <ul className="rows">
+            {missed.map((m) => (
+              <li
+                key={m.value}
+                className="row"
+                aria-label={t("maybe.row", { value: m.value, count: m.count === 1 ? t("entity.count.one") : t("entity.count", { n: m.count }) })}
+              >
+                <span className="row-word">
+                  <span aria-hidden="true" />
+                  <span className="row-value">{m.value}</span>
+                  <span className="row-count">×{m.count}</span>
+                </span>
+                <button type="button" className="row-toggle" onClick={() => props.onScrubWord(m.value)}>
+                  {t("maybe.scrub")}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </section>
   );
 }

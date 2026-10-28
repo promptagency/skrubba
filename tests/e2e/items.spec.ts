@@ -83,3 +83,17 @@ test("a row reads out its value, type, how many times and its state", async ({ p
     "Johan Lindqvist, namn, 1 gång, skrubbas",
   );
 });
+
+test("Kanske missat lists capitalised words left unmasked, and Skrubba ord masks one", async ({ page }) => {
+  await openReady(page);
+  await editor(page).fill("Johan Lindqvist ringde från Umeå om Snabbkassan.");
+  await expect(rows(page)).toHaveCount(2);
+  await countLink(page).click();
+  const maybe = items(page).locator(".maybe");
+  await expect(maybe.locator("summary")).toHaveText("Kanske missat · 1 ord");
+  await maybe.locator("summary").click();
+  await expect(maybe.getByText("Snabbkassan")).toBeVisible();
+  await maybe.getByRole("button", { name: "Skrubba ord" }).click();
+  await expect(items(page).locator(".row-main").filter({ hasText: "Snabbkassan" })).toContainText("Ord");
+  await expect(maybe).toHaveCount(0);
+});

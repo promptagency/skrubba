@@ -302,7 +302,8 @@ kbd {
   border-bottom: 1px solid var(--line);
 }
 
-.row-main {
+.row-main,
+.row-word {
   flex: 1;
   display: grid;
   grid-template-columns: 18px 1fr auto;
@@ -361,7 +362,15 @@ kbd {
   color: var(--hl-word-edge);
 }
 
-.words summary {
+.maybe-lead {
+  margin: var(--space-1) 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.words summary,
+.maybe summary {
   cursor: pointer;
   padding: var(--space-1) 0;
 }

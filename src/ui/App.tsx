@@ -16,6 +16,7 @@ import { Gate } from "./Gate.tsx";
 import { FaqDialog } from "./FaqDialog.tsx";
 import { HowtoDialog } from "./HowtoDialog.tsx";
 import { EntityPanel } from "./EntityPanel.tsx";
+import { maybeMissed } from "./maybeMissed.ts";
 import { KeyUpload } from "./KeyUpload.tsx";
 import { KeyView } from "./KeyView.tsx";
 import { Modal } from "./Modal.tsx";
@@ -348,6 +349,11 @@ export function App() {
   // Same arrays across renders (a toast, a scan tick), so the panel and the
   // Editor's highlight layer are not rebuilt for them.
   const entities = useMemo(() => panelEntities(state), [state.entities, state.kept]);
+  // Only once the model has read the whole text: half-read, every name would look missed.
+  const missed = useMemo(
+    () => (scan === null && state.entitiesText === state.text ? maybeMissed(state.text, state.entities) : []),
+    [scan, state.text, state.entitiesText, state.entities],
+  );
   const fresh = useMemo(() => freshEntities(state), [state.entities, state.entitiesText, state.text, state.kept]);
   const wrongMode = firstPlaceholder(state.text);
   const restoredMarks: Mark<EntityType>[] = (state.restore?.result.restored ?? []).map((r) => ({
@@ -635,6 +641,8 @@ export function App() {
           onKeep={(placeholder) => dispatch({ type: "keep", placeholder })}
           onScrubAll={() => dispatch({ type: "scrubAll" })}
           onKeepAll={() => dispatch({ type: "keepAll" })}
+          missed={missed}
+          onScrubWord={(term) => dispatch({ type: "addManual", term })}
         />
       </Modal>
       {/* The kodnyckel, opened from the link beside Kopiera. */}

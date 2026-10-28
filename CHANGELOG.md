@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Added
+
+- **"Kanske missat" in the Uppgifter window.** A folded list of capitalised words that nothing covers, with "Skrubba ord" on each row, so the read-through before copying has somewhere to start. Common words, acronyms and a lone word at the start of a sentence are left out.
+
 ## [1.8.8] - 2026-10-25
 
 ### Fixed

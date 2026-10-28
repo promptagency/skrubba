@@ -33,6 +33,11 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | panel.scrubAll | Skrubba alla |
 | panel.keepAll | Behåll alla |
 | panel.words | Egna ord |
+| maybe.heading | Kanske missat · {n} ord |
+| maybe.heading.one | Kanske missat · 1 ord |
+| maybe.lead | Ord med stor bokstav som inte döljs. Är något ett namn eller känsligt trycker du Skrubba ord. |
+| maybe.scrub | Skrubba ord |
+| maybe.row | {value}, {count} |
 | panel.wordsPlaceholder | Kundnamn, projektnamn, produkter. Ett per rad. |
 | entity.tip.scrub | {type} blir {placeholder}. Klicka för att behålla. |
 | entity.tip.keep | {type} behålls. Klicka för att skrubba. |
@@ -297,6 +302,13 @@ Nytt 2026-10-21, godkänt av ägaren 2026-10-21. Födelsedatum döljs.
 Nytt 2026-10-22, godkänt av ägaren 2026-10-22. Ett ord ur ett flerordigt namn på en organisation, en plats eller ett ord i ordlistan får en egen platshållare, som förnamnet.
 
 - Typerna `DEL_ORGANISATION`, `DEL_PLATS` och `DEL_ORD` visas som "Del av namn", till exempel i tipset över markeringen och i kodnyckeln. Platshållaren bär värdets typ och nummer: "Volvo-fabriken" blir "[DEL_ORGANISATION_1]-fabriken" när "Volvo Cars" är [ORGANISATION_1], och "Havsvindsteamet" blir "[DEL_ORD_1]steamet" när "Projekt Havsvind" i ordlistan är [ORD_1]. (Ägaren godkände namnet DEL och "Del av namn"; typen i platshållaren behövs eftersom [ORGANISATION_1] och [ORD_1] finns samtidigt.)
+
+Nytt 2026-10-28, godkänt av ägaren 2026-10-28. Fönstret Uppgifter hjälper till att läsa igenom.
+
+- `maybe.heading`, `maybe.heading.one`: en hopfälld rad längst ner i fönstret Uppgifter, till exempel "Kanske missat · 3 ord". Visas bara när det finns ord att visa och när modellen har läst klart.
+- `maybe.lead`: raden under rubriken. Listan har ord med stor bokstav mitt i meningen som ingen uppgift täcker. Ett ensamt ord först i en mening tas bara med om samma ord också står mitt i en mening. Inte heller tas med vanliga ord som Jag och Måndag, förkortningar som HR och platshållare.
+- `maybe.scrub`: knappen på varje rad. Ordet döljs överallt i texten som ett eget ord, som Skrubba markering.
+- `maybe.row`: radens namn för skärmläsare, till exempel "Personvagnar, 2 gånger" (`entity.count`).
 
 ## Typer
 
