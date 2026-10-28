@@ -52,6 +52,8 @@ test("changing the text or what is scrubbed clears the result", async ({ page })
   await expect(result(page, "Skrubbad text")).toHaveValue("");
 });
 
+const INSTRUCTION = "Texten nedan har platshållare som [NAMN_1]. Behåll dem exakt som de står i ditt svar.";
+
 test("Kopiera copies the scrubbed text", async ({ page, browserName }) => {
   test.skip(browserName !== "chromium", "reads the clipboard");
   await openReady(page);
@@ -61,8 +63,15 @@ test("Kopiera copies the scrubbed text", async ({ page, browserName }) => {
   await expect(result(page, "Skrubbad text")).toHaveValue(/NAMN_/);
   const scrubbed = await result(page, "Skrubbad text").inputValue();
   await copy(page).click();
-  expect(await clipboard(page)).toBe(scrubbed);
+  expect(await clipboard(page)).toBe(`${INSTRUCTION}\n\n${scrubbed}`);
   await expect(page.locator(".toast")).toHaveText(/^Kopierat\. 2 uppgifter skrubbade\./);
+
+  // Switched off, Kopiera copies the text alone.
+  const toggle = page.getByRole("checkbox", { name: "Lägg till en rad som ber AI:n behålla platshållarna" });
+  await expect(toggle).toBeChecked();
+  await toggle.uncheck();
+  await copy(page).click();
+  expect(await clipboard(page)).toBe(scrubbed);
 });
 
 test("Avskrubba puts the real values back on the right; each mode keeps its own panes", async ({ page }) => {

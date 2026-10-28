@@ -35,6 +35,8 @@ export const COPY = {
   "maybe.lead": "Ord med stor bokstav som inte döljs. Är något ett namn eller känsligt trycker du Skrubba ord.",
   "maybe.scrub": "Skrubba ord",
   "maybe.row": "{value}, {count}",
+  "copy.instructionToggle": "Lägg till en rad som ber AI:n behålla platshållarna",
+  "copy.instruction": "Texten nedan har platshållare som [NAMN_1]. Behåll dem exakt som de står i ditt svar.",
   "selection.scrub": "Skrubba markering",
   "action.copy": "Kopiera",
   "action.restore": "Avskrubba",
@@ -252,7 +254,7 @@ export const FAQ = {
     },
     {
       q: "Vad händer om AI:n ändrar platshållarna?",
-      a: "Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.",
+      a: "När du kopierar lägger Skrubba som standard till en rad överst som ber AI:n behålla platshållarna. Du kan slå av den under resultatet. Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.",
     },
     {
       q: "Vad är kodnyckeln?",

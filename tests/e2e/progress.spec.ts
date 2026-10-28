@@ -77,7 +77,7 @@ test("the copy shortcut during a long reading asks for Kopiera once the text is 
   await expect(copyButton).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator(".toast")).toHaveText(/^Kopierat\./);
-  expect(await clipboard(page)).toBe(await scrubbedBox(page).inputValue());
+  expect(await clipboard(page)).toBe(`Texten nedan har platshållare som [NAMN_1]. Behåll dem exakt som de står i ditt svar.\n\n${await scrubbedBox(page).inputValue()}`);
 });
 
 test("a short text shows neither", async ({ page }) => {

@@ -685,9 +685,23 @@ a {
 
 .card-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
   gap: var(--space-3);
+}
+
+.copy-instruct {
+  flex-basis: 100%; /* its own line under Kopiera */
+  accent-color: var(--accent);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 16px;
+  cursor: pointer;
 }
 
 /* Summary strip: what was found, as type dots and a count, opening a window.
@@ -896,9 +910,6 @@ a {
     content: "↓";
   }
   /* Kopiera spans the width, like the run button, with the kodnyckel strip under it. */
-  .card-actions {
-    flex-wrap: wrap;
-  }
   .card-actions .primary {
     order: -1;
     width: 100%;

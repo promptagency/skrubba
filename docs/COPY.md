@@ -38,6 +38,8 @@ Skrubba används av den som jobbar med andras personuppgifter eller andras hemli
 | maybe.lead | Ord med stor bokstav som inte döljs. Är något ett namn eller känsligt trycker du Skrubba ord. |
 | maybe.scrub | Skrubba ord |
 | maybe.row | {value}, {count} |
+| copy.instructionToggle | Lägg till en rad som ber AI:n behålla platshållarna |
+| copy.instruction | Texten nedan har platshållare som [NAMN_1]. Behåll dem exakt som de står i ditt svar. |
 | panel.wordsPlaceholder | Kundnamn, projektnamn, produkter. Ett per rad. |
 | entity.tip.scrub | {type} blir {placeholder}. Klicka för att behålla. |
 | entity.tip.keep | {type} behålls. Klicka för att skrubba. |
@@ -310,6 +312,12 @@ Nytt 2026-10-28, godkänt av ägaren 2026-10-28. Fönstret Uppgifter hjälper ti
 - `maybe.scrub`: knappen på varje rad. Ordet döljs överallt i texten som ett eget ord, som Skrubba markering.
 - `maybe.row`: radens namn för skärmläsare, till exempel "Personvagnar, 2 gånger" (`entity.count`).
 
+Nytt 2026-10-28, godkänt av ägaren 2026-10-28. Kopiera ber AI:n behålla platshållarna.
+
+- `copy.instructionToggle`: en kryssruta bredvid Kopiera under Skrubbad text, förvald. Gäller fliken och sparas inte.
+- `copy.instruction`: raden som läggs överst i den kopierade texten, följd av en tom rad. Rutan till höger visar texten utan raden.
+- Vanliga frågor, "Vad händer om AI:n ändrar platshållarna?": två nya meningar först, "När du kopierar lägger Skrubba som standard till en rad överst som ber AI:n behålla platshållarna. Du kan slå av den under resultatet."
+
 ## Typer
 
 | Intern typ | Visas som |
@@ -388,7 +396,7 @@ Markera ordet i texten och tryck Skrubba markering, så döljs det överallt i t
 
 ### Vad händer om AI:n ändrar platshållarna?
 
-Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.
+När du kopierar lägger Skrubba som standard till en rad överst som ber AI:n behålla platshållarna. Du kan slå av den under resultatet. Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.
 
 ### Vad är kodnyckeln?
 

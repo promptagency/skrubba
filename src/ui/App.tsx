@@ -47,6 +47,8 @@ export function App() {
   const [itemsOpen, setItemsOpen] = useState(false);
   const [mode, setMode] = useState<Mode>("scrub");
   const [fileJob, setFileJob] = useState<FileJob | null>(null);
+  // Kopiera puts a line asking the AI to keep the placeholders before the text.
+  const [instruct, setInstruct] = useState(true);
 
   // How far the model has read the current text, and whether Skrubba is waiting for it.
   const [scan, setScan] = useState<{ text: string; pct: number } | null>(null);
@@ -244,13 +246,13 @@ export function App() {
       }
       // One per value, as the Uppgifter line counts: [FÖRNAMN_1] belongs to [NAMN_1].
       const n = new Set(placeholderMarks(masked).map((m) => wholePlaceholder(masked.slice(m.start, m.end)))).size;
-      await copy(masked, t("toast.copied", { n }));
+      await copy(instruct ? `${t("copy.instruction")}\n\n${masked}` : masked, t("toast.copied", { n }));
     } else {
       const result = s.restore?.result ?? restore();
       if (!result) return;
       await copy(result.text, t("toast.copiedRestored", { n: result.restored.length }));
     }
-  }, [mode, scrub, restore, dispatch]);
+  }, [mode, scrub, restore, dispatch, instruct]);
 
   const hasResult = mode === "scrub" ? state.scrubbed !== null : state.restore !== null;
   useEffect(() => {
@@ -590,6 +592,12 @@ export function App() {
                 <button type="button" className="primary" ref={copyButton} onClick={() => void copyResult()}>
                   {t("action.copy")}
                 </button>
+              )}
+              {hasResult && mode === "scrub" && (
+                <label className="copy-instruct">
+                  <input type="checkbox" checked={instruct} onChange={(e) => setInstruct(e.target.checked)} />
+                  {t("copy.instructionToggle")}
+                </label>
               )}
             </div>
           )}
