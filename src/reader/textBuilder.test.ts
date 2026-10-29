@@ -41,9 +41,11 @@ describe("TextBuilder", () => {
       expect(table(rows).toString().split("\n")).toHaveLength(n);
       return performance.now() - started;
     };
-    const big = timed(100_000);
+    timed(10_000); // warm the JIT, or a cold big run inflates the ratio on a slow CI runner
+    const big = Math.min(timed(100_000), timed(100_000)); // the best run, free of a GC pause
+    const small = [timed(10_000), timed(10_000), timed(10_000)].sort((a, b) => a - b)[1];
     // Ten times the rows should take about ten times as long; stripping the
     // row's last tab once rescanned the text, which made it a hundred times.
-    expect(big / timed(10_000)).toBeLessThan(40);
+    expect(big / small).toBeLessThan(40);
   });
 });
