@@ -79,11 +79,15 @@ jobs:
           path: .cache/model-src
           key: model-${{ hashFiles('src/config.ts') }}
 
+      # The cached WebKit is built for the runner image's Ubuntu; a newer image
+      # lacks its libicu, so the image is part of the key.
+      - id: image
+        run: echo "os=$ImageOS" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v6
         id: browsers
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-${{ runner.os }}-${{ steps.image.outputs.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install test browsers
         if: steps.browsers.outputs.cache-hit != 'true'
