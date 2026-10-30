@@ -43,7 +43,7 @@ test("Vanliga frågor is an accordion: one answer open at a time", async ({ page
   const faq = page.getByRole("dialog", { name: "Vanliga frågor" });
   const answer = (text: string) => faq.getByText(text, { exact: false });
   const key = "Den är ingen krypteringsnyckel och låser inget.";
-  const check = "Inga anrop går till någon annan adress än den här sidan.";
+  const check = "Du ser att inga anrop går till andra adresser eller sidor på internet.";
 
   // All closed to start with, so the questions can be scanned.
   await expect(answer(key)).toBeHidden();
