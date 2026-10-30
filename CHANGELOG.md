@@ -4,6 +4,12 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.9.3] - 2026-10-30
+
+### Changed
+
+- **Vanliga frågor rewritten after the owner's review.** Fuller answers on how the text is handled, how to check that nothing is sent, and what Skrubba does not do.
+
 ## [1.9.2] - 2026-10-29
 
 ### Changed
@@ -315,7 +321,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.9.2...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.9.3...HEAD
+[1.9.3]: https://github.com/promptagency/skrubba/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/promptagency/skrubba/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/promptagency/skrubba/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/promptagency/skrubba/compare/v1.8.8...v1.9.0
