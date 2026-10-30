@@ -249,7 +249,7 @@ export const FAQ = {
   items: [
     {
       q: "Vad händer med min text?",
-      a: "Texten går igenom regler och en liten svensk språkmodell som laddas ner till din webbläsare första gången. Namn, personnummer, adresser och företag byts ut mot platshållare som [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten till valfri AI-tjänst och klistrar sedan in svaret under Avskrubba, så kommer de riktiga uppgifterna tillbaka.",
+      a: "Din text går igenom fördefinierade regler samt en liten svensk språkmodell som laddas ner till lokalt till din webbläsare första gången då besöker sajten. Namn, personnummer, adresser och företag byts ut mot platshållare som till exempel [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten och arbetar med den i valfri AI-tjänst. När du är klar så väljer du \"Avskrubba\". Klistra in din bearbetade text i rutan \"Avskrubba\", så avmaskeras din uppgigter och ersätts med de riktiga uppgifterna.",
     },
     {
       q: "Vilka uppgifter hittar Skrubba?",
@@ -257,39 +257,39 @@ export const FAQ = {
     },
     {
       q: "Hur döljer jag något som Skrubba missade?",
-      a: "Markera ordet i texten och tryck Skrubba markering, så döljs det överallt i texten. Ord som ska döljas varje gång, som kundnamn och projektnamn, skriver du under Egna ord, ett per rad. Vill du behålla något som Skrubba har dolt klickar du på markeringen. Listan kan du spara som en textfil med Spara ord och hämta nästa gång.",
+      a: "Markera ordet i texten och tryck Skrubba markering, så döljs det överallt i texten. Ord som ska döljas varje gång, som kundnamn och projektnamn, skriver du under Egna ord, ett ord per rad. Vill du behålla något i klartext, som Skrubba har dolt, klickar du på markeringen. Listan kan du spara som en textfil med Spara ord och hämta nästa gång.",
     },
     {
       q: "Vad händer om AI:n ändrar platshållarna?",
-      a: "När du kopierar lägger Skrubba som standard till en rad överst som ber AI:n behålla platshållarna. Du kan slå av den under resultatet. Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.",
+      a: "När du kopierar den maskerade texten lägger Skrubba som standard till en rad överst som ber AI:n behålla platshållarna. Du kan avaktivera den funktionengeom att avbocka det under rutan med det maskerade resultatet. Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.",
     },
     {
       q: "Vad är kodnyckeln?",
-      a: "En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att avskrubba svaret. Den är ingen krypteringsnyckel och låser inget. Den som har filen kan läsa de riktiga uppgifterna, så spara den som känsligt material.",
+      a: "En lista över vilka riktiga uppgifter platshållarna står för, till exempel att [NAMN_1] är Anna Berg. Den behövs för att avmaskera svaret. Den är ingen krypteringsnyckel och låser inget. Alla som har filen med kodnyckeln kan läsa de riktiga uppgifterna, så spara den så som du hade sparat känsligt material.",
     },
     {
       q: "Hur kan jag kontrollera att inget skickas?",
-      a: "Öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra in en text. Inga anrop går till någon annan adress än den här sidan. Det enda anrop som inte hämtar själva sidan är besöksräkningen när sidan laddas, och inget anrop görs när du skrubbar eller avskrubbar. Efter första besöket fungerar Skrubba även utan internet. Koden är öppen och går att läsa på Github.",
+      a: "Enklast är att stänga av internet. Men du kan också öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra sedan in en text i Maskera. Du ser att inga anrop går till andra adresser eller sidor på internet. Det enda anrop som är utanför grundtjänsten är en anonum besöksräkningen som sker när sidan laddas. Inget anrop görs när du skrubbar eller avskrubbar. All kod är öppen och går att granska på Github. Allt är helt öppet och transparent.",
     },
     {
       q: "Vad gör Skrubba inte?",
-      a: "Skrubba hittar inte allt, särskilt inte beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
+      a: "Skrubba är inte ofelbart, särskilt för beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text som säger \"Enda kvinnan i Eslöv\" innebära att alla som är från Eslöv vet vem som antyds. Obs! En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
     },
     {
       q: "Vilka AI-tjänster fungerar det med?",
-      a: "Alla. Skrubba gör bara texten säkrare, så du kan klistra in den i ChatGPT, Claude, Copilot, Gemini eller vilken tjänst du vill.",
+      a: "Alla. Det här är ren text. Skrubba gör bara texten säkrare, så du kan klistra in den i ChatGPT, Claude, Copilot, Gemini eller vilken tjänst du vill.",
     },
     {
       q: "Kostar Skrubba något?",
-      a: "Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam.",
+      a: "Nej. Skrubba är gratis och har öppen källkod under MIT-licensen. Det finns inga konton och ingen reklam. Tjänsten kommer fortsatt vara helt gratis att använda. En diskret länk till utvecklaren och företaget bakom är det ni \"betalar\" för tjänsten.",
     },
     {
       q: "Räknar ni besökare?",
-      a: "Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som skickar det vidare till Prompt Agencys egen Plausible-server i Finland. Plausible ser sidans adress, varifrån du kom, land, webbläsare och typ av enhet, men sätter inga cookies och sparar inte din IP-adress. Det du skriver, uppgifterna och kodnyckeln skickas aldrig. Har webbläsaren Do Not Track eller Global Privacy Control påslaget räknas du inte.",
+      a: "Ja, anonymt. När sidan laddas skickas ett besök till sidans egen adress, som skickar det vidare till Prompt Agencys egen Plausible-server i Finland. Plausible ser sidans adress, varifrån du kom, land, webbläsare och typ av enhet, men sätter inga cookies och sparar inte din IP-adress. Det du skriver, uppgifterna och kodnyckeln skickas aldrig. Har din webbläsare Do Not Track eller Global Privacy Control påslaget är du helt osynlig.",
     },
     {
       q: "Kan jag släppa in PDF och Word?",
-      a: "Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp och sparas inte. Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder. En skannad PDF utan text går inte att läsa.",
+      a: "Ja. Släpp filen på rutan eller tryck Välj fil. Skrubba läser PDF, Word, OpenDocument, RTF, Excel, PowerPoint, mejl som .eml och .msg, webbsidor och text i din webbläsare och lägger texten i rutan. Filen laddas inte upp till någon molntjänst och sparas inte. Kommentarer, dolda delar, bilagor och bilder tas inte med, och inte heller text i bilder. En skannad PDF utan text går inte att läsa.",
     },
   ],
 };
