@@ -249,7 +249,7 @@ export const FAQ = {
   items: [
     {
       q: "Vad händer med min text?",
-      a: "Din text går igenom fördefinierade regler samt en liten svensk språkmodell som laddas ner till lokalt till din webbläsare första gången då besöker sajten. Namn, personnummer, adresser och företag byts ut mot platshållare som till exempel [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten och arbetar med den i valfri AI-tjänst. När du är klar så väljer du \"Avskrubba\". Klistra in din bearbetade text i rutan \"Avskrubba\", så avmaskeras din uppgigter och ersätts med de riktiga uppgifterna.",
+      a: "Din text går igenom fördefinierade regler samt en liten svensk språkmodell som laddas ner lokalt till din webbläsare första gången du besöker sajten. Namn, personnummer, adresser och företag byts ut mot platshållare som till exempel [NAMN_1]. Dina egna ord, som kundnamn och projektnamn, byts ut på samma sätt. Du kopierar den skrubbade texten och arbetar med den i valfri AI-tjänst. När du är klar så väljer du \"Avskrubba\". Klistra in din bearbetade text i rutan \"Avskrubba\", så avmaskeras dina uppgifter och ersätts med de riktiga uppgifterna.",
     },
     {
       q: "Vilka uppgifter hittar Skrubba?",
@@ -261,7 +261,7 @@ export const FAQ = {
     },
     {
       q: "Vad händer om AI:n ändrar platshållarna?",
-      a: "När du kopierar den maskerade texten lägger Skrubba som standard till en rad överst som ber AI:n behålla platshållarna. Du kan avaktivera den funktionengeom att avbocka det under rutan med det maskerade resultatet. Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.",
+      a: "När du kopierar den maskerade texten lägger Skrubba som standard till en rad överst som ber AI:n behålla platshållarna. Du kan avaktivera den funktionen genom att avbocka den under rutan med det maskerade resultatet. Skriver AI:n platshållaren på ett annat sätt, till exempel NAMN 1 i stället för [NAMN_1], frågar Skrubba om det är samma innan uppgiften sätts tillbaka. En platshållare som inte finns i kodnyckeln lämnas som den är och visas under svaret, så att du kan kontrollera den.",
     },
     {
       q: "Vad är kodnyckeln?",
@@ -269,11 +269,11 @@ export const FAQ = {
     },
     {
       q: "Hur kan jag kontrollera att inget skickas?",
-      a: "Enklast är att stänga av internet. Men du kan också öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra sedan in en text i Maskera. Du ser att inga anrop går till andra adresser eller sidor på internet. Det enda anrop som är utanför grundtjänsten är en anonum besöksräkningen som sker när sidan laddas. Inget anrop görs när du skrubbar eller avskrubbar. All kod är öppen och går att granska på Github. Allt är helt öppet och transparent.",
+      a: "Enklast är att stänga av internet. Men du kan också öppna webbläsarens utvecklarverktyg, fliken Nätverk, och klistra sedan in en text i Skrubba. Du ser att inga anrop går till andra adresser eller sidor på internet. Det enda anrop som är utanför grundtjänsten är en anonym besöksräkning som sker när sidan laddas. Inget anrop görs när du skrubbar eller avskrubbar. All kod är öppen och går att granska på Github. Allt är helt öppet och transparent.",
     },
     {
       q: "Vad gör Skrubba inte?",
-      a: "Skrubba är inte ofelbart, särskilt för beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text som säger \"Enda kvinnan i Eslöv\" innebära att alla som är från Eslöv vet vem som antyds. Obs! En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
+      a: "Skrubba är inte ofelbart, särskilt för beskrivningar som pekar ut någon utan att nämna namnet. Läs alltid igenom innan du kopierar. En text som säger \"Enda kvinnan i Eslöv\" innebär att alla som är från Eslöv vet vem som antyds. En text med platshållare är inte anonym i lagens mening så länge kodnyckeln finns, så ansvaret för vad du delar är fortfarande ditt. Skrubba gör det bara mycket mindre riskabelt.",
     },
     {
       q: "Vilka AI-tjänster fungerar det med?",
