@@ -26,13 +26,20 @@ const leaks = (masked: string, secrets: string[]) => secrets.filter((s) => maske
 
 /**
  * The same pattern as src/reader/textBuilder.test.ts: one warm-up, the best of
- * two big runs (free of a GC pause), the median of three small ones.
+ * two big runs (free of a GC pause), the median of three small ones. Measured
+ * up to three times, keeping the lowest ratio: with the whole suite running
+ * beside it, the linear RTF reader measured 22–24 against about 9 alone, while
+ * a quadratic step gives about 100 every time.
  */
-async function growth(timed: (scale: number) => Promise<number>): Promise<number> {
-  await timed(1);
-  const big = Math.min(await timed(10), await timed(10));
-  const small = [await timed(1), await timed(1), await timed(1)].sort((a, b) => a - b)[1];
-  return big / small;
+async function growth(timed: (scale: number) => Promise<number>, limit = 20): Promise<number> {
+  let best = Infinity;
+  for (let attempt = 0; attempt < 3 && best >= limit; attempt++) {
+    await timed(1);
+    const big = Math.min(await timed(10), await timed(10));
+    const small = [await timed(1), await timed(1), await timed(1)].sort((a, b) => a - b)[1];
+    best = Math.min(best, big / small);
+  }
+  return best;
 }
 
 const clock = async (fn: () => unknown) => {
