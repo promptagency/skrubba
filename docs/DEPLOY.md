@@ -52,8 +52,9 @@ A hotfix takes the same path: commit on `dev`, release.
 Versions follow [Semantic Versioning](https://semver.org/): a bug fix bumps the last number (1.0.1), a new feature the middle one (1.1.0), and a change that breaks something users rely on, such as the kodnyckel file format, the first (2.0.0).
 
 1. While working on `dev`, note each user-visible change under `## [Unreleased]` in `CHANGELOG.md`.
-2. To release, with `dev` green on GitHub, rename that section to `## [X.Y.Z] - YYYY-MM-DD`, add a new empty `## [Unreleased]` above it, and update the compare links at the bottom.
-3. Set the version, commit and tag on `dev`, then move `main` to it:
+2. Run `REQUIRE_MODEL=1 npm test` on the `dev` commit you are releasing. GitHub's runners skip the model tests (their processors give the model wrong results), so a green run there does not show that names are still found; with `REQUIRE_MODEL=1` a missing or skipped model fails the run instead.
+3. To release, with `dev` green on GitHub, rename that section to `## [X.Y.Z] - YYYY-MM-DD`, add a new empty `## [Unreleased]` above it, and update the compare links at the bottom.
+4. Set the version, commit and tag on `dev`, then move `main` to it:
 
    ```sh
    npm version X.Y.Z --no-git-tag-version   # package.json and package-lock.json

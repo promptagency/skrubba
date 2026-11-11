@@ -19,8 +19,16 @@ export const backend: NerBackend = { init: () => recognizer.ready, detect: (text
  * (tests/e2e/model.spec.ts checks that). So on CI such a runner skips the
  * model tests, with a warning, instead of failing; on a developer machine
  * they always run, and fail loudly if the model is broken.
+ * REQUIRE_MODEL=1 (before a release, docs/DEPLOY.md) turns any skip into a
+ * failure of every model test file.
  */
 export async function runModelTests(): Promise<boolean> {
+  const run = await canRunModel();
+  if (!run && process.env.REQUIRE_MODEL === "1") throw new Error("REQUIRE_MODEL=1, but the model tests would be skipped here (no model: npm run fetch-model, or a CPU it cannot run on).");
+  return run;
+}
+
+async function canRunModel(): Promise<boolean> {
   if (!modelPresent) return false;
   if (!process.env.CI) return true;
   await recognizer.ready;
