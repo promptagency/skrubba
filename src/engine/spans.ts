@@ -294,10 +294,13 @@ const MARKER = /^(?:[ivx]{1,5}|[IVX]{1,5}|\p{L}|\d+)$/u;
  */
 export function withoutCommonWords(text: string, spans: Span[]): Span[] {
   const formal = looksFormal(text);
+  const english = looksEnglish(text);
   return spans.filter((s) => {
     if (s.source !== "model" || !EDGE_TYPES.has(s.type)) return true;
     const value = text.slice(s.start, s.end);
     if (MARKER.test(value)) return false;
+    // "will join the call": a name in lowercase keeps "the" at its start ("the body shop").
+    if (english && !/\p{Lu}/u.test(value) && /\S\s+the\s+\S/u.test(value)) return false;
     return !formal || /\p{Lu}/u.test(value);
   });
 }
@@ -328,7 +331,9 @@ export function trimEdgeWords(text: string, spans: Span[]): Span[] {
     if (s.source !== "model" || !EDGE_TYPES.has(s.type) || !CAPITAL_WORD.test(text.slice(s.start, s.end))) return [s];
     const words = text.slice(s.start, s.end).split(/(\s+)/);
     const lowercase = (w: string) => /^\p{Ll}+$/u.test(w) && !PARTICLE.test(w);
-    const plain = (w: string) => NEVER_NAME.test(w) || (english && (lowercase(w) || OPENER.test(w)));
+    // A function word in capitals ("OM" in a shouted line) too, but never one letter: "A Berg" keeps its initial.
+    const neverName = (w: string) => NEVER_NAME.test(w) || (/^\p{Lu}{2,}$/u.test(w) && NEVER_NAME.test(w.toLowerCase()));
+    const plain = (w: string) => neverName(w) || (english && (lowercase(w) || OPENER.test(w)));
     const plainFirst = (w: string) => plain(w) || (formal && s.type !== "NAMN" && lowercase(w));
     let first = 0;
     let last = words.length - 1;
@@ -343,7 +348,7 @@ export function trimEdgeWords(text: string, spans: Span[]): Span[] {
 
 // Job titles and roles the model takes for a company or a name, including
 // the roles in a signing log ("Initierare", "Signerare").
-const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|senior|junior|chef|ägare|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist|initierare|signerare|undertecknare|firmatecknare|mottagare|avsändare|handläggare|kontaktperson|granskare|attestant|vittne|id)`;
+const TITLE = String.raw`(?:ceo|cfo|cto|coo|cmo|cio|chro|cco|vd|vvd|vp|hr|ordf\.?|ordförande|ledamot|suppleant|controller|konsult|senior|junior|chef|ägare|projektledare|säljchef|ekonomichef|it-chef|hr-chef|rekryterare|kandidaten?|dr\.?|doktor|prof\.?|professor|ssk|usk|öl|ul|läkare|överläkare|sjuksköterska|specialist|initierare|signerare|undertecknare|firmatecknare|mottagare|avsändare|handläggare|kontaktperson|granskare|attestant|vittne|id|roll)`;
 
 /**
  * Model spans cut at line breaks: a name never continues on the next line,

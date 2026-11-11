@@ -338,6 +338,25 @@ describe("withoutCommonWords", () => {
     expect(withoutCommonWords(t, spans)).toEqual(spans);
   });
 
+
+  it("drops a lowercase English phrase with 'the' inside, but keeps a name that starts with it", () => {
+    const t = "Hi team, Dragan will join the call with the body shop.";
+    const spans = [at(t, "join the call", "NAMN", "model"), at(t, "the body shop", "ORGANISATION", "model")];
+    expect(show(t, withoutCommonWords(t, spans))).toEqual(["the body shop:ORGANISATION:model"]);
+  });
+});
+
+describe("shouted text and table headers", () => {
+  it("drops a function word in capitals but keeps a one-letter initial", () => {
+    const t = "RING HR OM LÖNEN. A Berg ringde.";
+    const spans = [at(t, "OM", "NAMN", "model"), at(t, "A Berg", "NAMN", "model")];
+    expect(show(t, trimEdgeWords(t, spans))).toEqual(["A Berg:NAMN:model"]);
+  });
+
+  it("drops the role column header 'Roll'", () => {
+    const t = "| Namn | Roll |\n|---|---|\n| Leonora Bexell | Säljare |";
+    expect(withoutTitles(t, [at(t, "Roll", "NAMN", "model")])).toEqual([]);
+  });
 });
 
 describe("resolveSpans speed", () => {
