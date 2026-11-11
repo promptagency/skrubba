@@ -339,10 +339,19 @@ describe("withoutCommonWords", () => {
   });
 
 
-  it("drops a lowercase English phrase with 'the' inside, but keeps a name that starts with it", () => {
-    const t = "Hi team, Dragan will join the call with the body shop.";
-    const spans = [at(t, "join the call", "NAMN", "model"), at(t, "the body shop", "ORGANISATION", "model")];
-    expect(show(t, withoutCommonWords(t, spans))).toEqual(["the body shop:ORGANISATION:model"]);
+  it("drops a lowercase English verb phrase ('join the call') but keeps lowercase names with 'the' in them", () => {
+    const t = "Hi team, Dragan will join the call with the body shop, bank of the west and museum of the moving image.";
+    const spans = [
+      at(t, "join the call", "NAMN", "model"),
+      at(t, "the body shop", "ORGANISATION", "model"),
+      at(t, "bank of the west", "ORGANISATION", "model"),
+      at(t, "museum of the moving image", "PLATS", "model"),
+    ];
+    expect(show(t, withoutCommonWords(t, spans))).toEqual([
+      "the body shop:ORGANISATION:model",
+      "bank of the west:ORGANISATION:model",
+      "museum of the moving image:PLATS:model",
+    ]);
   });
 });
 

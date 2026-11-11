@@ -285,6 +285,7 @@ export function looksFormal(text: string): boolean {
 
 /** Only a list marker, a single letter or digits ("ii", "iii", "b", "12"). */
 const MARKER = /^(?:[ivx]{1,5}|[IVX]{1,5}|\p{L}|\d+)$/u;
+const VERB_THE_PHRASE = /^(?:join|attend|take|send|share|review|discuss|schedule|book|move|start|finish|run|lead|have|get)\s+the\s+\p{Ll}/u;
 
 /**
  * Model name, organisation and place spans that are only a list marker, and,
@@ -299,8 +300,8 @@ export function withoutCommonWords(text: string, spans: Span[]): Span[] {
     if (s.source !== "model" || !EDGE_TYPES.has(s.type)) return true;
     const value = text.slice(s.start, s.end);
     if (MARKER.test(value)) return false;
-    // "will join the call": a name in lowercase keeps "the" at its start ("the body shop").
-    if (english && !/\p{Lu}/u.test(value) && /\S\s+the\s+\S/u.test(value)) return false;
+    // "will join the call": a verb, then "the". A lowercase name starts with a noun ("bank of the west").
+    if (english && !/\p{Lu}/u.test(value) && VERB_THE_PHRASE.test(value)) return false;
     return !formal || /\p{Lu}/u.test(value);
   });
 }
