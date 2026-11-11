@@ -95,6 +95,8 @@ jobs:
 
       - name: Install test browsers' system libraries
         if: steps.browsers.outputs.cache-hit == 'true'
+        # apt hung for the job's 45 minutes when the runner could not resolve Ubuntu's mirrors (2026-11-11).
+        timeout-minutes: 10
         run: npx playwright install-deps chromium firefox webkit
 
       - name: Browser tests (Chromium, Firefox, WebKit)
