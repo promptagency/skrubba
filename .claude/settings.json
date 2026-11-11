@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "cd \"$CLAUDE_PROJECT_DIR\" && node \"$CLAUDE_PROJECT_DIR/.claude/hooks/loop-stop.mjs\"", "timeout": 900 }] }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+        "hooks": [{ "type": "command", "command": "cd \"$CLAUDE_PROJECT_DIR\" && node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-exam.mjs\"" }]
+      }
+    ]
+  }
+}

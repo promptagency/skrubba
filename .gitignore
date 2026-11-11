@@ -9,3 +9,4 @@ public/runtime/
 test-results
 playwright-report
 src/engine/assets.generated.ts
+.claude/loop/
