@@ -337,6 +337,33 @@ describe("withoutCommonWords", () => {
     const spans = [at(t, "arla", "ORGANISATION", "model"), at(t, "anna", "NAMN", "model"), at(t, "ii", "NAMN", "rule")];
     expect(withoutCommonWords(t, spans)).toEqual(spans);
   });
+
+});
+
+describe("resolveSpans speed", () => {
+  it("resolves twenty thousand spans in linear time", () => {
+    const line = "Tilda Granqvist ringer om Hagfors.\n";
+    const make = (n: number) => {
+      const t = line.repeat(n);
+      const spans: Span[] = [];
+      for (let i = 0; i < n; i++) {
+        const o = i * line.length;
+        spans.push({ start: o, end: o + 15, type: "NAMN", source: "rule" }, { start: o + 6, end: o + 15, type: "NAMN", source: "model" });
+      }
+      return [t, spans] as const;
+    };
+    const time = (n: number) => {
+      const [t, spans] = make(n);
+      const started = performance.now();
+      resolveSpans(t, spans);
+      return performance.now() - started;
+    };
+    time(1_000);
+    const small = Math.min(time(1_000), time(1_000));
+    const big = Math.min(time(10_000), time(10_000));
+    // Linear is ten times; the old scan of every kept span made it a hundred.
+    expect(big / small).toBeLessThan(40);
+  });
 });
 
 describe("trimEdgeWords on organisations and places", () => {

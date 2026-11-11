@@ -26,8 +26,9 @@ export function resolveSpans(text: string, spans: Span[]): Span[] {
     (a, b) => PRIORITY[a.source] - PRIORITY[b.source] || a.start - b.start || b.end - a.end,
   );
   const kept: Span[] = [];
+  const claimed = new ClaimedIndex();
   for (const span of ordered) {
-    for (const [start, end] of unclaimed(span, kept)) {
+    for (const [start, end] of unclaimed(span, claimed.near(span))) {
       const trimmed = trim(text, start, end);
       if (!trimmed) continue;
       const wasClipped = trimmed[0] !== span.start || trimmed[1] !== span.end;
@@ -36,7 +37,9 @@ export function resolveSpans(text: string, spans: Span[]): Span[] {
       // form arrives as a span of its own, unclipped.
       if ((wasClipped || span.source === "model") && ONLY_COMPANY_FORM.test(text.slice(trimmed[0], trimmed[1]))) continue;
       if ((wasClipped || span.source === "model") && isCompoundTail(text, trimmed[0])) continue;
-      kept.push({ ...span, start: trimmed[0], end: trimmed[1] });
+      const part = { ...span, start: trimmed[0], end: trimmed[1] };
+      kept.push(part);
+      claimed.add(part);
     }
   }
   kept.sort((a, b) => a.start - b.start);
@@ -45,6 +48,30 @@ export function resolveSpans(text: string, spans: Span[]): Span[] {
 
 function isCompoundTail(text: string, start: number): boolean {
   return /\p{L}/u.test(text[start - 1] ?? "") && /\p{Ll}/u.test(text[start] ?? "");
+}
+
+/**
+ * Kept spans by 256-character bucket, so finding the claimed text a span
+ * overlaps looks at its neighbours only. Scanning every kept span made rule
+ * masking quadratic: 3 200 lines took ten times as long as 800.
+ */
+class ClaimedIndex {
+  private buckets = new Map<number, Span[]>();
+
+  add(span: Span): void {
+    for (let b = span.start >> 8; b <= (span.end - 1) >> 8; b++) {
+      const bucket = this.buckets.get(b);
+      if (bucket) bucket.push(span);
+      else this.buckets.set(b, [span]);
+    }
+  }
+
+  /** Every kept span sharing a bucket with `span`, possibly more than once. */
+  near(span: Span): Span[] {
+    const out: Span[] = [];
+    for (let b = span.start >> 8; b <= (span.end - 1) >> 8; b++) out.push(...(this.buckets.get(b) ?? []));
+    return out;
+  }
 }
 
 function unclaimed(span: Span, claimed: Span[]): Array<[number, number]> {
