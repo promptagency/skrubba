@@ -10,7 +10,8 @@ import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 const ACTIVE = ".claude/loop/active";
 const MAX = Number(process.env.LOOP_MAX_ITERATIONS ?? 20);
 const STALE_MS = 6 * 60 * 60 * 1000;
-const EXAM = ["tests/fuzz", "tests/robustness.test.ts"];
+// vite.config.ts decides whether vitest runs the exam, so it is part of it.
+const EXAM = ["tests/fuzz", "tests/robustness.test.ts", "vite.config.ts"];
 if (!existsSync(ACTIVE)) process.exit(0);
 
 const input = JSON.parse(readFileSync(0, "utf8") || "{}");
