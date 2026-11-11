@@ -4,6 +4,10 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+### Fixed
+
+- **Document words are no longer taken for names.** "KALLELSE" or "Kallelse" at the top of a notice, and words like "Protokoll", "Dagordning" and "Faktura" standing alone, now stay as written.
+
 ## [1.9.4] - 2026-11-11
 
 ### Fixed

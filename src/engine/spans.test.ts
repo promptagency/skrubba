@@ -366,6 +366,12 @@ describe("shouted text and table headers", () => {
     const t = "| Namn | Roll |\n|---|---|\n| Leonora Bexell | Säljare |";
     expect(withoutTitles(t, [at(t, "Roll", "NAMN", "model")])).toEqual([]);
   });
+
+  it("drops a document word like 'KALLELSE' standing alone, in capitals or not", () => {
+    const t = "KALLELSE TILL MÖTE MED ANNA BERG. Kallelse till Protokoll Holm.";
+    const spans = [at(t, "KALLELSE", "NAMN", "model"), at(t, "ANNA BERG", "NAMN", "model"), at(t, "Kallelse", "NAMN", "model"), at(t, "Protokoll Holm", "NAMN", "model")];
+    expect(show(t, withoutCommonWords(t, spans))).toEqual(["ANNA BERG:NAMN:model", "Protokoll Holm:NAMN:model"]);
+  });
 });
 
 describe("resolveSpans speed", () => {

@@ -286,9 +286,12 @@ export function looksFormal(text: string): boolean {
 /** Only a list marker, a single letter or digits ("ii", "iii", "b", "12"). */
 const MARKER = /^(?:[ivx]{1,5}|[IVX]{1,5}|\p{L}|\d+)$/u;
 const VERB_THE_PHRASE = /^(?:join|attend|take|send|share|review|discuss|schedule|book|move|start|finish|run|lead|have|get)\s+the\s+\p{Ll}/u;
+// A document's heading word, which the model takes for a name ("KALLELSE TILL MÖTE", "Kallelse till möte").
+const DOCUMENT_WORD = /^(?:kallelse|inbjudan|påminnelse|protokoll|mötesprotokoll|dagordning|föredragningslista|anteckningar|minnesanteckningar|sammanfattning|meddelande|beslut|yttrande|intyg|offert|faktura|kvitto)$/iu;
 
 /**
- * Model name, organisation and place spans that are only a list marker, and,
+ * Model name, organisation and place spans that are only a list marker or a
+ * document word ("Kallelse", "Protokoll"), and,
  * in a formal document, spans with no capital letter at all ("penningtvätt",
  * "relevanta nationella myndigheter"): common nouns the model takes for
  * names. In a chat a lowercase word can be a name, so there they stay.
@@ -299,7 +302,7 @@ export function withoutCommonWords(text: string, spans: Span[]): Span[] {
   return spans.filter((s) => {
     if (s.source !== "model" || !EDGE_TYPES.has(s.type)) return true;
     const value = text.slice(s.start, s.end);
-    if (MARKER.test(value)) return false;
+    if (MARKER.test(value) || DOCUMENT_WORD.test(value)) return false;
     // "will join the call": a verb, then "the". A lowercase name starts with a noun ("bank of the west").
     if (english && !/\p{Lu}/u.test(value) && VERB_THE_PHRASE.test(value)) return false;
     return !formal || /\p{Lu}/u.test(value);
