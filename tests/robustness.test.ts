@@ -191,8 +191,9 @@ describe("7. linear growth: ten times the input takes at most twenty times as lo
 
   it("masking with rules, mask and restore", async () => {
     const masker = new MaskeraMasker(backend);
-    // The old quadratic resolveSpans measured 22 at 500 and 5 000 lines, 26 at these sizes.
-    const texts = { 1: `${LINE}\n`.repeat(1_000), 10: `${LINE}\n`.repeat(10_000) };
+    // The old quadratic resolveSpans measured 22 at 500 and 5 000 lines and 26 at 1 000 and 10 000.
+    // 20 000 lines stay under the 2 000 000-character text cap.
+    const texts = { 1: `${LINE}\n`.repeat(2_000), 10: `${LINE}\n`.repeat(20_000) };
     const ratio = await growth((s) =>
       clock(() => {
         const text = texts[s as 1 | 10];
