@@ -91,6 +91,8 @@ jobs:
 
       - name: Install test browsers
         if: steps.browsers.outputs.cache-hit != 'true'
+        # Also downloads the browsers, so longer than the step below; the same apt hang applies.
+        timeout-minutes: 15
         run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Install test browsers' system libraries
