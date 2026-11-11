@@ -4,6 +4,15 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.9.4] - 2026-11-11
+
+### Fixed
+
+- **Names with letters from other languages are masked.** The model missed names like Petrović, Kovačević, Łukasiewicz and Ørsted; it now reads such letters as their base letter, so these names are found.
+- **Names written in capitals are masked.** "KARL JOHANSSON" above an address was missed; lines written mostly in capitals are now also read in normal case, and what either reading finds is masked.
+- **Fewer ordinary words masked.** Short words in capitals such as "OM", the table header "Roll", and English phrases like "join the call" are no longer taken for names.
+- **Long texts are masked faster.** Thousands of lines no longer slow down more than the length of the text.
+
 ## [1.9.3] - 2026-10-30
 
 ### Changed
@@ -321,7 +330,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.9.3...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.9.4...HEAD
+[1.9.4]: https://github.com/promptagency/skrubba/compare/v1.9.3...v1.9.4
 [1.9.3]: https://github.com/promptagency/skrubba/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/promptagency/skrubba/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/promptagency/skrubba/compare/v1.9.0...v1.9.1
