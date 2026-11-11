@@ -109,6 +109,13 @@ Numbering is assigned once per session per unique value and never reused. A sess
 
 A PDF or OCR can leave a space between every letter ("A n d e r s  E k s t r ö m"). The model sees single letters and finds nothing, and a rule cannot tell such a name from a heading set the same way ("I N N E H Å L L"). So the model layer (`modelSpans` in `nerModel.ts`) closes up runs of three or more single letters with one space between each before the model reads the text, and maps the model's spans back to the original offsets (`unspace.ts`). The entity's value is the text as it stands, spaces included, so restore writes it back unchanged. Rules and the main thread see the original text.
 
+## Letters and capitals the model misreads
+
+Two more changes are made to the text the model reads, both keeping its length so the spans fit the original (robustness exam, 2026-11-11):
+
+- **Letters outside Swedish** go to the model as their base letter (`foldForModel`): "Dragan Petrović" gave only "Dragan", and "Kovačević", "Łukasiewicz" and "Ørsted" were not found at all, while the same names without the marks were. Å, ä and ö stay.
+- **Lines in capitals** are read twice, as written and in title case (`unshout`), and the spans of both readings are kept. "LEONORA BEXELL PÅ BRÄNNVIK KONSULT AB" gave only "AB", while "KARL JOHANSSON" above an address is found only as written. A text without such lines is read once. A function word in capitals that the model takes for a name ("OM") is trimmed like its lowercase form.
+
 ## Merging rules and model
 
 Priority on overlap: manual > word list > rules > model. A lower-priority span wholly inside a higher-priority one is dropped. One that partially overlaps is clipped to its uncovered part, as maskera does, so that part stays masked. Organisations from the model are active by default.
