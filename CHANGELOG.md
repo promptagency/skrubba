@@ -4,6 +4,8 @@ Notable changes to Skrubba. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.9.5] - 2026-11-11
+
 ### Fixed
 
 - **Document words are no longer taken for names.** "KALLELSE" or "Kallelse" at the top of a notice, and words like "Protokoll", "Dagordning" and "Faktura" standing alone, now stay as written.
@@ -334,7 +336,8 @@ First tagged version, before the public launch.
 - **Light and dark themes**, keyboard shortcuts, and a layout that works down to 390 px. Checked against WCAG 2.2 AA with axe-core.
 - **Privacy by construction.** No requests to any other origin (enforced by a Content Security Policy and tested), and no text stored in localStorage, sessionStorage, IndexedDB or cookies (tested).
 
-[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.9.4...HEAD
+[Unreleased]: https://github.com/promptagency/skrubba/compare/v1.9.5...HEAD
+[1.9.5]: https://github.com/promptagency/skrubba/compare/v1.9.4...v1.9.5
 [1.9.4]: https://github.com/promptagency/skrubba/compare/v1.9.3...v1.9.4
 [1.9.3]: https://github.com/promptagency/skrubba/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/promptagency/skrubba/compare/v1.9.1...v1.9.2
