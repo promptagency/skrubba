@@ -21,7 +21,7 @@
     "demo-video": "tsx scripts/demo/make-video.ts"
   },
   "dependencies": {
-    "@huggingface/transformers": "^4.3.1",
+    "@huggingface/transformers": "^4.3.2",
     "@maskera/core": "^0.8.2",
     "maskera": "^0.10.2",
     "pdfjs-dist": "6.4.299",
