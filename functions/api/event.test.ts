@@ -28,7 +28,7 @@ describe("/api/event", () => {
     expect(res.status).toBe(202);
     expect(forwarded).toHaveBeenCalledTimes(1);
     const [url, init] = forwarded.mock.calls[0];
-    expect(url).toBe("https://plausible.app.promptagency.se/api/event");
+    expect(url).toBe("https://plausible.promptagency.se/api/event");
     const headers = new Headers(init.headers);
     expect(headers.get("X-Forwarded-For")).toBe("203.0.113.7");
     expect(headers.get("User-Agent")).toBe("Firefox/140");

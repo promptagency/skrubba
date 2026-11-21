@@ -9,7 +9,7 @@
 // that changes every day. Do Not Track and Global Privacy Control are
 // honoured here too.
 
-const PLAUSIBLE = "https://plausible.app.promptagency.se/api/event";
+const PLAUSIBLE = "https://plausible.promptagency.se/api/event";
 const SITE = "skrubba.app";
 const MAX_BODY = 2048;
 
